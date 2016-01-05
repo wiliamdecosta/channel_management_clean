@@ -1,0 +1,54 @@
+<?php
+class M_parameter extends CI_Model {
+
+    function __construct() {
+        parent::__construct();
+
+        $this->load->helper('sequence');
+    }
+    function crud_batchType(){
+        $oper=$this->input->post('oper');
+        $id_=$this->input->post('id');
+        $array_edit = array('CODE' => $this->input->post('CODE'),
+            'IS_ACTIVE' => $this->input->post('IS_ACTIVE'),
+            'IS_BATCH_REPORT' => $this->input->post('IS_BATCH_REPORT'),
+            'UPDATE_DATE' => "SYSDATE",
+            'UPDATE_BY' => $this->session->userdata('d_user_name')
+        );
+        switch ($oper) {
+            case 'add':
+                $new_id = gen_id('P_BATCH_TYPE_ID','P_BATCH_TYPE');
+                $this->db->query("INSERT INTO P_BATCH_TYPE(P_BATCH_TYPE_ID,CODE,IS_ACTIVE,IS_BATCH_REPORT,CREATION_DATE,CREATED_BY,UPDATE_DATE,UPDATE_BY)
+                                    VALUES($new_id,
+                                            '".$this->input->post('CODE')."',
+                                            '".$this->input->post('IS_ACTIVE')."',
+                                            '".$this->input->post('IS_BATCH_REPORT')."',
+                                            SYSDATE,
+                                            '".$this->session->userdata('d_user_name')."',
+                                            SYSDATE,
+                                            '".$this->session->userdata('d_user_name')."'
+                                            )");
+                break;
+            case 'edit':
+                $this->db->query("UPDATE P_BATCH_TYPE SET
+                                    CODE = '".$this->input->post('CODE')."',
+                                    IS_ACTIVE = '".$this->input->post('IS_ACTIVE')."',
+                                    IS_BATCH_REPORT = '".$this->input->post('IS_BATCH_REPORT')."',
+                                    UPDATE_DATE = SYSDATE,
+                                    UPDATE_BY = '".$this->session->userdata('d_user_name')."'
+                                    WHERE
+                                    P_BATCH_TYPE_ID = ".$id_ );
+                break;
+            case 'del':
+                $this->db->where('P_BATCH_TYPE_ID',$id_);
+                $this->db->delete('P_BATCH_TYPE');
+                break;
+        }
+
+    }
+
+
+	
+    
+	
+}
