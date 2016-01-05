@@ -104,8 +104,8 @@
         <!--<div class="hr hr32 hr-dotted"></div>-->
         <div class="btn-group" style="margin-left:30px; margin-top: 20px;">
             <button type="button" class="btn btn-white btn-sm btn-primary" id="detailMitra">Detail Mitra</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKontrak">Dokumen Kontrak</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKelengkapan">Kelengkapan Dokumen</button>
+            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKontrak">Dokumen PKS</button>
+            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKelengkapan">Dokumen NPK</button>
         </div>
 
         <div class="hr hr-double hr-dotted hr18"></div>
