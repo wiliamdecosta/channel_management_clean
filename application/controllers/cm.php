@@ -63,8 +63,8 @@ class Cm extends CI_Controller {
     public function detailMitra() {
         $this->load->view('channel_mgm/detail_mitra');
     }
-    public function dokKontrak(){
-        $this->load->view('channel_mgm/detail_mitra2');
+    public function dokPKS(){
+        $this->load->view('channel_mgm/dok_pks');
     }
     public function rinta() {
         $title = $_POST['title'];

@@ -104,8 +104,8 @@
         <!--<div class="hr hr32 hr-dotted"></div>-->
         <div class="btn-group" style="margin-left:30px; margin-top: 20px;">
             <button type="button" class="btn btn-white btn-sm btn-primary" id="detailMitra">Detail Mitra</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKontrak">Dokumen PKS</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKelengkapan">Dokumen NPK</button>
+            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokPKS">Dokumen PKS</button>
+            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKel">Dokumen NPK</button>
         </div>
 
         <div class="hr hr-double hr-dotted hr18"></div>
@@ -129,8 +129,6 @@
                 alert('Silahkan Pilih Nama Segment !!!');
                 return false
             }else{
-
-                $('#tab-content').html('<div class="throbber-loader">Loading...</div>');
                 $.ajax({
                     type: 'POST',
                     url: "<?php echo site_url();?>cm/"+ctrl,
@@ -148,9 +146,6 @@
 
     $("#mitra").change(function(){
         var mitra = $("#mitra").val();
-
-        // Animasi loading
-
         if(mitra){
             $.ajax({
             type: "POST",
@@ -158,7 +153,6 @@
             url: "<?php echo site_url('cm/listTenant');?>",
             data: {id_mitra : mitra},
             success: function(msg){
-                // jika tidak ada data
                 if(msg == ''){
                     alert('Tidak ada tenant');
                 }

@@ -62,10 +62,10 @@ class Admin extends CI_Controller {
             "or_where" => null,
             "or_where_in" => null,
             "or_where_not_in"=>null,
-            "search" => $_REQUEST['_search'],
-            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
-            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
-            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField'))?$this->input->post('searchField'):null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper'):null,
+            "search_str" => ($this->input->post('searchString'))? ($this->input->post('searchString')):null
         );
 
         // Filter Table *
@@ -121,10 +121,10 @@ class Admin extends CI_Controller {
             "or_where" => null,
             "or_where_in" => null,
             "or_where_not_in"=>null,
-            "search" => $_REQUEST['_search'],
-            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
-            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
-            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField'))?$this->input->post('searchField'):null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper'):null,
+            "search_str" => ($this->input->post('searchString'))? ($this->input->post('searchString')):null
         );
 
         // Get limit paging
@@ -159,14 +159,12 @@ class Admin extends CI_Controller {
 
     public function crud_profile(){
         $table = "APP_PROFILE";
-        $id = $this->input->post('id');
-        $this->jqGrid->crud($table,'PROF_ID', $id, array('PROF_NAME','PROF_DESC'));
+        $this->jqGrid->crud($table,'PROF_ID', array('PROF_NAME','PROF_DESC'));
     }
 
     public function crud_detail(){
         $table = "APP_MENU";
-        $id = $this->input->post('id');
-        $this->jqGrid->crud($table,'MENU_ID', $id, array('MENU_NAME', 'MENU_LINK','FILE_NAME','MENU_PARENT'));
+        $this->jqGrid->crud($table,'MENU_ID', array('MENU_NAME', 'MENU_LINK','FILE_NAME','MENU_PARENT'));
     }
 
     public function gridMenuchild() {
@@ -191,10 +189,10 @@ class Admin extends CI_Controller {
             "or_where" => null,
             "or_where_in" => null,
             "or_where_not_in"=>null,
-            "search" => $_REQUEST['_search'],
-            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
-            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
-            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField'))?$this->input->post('searchField'):null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper'):null,
+            "search_str" => ($this->input->post('searchString'))? ($this->input->post('searchString')):null
         );
 
         // Filter Table *
@@ -313,10 +311,10 @@ class Admin extends CI_Controller {
             "or_where" => null,
             "or_where_in" => null,
             "or_where_not_in"=>null,
-            "search" => $_REQUEST['_search'],
-            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
-            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
-            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField'))?$this->input->post('searchField'):null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper'):null,
+            "search_str" => ($this->input->post('searchString'))? ($this->input->post('searchString')):null
         );
 
         // Filter Table *
