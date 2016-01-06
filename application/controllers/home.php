@@ -2,16 +2,12 @@
 
 class Home extends CI_Controller {
 	
-	private $d_sub_menus;
-	
 	function __construct() {
 		parent::__construct();
+
+        checkAuth();
 		$this->load->model('M_profiling');
 		$this->load->model('M_user');
-		$this->d_sub_menus = array();
-
-        $this->load->library('cek_session');
-        $this->cek_session->cek_ses();
 	}
 
 	public function index()

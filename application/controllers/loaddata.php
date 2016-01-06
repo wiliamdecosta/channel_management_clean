@@ -9,12 +9,7 @@ class Loaddata extends CI_Controller {
 
         date_default_timezone_set('Asia/Jakarta');
 
-		$this->load->library('cek_session');
-        $this->cek_session->cek_ses();
-        $this->load->library('session');
-
-        $this->load->helper('breadcrumb');
-		
+        checkAuth();
 		$this->load->model('M_loaddata', 'loadData');
 		$this->load->model('M_admin');
         $this->load->model('M_jqGrid', 'jqGrid');

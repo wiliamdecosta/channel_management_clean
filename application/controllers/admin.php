@@ -6,12 +6,8 @@ class Admin extends CI_Controller {
 	
 	function __construct() {
 		parent::__construct();
-		
-		//Load Library Cek Session
-		$this->load->library('cek_session');
-        $this->cek_session->cek_ses();
 
-        $this->load->helper('breadcrumb');
+        checkAuth();
 
 		$this->load->model('M_profiling');
 		$this->load->model('M_user');

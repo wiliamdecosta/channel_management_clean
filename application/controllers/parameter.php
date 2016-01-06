@@ -7,11 +7,7 @@ class Parameter extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 
-		$this->load->library('cek_session');
-        $this->cek_session->cek_ses();
-
-        $this->load->helper('breadcrumb');
-
+        checkAuth();
         $this->load->model('M_cm','cm');
         $this->load->model('M_param');
         $this->load->model('M_tenant');

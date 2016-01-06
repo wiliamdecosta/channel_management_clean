@@ -6,11 +6,7 @@ class nd extends CI_Controller {
 		parent::__construct();
         date_default_timezone_set('Asia/Jakarta');
 
-        $this->load->library('cek_session');
-
-        $this->cek_session->cek_ses();
-        $this->load->helper('breadcrumb');
-
+        checkAuth();
 		$this->load->model('M_cm','cm');
         $this->load->model('M_param');
         $this->load->model('M_tenant');

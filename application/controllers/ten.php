@@ -6,16 +6,11 @@ class ten extends CI_Controller {
 	
 	function __construct() {
 		parent::__construct();
-                if($this->session->userdata('d_user_id')=="" || $this->session->userdata('d_prof_id')=="") {
-			if($this->session->userdata('d_user_id')=="")
-				redirect("/home/login");
-			elseif($this->session->userdata('d_prof_id')=="")
-				redirect("/home/setprofile");
-		}
-                
+
+        checkAuth();
 		$this->load->model('M_profiling');
 		$this->load->model('M_tenant');
-                $this->load->model('M_param');
+        $this->load->model('M_param');
 	}
 	
 	private function filtering() {

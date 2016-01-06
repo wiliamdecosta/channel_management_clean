@@ -3,11 +3,8 @@
 class JqGrid extends CI_Controller {
 	function __construct() {
 		parent::__construct();
-		
-		//Load Library Cek Session
-		$this->load->library('cek_session');
-        $this->cek_session->cek_ses();
-		
+
+        checkAuth();
 		$this->load->model('M_profiling');
 		$this->load->model('M_user');
         $this->load->model('M_jqgrid', 'jqGrid');
