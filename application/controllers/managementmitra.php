@@ -1,7 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Managementmitra extends CI_Controller {
+
     private $head = "Marketing Fee";
+    private $folder = "managementmitra";
 
 	function __construct() {
 		parent::__construct();
@@ -15,6 +17,11 @@ class Managementmitra extends CI_Controller {
 	}
 
 	public function index() {
+        $title = $_POST['title'];
+        //BreadCrumb
+        $bc = array($this->head,$title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
         // Fungsi dropdown tenant
         $this->load->model('M_cm','cm');
         if($this->session->userdata('d_prof_id') == 3) {
@@ -25,6 +32,14 @@ class Managementmitra extends CI_Controller {
 
         $this->load->view('global/filter_mitra',$result);
     }
+
+    public function detailMitra() {
+        $this->load->view($this->folder.'/detail_mitra');
+    }
+    public function dokPKS(){
+        $this->load->view($this->folder.'/dok_pks');
+    }
+
 
 
 

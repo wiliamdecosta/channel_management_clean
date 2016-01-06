@@ -18,12 +18,6 @@ class Cm extends CI_Controller {
         }
 	}
 
-	// Management Mitra
-	public function mm() {
-        $result['result'] = $this->cm->getPglList();
-        $this->load->view('channel_mgm/m_mitra',$result);
-    }
-
     public function listTenant() {
         $id = $this->input->post("id_mitra");
         $result = $this->cm->getListTenant($id);
@@ -35,34 +29,6 @@ class Cm extends CI_Controller {
         echo $option;
     }
 
-    // Jangka Waktu
-    public function jw(){
-        echo "Jangka Waktu";
-        //$this->load->view('channel_mgm/m_mitra',$dataa',$data);
-    }
-
-    public function hs() {
-        echo "Harga Sewa";
-        //$this->load->view('channel_mgm/m_mitra',$data);
-    }
-
-    public function mp() {
-        echo "Monitoring Progress";
-        //$this->load->view('channel_mgm/m_mitra',$data);
-    }
-
-    public function summary() {
-        echo "Summarty";
-        //$this->load->view('channel_mgm/m_mitra',$data);
-    }
-
-    // Management Mitra
-    public function detailMitra() {
-        $this->load->view('channel_mgm/detail_mitra');
-    }
-    public function dokPKS(){
-        $this->load->view('channel_mgm/dok_pks');
-    }
     public function rinta() {
         $title = $_POST['title'];
         //BreadCrumb
