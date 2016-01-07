@@ -1,10 +1,4 @@
 <div id="content-mitra">
-<!--    <div id="group1">-->
-<!--         <a class="btn btn-white btn-info btn-round">-->
-<!--            <i class="ace-icon fa fa-plus bigger-120 green"></i>-->
-<!--                Add Mitra-->
-<!--          </a>-->
-<!--    </div>-->
     <br>
     <form class="form-horizontal" role="form" id="mitraForm">
     <div class="row">

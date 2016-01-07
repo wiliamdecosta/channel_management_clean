@@ -93,6 +93,9 @@
             <button type="button" class="btn btn-white btn-sm btn-primary" id="detailMitra">Detail Mitra</button>
             <button type="button" class="btn btn-white btn-sm btn-primary" id="dokPKS">Dokumen PKS</button>
             <button type="button" class="btn btn-white btn-sm btn-primary" id="dokNPK">Dokumen NPK</button>
+            <button type="button" class="btn btn-white btn-sm btn-primary" id="fastel">Fastel</button>
+            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKontrak">Dokumen Kontrak</button>
+            <button type="button" class="btn btn-white btn-sm btn-primary" id="evaluasiMitra">Evaluasi Mitra</button>
         </div>
 
         <div class="hr hr-double hr-dotted hr18"></div>

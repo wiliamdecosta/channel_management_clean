@@ -70,7 +70,7 @@ class M_profiling extends CI_Model {
 	    $result = array();
 		$sql = "SELECT * FROM APP_MENU ";
 		if($cond!='') $sql .= " WHERE ".$cond;
-		$sql .= " ORDER BY MENU_ID";
+		$sql .= " ORDER BY MENU_NAME";
 		$q = $this->db->query($sql); 
 		if($q->num_rows() > 0) $result = $q->result();
 		return $result;
@@ -80,7 +80,7 @@ class M_profiling extends CI_Model {
 	    $result = array();
 		$sql = "SELECT A.* FROM APP_MENU A, APP_MENU_PROFILE B WHERE A.MENU_ID=B.MENU_ID AND B.PROF_ID=".
 			$prof_id;
-		$sql .= " ORDER BY A.MENU_ID";
+		$sql .= " ORDER BY A.MENU_NAME";
 		$q = $this->db->query($sql); 
 		if($q->num_rows() > 0) $result = $q->result();
 		return $result;
