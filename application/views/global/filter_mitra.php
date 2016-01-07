@@ -87,29 +87,45 @@
 
         </div><!-- /.row -->
 
-        <!-- #section:custom/extra.hr -->
-        <!--<div class="hr hr32 hr-dotted"></div>-->
-        <div class="btn-group" style="margin-left:30px; margin-top: 20px;">
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="detailMitra">Detail Mitra</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokPKS">Dokumen PKS</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokNPK">Dokumen NPK</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="fastel">Fastel</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="dokKontrak">Dokumen Kontrak</button>
-            <button type="button" class="btn btn-white btn-sm btn-primary" id="evaluasiMitra">Evaluasi Mitra</button>
+        <div class="tabbable">
+            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="mytab">
+                <li class="tab" id="detailMitra">
+                    <a href="javascript:void(0)">Detail Mitra</a>
+                </li>
+
+                <li class="tab" id="dokPKS">
+                    <a href="javascript:void(0)">Dokumen PKS</a>
+                </li>
+
+                <li class="tab" id="dokNPK">
+                    <a href="javascript:void(0)">Dokumen NPK</a>
+                </li>
+                <li class="tab" id="fastel">
+                    <a href="javascript:void(0)">Fastel</a>
+                </li>
+                <li class="tab" id="dokKontrak">
+                    <a href="javascript:void(0)">Dokumen Kontrak</a>
+                </li>
+                <li class="tab" id="evaluasiMitra">
+                    <a href="javascript:void(0)">Evaluasi Mitra</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="main_content" style="min-height: 400px;">
+                </div>
+            </div>
         </div>
-
-        <div class="hr hr-double hr-dotted hr18"></div>
-        <div id="tab-content"></div>
-
-        <!-- PAGE CONTENT ENDS -->
-    </div><!-- /.col -->
-</div><!-- /.row
-</div><!-- /.page-content -->
+    </div>
+</div>
 </div>
 <!-- #section:basics/content.breadcrumbs -->
 <script type="text/javascript">
     $(document).ready(function(){
-        $('.btn').click(function(){
+        $('.tab').click(function(e){
+            e.preventDefault();
+            //var position = $(document).scrollTop();
+           // alert(position);
             var ctrl = $(this).attr('id');
             // Cek Required field Filter
             var tmp_name = document.getElementById("nama_segment");
@@ -119,16 +135,21 @@
                 alert('Silahkan Pilih Nama Segment !!!');
                 return false
             }else{
+                $('.tab').removeClass('active');
+                $('#'+ctrl).addClass('active');
                 $.ajax({
                     type: 'POST',
                     url: "<?php echo site_url();?>managementmitra/"+ctrl,
                     data: {},
                     timeout: 10000,
+                    //async: false,
                     success: function(data) {
-                        $("#tab-content").html(data);
+                        $("#main_content").html(data);
+                      //  $(document).scrollTop(position)
                     }
                 })
                 return false;
+
             }
 
         })

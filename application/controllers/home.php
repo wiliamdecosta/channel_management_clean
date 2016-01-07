@@ -118,4 +118,13 @@ class Home extends CI_Controller {
 		}
 		return $d_sub_menu;
 	}
+
+    public function download(){
+        $this->load->helper('download');
+        $path = base_url()."application/third_party/doc_pks/tes.pdf";
+      //  die($path);
+        $data = file_get_contents($path); // Read the file's contents
+        $name = 'pks_doc.pdf';
+        force_download($name, $data);
+    }
 }

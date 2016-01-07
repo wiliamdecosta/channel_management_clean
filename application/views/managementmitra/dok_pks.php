@@ -52,7 +52,7 @@
                                 <?php foreach ($result as $content){
                                     ?>
                                     <tr>
-                                        <td class="center"><?php echo $content->DOC_PKS_ID; ?> </td>
+                                        <td class="center"><?php echo $content->DOC_ID; ?> </td>
                                         <td>
                                             <a href="#"><?php echo $content->DOC_NAME; ?></a>
                                         </td>
@@ -62,15 +62,21 @@
                                         <td> <?php echo $content->UPDATE_DATE; ?> </td>
                                         <td>
                                             <div class="hidden-sm hidden-xs action-buttons">
-                                                <a class="blue" href="#">
+                                                <a class="purple" href="<?php echo site_url('home/download');?>" data-rel="tooltip" data-original-title="Download">
+                                                    <i class="ace-icon fa fa-download bigger-130"></i>
+                                                </a>
+                                                <a class="orange" href="#" data-rel="tooltip" data-original-title="Print">
+                                                    <i class="ace-icon fa fa-print bigger-130"></i>
+                                                </a>
+                                                <a class="blue" href="#" data-rel="tooltip" data-original-title="View">
                                                     <i class="ace-icon fa fa-search-plus bigger-130"></i>
                                                 </a>
 
-                                                <a class="green" href="#">
+                                                <a class="green" href="#" data-rel="tooltip" data-original-title="Edit">
                                                     <i class="ace-icon fa fa-pencil bigger-130"></i>
                                                 </a>
 
-                                                <a class="red" href="#">
+                                                <a class="red" href="#" data-rel="tooltip" data-original-title="Delete">
                                                     <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                                 </a>
                                             </div>
@@ -82,6 +88,20 @@
                                                     </button>
 
                                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                        <li>
+                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="Dwonload">
+																				<span class="blue">
+																					<i class="ace-icon fa fa-download bigger-120">ss</i>
+																				</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="Print">
+																				<span class="blue">
+																					<i class="ace-icon fa fa-search-print bigger-120"></i>
+																				</span>
+                                                            </a>
+                                                        </li>
                                                         <li>
                                                             <a href="#" class="tooltip-info" data-rel="tooltip" title="View">
 																				<span class="blue">
@@ -105,6 +125,14 @@
 																				</span>
                                                             </a>
                                                         </li>
+                                                        <li>
+                                                            <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
+																				<span class="red">
+																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																				</span>
+                                                            </a>
+                                                        </li>
+
                                                     </ul>
                                                 </div>
                                             </div>
@@ -324,6 +352,10 @@ jQuery(function($) {
         if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
         return 'left';
     }
+
+    $(function() {
+     //   $( document ).tooltip();
+    });
 
 })
 </script>

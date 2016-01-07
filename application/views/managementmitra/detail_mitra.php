@@ -78,9 +78,11 @@
                 </div>
             </div>
         </div>
-    </div>
-        <hr>
-    <div id="button-form" class="">
+        <div class="col-xs-12">
+            <hr>
+        </div>
+
+        <div id="button-form" class="col-xs-12">
         <span id="group1" style="float: left">
             <button class="btn btn-white btn-info btn-bold">
                 <i class="ace-icon fa fa-cloud-download bigger-120 green"></i>
@@ -105,8 +107,8 @@
                 Delete
             </a>
         </span>
+        </div>
     </div>
-
     </form>
 <script type="text/javascript">
     $('#mitraForm').find('input[type=text],select,textarea').each(function() {

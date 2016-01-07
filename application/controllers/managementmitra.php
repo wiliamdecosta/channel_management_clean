@@ -10,8 +10,9 @@ class Managementmitra extends CI_Controller
     {
         parent::__construct();
         date_default_timezone_set('Asia/Jakarta');
-
+        $this->load->library('encrypt');
         checkAuth();
+        $this->load->helper('download');
 
         if (!$this->input->is_ajax_request()) {
             exit('No direct script access allowed');
@@ -42,9 +43,31 @@ class Managementmitra extends CI_Controller
 
     public function dokPKS()
     {
-        $result['result'] = $this->db->get('DOC_PKS')->result();
 
-        $this->load->view($this->folder . '/dok_pks',$result);
+        $result['result'] = $this->db->get_where('DOC', array('DOC_TYPE_ID' => '1'))->result();
+
+        $this->load->view($this->folder . '/dok_pks', $result);
+    }
+
+    public function dokNPK()
+    {
+
+        $result['result'] = $this->db->get_where('DOC', array('DOC_TYPE_ID' => '2'))->result();
+
+        $this->load->view($this->folder . '/dok_npk', $result);
+    }
+
+    public function fastel()
+    {
+        $this->load->view($this->folder . '/fastel');
+    }
+
+    public function downloadDokPKS()
+    {
+        $data = file_get_contents(base_url('')); // Read the file's contents
+        $name = 'myphoto.jpg';
+
+        force_download($name, $data);
     }
 
 
