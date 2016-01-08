@@ -74,7 +74,7 @@ class M_jqGrid extends CI_Model {
 
         ($param['limit'] != null ? $this->db->limit($param['limit']['end'], $param['limit']['start']) : '');
         ($param['sort_by'] != null ? $this->db->order_by($param['sort_by'], $param['sord']) : '');
-
+        
          $qs = $this->db->get($param['table']);
          return $qs;
 
