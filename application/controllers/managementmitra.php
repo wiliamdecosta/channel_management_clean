@@ -62,6 +62,22 @@ class Managementmitra extends CI_Controller
         $this->load->view($this->folder . '/fastel');
     }
 
+    public function dokKontrak()
+    {
+
+        $result['result'] = $this->db->get_where('DOC', array('DOC_TYPE_ID' => '3'))->result();
+
+        $this->load->view($this->folder . '/dok_kontrak', $result);
+    }
+
+    public function evaluasiMitra()
+    {
+
+        $result['result'] = $this->db->get_where('DOC', array('DOC_TYPE_ID' => '4'))->result();
+
+        $this->load->view($this->folder . '/evaluasi_mitra', $result);
+    }
+
     public function downloadDokPKS()
     {
         $data = file_get_contents(base_url('')); // Read the file's contents

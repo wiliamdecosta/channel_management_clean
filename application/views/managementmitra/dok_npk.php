@@ -9,28 +9,39 @@
     <form class="form-horizontal" role="form">
         <div class="rows">
             <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">Tanggal PKS  </label>
-                <div class="col-sm-6">
-                    <div class="input-group">
-                        <input class="date-picker col-sm-3" id="start_date" type="text" data-date-format="dd-mm-yyyy" placeholder="Input Date"/>
-                        <label class="col-sm-1" style="margin-right:10px;"> s/d </label>
-                        <input class="date-picker col-sm-3" id="end_date" type="text" data-date-format="dd-mm-yyyy" placeholder="Input Date"/>
+                    <label class="col-sm-1 control-label no-padding-right" for="form-field-1"> Periode </label>
+                    <div class="col-sm-2">
+                        <select name="bulan" class="form-control">
+                            <option selected="selected" value="">Bulan</option>
+                            <?php
+                            $bln=array(1=>"Januari","Februari","Maret","April","Mei","Juni","July","Agustus","September","Oktober","November","Desember");
+                            for($bulan=1; $bulan<=12; $bulan++){
+                                if($bulan<=9) { echo "<option value='0$bulan'>$bln[$bulan]</option>"; }
+                                else { echo "<option value='$bulan'>$bln[$bulan]</option>"; }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-sm-1">
+                        <select class="form-control" name="tahun">
+                            <option value=""> Tahun</option>
+                            <?php
+                            $year = date("Y");
+                            for($i = ($year); $i >= $year-5; $i--){
+                                echo "<option value=$i>$i</option>";
+                            }
+                            ?>
+
+                        </select>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">No PKS </label>
-                <div class="col-sm-4">
-                    <input type="text" id="no_pks" placeholder="Di isi Nomor PKS / Amandemen yang aktif terakhit" class="form-control" value=""/>
-                </div>
-            </div>
             <div class="form-group">
                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"></label>
                 <div class="col-xs-11">
                         <div class="clearfix">
                         </div>
                         <div class="table-header">
-                            Dokumen PKS
+                            Dokumen NPK
                         </div>
                         <div>
                             <table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -138,7 +149,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                <?php
+                                    <?php
                                     $i++;
                                 }
 
@@ -355,7 +366,7 @@ jQuery(function($) {
     }
 
     $(function() {
-     //   $( document ).tooltip();
+       // $( document ).tooltip();
     });
 
 })
