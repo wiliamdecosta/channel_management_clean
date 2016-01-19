@@ -184,7 +184,7 @@
 <!-- List Menu -->
 <ul class="nav nav-list">
     <li class="active" id="nav_lvl1">
-        <a href="<?php echo base_url();?>">
+        <a href="<?php echo site_url("home");?>">
             <i class="menu-icon fa fa-tachometer"></i>
             <span class="menu-text"> Dashboard </span>
         </a>

@@ -54,9 +54,10 @@ $(document).ready(function() {
             url: site+"auth/login",
             dataType: 'json',
             data: {nik: nik, pwd: password, csrf_token:token_val},
+            cache :false,
             success: function(data) {
                 if (data.success){
-                    window.location.href = host;
+                    window.location.href = 'home';
                 } else {
                     $('#msg').html(data.msg);
                     $('#msg').show();

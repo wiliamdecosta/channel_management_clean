@@ -53,7 +53,7 @@
                     Please Enter Your Information
                 </h4>
                 <div class="space-6"></div>
-                <form id="loginForm">
+                <form id="loginForm" name="loginForm" method="post">
                     <fieldset>
                         <div class="form-group">
                             <label class="block clearfix">
@@ -89,7 +89,6 @@
                     <input type="hidden" value="<?= site_url();?>" id="host">
                     <input type="hidden" id="token" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" style="display: none">
                 </form>
-
                 <div class="space-6"></div>
             </div>
         </div>
