@@ -15,7 +15,7 @@
                             <div class="widget-header red widget-header-flat">
                                 <h4 class="widget-title lighter">
                                     <!--                    <i class="ace-icon fa fa-money orange"></i>-->
-                                    Daftar Mitra
+                                    Skema Bisnis
                                 </h4>
 
                                 <div class="widget-toolbar">

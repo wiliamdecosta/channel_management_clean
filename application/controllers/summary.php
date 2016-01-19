@@ -30,22 +30,19 @@ class Summary extends CI_Controller
         $this->load->view('summary/filter_summary');
     }
 
-    public function list_template()
+    public function trend_mf()
     {
-        $result['result'] = $this->db->get('V_DOC')->result();
-
-        $this->load->view($this->folder . '/view_template', $result);
+        $this->load->view($this->folder . '/trend_mf');
     }
 
-    public function create_user()
+    public function mitra()
     {
-        $this->load->model('M_cm', 'cm');
-        if ($this->session->userdata('d_prof_id') == 3) {
-            $result['result'] = $this->cm->getPglListByID($this->session->userdata('d_user_id'));
-        } else {
-            $result['result'] = $this->cm->getPglList();
-        }
-        $this->load->view($this->folder . '/create_user', $result);
+        $this->load->view($this->folder . '/mitra');
+    }
+
+    public function inventory()
+    {
+        $this->load->view($this->folder . '/inventory');
     }
 
 
