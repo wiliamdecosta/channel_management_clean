@@ -754,17 +754,12 @@
 
         var c =  confirm('Apakah Anda Yakin Create New Batch ?');
         if(c == true){
-           var target = document.getElementById('content')
-           var spinner = new Spinner(opts).spin(target);
 
-          //  var spinner = new Spinner().spin()
-            target.appendChild(spinner.el)
             $.ajax({
                 type: 'POST',
                 url: '<?php echo site_url('loaddata/createBatch');?>',
                 data: {periode:val,batch_type:1},
                 success: function(data) {
-                    spinner.stop();
                     $('#new_batch').hide("fast");
                     $('#table-content').show("slow");
                     $('#application_form')[0].reset();
