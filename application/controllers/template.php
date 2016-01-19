@@ -3,7 +3,7 @@
 class Template extends CI_Controller
 {
 
-    private $head = "Template";
+    private $head = "Marketing Fee";
     private $folder = "template";
 
     function __construct()

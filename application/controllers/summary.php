@@ -3,7 +3,7 @@
 class Summary extends CI_Controller
 {
 
-    private $head = "Summary";
+    private $head = "Marketing Fee";
     private $folder = "summary";
 
     function __construct()
