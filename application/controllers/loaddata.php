@@ -225,8 +225,12 @@ class Loaddata extends CI_Controller {
             "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
         );
 
-        $req_param['field'] = array('P_BATCH_TYPE_ID');
-        $req_param['value'] = array(2);
+        //$req_param['field'] = array('P_BATCH_TYPE_ID');
+        //$req_param['value'] = array(2);
+
+        $req_param['where'] = array('P_BATCH_TYPE_ID' => 2);
+
+
 
         $row = $this->jqGrid->get_data($req_param)->result_array();
         $count = count($row);
