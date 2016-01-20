@@ -269,7 +269,7 @@
                     }, 0);
                 },
                 //memanggil controller jqgrid yang ada di controller crud
-                caption:"Batch ND"
+                caption:"Proses Expense"
 
          });
 
