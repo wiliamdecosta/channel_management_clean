@@ -49,14 +49,18 @@ class nd extends CI_Controller {
             "sord" => $sord,
             "limit" => null,
             "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
             "search" => $_REQUEST['_search'],
             "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
             "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
             "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
         );
 
-        $req_param['field'] = array('P_BATCH_TYPE_ID');
-        $req_param['value'] = array(4);
+        //$req_param['field'] = array('P_BATCH_TYPE_ID');
+        //$req_param['value'] = array(4);
+        $req_param['where'] = array('P_BATCH_TYPE_ID' => 4);
 
         $row = $this->jqGrid->get_data($req_param)->result_array();
         $count = count($row);
