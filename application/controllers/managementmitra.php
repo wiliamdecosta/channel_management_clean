@@ -33,7 +33,7 @@ class Managementmitra extends CI_Controller
             $result['result'] = $this->cm->getPglList();
         }
 
-        $this->load->view('global/filter_mitra', $result);
+        $this->load->view($this->folder . '/filter_mitra', $result);
     }
 
     public function detailMitra()
@@ -84,6 +84,21 @@ class Managementmitra extends CI_Controller
         $name = 'myphoto.jpg';
 
         force_download($name, $data);
+    }
+
+    public function listCC()
+    {
+        $this->load->model('mfee');
+        $segmen = $this->input->post('segmen');
+        $result = $this->mfee->getCCbySEGMEN($segmen);
+
+        $option = "";
+
+        foreach ($result as $content) {
+            $option .= "<option value=" . $content->ID . ">" . $content->NAME . "</option>";
+        }
+        echo $option;
+
     }
 
 

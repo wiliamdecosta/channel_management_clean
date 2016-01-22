@@ -39,9 +39,7 @@ if (!function_exists('generatehtml')) {
     function bulan()
     {
         $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
-        echo "<select name='bulan' class='input-large'>
-            
-           ";
+        echo "<select name='bulan' class='input-large'>";
         for ($i = 0; $i <= 11; $i++) {
             echo " <option value=" . $i . ">" . strtoupper($bulan[$i]) . "</option>";
         }
@@ -62,11 +60,29 @@ if (!function_exists('generatehtml')) {
         echo "<select name='" . $nama . "' id='" . $id . "'  class='form-control'>";
 
         if ($default_select != "") {
-           echo  "<option value=''> " . $default_select . " </option> ";
+            echo "<option value=''> " . $default_select . " </option> ";
         }
 
         foreach ($data as $r) {
             echo " <option value=" . $r->$pk . ">" . strtoupper($r->$field) . "</option>";
+        }
+        echo "</select>";
+    }
+
+    function combo_segmen()
+    {
+        $CI =& get_instance();
+        $CI->load->model('mcrud');
+
+        $q = $CI->db->query("SELECT DISTINCT(segmen) as SEGMENS,segmen||' - ' ||segment_6_lname as SEGMEN_NAME FROM cbase_dives_2016@DWHMART_AON")->result();
+
+        echo "<select name='segmen' id='segmen'  class='form-control'>";
+
+        echo "<option value=''> Pilih Segmen </option> ";
+
+
+        foreach ($q as $r) {
+            echo " <option value=" . $r->SEGMENS . ">" . $r->SEGMEN_NAME . "</option>";
         }
         echo "</select>";
     }

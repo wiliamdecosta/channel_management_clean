@@ -57,16 +57,8 @@ class mcrud extends CI_Model
         return $this->db->get($tables);
     }
 
-    // Menampilkan data dari sebuah query dengan pagination.
-    public function queryList($query, $limit, $page)
+    public function query($query)
     {
-
-        return $this->db->query($query . " limit " . $page . "," . $limit . "");
-    }
-
-    public function queryBiasa($query, $by, $sort)
-    {
-        // $this->db->order_by($by,$sort);
         return $this->db->query($query);
     }
 
