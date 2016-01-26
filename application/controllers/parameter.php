@@ -28,6 +28,17 @@ class Parameter extends CI_Controller {
 
 		$this->load->view('parameter/list_batchtype');
 	}
+	
+	public function reference() {
+        $title = "Reference";
+        //BreadCrumb
+        $bc = array($this->head,$title);
+        $this->breadcrumb = getBreadcrumb($bc);
+		
+		$result['result'] = $this->cm->getPglList();
+        $result['product'] = $this->M_param->getParamProducts();
+		$this->load->view('parameter/reference');
+	}
 
 
     public function gridBatchType() {
@@ -317,5 +328,60 @@ class Parameter extends CI_Controller {
         }
     }
 
+	public function gridReference() {
+        $page = intval($_REQUEST['page']) ;
+        $limit = $_REQUEST['rows'] ;
+        $sidx = $_REQUEST['sidx'] ;
+        $sord = $_REQUEST['sord'] ;
 
+        $table = "P_REFERENCE_TYPE";
+
+        $req_param = array (
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+			"where" => null,
+			"where_in" => null,
+			"where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
+            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
+            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+        );
+
+        //$req_param['field'] = array();
+        //$req_param['value'] = array();
+
+        $row = $this->jqGrid->get_data($req_param)->result_array();
+		//print_r($row);exit;
+        $count = count($row);
+
+        if( $count >0 ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+	
+	public function crud_reference(){
+        $this->M_parameter->crud_reference();
+    }
 }
