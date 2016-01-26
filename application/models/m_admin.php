@@ -63,7 +63,8 @@ class M_admin extends CI_Model {
     }
 
     public function insMenuProf($menu_id,$prof_id){
-        $qs = "INSERT INTO APP_MENU_PROFILE (SELECT MENU_ID,".$prof_id." FROM APP_MENU WHERE MENU_ID IN (".$menu_id."))" ;
+        $new_id = gen_id('APP_MENU_PROFILE_ID','APP_MENU_PROFILE');
+        $qs = "INSERT INTO APP_MENU_PROFILE (APP_MENU_PROFILE_ID,MENU_ID,PROF_ID,CREATION_DATE,CREATED_BY,UPDATE_DATE,UPDATED_BY)(SELECT APP_MENU_PROFILE_SEQ.NEXTVAL , MENU_ID,".$prof_id.",SYSDATE,'ADMIN',SYSDATE,'ADMIN' FROM APP_MENU WHERE MENU_ID IN (".$menu_id."))" ;
         $this->db->query($qs);
     }
 

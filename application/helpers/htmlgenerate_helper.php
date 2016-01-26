@@ -76,7 +76,7 @@ if (!function_exists('generatehtml')) {
 
         $q = $CI->db->query("SELECT DISTINCT(segmen) as SEGMENS,segmen||' - ' ||segment_6_lname as SEGMEN_NAME FROM cbase_dives_2016@DWHMART_AON")->result();
 
-        echo "<select name='segmen' id='segmen'  class='form-control'>";
+        echo "<select name='segment' id='segment'  class='form-control'>";
 
         echo "<option value=''> Pilih Segmen </option> ";
 

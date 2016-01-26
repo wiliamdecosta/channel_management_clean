@@ -82,8 +82,6 @@
 
     }
     jQuery("#save_batch" ).click(function() {
-        var target = document.getElementById('content')
-        var spinner = new Spinner(opts).spin(target);
         $.ajax({
             type: 'POST',
             url: '<?php echo site_url('loaddata/createBatch');?>',

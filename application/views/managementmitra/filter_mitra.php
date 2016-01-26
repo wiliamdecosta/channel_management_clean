@@ -68,7 +68,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label no-padding-right"
-                                                       for="form-field-1-1">Sewa </label>
+                                                       for="form-field-1-1">Nama Lokasi Sewa </label>
 
                                                 <div class="col-sm-6">
                                                     <input type="text" id="form-field-1-1" placeholder="Text Field"
@@ -133,7 +133,7 @@
             // alert(position);
             var ctrl = $(this).attr('id');
             // Cek Required field Filter
-            var tmp_name = document.getElementById("nama_segment");
+            var tmp_name = document.getElementById("segment");
             var segment_name = tmp_name.options[tmp_name.selectedIndex].value;
 
             if (!segment_name) {
@@ -189,7 +189,7 @@
 </script>
 <script>
     $(document).ready(function(){
-        $("#segmen").change(function(){
+        $("#segment").change(function(){
             loadcc()
         });
     });
@@ -198,13 +198,13 @@
 
 
     function loadcc() {
-        var segmen = $("#segmen").val();
+        var segmen = $("#segment").val();
         $.ajax({
             url: "<?php echo base_url();?>managementmitra/listCC",
             type: "POST",
             data: {segmen:segmen},
-            success: function (html) {
-                $("#list_cc").html(html);
+            success: function (data) {
+                $('#list_cc').html(data);
 
             }
         });
