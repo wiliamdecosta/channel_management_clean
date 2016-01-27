@@ -433,7 +433,13 @@ class Parameter extends CI_Controller {
             'end' => $limit
         );
 
-        $result['page'] = $page;
+        $this->parent_type_id = $id;
+		if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+		//$result['page'] = $page;
         $result['total'] = $total_pages;
         $result['records'] = $count;
 
