@@ -5,7 +5,6 @@
 
 <div id="content-mitra" style="display:none">
     <br>
-
     <form class="form-horizontal" role="form" id="mitraForm">
         <div class="row">
             <div class="col-xs-6">

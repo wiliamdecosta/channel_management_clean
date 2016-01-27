@@ -1,6 +1,12 @@
 <!-- #section:basics/content.breadcrumbs -->
+<script type="text/css">
+    .ui-jqgrid .ui-jqgrid-btable
+    {
+        table-layout:auto;
+    }
+</script>
 <div class="breadcrumbs" id="breadcrumbs">
-    <?=$this->breadcrumb;?>
+    <?= $this->breadcrumb; ?>
 </div>
 
 <!-- /section:basics/content.breadcrumbs -->
@@ -32,104 +38,174 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-            var grid_selector = "#grid-table";
-            var pager_selector = "#grid-pager";
+        var grid_selector = "#grid-table";
+        var pager_selector = "#grid-pager";
 
-            //resize to fit page size
-            $(window).on('resize.jqGrid', function () {
-                $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
-            })
-         var userName = '<?php echo $this->session->userdata("d_user_name"); ?>';
-         var date = '<?= date("d/m/Y");?>';
-         jQuery("#grid-table").jqGrid({
-                 url:'<?php echo site_url('parameter/gridReference');?>',
-                 datatype: "json",
-                 mtype: "POST",
-                 colModel: [
-                     { label: 'ID', name: 'P_REFERENCE_TYPE_ID', key: true, width:35, sorttype:'number',sortable:true, editable: false,hidden:true },
-                     { label: 'Kode', name: 'CODE', width:250, align:"left",sortable:true, editable:true,editrules : { required: true}, editoptions: {size:45,value:{Tes:'asdad'}}},
-                     { label: 'Tipe Referensi', name: 'REFERENCE_NAME', width:250, align:"left", editable:true,editrules : { required: true},editoptions: {size:45,value:{Tes:'asdad'}}},
-					 { label: 'Deskripsi', name: 'DESCRIPTION', width:250, align:"left", editable:true,editoptions: {size:45,value:{Tes:'asdad'}}},
-					 { label: 'Tanggal Dibuat', name: 'CREATION_DATE', width:250, align:"left", sortable:true, editable: false,hidden:false },
-					 { label: 'Dibuat Oleh', name: 'CREATED_BY', width:250, align:"left", sortable:true, editable: false,hidden:false },
-					 { label: 'Tanggal Diubah', name: 'UPDATED_DATE', width:250, align:"left", sortable:true, editable: false,hidden:false },
-					 { label: 'Diubah Oleh', name: 'UPDATED_BY', width:250, align:"left", sortable:true, editable: false,hidden:false },
-                 ],
-                 caption:"DAFTAR TIPE REFERENSI",
-                 width: 1120,
-                 height: '100%',
-                 scrollOffset:0,
-                 rowNum:5,
-                 viewrecords: true,
-                 rowList:[5,10,20],
-                 sortname: 'REFERENCE_NAME', // default sorting ID
-                 //rownumbers: true, // show row numbers
-                 rownumWidth: 35, // the width of the row numbers columns
-                 sortorder: 'asc',
-                 altRows: true,
-                 shrinkToFit: true,
-                 //multiselect: true,
-                 //multikey: "ctrlKey",
-                 multiboxonly: true,
-				 
-				 onSelectRow: function(rowid) {
-                    var celValue = $('#grid-table').jqGrid ('getCell', rowid, 'REFERENCE_NAME');
-                    var grid_id = jQuery("#jqGridDetails");
-                    if(rowid != null) {
-                        grid_id.jqGrid('setGridParam',{url:"<?php echo site_url('parameter/gridReferenceList');?>/"+rowid,datatype: 'json',postData:{parent_id:rowid}, userData:{row:rowid}});
-                        grid_id.jqGrid('setCaption', 'Tipe Referensi :: '+celValue);
-                        jQuery("#detailsPlaceholder").show();
-                        jQuery("#jqGridDetails").trigger("reloadGrid");
-                    }
-                }, // use the onSelectRow that is triggered on row click to show a details grid
-                 onSortCol : clearSelection,
-                 onPaging : clearSelection,
-                //#pager merupakan div id pager
-                 pager: '#grid-pager',
-                 jsonReader: {
-                    root: 'Data',
-                    id: 'id',
-                    repeatitems: false
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        var userName = '<?php echo $this->session->userdata("d_user_name"); ?>';
+        var date = '<?= date("d/m/Y");?>';
+        jQuery("#grid-table").jqGrid({
+            url: '<?php echo site_url('parameter/gridReference');?>',
+            datatype: "json",
+            mtype: "POST",
+            colModel: [
+                {
+                    label: 'ID',
+                    name: 'P_REFERENCE_TYPE_ID',
+                    key: true,
+                    width: 35,
+                    sorttype: 'number',
+                    sortable: true,
+                    editable: false,
+                    hidden: true
                 },
-                loadComplete : function() {
-                    var table = this;
-                    setTimeout(function(){
-                      //  styleCheckbox(table);
-
-                      //  updateActionIcons(table);
-                        updatePagerIcons(table);
-                        enableTooltips(table);
-                    }, 0);
+                {
+                    label: 'Kode',
+                    name: 'CODE',
+                    width: 250,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editrules: {required: true},
+                    editoptions: {size: 45, value: {Tes: 'asdad'}}
                 },
-                //memanggil controller jqgrid yang ada di controller crud
+                {
+                    label: 'Tipe Referensi',
+                    name: 'REFERENCE_NAME',
+                    width: 250,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true},
+                    editoptions: {size: 45, value: {Tes: 'asdad'}}
+                },
+                {
+                    label: 'Deskripsi',
+                    name: 'DESCRIPTION',
+                    width: 250,
+                    align: "left",
+                    editable: true,
+                    editoptions: {size: 45, value: {Tes: 'asdad'}}
+                },
+                {
+                    label: 'Tanggal Dibuat',
+                    name: 'CREATION_DATE',
+                    width: 250,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+                {
+                    label: 'Dibuat Oleh',
+                    name: 'CREATED_BY',
+                    width: 250,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+                {
+                    label: 'Tanggal Diubah',
+                    name: 'UPDATED_DATE',
+                    width: 250,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+                {
+                    label: 'Diubah Oleh',
+                    name: 'UPDATED_BY',
+                    width: 250,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+            ],
+            caption: "DAFTAR TIPE REFERENSI",
+            width: 1120,
+            height: '100%',
+            scrollOffset: 0,
+            rowNum: 5,
+            viewrecords: true,
+            rowList: [5, 10, 20],
+            sortname: 'REFERENCE_NAME', // default sorting ID
+            rownumbers: true, // show row numbers
+            rownumWidth: 35, // the width of the row numbers columns
+            sortorder: 'asc',
+            altRows: true,
+            shrinkToFit: true,
+            //multiselect: true,
+            //multikey: "ctrlKey",
+            multiboxonly: true,
 
-                editurl: '<?php echo site_url('parameter/crud_reference');?>'
+            onSelectRow: function (rowid) {
+                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'REFERENCE_NAME');
+                var grid_id = jQuery("#jqGridDetails");
+                if (rowid != null) {
+                    grid_id.jqGrid('setGridParam', {
+                        url: "<?php echo site_url('parameter/gridReferenceList');?>/" + rowid,
+                        datatype: 'json',
+                        postData: {parent_id: rowid},
+                        userData: {row: rowid}
+                    });
+                    grid_id.jqGrid('setCaption', 'Tipe Referensi :: ' + celValue);
+                    jQuery("#detailsPlaceholder").show();
+                    jQuery("#jqGridDetails").trigger("reloadGrid");
+                }
+            }, // use the onSelectRow that is triggered on row click to show a details grid
+            onSortCol: clearSelection,
+            onPaging: clearSelection,
+            //#pager merupakan div id pager
+            pager: '#grid-pager',
+            jsonReader: {
+                root: 'Data',
+                id: 'id',
+                repeatitems: false
+            },
+            loadComplete: function () {
+                var table = this;
+                setTimeout(function () {
+                    //  styleCheckbox(table);
+
+                    //  updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+            },
+            //memanggil controller jqgrid yang ada di controller crud
+
+            editurl: '<?php echo site_url('parameter/crud_reference');?>'
 
 
-         });
+        });
     });
     //JqGrid Detail
 
     //navButtons grid master
-    jQuery('#grid-table').jqGrid('navGrid','#grid-pager',
+    jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
         { 	//navbar options
             edit: true,
-            excel:true,
-            editicon : 'ace-icon fa fa-pencil blue',
+            excel: true,
+            editicon: 'ace-icon fa fa-pencil blue',
             add: true,
-            addicon : 'ace-icon fa fa-plus-circle purple',
+            addicon: 'ace-icon fa fa-plus-circle purple',
             del: true,
-            delicon : 'ace-icon fa fa-trash-o red',
+            delicon: 'ace-icon fa fa-trash-o red',
             search: true,
-            searchicon : 'ace-icon fa fa-search orange',
+            searchicon: 'ace-icon fa fa-search orange',
             refresh: true,
-            afterRefresh : function () {
-            // some code here
+            afterRefresh: function () {
+                // some code here
                 jQuery("#detailsPlaceholder").hide();
             },
-            refreshicon : 'ace-icon fa fa-refresh green',
+            refreshicon: 'ace-icon fa fa-refresh green',
             view: false,
-            viewicon : 'ace-icon fa fa-search-plus grey',
+            viewicon: 'ace-icon fa fa-search-plus grey',
         },
         {
             // options for the Edit Dialog
@@ -139,7 +215,7 @@
                 return 'Error: ' + data.responseText
             },
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
@@ -154,7 +230,7 @@
             closeAfterAdd: true,
             recreateForm: true,
             viewPagerButtons: false,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                     .wrapInner('<div class="widget-header" />')
@@ -164,34 +240,34 @@
         {
             //delete record form
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
-                if(form.data('styled')) return false;
+                if (form.data('styled')) return false;
 
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_delete_form(form);
 
                 form.data('styled', true);
             },
-            onClick : function(e) {
+            onClick: function (e) {
                 //alert(1);
             }
         },
         {
             //search form
-           // closeAfterSearch: true,
+            // closeAfterSearch: true,
             recreateForm: true,
-            afterShowSearch: function(e){
+            afterShowSearch: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 style_search_form(form);
             },
-            afterRedraw: function(){
+            afterRedraw: function () {
                 style_search_filters($(this));
             }
 
 //            multipleSearch: true,
- //           showQuery: true
+            //           showQuery: true
             /**
              multipleGroup:true,
              showQuery: true
@@ -200,7 +276,7 @@
         {
             //view record form
             recreateForm: true,
-            beforeShowForm: function(e){
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
             }
@@ -217,7 +293,7 @@
 
     function style_edit_form(form) {
         //enable datepicker on "sdate" field and switches for "stock" field
-        form.find('input[name=sdate]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
+        form.find('input[name=sdate]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
 
         form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
         //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
@@ -259,7 +335,7 @@
 
     function beforeDeleteCallback(e) {
         var form = $(e[0]);
-        if(form.data('styled')) return false;
+        if (form.data('styled')) return false;
 
         form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
         style_delete_form(form);
@@ -272,7 +348,6 @@
         form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
         style_edit_form(form);
     }
-
 
 
     //it causes some flicker when reloading or navigating grid
@@ -315,47 +390,118 @@
     function updatePagerIcons(table) {
         var replacement =
         {
-            'ui-icon-seek-first' : 'ace-icon fa fa-angle-double-left bigger-140',
-            'ui-icon-seek-prev' : 'ace-icon fa fa-angle-left bigger-140',
-            'ui-icon-seek-next' : 'ace-icon fa fa-angle-right bigger-140',
-            'ui-icon-seek-end' : 'ace-icon fa fa-angle-double-right bigger-140'
+            'ui-icon-seek-first': 'ace-icon fa fa-angle-double-left bigger-140',
+            'ui-icon-seek-prev': 'ace-icon fa fa-angle-left bigger-140',
+            'ui-icon-seek-next': 'ace-icon fa fa-angle-right bigger-140',
+            'ui-icon-seek-end': 'ace-icon fa fa-angle-double-right bigger-140'
         };
-        $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
+        $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
             var icon = $(this);
             var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
 
-            if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+            if ($class in replacement) icon.attr('class', 'ui-icon ' + replacement[$class]);
         })
     }
 
     function enableTooltips(table) {
-        $('.navtable .ui-pg-button').tooltip({container:'body'});
-        $(table).find('.ui-pg-div').tooltip({container:'body'});
+        $('.navtable .ui-pg-button').tooltip({container: 'body'});
+        $(table).find('.ui-pg-div').tooltip({container: 'body'});
     }
 
-	
-	
-	
-	//----------------------------------------------------------------------------------------------------------//
-	//JqGrid Detail
+
+    //----------------------------------------------------------------------------------------------------------//
+    //JqGrid Detail
     $("#jqGridDetails").jqGrid({
         mtype: "POST",
         datatype: "json",
         colModel: [
-			 { label: 'ID', name: 'P_REFERENCE_LIST_ID', key: true, width:35, sorttype:'number',sortable:true, editable: false,hidden:true },
-			 { label: 'Kode', name: 'CODE', width:250, align:"left",sortable:true, editable:true,editrules : { required: true}, editoptions: {size:45,value:{Tes:'asdad'}}},
-			 { label: 'Tipe Referensi', name: 'REFERENCE_NAME', width:250, align:"left", editable:true,editrules : { required: true},editoptions: {size:45,value:{Tes:'asdad'}}},
-			 { label: 'No. List', name: 'LISTING_NO', width:100, align:"left", editable:true,editrules : { required: true},editoptions: {size:45,value:{Tes:'asdad'}}},
-			 { label: 'Deskripsi', name: 'DESCRIPTION', width:250, align:"left", editable:true,editoptions: {size:45,value:{Tes:'asdad'}}},
-			 { label: 'Tanggal Dibuat', name: 'CREATION_DATE', width:250, align:"left", sortable:true, editable: false,hidden:false },
-			 { label: 'Dibuat Oleh', name: 'CREATED_BY', width:250, align:"left", sortable:true, editable: false,hidden:false },
-			 { label: 'Tanggal Diubah', name: 'UPDATED_DATE', width:250, align:"left", sortable:true, editable: false,hidden:false },
-			 { label: 'Diubah Oleh', name: 'UPDATED_BY', width:250, align:"left", sortable:true, editable: false,hidden:false },
+            {
+                label: 'ID',
+                name: 'P_REFERENCE_LIST_ID',
+                key: true,
+                width: 35,
+                sorttype: 'number',
+                sortable: true,
+                editable: false,
+                hidden: true
+            },
+            {
+                label: 'Kode',
+                name: 'CODE',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: true,
+                editrules: {required: true},
+                editoptions: {size: 45, value: {Tes: 'asdad'}}
+            },
+            {
+                label: 'Tipe Referensi',
+                name: 'REFERENCE_NAME',
+                width: 250,
+                align: "left",
+                editable: true,
+                editrules: {required: true},
+                editoptions: {size: 45, value: {Tes: 'asdad'}}
+            },
+            {
+                label: 'No. List',
+                name: 'LISTING_NO',
+                width: 100,
+                align: "left",
+                editable: true,
+                editrules: {required: true},
+                editoptions: {size: 45, value: {Tes: 'asdad'}}
+            },
+            {
+                label: 'Deskripsi',
+                name: 'DESCRIPTION',
+                width: 250,
+                align: "left",
+                editable: true,
+                editoptions: {size: 45, value: {Tes: 'asdad'}}
+            },
+            {
+                label: 'Tanggal Dibuat',
+                name: 'CREATION_DATE',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: false,
+                hidden: false
+            },
+            {
+                label: 'Dibuat Oleh',
+                name: 'CREATED_BY',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: false,
+                hidden: false
+            },
+            {
+                label: 'Tanggal Diubah',
+                name: 'UPDATED_DATE',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: false,
+                hidden: false
+            },
+            {
+                label: 'Diubah Oleh',
+                name: 'UPDATED_BY',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: false,
+                hidden: false
+            },
         ],
-		//width: '100%',
-		height: '100%',
+        //width: '100%',
+        height: '100%',
         width: 1120,
-        page:1,
+        page: 1,
         //height: '100%',
         rowNum: 5,
         shrinkToFit: true,
@@ -371,9 +517,9 @@
             id: 'id',
             repeatitems: false
         },
-        loadComplete : function() {
+        loadComplete: function () {
             var table = this;
-            setTimeout(function(){
+            setTimeout(function () {
                 //  styleCheckbox(table);
 
                 //  updateActionIcons(table);
@@ -383,39 +529,41 @@
         },
         editurl: '<?php echo site_url('parameter/crud_reference_list');?>'
     });
-	
-	//navButtons Grid Detail -- P_REFERENCE_LIST
-    jQuery('#jqGridDetails').jqGrid('navGrid','#jqGridDetailsPager',
-    { 	//navbar options
+
+    //navButtons Grid Detail -- P_REFERENCE_LIST
+    jQuery('#jqGridDetails').jqGrid('navGrid', '#jqGridDetailsPager',
+        { 	//navbar options
             edit: true,
-            excel:true,
-            editicon : 'ace-icon fa fa-pencil blue',
+            excel: true,
+            editicon: 'ace-icon fa fa-pencil blue',
             add: true,
-            addicon : 'ace-icon fa fa-plus-circle purple',
+            addicon: 'ace-icon fa fa-plus-circle purple',
             del: true,
-            delicon : 'ace-icon fa fa-trash-o red',
+            delicon: 'ace-icon fa fa-trash-o red',
             search: true,
-            searchicon : 'ace-icon fa fa-search orange',
+            searchicon: 'ace-icon fa fa-search orange',
             refresh: true,
-            refreshicon : 'ace-icon fa fa-refresh green',
+            refreshicon: 'ace-icon fa fa-refresh green',
             view: false,
-            viewicon : 'ace-icon fa fa-search-plus grey'
+            viewicon: 'ace-icon fa fa-search-plus grey'
         },
         {
 
             // options for the Edit Dialog
-            editData: {PARENT_ID: function (){
-                var data =  jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
-                var parent_id  = data.parent_id;
-                return parent_id;
-            }},
+            editData: {
+                PARENT_ID: function () {
+                    var data = jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
+                    var parent_id = data.parent_id;
+                    return parent_id;
+                }
+            },
             closeAfterEdit: true,
             width: 500,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
@@ -423,12 +571,14 @@
         },
         {
 
-            editData: {PARENT_ID: function (){
-                var data =  jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
-                var parent_id  = data.parent_id;
-                return parent_id;
-            }},
-            onClickButton : function() {
+            editData: {
+                PARENT_ID: function () {
+                    var data = jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
+                    var parent_id = data.parent_id;
+                    return parent_id;
+                }
+            },
+            onClickButton: function () {
                 alert('sss');
             },
             //new record form
@@ -439,7 +589,7 @@
             closeAfterAdd: true,
             recreateForm: true,
             viewPagerButtons: false,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                     .wrapInner('<div class="widget-header" />')
@@ -450,16 +600,16 @@
         {
             //delete record form
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
-                if(form.data('styled')) return false;
+                if (form.data('styled')) return false;
 
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_delete_form(form);
 
                 form.data('styled', true);
             },
-            onClick : function(e) {
+            onClick: function (e) {
                 //alert(1);
             }
         },
@@ -467,16 +617,16 @@
             //search form
             //closeAfterSearch: true,
             recreateForm: true,
-            afterShowSearch: function(e){
+            afterShowSearch: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 style_search_form(form);
             },
-            afterRedraw: function(){
+            afterRedraw: function () {
                 style_search_filters($(this));
             }
 
-           // multipleSearch: true
+            // multipleSearch: true
             /**
              multipleGroup:true,
              showQuery: true
@@ -485,7 +635,7 @@
         {
             //view record form
             recreateForm: true,
-            beforeShowForm: function(e){
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
             }
