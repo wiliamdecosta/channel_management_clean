@@ -57,7 +57,7 @@ $(document).ready(function() {
             cache :false,
             success: function(data) {
                 if (data.success){
-                    window.location.href = 'home';
+                    window.location.href = host;
                 } else {
                     $('#msg').html(data.msg);
                     $('#msg').show();
