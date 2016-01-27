@@ -25,10 +25,10 @@ class mcrud extends CI_Model
         return $this->db->get($table);
     }
     public function getComboByID($table,$field,$pk,$where){
-        $this->db->select($pk,$field);
+       // $this->db->select($pk,$field);
         $this->db->where($where);
         $this->db->order_by($field, 'desc');
-        $this->db->get($table);
+        return $this->db->get($table);
     }
 
     // menghitun jumlah record dari sebuah tabel.

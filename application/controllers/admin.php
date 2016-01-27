@@ -228,7 +228,7 @@ class Admin extends CI_Controller
         } else {
             $result['page'] = $page;
         }
-        ($page == 0 ? $result['page'] = 1 : $page);
+      //  ($page == 0 ? $result['page'] = 1 : $page);
         $result['total'] = $total_pages;
         $result['records'] = $count;
 

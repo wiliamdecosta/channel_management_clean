@@ -24,25 +24,6 @@
 </a>
 </div><!-- /.main-container -->
 
-<style>
-    .loading-div{
-        /*position: absolute;*/
-        float: left;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        min-height: 520px;
-        background: rgba(0, 0, 0, 0.56);
-        z-index: 999;
-        /*display:none;*/
-    }
-    .loading-div img {
-        margin-top: 20%;
-        margin-left: 50%;
-    }
-</style>
-
 <!--Ajax Menu-->
 <script type="text/javascript">
     $(document).ajaxStart(function () {
@@ -90,7 +71,7 @@
                         $("#ajaxContent").html(errorThrown);
                     },
                     timeout: 10000 // sets timeout to 10 seconds
-                })
+                });
                 return false;
             }
 
@@ -120,9 +101,9 @@
 
 <!-- page specific plugin scripts -->
 
-<!--[if lte IE 8]>
+
 <script src="<?php echo base_url();?>assets/js/excanvas.js"></script>
-<![endif]-->
+
 <!--<script src="--><?php //echo base_url();?><!--assets/js/jquery-ui.custom.js"></script>-->
 <script src="<?php echo base_url();?>assets/js/jquery.blockUI.js"></script>
 <script src="<?php echo base_url();?>assets/js/jquery.ui.touch-punch.js"></script>
@@ -133,7 +114,6 @@
 <script src="<?php echo base_url();?>assets/js/flot/jquery.flot.resize.js"></script>
 <script src="<?php echo base_url();?>assets/js/notify.js"></script>
 <script src="<?php echo base_url();?>assets/js/notify.min.js"></script>
-
 
 <!-- ace scripts -->
 <script src="<?php echo base_url();?>assets/js/ace/elements.scroller.js"></script>
@@ -167,6 +147,7 @@
 <script src="<?php echo base_url();?>assets/js/dataTables/extensions/TableTools/js/dataTables.tableTools.js"></script>
 <script src="<?php echo base_url();?>assets/js/dataTables/extensions/ColVis/js/dataTables.colVis.js"></script>
 
+
 <!-- JqGrid -->
 <script src="<?php echo base_url();?>assets/js/date-time/bootstrap-datepicker.js"></script>
 <script src="<?php echo base_url();?>assets/js/jqGrid/jquery.jqGrid.src.js"></script>
@@ -190,5 +171,6 @@
 <!--<script src="--><?php //echo base_url();?><!--docs/assets/js/language/html.js"></script>-->
 <!--<script src="--><?php //echo base_url();?><!--docs/assets/js/language/css.js"></script>-->
 <!--<script src="--><?php //echo base_url();?><!--docs/assets/js/language/javascript.js"></script>-->
+
 </body>
 </html>

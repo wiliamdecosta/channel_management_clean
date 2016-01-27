@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="<?php echo base_url();?>assets/css/ace-part2.css" class="ace-main-stylesheet" />
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/css/ace-part2.css" class="ace-main-stylesheet"/>
     <![endif]-->
 
     <!--[if lte IE 9]>
@@ -194,21 +194,6 @@
     <?php
         echo $this->menu;
     ?>
-<!--    --><?php
-//    foreach($this->M_profiling->getMenuByProf($this->session->userdata("d_prof_id"),0) as $k => $v) {
-//        ?>
-<!---->
-<!--        <li class=""><a href="--><?php //echo site_url($v->MENU_LINK);?><!--" class="dropdown-toggle"><i class="--><?php //echo $v->MENU_ICON;?><!--"> </i>-->
-<!--                <span class="menu-text"> --><?php //echo $v->MENU_NAME  ;?><!-- </span>-->
-<!---->
-<!--                <b class="arrow fa fa-angle-down"></b>-->
-<!--            </a>-->
-<!---->
-<!--            --><?php //echo showSubMenu($this->M_profiling, $this->session->userdata("d_prof_id") ,$v->MENU_ID);?>
-<!---->
-<!--        </li>-->
-<!--    --><?php //} ;?>
-
 </ul><!-- /.nav-list -->
 
 <?php

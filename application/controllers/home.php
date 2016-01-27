@@ -14,12 +14,14 @@ class Home extends CI_Controller {
 	{
         $menu = "";
         $result = $this->M_profiling->getMenuByProf($this->session->userdata("d_prof_id"),0);
+
         foreach($result as $datas){
             $data[$datas->MENU_PARENT][] = $datas;
 
             $menu = $this->get_menu($data);
 
         }
+
         $this->menu = $menu;
 
         $this->load->view('templates/header');
