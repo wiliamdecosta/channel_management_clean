@@ -86,4 +86,46 @@ class M_parameter extends CI_Model {
         }
 
     }	
+	
+	function crud_reference_list(){
+		$parent_id = $this->input->post('parent_id');
+        $oper=$this->input->post('oper');
+        $id_=$this->input->post('id');
+        $array_edit = array('CODE' => $this->input->post('CODE'),
+            'REFERENCE_NAME' => $this->input->post('REFERENCE_NAME'),
+			'LISTING_NO' => $this->input->post('LISTING_NO'),
+            'DESCRIPTION' => $this->input->post('DESCRIPTION')
+        );
+        switch ($oper) {
+            case 'add':
+                $new_id = gen_id('P_REFERENCE_LIST_ID','P_REFERENCE_LIST');
+                $this->db->query("INSERT INTO P_REFERENCE_LIST(P_REFERENCE_LIST_ID,P_REFERENCE_TYPE_ID,CODE,REFERENCE_NAME,LISTING_NO,DESCRIPTION,CREATION_DATE,CREATED_BY,UPDATED_DATE,UPDATED_BY)
+                                    VALUES(".$new_id.",".$parent_id.",
+                                            '".$this->input->post('CODE')."',
+                                            '".$this->input->post('REFERENCE_NAME')."',
+											'".$this->input->post('LISTING_NO')."',
+                                            '".$this->input->post('DESCRIPTION')."',
+                                            SYSDATE,
+                                            '".$this->session->userdata('d_user_name')."',
+                                            SYSDATE,
+                                            '".$this->session->userdata('d_user_name')."'
+                                            )");
+                break;
+            case 'edit':
+                $this->db->query("UPDATE P_REFERENCE_TYPE SET
+                                    CODE = '".$this->input->post('CODE')."',
+                                    REFERENCE_NAME = '".$this->input->post('REFERENCE_NAME')."',
+                                    DESCRIPTION = '".$this->input->post('DESCRIPTION')."',
+                                    UPDATED_DATE = SYSDATE,
+                                    UPDATED_BY = '".$this->session->userdata('d_user_name')."'
+                                    WHERE
+                                    P_REFERENCE_TYPE_ID = ".$id_ );
+                break;
+            case 'del':
+                $this->db->where('P_REFERENCE_TYPE_ID',$id_);
+                $this->db->delete('P_REFERENCE_TYPE');
+                break;
+        }
+
+    }	
 }

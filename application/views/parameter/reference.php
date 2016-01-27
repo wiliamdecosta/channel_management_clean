@@ -46,23 +46,23 @@
                  datatype: "json",
                  mtype: "POST",
                  colModel: [
-                     //{ label: 'ID', name: 'P_REFERENCE_TYPE_ID', key: true, width:35, sorttype:'number',sortable:true, editable: false,hidden:false },
+                     { label: 'ID', name: 'P_REFERENCE_TYPE_ID', key: true, width:35, sorttype:'number',sortable:true, editable: false,hidden:true },
                      { label: 'Kode', name: 'CODE', width:250, align:"left",sortable:true, editable:true,editrules : { required: true}, editoptions: {size:45,value:{Tes:'asdad'}}},
                      { label: 'Tipe Referensi', name: 'REFERENCE_NAME', width:250, align:"left", editable:true,editrules : { required: true},editoptions: {size:45,value:{Tes:'asdad'}}},
-					 { label: 'Deskripsi', name: 'DESCRIPTION', width:250, align:"left", editable:true,editrules : { required: true},editoptions: {size:45,value:{Tes:'asdad'}}},
+					 { label: 'Deskripsi', name: 'DESCRIPTION', width:250, align:"left", editable:true,editoptions: {size:45,value:{Tes:'asdad'}}},
 					 { label: 'Tanggal Dibuat', name: 'CREATION_DATE', width:250, align:"left", sortable:true, editable: false,hidden:false },
 					 { label: 'Dibuat Oleh', name: 'CREATED_BY', width:250, align:"left", sortable:true, editable: false,hidden:false },
 					 { label: 'Tanggal Diubah', name: 'UPDATED_DATE', width:250, align:"left", sortable:true, editable: false,hidden:false },
 					 { label: 'Diubah Oleh', name: 'UPDATED_BY', width:250, align:"left", sortable:true, editable: false,hidden:false },
                  ],
                  caption:"DAFTAR TIPE REFERENSI",
-                 width: '100%',
+                 width: 1120,
                  height: '100%',
                  scrollOffset:0,
                  rowNum:5,
                  viewrecords: true,
                  rowList:[5,10,20],
-                 sortname: 'P_REFERENCE_TYPE_ID', // default sorting ID
+                 sortname: 'REFERENCE_NAME', // default sorting ID
                  //rownumbers: true, // show row numbers
                  rownumWidth: 35, // the width of the row numbers columns
                  sortorder: 'asc',
@@ -71,6 +71,17 @@
                  //multiselect: true,
                  //multikey: "ctrlKey",
                  multiboxonly: true,
+				 
+				 onSelectRow: function(rowid) {
+                    var celValue = $('#grid-table').jqGrid ('getCell', rowid, 'REFERENCE_NAME');
+                    var grid_id = jQuery("#jqGridDetails");
+                    if(rowid != null) {
+                        grid_id.jqGrid('setGridParam',{url:"<?php echo site_url('parameter/gridReferenceList');?>/"+rowid,datatype: 'json',postData:{parent_type_id:rowid}, userData:{row:rowid}});
+                        grid_id.jqGrid('setCaption', 'Tipe Referensi :: '+celValue);
+                        jQuery("#detailsPlaceholder").show();
+                        jQuery("#jqGridDetails").trigger("reloadGrid");
+                    }
+                }, // use the onSelectRow that is triggered on row click to show a details grid
                  onSortCol : clearSelection,
                  onPaging : clearSelection,
                 //#pager merupakan div id pager
@@ -322,5 +333,162 @@
         $(table).find('.ui-pg-div').tooltip({container:'body'});
     }
 
+	
+	
+	
+	//----------------------------------------------------------------------------------------------------------//
+	//JqGrid Detail
+    $("#jqGridDetails").jqGrid({
+        mtype: "POST",
+        datatype: "json",
+        colModel: [
+			 { label: 'ID', name: 'P_REFERENCE_LIST_ID', key: true, width:35, sorttype:'number',sortable:true, editable: false,hidden:true },
+			 { label: 'Kode', name: 'CODE', width:250, align:"left",sortable:true, editable:true,editrules : { required: true}, editoptions: {size:45,value:{Tes:'asdad'}}},
+			 { label: 'Tipe Referensi', name: 'REFERENCE_NAME', width:250, align:"left", editable:true,editrules : { required: true},editoptions: {size:45,value:{Tes:'asdad'}}},
+			 { label: 'No. List', name: 'LISTING_NO', width:100, align:"left", editable:true,editrules : { required: true},editoptions: {size:45,value:{Tes:'asdad'}}},
+			 { label: 'Deskripsi', name: 'DESCRIPTION', width:250, align:"left", editable:true,editoptions: {size:45,value:{Tes:'asdad'}}},
+			 { label: 'Tanggal Dibuat', name: 'CREATION_DATE', width:250, align:"left", sortable:true, editable: false,hidden:false },
+			 { label: 'Dibuat Oleh', name: 'CREATED_BY', width:250, align:"left", sortable:true, editable: false,hidden:false },
+			 { label: 'Tanggal Diubah', name: 'UPDATED_DATE', width:250, align:"left", sortable:true, editable: false,hidden:false },
+			 { label: 'Diubah Oleh', name: 'UPDATED_BY', width:250, align:"left", sortable:true, editable: false,hidden:false },
+        ],
+		//width: '100%',
+		height: '100%',
+        width: 1120,
+        page:1,
+        //height: '100%',
+        rowNum: 5,
+        shrinkToFit: true,
+        rownumbers: true,
+        rownumWidth: 35, // the width of the row numbers columns
+        viewrecords: true,
+        sortname: 'REFERENCE_NAME ', // default sorting ID
+        caption: 'Daftar referensi',
+        sortorder: 'asc',
+        pager: "#jqGridDetailsPager",
+        jsonReader: {
+            root: 'Data',
+            id: 'id',
+            repeatitems: false
+        },
+        loadComplete : function() {
+            var table = this;
+            setTimeout(function(){
+                //  styleCheckbox(table);
 
+                //  updateActionIcons(table);
+                updatePagerIcons(table);
+                enableTooltips(table);
+            }, 0);
+        },
+        editurl: '<?php echo site_url('parameter/crud_reference_list');?>'
+    });
+	
+	//navButtons Grid Detail -- P_REFERENCE_LIST
+    jQuery('#jqGridDetails').jqGrid('navGrid','#jqGridDetailsPager',
+    { 	//navbar options
+            edit: true,
+            excel:true,
+            editicon : 'ace-icon fa fa-pencil blue',
+            add: true,
+            addicon : 'ace-icon fa fa-plus-circle purple',
+            del: true,
+            delicon : 'ace-icon fa fa-trash-o red',
+            search: true,
+            searchicon : 'ace-icon fa fa-search orange',
+            refresh: true,
+            refreshicon : 'ace-icon fa fa-refresh green',
+            view: false,
+            viewicon : 'ace-icon fa fa-search-plus grey'
+        },
+        {
+
+            // options for the Edit Dialog
+            editData: {MENU_PARENT: function (){
+                var data =  jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
+                var parent_id  = data.parent_id;
+                return parent_id;
+            }},
+            closeAfterEdit: true,
+            width: 500,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            recreateForm: true,
+            beforeShowForm : function(e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                style_edit_form(form);
+            }
+        },
+        {
+
+            editData: {MENU_PARENT: function (){
+                var data =  jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
+                var parent_id  = data.parent_id;
+                return parent_id;
+            }},
+            onClickButton : function() {
+                alert('sss');
+            },
+            //new record form
+            width: 500,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            closeAfterAdd: true,
+            recreateForm: true,
+            viewPagerButtons: false,
+            beforeShowForm : function(e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
+                    .wrapInner('<div class="widget-header" />')
+                style_edit_form(form);
+            }
+
+        },
+        {
+            //delete record form
+            recreateForm: true,
+            beforeShowForm : function(e) {
+                var form = $(e[0]);
+                if(form.data('styled')) return false;
+
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                style_delete_form(form);
+
+                form.data('styled', true);
+            },
+            onClick : function(e) {
+                //alert(1);
+            }
+        },
+        {
+            //search form
+            //closeAfterSearch: true,
+            recreateForm: true,
+            afterShowSearch: function(e){
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+                style_search_form(form);
+            },
+            afterRedraw: function(){
+                style_search_filters($(this));
+            }
+
+           // multipleSearch: true
+            /**
+             multipleGroup:true,
+             showQuery: true
+             */
+        },
+        {
+            //view record form
+            recreateForm: true,
+            beforeShowForm: function(e){
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+            }
+        }
+    )
 </script>
