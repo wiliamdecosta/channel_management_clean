@@ -88,7 +88,7 @@ class M_parameter extends CI_Model {
     }	
 	
 	function crud_reference_list(){
-		$parent_id = $this->input->post('parent_id');
+		$parent_id = $this->input->post('PARENT_ID');
         $oper=$this->input->post('oper');
         $id_=$this->input->post('id');
         $array_edit = array('CODE' => $this->input->post('CODE'),
@@ -112,18 +112,19 @@ class M_parameter extends CI_Model {
                                             )");
                 break;
             case 'edit':
-                $this->db->query("UPDATE P_REFERENCE_TYPE SET
+                $this->db->query("UPDATE P_REFERENCE_LIST SET
                                     CODE = '".$this->input->post('CODE')."',
                                     REFERENCE_NAME = '".$this->input->post('REFERENCE_NAME')."',
+									LISTING_NO = '".$this->input->post('LISTING_NO')."',
                                     DESCRIPTION = '".$this->input->post('DESCRIPTION')."',
                                     UPDATED_DATE = SYSDATE,
                                     UPDATED_BY = '".$this->session->userdata('d_user_name')."'
                                     WHERE
-                                    P_REFERENCE_TYPE_ID = ".$id_ );
+                                    P_REFERENCE_LIST_ID = ".$id_ );
                 break;
             case 'del':
-                $this->db->where('P_REFERENCE_TYPE_ID',$id_);
-                $this->db->delete('P_REFERENCE_TYPE');
+                $this->db->where('P_REFERENCE_LIST_ID',$id_);
+                $this->db->delete('P_REFERENCE_LIST');
                 break;
         }
 

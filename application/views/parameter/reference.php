@@ -404,7 +404,7 @@
         {
 
             // options for the Edit Dialog
-            editData: {MENU_PARENT: function (){
+            editData: {PARENT_ID: function (){
                 var data =  jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
                 var parent_id  = data.parent_id;
                 return parent_id;
@@ -423,7 +423,7 @@
         },
         {
 
-            editData: {MENU_PARENT: function (){
+            editData: {PARENT_ID: function (){
                 var data =  jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
                 var parent_id  = data.parent_id;
                 return parent_id;
