@@ -76,7 +76,7 @@
                     var celValue = $('#grid-table').jqGrid ('getCell', rowid, 'REFERENCE_NAME');
                     var grid_id = jQuery("#jqGridDetails");
                     if(rowid != null) {
-                        grid_id.jqGrid('setGridParam',{url:"<?php echo site_url('parameter/gridReferenceList');?>/"+rowid,datatype: 'json',postData:{parent_type_id:rowid}, userData:{row:rowid}});
+                        grid_id.jqGrid('setGridParam',{url:"<?php echo site_url('parameter/gridReferenceList');?>/"+rowid,datatype: 'json',postData:{parent_id:rowid}, userData:{row:rowid}});
                         grid_id.jqGrid('setCaption', 'Tipe Referensi :: '+celValue);
                         jQuery("#detailsPlaceholder").show();
                         jQuery("#jqGridDetails").trigger("reloadGrid");

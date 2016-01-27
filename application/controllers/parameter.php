@@ -386,7 +386,7 @@ class Parameter extends CI_Controller {
     }
 	
 	public function gridReferenceList() {
-		$id = $this->input->post('parent_type_id');
+		$id = $this->input->post('parent_id');
         $page = intval($_REQUEST['page']) ;
         $limit = $_REQUEST['rows'] ;
         $sidx = $_REQUEST['sidx'] ;
@@ -433,7 +433,7 @@ class Parameter extends CI_Controller {
             'end' => $limit
         );
 
-        $this->parent_type_id = $id;
+        $this->parent_id = $id;
 		if ($page == 0) {
             $result['page'] = 1;
         } else {
