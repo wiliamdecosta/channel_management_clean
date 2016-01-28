@@ -87,7 +87,6 @@ if (!function_exists('generatehtml')) {
         echo "</select>";
     }
 
-
     function editcombo($nama, $table, $class, $field, $pk, $kondisi, $tags, $value)
     {
         $CI =& get_instance();

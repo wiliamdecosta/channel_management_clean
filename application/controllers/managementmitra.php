@@ -14,6 +14,8 @@ class Managementmitra extends CI_Controller
         checkAuth();
         $this->load->helper('download');
 
+        $this->load->model('M_jqGrid', 'jqGrid');
+
         if (!$this->input->is_ajax_request()) {
             exit('No direct script access allowed');
         }
@@ -38,7 +40,10 @@ class Managementmitra extends CI_Controller
 
     public function detailMitra()
     {
-        $this->load->view($this->folder . '/detail_mitra');
+        $data['ccid'] = $this->input->post('ccid');
+        $data['mitra'] = $this->input->post('mitra');
+        $data['lokasisewa'] = $this->input->post('lokasisewa');
+        $this->load->view($this->folder . '/detail_mitra', $data);
     }
 
     public function dokPKS()
@@ -92,13 +97,127 @@ class Managementmitra extends CI_Controller
         $segmen = $this->input->post('segmen');
         $result = $this->mfee->getCCbySEGMEN($segmen);
 
-        $option = "";
 
-        foreach ($result as $content) {
-            $option .= "<option value=" . $content->ID . ">" . $content->NAME . "</option>";
+        $option = "";
+        if ($result->num_rows() > 0) {
+            $option .= "<option value=''> Pilih CC </option>";
+            foreach ($result->result() as $content) {
+                $option .= "<option value=" . $content->ID . ">" . $content->NAME . "</option>";
+            }
+        } else {
+            $option .= "<option value=''> Tidak ada CC </option>";
         }
+
         echo $option;
 
+
+    }
+
+    public function listMitra()
+    {
+        $this->load->model('mfee');
+        $ccid = intval($this->input->post('ccid'));
+        $result = $this->mfee->getMitraByCC($ccid);
+
+
+        $option = "";
+        if ($result->num_rows() > 0) {
+            $option .= "<option value=''> Pilih Mitra </option>";
+            foreach ($result->result() as $content) {
+                $option .= "<option value='" . $content->NAME . "'>" . $content->NAME . "</option>";
+            }
+
+        } else {
+            $option .= "<option value=''> Tidak ada mitra </option>";
+        }
+
+        echo $option;
+
+
+    }
+
+    public function listLokasiSewa()
+    {
+        $this->load->model('mfee');
+        $mitra_name = $this->input->post('mitra_name');
+        $result = $this->mfee->getLokasisewaByMitra($mitra_name);
+
+        $option = "";
+        if ($result->num_rows() > 0) {
+            $option .= "<option value=''> Pilih Lokasi Sewa </option>";
+            foreach ($result->result() as $content) {
+                $option .= "<option value='" . $content->NAME . "'>" . $content->NAME . "</option>";
+
+            }
+
+        } else {
+            $option .= "<option value=''> Tidak ada Lokasi Sewa </option>";
+        }
+
+        echo $option;
+
+
+    }
+
+    public function gridPIC()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "V_MAP_MIT_CC";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Filter Table *
+        $ccid = $this->input->post('ccid');
+        $mitra = $this->input->post('mitra');
+        $lokasisewa = $this->input->post('lokasisewa');
+        $req_param['where'] = array('ID_CC' => $ccid, 'NAMA_MITRA' => $mitra, 'LOKASI_SEWA' => $lokasisewa);
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
 
     }
 

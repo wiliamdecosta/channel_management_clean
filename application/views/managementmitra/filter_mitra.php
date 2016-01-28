@@ -14,7 +14,6 @@
                         <div class="widget-box transparent">
                             <div class="widget-header red widget-header-flat">
                                 <h4 class="widget-title lighter">
-                                    <!--                    <i class="ace-icon fa fa-money orange"></i>-->
                                     Daftar Mitra
                                 </h4>
 
@@ -30,21 +29,19 @@
                                 <form class="form-horizontal" role="form">
                                     <div class="row">
                                         <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right"
-                                                       for="form-field-1"> Nama Segment </label>
-
+                                            <label class="col-sm-3 control-label no-padding-right"
+                                                   for="form-field-1"> Nama Segment </label>
+                                            <div class="form-group" id="segmen_notif">
                                                 <div class="col-sm-8">
                                                     <?php echo combo_segmen(); ?>
                                                 </div>
                                             </div>
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                                                Nama CC </label>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right"
-                                                       for="form-field-1"> Nama CC </label>
-
                                                 <div class="col-sm-8">
                                                     <select class="form-control" id="list_cc">
-                                                        <option>Pilih CC</option>
+                                                        <option value="">Pilih CC</option>
 
                                                     </select>
                                                 </div>
@@ -52,27 +49,22 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
+                                            <label class="col-sm-3 control-label no-padding-right"
+                                                   for="form-field-1-1"> Nama Mitra </label>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right"
-                                                       for="form-field-1-1"> Nama Mitra </label>
-
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-8">
                                                     <select class="form-control" id="mitra">
                                                         <option value="">Pilih Mitra</option>
-                                                        <?php foreach ($result as $content) {
-                                                            echo "<option value='" . $content->PGL_ID . "'>" . $content->PGL_NAME . "</option>";
-                                                        }
-                                                        ?>
                                                     </select>
                                                 </div>
                                             </div>
+                                            <label class="col-sm-3 control-label no-padding-right"
+                                                   for="form-field-1-1">Nama Lokasi Sewa </label>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right"
-                                                       for="form-field-1-1">Nama Lokasi Sewa </label>
-
-                                                <div class="col-sm-6">
-                                                    <input type="text" id="form-field-1-1" placeholder="Text Field"
-                                                           class="form-control"/>
+                                                <div class="col-sm-8">
+                                                    <select class="form-control" id="lokasisewa">
+                                                        <option value="">Pilih Lokasi Sewa</option>
+                                                    </select>
                                                 </div>
                                             </div>
 
@@ -123,88 +115,147 @@
         </div>
     </div>
 </div>
-</div>
+
 <!-- #section:basics/content.breadcrumbs -->
 <script type="text/javascript">
     $(document).ready(function () {
         $('.tab').click(function (e) {
             e.preventDefault();
-            //var position = $(document).scrollTop();
-            // alert(position);
-            var ctrl = $(this).attr('id');
-            // Cek Required field Filter
-            var tmp_name = document.getElementById("segment");
-            var segment_name = tmp_name.options[tmp_name.selectedIndex].value;
 
-            if (!segment_name) {
-                alert('Silahkan Pilih Nama Segment !!!');
-                return false
-            } else {
+            var ctrl = $(this).attr('id');
+            var ccid = $('#list_cc').val();
+            var mitra = $('#mitra').val();
+            //var lokasisewa = $('#lokasisewa option:selected').text();
+            var lokasisewa = $('#lokasisewa').val();
+            var data = {ccid:ccid,mitra:mitra,lokasisewa:lokasisewa}
+            if (checkFilter()) {
                 $('.tab').removeClass('active');
                 $('#' + ctrl).addClass('active');
                 $.ajax({
                     type: 'POST',
                     url: "<?php echo site_url();?>managementmitra/" + ctrl,
-                    data: {},
+                    data: data,
                     timeout: 10000,
                     //async: false,
                     success: function (data) {
                         $("#main_content").html(data);
                         //  $(document).scrollTop(position)
                     }
-                })
+                });
                 return false;
-
             }
 
         })
-    })
-
-    $("#mitra").change(function () {
-        var mitra = $("#mitra").val();
-
-        // Animasi loading
-
-        if (mitra) {
-            $.ajax({
-                type: "POST",
-                dataType: "html",
-                url: "<?php echo site_url('cm/listTenant');?>",
-                data: {id_mitra: mitra},
-                success: function (msg) {
-                    // jika tidak ada data
-                    if (msg == '') {
-                        alert('Tidak ada tenant');
-                    }
-                    else {
-                        $("#list_cc").html(msg);
-                    }
-                }
-            });
-        } else {
-            $("#list_cc").html('<option> Pilih CC </option>');
-        }
     });
-
 </script>
 <script>
-    $(document).ready(function(){
-        $("#segment").change(function(){
-            loadcc()
+    function checkFilter(){
+        v_str = "";
+        if($("#segment").val()==""){
+            v_str += "* Segmen belum dipilih\n";
+        }
+        if($("#list_cc").val()==""){
+            v_str += "* CC belum dipilih\n";
+        }
+        if($("#mitra").val()==""){
+            v_str += "* Mitra belum dipilih\n";
+        }
+        if($("#lokasisewa").val()==""){
+            v_str += "* Lokasi Sewa belum dipilih\n";
+        }
+
+        if(v_str!=""){
+            alert(v_str);
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $("#segment").change(function () {
+            var segmen = $('#segment').val();
+            if (segmen) {
+                loadcc();
+            } else {
+                $('#list_cc').html('<option value=""> Pilih CC </option>');
+            }
+
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#list_cc").change(function () {
+            var list_cc = $('#list_cc').val();
+            if (list_cc) {
+                loadmitra();
+            } else {
+                $('#mitra').html('<option value=""> Pilih Mitra </option>');
+            }
+
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#mitra").change(function () {
+            var mitra = $('#mitra').val();
+            if (mitra) {
+                loadlokasi();
+            } else {
+                $('#lokasisewa').html('<option value=""> Pilih Lokasi Sewa </option>');
+            }
+
         });
     });
 </script>
 <script type="text/javascript">
-
-
     function loadcc() {
         var segmen = $("#segment").val();
         $.ajax({
+            // async: false,
+            cache: false,
             url: "<?php echo base_url();?>managementmitra/listCC",
             type: "POST",
-            data: {segmen:segmen},
+            data: {segmen: segmen},
+            beforeSend: function () {
+
+            },
             success: function (data) {
                 $('#list_cc').html(data);
+
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function loadmitra() {
+        var ccid = $("#list_cc").val();
+        $.ajax({
+            //async: false,
+            url: "<?php echo base_url();?>managementmitra/listMitra",
+            type: "POST",
+            data: {ccid: ccid},
+            success: function (data) {
+                $('#mitra').html(data);
+
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function loadlokasi() {
+        var mitra_name = $("#mitra").val();
+        $.ajax({
+            //async: false,
+            url: "<?php echo base_url();?>managementmitra/listLokasiSewa",
+            type: "POST",
+            data: {mitra_name: mitra_name},
+            success: function (data) {
+                $('#lokasisewa').html(data);
 
             }
         });
