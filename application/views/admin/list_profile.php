@@ -51,7 +51,27 @@
 <!--        </div>-->
 
     </div><!-- /.row -->
+    <div class="row" style="visibility: hidden;" id="privilege-table">
+        <div class="col-sm-7">
+            <div class="widget-box widget-color-blue">
+                <div class="widget-header">
+                    <h4 class="widget-title lighter smaller" id="privilege-title">Setting Menu Privilege</h4>
+                </div>
+            
+                <div style="margin-left:10px;margin-top:10px;">
+                    <button class="btn btn-sm btn-primary" id="save-privilege">Save</button>
+                </div>
+                
+                <div class="widget-body">
+                    <div class="widget-main padding-8" id="privilege-content">
+                         
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.col -->
+    </div>
 </div><!-- /.page-content -->
+
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -104,6 +124,7 @@
                              }
                          })
                      }
+                     $('#privilege-table').css('visibility', 'hidden');
                  }, // use the onSelectRow that is triggered on row click to show a details grid
                 onSortCol : clearSelection,
                 onPaging : clearSelection,
