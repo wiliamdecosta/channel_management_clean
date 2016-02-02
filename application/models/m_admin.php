@@ -58,7 +58,7 @@ class M_admin extends CI_Model {
     }
 
     public function cekMenuProfile($menu_id,$prof_id) {
-        $qs =  $this->db->get_where('APP_MENU_PROFILE',array('MENU_ID'=>$menu_id, 'PROF_ID' => $prof_id));
+        $qs =  $this->db->get_where('APP_MENU_PROFILE',array('MENU_ID'=> $menu_id, 'PROF_ID' => $prof_id));
         return $qs;
     }
 
@@ -129,6 +129,32 @@ class M_admin extends CI_Model {
 
     }
 	
+	public function getPrivilegeMenu($app_menu_profile_id) {
+        $result = array();
+        $sql = "SELECT a.P_APP_OBJECT_TYPE_ID, b.P_APP_RMDIS_OBJECT_ID, a.CODE, nvl(b.IS_ACTIVE,'N') AS IS_ACTIVE,
+                b.CREATION_DATE, b.CREATED_BY, b.UPDATE_DATE, b.UPDATED_BY
+                FROM P_APP_OBJECT_TYPE a
+                LEFT JOIN P_APP_RMDIS_OBJECT b ON a.P_APP_OBJECT_TYPE_ID = b.P_APP_OBJECT_TYPE_ID
+                AND b.APP_MENU_PROFILE_ID = ".$app_menu_profile_id;
+        $qs = $this->db->query($sql);
+
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+    }
     
+    public function insRmdisObject($item){
+        $qs = "INSERT INTO P_APP_RMDIS_OBJECT (P_APP_RMDIS_OBJECT_ID,APP_MENU_PROFILE_ID,P_APP_OBJECT_TYPE_ID,IS_ACTIVE,CREATION_DATE,CREATED_BY,UPDATE_DATE,UPDATED_BY) VALUES(".$item['P_APP_RMDIS_OBJECT_ID']." , ".$item['APP_MENU_PROFILE_ID'].",".$item['P_APP_OBJECT_TYPE_ID'].",'".$item['IS_ACTIVE']."',SYSDATE,'".$this->session->userdata('d_user_name')."',SYSDATE,'".$this->session->userdata('d_user_name')."')" ;
+        $this->db->query($qs);
+    }
+    
+    public function updRmdisObject($item) {
+        $qs = "UPDATE P_APP_RMDIS_OBJECT
+                SET IS_ACTIVE = '".$item['IS_ACTIVE']."',
+                UPDATE_DATE = SYSDATE,
+                UPDATED_BY = '".$this->session->userdata('d_user_name')."'
+                WHERE P_APP_RMDIS_OBJECT_ID = ".$item['P_APP_RMDIS_OBJECT_ID'];   
+    
+        $this->db->query($qs);
+    }
 	
 }
