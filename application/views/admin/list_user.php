@@ -21,9 +21,11 @@
         $(window).on('resize.jqGrid', function () {
             $(grid_selector).jqGrid('setGridWidth', $("#contentJgGrid").width());
         });
+
         $(window).on('resize.jqGrid', function () {
             $(pager_selector).jqGrid('setGridWidth', $("#contentJgGrid").width());
         });
+        
         jQuery("#grid-table").jqGrid({
             url: '<?php echo site_url('admin/gridUser');?>',
             datatype: "json",
@@ -66,6 +68,11 @@
             //multiselect: true,
             //multikey: "ctrlKey",
             multiboxonly: true,
+            onSelectRow: function (rowid) {
+                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'USER_ID');
+                alert(celValue);    
+                    
+            },
             onSortCol: clearSelection,
             onPaging: clearSelection,
             //#pager merupakan div id pager
