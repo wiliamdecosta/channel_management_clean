@@ -129,4 +129,85 @@ class M_parameter extends CI_Model {
         }
 
     }	
+    
+    
+    function crud_user_attribute_type(){
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+        
+        switch ($oper) {
+            case 'add':
+                $new_id = gen_id('P_USER_ATTRIBUTE_TYPE_ID','P_USER_ATTRIBUTE_TYPE');
+                $this->db->query("INSERT INTO P_USER_ATTRIBUTE_TYPE(P_USER_ATTRIBUTE_TYPE_ID,CODE,VALID_FROM,VALID_TO, DESCRIPTION,CREATION_DATE,CREATED_BY,UPDATED_DATE,UPDATED_BY)
+                                    VALUES($new_id,
+                                            '".$this->input->post('CODE')."',
+                                            to_date('".$this->input->post('VALID_FROM')."','dd/mm/yyyy'),
+                                            to_date('".$this->input->post('VALID_TO')."','dd/mm/yyyy'),
+                                            '".$this->input->post('DESCRIPTION')."',
+                                            SYSDATE,
+                                            '".$this->session->userdata('d_user_name')."',
+                                            SYSDATE,
+                                            '".$this->session->userdata('d_user_name')."'
+                                            )");
+                break;
+            case 'edit':
+                $this->db->query("UPDATE P_USER_ATTRIBUTE_TYPE SET
+                                    CODE = '".$this->input->post('CODE')."',
+                                    VALID_FROM = to_date('".$this->input->post('VALID_FROM')."','dd/mm/yyyy'),
+                                    VALID_TO = to_date('".$this->input->post('VALID_TO')."','dd/mm/yyyy'),
+                                    DESCRIPTION = '".$this->input->post('DESCRIPTION')."',
+                                    UPDATED_DATE = SYSDATE,
+                                    UPDATED_BY = '".$this->session->userdata('d_user_name')."'
+                                    WHERE
+                                    P_USER_ATTRIBUTE_TYPE_ID = ".$id_ );
+                break;
+            case 'del':
+                $this->db->where('P_USER_ATTRIBUTE_TYPE_ID',$id_);
+                $this->db->delete('P_USER_ATTRIBUTE_TYPE');
+                break;
+        }
+
+    }	
+    
+    
+    function crud_user_attribute_list(){
+        $parent_id = $this->input->post('PARENT_ID');
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+        
+        switch ($oper) {
+            case 'add':
+                $new_id = gen_id('P_USER_ATTRIBUTE_LIST_ID','P_USER_ATTRIBUTE_LIST');
+                $this->db->query("INSERT INTO P_USER_ATTRIBUTE_LIST(P_USER_ATTRIBUTE_LIST_ID,P_USER_ATTRIBUTE_TYPE_ID, CODE, NAME, VALID_FROM,VALID_TO, DESCRIPTION,CREATION_DATE,CREATED_BY,UPDATED_DATE,UPDATED_BY)
+                                    VALUES(".$new_id.",".$parent_id.",
+                                            '".$this->input->post('CODE')."',
+                                            '".$this->input->post('NAME')."',
+                                            to_date('".$this->input->post('VALID_FROM')."','dd/mm/yyyy'),
+                                            to_date('".$this->input->post('VALID_TO')."','dd/mm/yyyy'),
+                                            '".$this->input->post('DESCRIPTION')."',
+                                            SYSDATE,
+                                            '".$this->session->userdata('d_user_name')."',
+                                            SYSDATE,
+                                            '".$this->session->userdata('d_user_name')."'
+                                            )");
+                break;
+            case 'edit':
+                $this->db->query("UPDATE P_USER_ATTRIBUTE_LIST SET
+                                    CODE = '".$this->input->post('CODE')."',
+                                    NAME = '".$this->input->post('NAME')."',
+                                    VALID_FROM = to_date('".$this->input->post('VALID_FROM')."','dd/mm/yyyy'),
+                                    VALID_TO = to_date('".$this->input->post('VALID_TO')."','dd/mm/yyyy'),
+                                    DESCRIPTION = '".$this->input->post('DESCRIPTION')."',
+                                    UPDATED_DATE = SYSDATE,
+                                    UPDATED_BY = '".$this->session->userdata('d_user_name')."'
+                                    WHERE
+                                    P_USER_ATTRIBUTE_LIST_ID = ".$id_ );
+                break;
+            case 'del':
+                $this->db->where('P_USER_ATTRIBUTE_LIST_ID',$id_);
+                $this->db->delete('P_USER_ATTRIBUTE_LIST');
+                break;
+        }
+
+    }	
 }
