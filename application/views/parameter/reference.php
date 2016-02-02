@@ -1,8 +1,7 @@
 <!-- #section:basics/content.breadcrumbs -->
 <script type="text/css">
-    .ui-jqgrid .ui-jqgrid-btable
-    {
-        table-layout:auto;
+    .ui-jqgrid .ui-jqgrid-btable {
+        table-layout: auto;
     }
 </script>
 <div class="breadcrumbs" id="breadcrumbs">

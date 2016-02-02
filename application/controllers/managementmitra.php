@@ -43,6 +43,7 @@ class Managementmitra extends CI_Controller
         $data['ccid'] = $this->input->post('ccid');
         $data['mitra'] = $this->input->post('mitra');
         $data['lokasisewa'] = $this->input->post('lokasisewa');
+        $data['segment'] = $this->input->post('segment');
         $this->load->view($this->folder . '/detail_mitra', $data);
     }
 
@@ -124,7 +125,7 @@ class Managementmitra extends CI_Controller
         if ($result->num_rows() > 0) {
             $option .= "<option value=''> Pilih Mitra </option>";
             foreach ($result->result() as $content) {
-                $option .= "<option value='" . $content->NAME . "'>" . $content->NAME . "</option>";
+                $option .= "<option value='" . $content->ID . "'>" . $content->NAME . "</option>";
             }
 
         } else {
@@ -187,10 +188,77 @@ class Managementmitra extends CI_Controller
         );
 
         // Filter Table *
+
+        $segment = $this->input->post('segment');
         $ccid = $this->input->post('ccid');
-        $mitra = $this->input->post('mitra');
+        $pgl_id = $this->input->post('mitra');
         $lokasisewa = $this->input->post('lokasisewa');
-        $req_param['where'] = array('ID_CC' => $ccid, 'NAMA_MITRA' => $mitra, 'LOKASI_SEWA' => $lokasisewa);
+        if($segment){
+            $req_param['where'] = array('SEGMENT'=>$segment);
+        }
+        if($ccid){
+            $req_param['where'] = array('ID_CC'=>$ccid);
+        }
+
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+
+    public function lovPIC(){
+        $this->load->view('managementmitra/lov_pic');
+    }
+    public function grid_lov_pic()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "P_PIC";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
 
         // Get limit paging
         $count = $this->jqGrid->countAll($req_param);

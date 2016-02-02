@@ -12,7 +12,7 @@ class mfee extends CI_Model
 
     public function getMitraByCC($ccid)
     {
-        $q = "SELECT DISTINCT(NAMA_MITRA) NAME,ID_MITRA ID FROM p_map_mit_cc WHERE ID_CC = ".$ccid;
+        $q = "SELECT  DISTINCT a.PGL_ID ID,a.PGL_NAME NAME FROM CUST_PGL a,p_map_mit_cc b WHERE b.ID_CC = ".$ccid." AND a.PGL_ID = b.PGL_ID  ";
         $sql = $this->db->query($q);
         return $sql;
     }

@@ -59,11 +59,11 @@
                                                 </div>
                                             </div>
                                             <label class="col-sm-3 control-label no-padding-right"
-                                                   for="form-field-1-1">Nama Lokasi Sewa </label>
+                                                   for="form-field-1-1">Nama Lokasi PKS </label>
                                             <div class="form-group">
                                                 <div class="col-sm-8">
                                                     <select class="form-control" id="lokasisewa">
-                                                        <option value="">Pilih Lokasi Sewa</option>
+                                                        <option value="">Pilih Lokasi PKS</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -123,11 +123,12 @@
             e.preventDefault();
 
             var ctrl = $(this).attr('id');
+            var segment = $('#segment').val();
             var ccid = $('#list_cc').val();
             var mitra = $('#mitra').val();
             //var lokasisewa = $('#lokasisewa option:selected').text();
             var lokasisewa = $('#lokasisewa').val();
-            var data = {ccid:ccid,mitra:mitra,lokasisewa:lokasisewa}
+            var data = {ccid:ccid,mitra:mitra,lokasisewa:lokasisewa,segment:segment}
             if (checkFilter()) {
                 $('.tab').removeClass('active');
                 $('#' + ctrl).addClass('active');
@@ -154,15 +155,15 @@
         if($("#segment").val()==""){
             v_str += "* Segmen belum dipilih\n";
         }
-        if($("#list_cc").val()==""){
-            v_str += "* CC belum dipilih\n";
-        }
-        if($("#mitra").val()==""){
-            v_str += "* Mitra belum dipilih\n";
-        }
-        if($("#lokasisewa").val()==""){
-            v_str += "* Lokasi Sewa belum dipilih\n";
-        }
+//        if($("#list_cc").val()==""){
+//            v_str += "* CC belum dipilih\n";
+//        }
+//        if($("#mitra").val()==""){
+//            v_str += "* Mitra belum dipilih\n";
+//        }
+//        if($("#lokasisewa").val()==""){
+//            v_str += "* Lokasi Sewa belum dipilih\n";
+//        }
 
         if(v_str!=""){
             alert(v_str);

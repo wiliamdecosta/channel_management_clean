@@ -2,7 +2,7 @@
     <table id="grid-table"></table>
     <div id="grid-pager"></div>
 </div>
-<div id="content-mitra" style="display:none">
+<div id="content-mitra" style="display:">
     <br>
     <form class="form-horizontal" role="form" id="mitraForm">
         <div class="row">
@@ -21,6 +21,8 @@
                         <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control required"
                                value="Amirudin" required>
                     </div>
+                    <a type="button" class="btn btn-white btn-info btn-sm" onclick="getLov()"> <i
+                            class="ace-icon fa fa-search bigger-120"></i>Pilih</a>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Jabatan </label>
@@ -153,105 +155,171 @@
     </script>
 
 </div>
+<div id="lov_pic">
+
+</div>
+
+<script type="text/javascript">
+    function getLov() {
+        // var mitra_name = $("#mitra").val();
+        $.ajax({
+            async: false,
+            url: "<?php echo base_url();?>managementmitra/lovPIC",
+            type: "POST",
+            data: {},
+            success: function (data) {
+                $('#lov_pic').html(data);
+                $('#myModal').modal('show')
+            }
+        });
+    }
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
         //resize to fit page size
         $(window).on('resize.jqGrid', function () {
-            $(grid_selector).jqGrid( 'setGridWidth', $("#tbl_pic").width() );
+            $(grid_selector).jqGrid('setGridWidth', $("#tbl_pic").width());
         });
         $(window).on('resize.jqGrid', function () {
-            $(pager_selector).jqGrid( 'setGridWidth', $("#tbl_pic").width() );
+            $(pager_selector).jqGrid('setGridWidth', $("#tbl_pic").width());
         });
 
-        var ccid = <?php echo $ccid;?>;
+        var ccid = '<?php echo $ccid;?>';
         var mitra = '<?php echo $mitra;?>';
         var lokasisewa = '<?php echo $lokasisewa;?>';
-        var data = {ccid:ccid,mitra:mitra,lokasisewa:lokasisewa};
+        var segment = '<?php echo $segment;?>';
+        var data = {ccid: ccid, mitra: mitra, lokasisewa: lokasisewa, segment: segment};
         jQuery("#grid-table").jqGrid({
-            url:'<?php echo site_url('managementmitra/gridPIC');?>',
+            url: '<?php echo site_url('managementmitra/gridPIC');?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
-                { label: 'ID', name: 'ID_MITRA', key: true, width:5, sorttype:'number', editable: true,hidden:true },
-                { label: 'Nama Mitra', name: 'NAMA_MITRA', align:"left", editable:true,editrules : { required: true}},
-                { label: 'Contact Type', name: 'CODE', width:150, align:"left", editable:true,editrules : { required: true}},
-                { label: 'Jabatan', name: 'JABATAN', width:150, align:"left", editable:true},
-                { label: 'Alamat', name: 'ADDRESS_1', width:300, align:"left", editable:true},
-                { label: 'Kota', name: 'KOTA', width:150, align:"left", editable:true},
-                { label: 'Zip Code', name: 'ZIP_CODE', width:100, align:"left", editable:true},
-                { label: 'Email', name: 'EMAIL_PIC', width:150, align:"left", editable:true},
-                { label: 'No Hp', name: 'NO_HP_PIC', width:100, align:"left", editable:true},
-                { label: 'No Telp', name: 'NO_TELP', width:100, align:"left", editable:true},
-                { label: 'Fax', name: 'FAX', width:100, align:"left"}
+                {label: 'ID', name: 'ID_MITRA', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
+                {
+                    label: 'Nama Mitra',
+                    name: 'PGL_NAME',
+                    width: 200,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Nama CC',
+                    name: 'CC_NAME',
+                    width: 200,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Segment',
+                    name: 'SEGMENT',
+                    width: 90,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {label: 'Lokasi PKS', name: 'PKS', align: "left", editable: true, editrules: {required: true}},
+                {label: 'No PKS', name: 'NO_PKS', align: "left", editable: true, editrules: {required: true}},
+                {
+                    label: 'Nama PIC',
+                    name: 'PIC_NAME',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Contact Type',
+                    name: 'CODE',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true},
+                    editoptions: {size: 45}
+                },
+                {label: 'Jabatan', name: 'JABATAN', width: 150, align: "left", editable: true},
+                {label: 'Alamat', name: 'ADDRESS_1', width: 300, align: "left", editable: true},
+                {label: 'Kota', name: 'KOTA', width: 150, align: "left", editable: true},
+                {label: 'Zip Code', name: 'ZIP_CODE', width: 100, align: "left", editable: true},
+                {label: 'Email', name: 'EMAIL_PIC', width: 150, align: "left", editable: true},
+                {label: 'No Hp', name: 'NO_HP_PIC', width: 100, align: "left", editable: true},
+                {label: 'No Telp', name: 'NO_TELP', width: 100, align: "left", editable: true},
+                {label: 'Fax', name: 'FAX', width: 100, align: "left"},
+                {label: 'Valid From', name: 'VALID_FROM', width: 100, align: "left"},
+                {label: 'Valid Until', name: 'VALID_T0', width: 100, align: "left"},
+                {label: 'NAMA EAM', name: 'AM_NAME', width: 150, align: "left"},
+                {label: 'NIK', name: 'NIK', width: 100, align: "left"},
+                {label: 'EMAIL AM', name: 'EMAIL_AM', width: 150, align: "left"},
+                {label: 'NO HP AM', name: 'NO_HP_AM', width: 150, align: "left"}
             ],
             postData: data,
             width: '100%',
-            AutoWidth:true,
+            AutoWidth: true,
             height: '100%',
-            scrollOffset:0,
-            rowNum:5,
+            scrollOffset: 0,
+            rowNum: 5,
             viewrecords: true,
-            rowList:[5,10,20],
-            sortname: 'ID_MITRA', // default sorting ID
+            rowList: [5, 10, 20],
+            sortname: 'P_MAP_MIT_CC_ID', // default sorting ID
             rownumbers: true, // show row numbers
             rownumWidth: 35,
             sortorder: 'asc',
             altRows: true,
             shrinkToFit: false,
             multiboxonly: true,
-            onSortCol : clearSelection,
-            onPaging : clearSelection,
+            onSortCol: clearSelection,
+            onPaging: clearSelection,
             pager: '#grid-pager',
             jsonReader: {
                 root: 'Data',
                 id: 'id',
                 repeatitems: false
             },
-            loadComplete : function() {
+            loadComplete: function () {
                 var table = this;
-                setTimeout(function(){
+                setTimeout(function () {
                     updatePagerIcons(table);
                     enableTooltips(table);
                 }, 0);
             },
             editurl: '<?php echo site_url('admin/crud_user');?>',
-            caption:"List PIC Mitra"
+            caption: "List PIC Mitra"
 
         });
     });
 
     //navButtons grid master
-    jQuery('#grid-table').jqGrid('navGrid','#grid-pager',
+    jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
         { 	//navbar options
             edit: true,
-            excel:true,
-            editicon : 'ace-icon fa fa-pencil blue',
+            excel: true,
+            editicon: 'ace-icon fa fa-pencil blue',
             add: true,
-            addicon : 'ace-icon fa fa-plus-circle purple',
+            addicon: 'ace-icon fa fa-plus-circle purple',
             del: true,
-            delicon : 'ace-icon fa fa-trash-o red',
+            delicon: 'ace-icon fa fa-trash-o red',
             search: true,
-            searchicon : 'ace-icon fa fa-search orange',
+            searchicon: 'ace-icon fa fa-search orange',
             refresh: true,
-            refreshicon : 'ace-icon fa fa-refresh green',
+            refreshicon: 'ace-icon fa fa-refresh green',
             view: true,
-            viewicon : 'ace-icon fa fa-search-plus grey'
+            viewicon: 'ace-icon fa fa-search-plus grey'
         },
         {
             // options for the Edit Dialog
             closeAfterEdit: true,
-            width: 500,
+            width: 600,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             recreateForm: true,
-            beforeShowForm : function(e,form) {
+            beforeShowForm: function (e, form) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
-                $("#NIK").prop("readonly",true);
 
             }
         },
@@ -264,27 +332,27 @@
             closeAfterAdd: true,
             recreateForm: true,
             viewPagerButtons: false,
-            beforeShowForm : function(e,form) {
+            beforeShowForm: function (e, form) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                     .wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
-                $("#tr_PASSWD",form).show();
+                $("#tr_PASSWD", form).show();
             }
         },
         {
             //delete record form
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
-                if(form.data('styled')) return false;
+                if (form.data('styled')) return false;
 
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_delete_form(form);
 
                 form.data('styled', true);
             },
-            onClick : function(e) {
+            onClick: function (e) {
                 //alert(1);
             }
         },
@@ -292,12 +360,12 @@
             //search form
             // closeAfterSearch: true,
             recreateForm: true,
-            afterShowSearch: function(e){
+            afterShowSearch: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 style_search_form(form);
             },
-            afterRedraw: function(){
+            afterRedraw: function () {
                 style_search_filters($(this));
             }
 
@@ -305,7 +373,7 @@
         {
             //view record form
             recreateForm: true,
-            beforeShowForm: function(e){
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
             }
@@ -313,15 +381,12 @@
     );
 
     function clearSelection() {
-        //jQuery("#jqGridDetails").jqGrid('setGridParam',{url: "empty.json", datatype: 'json'}); // the last setting is for demo purpose only
-        jQuery("#jqGridDetails").jqGrid('setCaption', 'Menu Child ::');
-        jQuery("#jqGridDetails").trigger("reloadGrid");
 
     }
 
     function style_edit_form(form) {
         //enable datepicker on "sdate" field and switches for "stock" field
-        form.find('input[name=sdate]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
+        form.find('input[name=sdate]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
 
         form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
         //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
@@ -363,7 +428,7 @@
 
     function beforeDeleteCallback(e) {
         var form = $(e[0]);
-        if(form.data('styled')) return false;
+        if (form.data('styled')) return false;
 
         form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
         style_delete_form(form);
@@ -376,7 +441,6 @@
         form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
         style_edit_form(form);
     }
-
 
 
     //it causes some flicker when reloading or navigating grid
@@ -419,22 +483,22 @@
     function updatePagerIcons(table) {
         var replacement =
         {
-            'ui-icon-seek-first' : 'ace-icon fa fa-angle-double-left bigger-140',
-            'ui-icon-seek-prev' : 'ace-icon fa fa-angle-left bigger-140',
-            'ui-icon-seek-next' : 'ace-icon fa fa-angle-right bigger-140',
-            'ui-icon-seek-end' : 'ace-icon fa fa-angle-double-right bigger-140'
+            'ui-icon-seek-first': 'ace-icon fa fa-angle-double-left bigger-140',
+            'ui-icon-seek-prev': 'ace-icon fa fa-angle-left bigger-140',
+            'ui-icon-seek-next': 'ace-icon fa fa-angle-right bigger-140',
+            'ui-icon-seek-end': 'ace-icon fa fa-angle-double-right bigger-140'
         };
-        $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
+        $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
             var icon = $(this);
             var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
 
-            if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+            if ($class in replacement) icon.attr('class', 'ui-icon ' + replacement[$class]);
         })
     }
 
     function enableTooltips(table) {
-        $('.navtable .ui-pg-button').tooltip({container:'body'});
-        $(table).find('.ui-pg-div').tooltip({container:'body'});
+        $('.navtable .ui-pg-button').tooltip({container: 'body'});
+        $(table).find('.ui-pg-div').tooltip({container: 'body'});
     }
 
 </script>

@@ -150,8 +150,9 @@
 
 <!-- JqGrid -->
 <script src="<?php echo base_url();?>assets/js/date-time/bootstrap-datepicker.js"></script>
-<!--<script src="--><?php //echo base_url();?><!--assets/js/jqGrid/jquery.jqGrid.src.js"></script>-->
+<script src="<?php echo base_url();?>assets/js/jqGrid/jquery.jqGrid.src.js"></script>
 <script src="<?php echo base_url();?>assets/js/jqGrid/jquery.jqGrid.js"></script>
+<!--<script src="--><?php //echo base_url();?><!--assets/js/jqGrid/jquery.jqGrid.min.js"></script>-->
 <script src="<?php echo base_url();?>assets/js/jqGrid/i18n/grid.locale-en.js"></script>
 		
 
