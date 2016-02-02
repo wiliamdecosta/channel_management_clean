@@ -18,8 +18,11 @@
                     <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Nama PIC </label>
 
                     <div class="col-sm-6">
-                        <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control required"
-                               value="Amirudin" required>
+                        <input type="text" id="picname" placeholder="Text Field" class="form-control required"
+                               value="Amirudin" readonly>
+                        <br>
+                        <input type="text" id="pic_id" placeholder="Text Field" class="form-control required"
+                               value="" readonly>
                     </div>
                     <a type="button" class="btn btn-white btn-info btn-sm" onclick="getLov()"> <i
                             class="ace-icon fa fa-search bigger-120"></i>Pilih</a>
@@ -28,15 +31,15 @@
                     <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Jabatan </label>
 
                     <div class="col-sm-6">
-                        <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control"
-                               value="Direktur"/>
+                        <input type="text" id="jabatan" placeholder="Text Field" class="form-control"
+                               value="Direktur" readonly/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Alamat </label>
 
                     <div class="col-sm-6">
-                        <textarea class="form-control limited" id="form-field-9" maxlength="50">Gedung Attira Lt.9 Jl.
+                        <textarea class="form-control limited" id="alamat" maxlength="50" readonly>Gedung Attira Lt.9 Jl.
                             Jendral Sudirman Kav 45 Jakarta</textarea>
                     </div>
                 </div>
@@ -44,24 +47,24 @@
                     <label class="col-xs-4 control-label no-padding-right" for="form-field-1-1">Email </label>
 
                     <div class="col-sm-6">
-                        <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control"
-                               value="amirudin@attira.com"/>
+                        <input type="text" id="email" placeholder="Text Field" class="form-control"
+                               value="amirudin@attira.com" readonly/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">No Telp </label>
+                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">No HP </label>
 
                     <div class="col-sm-6">
-                        <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control"
-                               value="021-102938"/>
+                        <input type="text" id="no_hp" placeholder="Text Field" class="form-control"
+                               value="021-102938" readonly/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Fax</label>
 
                     <div class="col-sm-6">
-                        <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control"
-                               value="021-102934"/>
+                        <input type="text" id="fax" placeholder="Text Field" class="form-control"
+                               value="021-102934" readonly/>
                     </div>
                 </div>
             </div>
@@ -161,12 +164,12 @@
 
 <script type="text/javascript">
     function getLov() {
-        // var mitra_name = $("#mitra").val();
+        var divID = "pic_id#~#picname#~#jabatan#~#alamat#~#email#~#no_hp#~#fax";
         $.ajax({
-            async: false,
+           // async: false,
             url: "<?php echo base_url();?>managementmitra/lovPIC",
             type: "POST",
-            data: {},
+            data: {divID:divID},
             success: function (data) {
                 $('#lov_pic').html(data);
                 $('#myModal').modal('show')

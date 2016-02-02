@@ -193,11 +193,11 @@ class Managementmitra extends CI_Controller
         $ccid = $this->input->post('ccid');
         $pgl_id = $this->input->post('mitra');
         $lokasisewa = $this->input->post('lokasisewa');
-        if($segment){
-            $req_param['where'] = array('SEGMENT'=>$segment);
+        if ($segment) {
+            $req_param['where'] = array('SEGMENT' => $segment);
         }
-        if($ccid){
-            $req_param['where'] = array('ID_CC'=>$ccid);
+        if ($ccid) {
+            $req_param['where'] = array('ID_CC' => $ccid);
         }
 
 
@@ -230,9 +230,12 @@ class Managementmitra extends CI_Controller
 
     }
 
-    public function lovPIC(){
-        $this->load->view('managementmitra/lov_pic');
+    public function lovPIC()
+    {
+        $data['divID'] = $this->input->post('divID');
+        $this->load->view('managementmitra/lov_pic', $data);
     }
+    
     public function grid_lov_pic()
     {
         $page = intval($_REQUEST['page']); // Page
