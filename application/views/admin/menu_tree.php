@@ -12,8 +12,12 @@
              <div id='jqxTree' style='visibility: hidden;'>
 
              </div>
+             <div>
+                <input type="hidden" name="prof_id" id="prof_id" value="<?= $prof_id;?>"> 
+             </div>
         </div>
     </div>
+    
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -80,34 +84,6 @@
                 }
             })
         });
-<!--        $('#jqxTree').on('checkChange', function (event) {-->
-<!--            var str_check = "";-->
-<!--            var str_uncheck = "";-->
-<!--            var items_check = $('#jqxTree').jqxTree('getCheckedItems');-->
-<!--            var items_uncheck = $('#jqxTree').jqxTree('getUncheckedItems');-->
-<!--            for (var c = 0; c < items_check.length; c++) {-->
-<!--                var item_check = items_check[c];-->
-<!--                str_check += item_check.label + ",";-->
-<!--            }-->
-<!--            for (var u = 0; u < items_uncheck.length; u++) {-->
-<!--                var item_uncheck = items_uncheck[u];-->
-<!--                str_uncheck += item_uncheck.label + ",";-->
-<!--            }-->
-<!--            //alert("The checked items are " + str_check + "Uncek" +str_uncheck);-->
-<!---->
-<!--            // AJax proses cek / uncek-->
-<!--            $.ajax({-->
-<!--                type: 'POST',-->
-<!--                url: '--><?php //echo site_url('admin/updateProfile');?><!--',-->
-<!--                data: {check:str_check , uncheck:str_uncheck,prof_id:--><?//= $prof_id;?><!--},-->
-<!--                timeout: 10000,-->
-<!--                success: function(data) {-->
-<!--                    $("#menutreAjax").html(data);-->
-<!--                    spinner.stop();-->
-<!--                }-->
-<!--            })-->
-<!--        });-->
-
 
     });
 </script>
@@ -122,14 +98,13 @@
                 { name: 'parentid' },
                 { name: 'text' },
                 { name: 'value' },
-                { name: 'checked' }
-//                { name: 'expanded' }
-
+                { name: 'checked' },
+                { name: 'app_menu_profile_id' }
             ],
             id: 'id',
             url: '<?php echo site_url('admin/getMenuTreeJson');?>/<?= $prof_id;?>',
             async: false
-//                        localdata: data
+//            localdata: data
         };
         // create data adapter.
         var dataAdapter = new $.jqx.dataAdapter(source);
@@ -146,5 +121,71 @@
 //            hasThreeStates: true,
 //            theme: 'energyblue'
         });
+        
+        
+        $("#jqxTree").on('select', function (event) {
+                var args = event.args;                
+                var item = $('#jqxTree').jqxTree('getItem', args.element);
+                var app_menu_profile_id;
+                var id = args.element.id;
+                var recursion = function (object) {
+                    for (var i = 0; i < object.length; i++) {
+                        if (id == object[i].id) {
+                            app_menu_profile_id = object[i].app_menu_profile_id;
+                            break;
+                        } else if (object[i].items) {
+                            recursion(object[i].items);
+                        };
+                    };
+                };
+                recursion(records);
+                
+                if(app_menu_profile_id == "") {
+                    $('#save-privilege').hide();
+                    $('#privilege-table').css('visibility', 'visible');
+                    $('#privilege-title').text('Setting Privilege');
+                    $('#privilege-content').html('Setting privilege belum bisa dilakukan. Checklist dan simpan menu yang bersangkutan terlebih dahulu agar dapat mengatur privilege menu.');      
+                }else {
+                    $('#save-privilege').show();
+                    $('#privilege-table').css('visibility', 'visible');
+                    $('#privilege-title').text('Setting Privilege : ' + item.label);
+                    $('#privilege-content').html('');
+                    getPrivilegeTable(app_menu_profile_id);
+                }    
+
+        });
+        
+        
+        $('#save-privilege').click(function () {
+            var options = { 
+                success:       showResponsePrivilegeFormSubmit  // post-submit callback 
+            }; 
+         
+            // bind to the form's submit event 
+            $("#form-privelege").ajaxSubmit(options);
+            return false;
+        });
+        
     });
+</script>
+
+<script>
+    
+    function getPrivilegeTable(the_id) {
+        $("#privilege-content").html("");
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo site_url('admin/getPrivilegeMenuTable');?>",
+            data: {app_menu_profile_id: the_id},
+            success: function(data) {
+                $("#privilege-content").html(data);
+            }
+        });
+        
+    }    
+    
+    function showResponsePrivilegeFormSubmit(responseText, statusText, xhr, $form)  { 
+        getPrivilegeTable(responseText);
+    } 
+    
 </script>
