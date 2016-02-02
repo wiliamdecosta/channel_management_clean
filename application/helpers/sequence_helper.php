@@ -11,7 +11,7 @@ function gen_id($key,$table)
 	$obj =& get_instance();
 	$base_url = $obj->config->item('base_url');
     // You may need to load the model if it hasn't been pre-loaded
-    $q = $obj->db->query("SELECT MAX($key)+1 id FROM $table");
+    $q = $obj->db->query("SELECT nvl(MAX($key),0)+1 id FROM $table");
     $row = $q->row(0);
     return $row->ID;
 
