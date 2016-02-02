@@ -172,6 +172,8 @@
 <!--<script src="--><?php //echo base_url();?><!--docs/assets/js/language/html.js"></script>-->
 <!--<script src="--><?php //echo base_url();?><!--docs/assets/js/language/css.js"></script>-->
 <!--<script src="--><?php //echo base_url();?><!--docs/assets/js/language/javascript.js"></script>-->
-
+<script src="<?php echo base_url();?>assets/js/jquery.form.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/bootgrid/jquery.bootgrid.css" />
+<script src="<?php echo base_url();?>assets/bootgrid/jquery.bootgrid.min.js"></script>
 </body>
 </html>
