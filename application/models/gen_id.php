@@ -6,7 +6,7 @@ class Gen_id extends CI_Model {
     }
 
 	public function generate_id($key,$table) {
-        $q = $this->db->query("SELECT MAX($key)+1 N FROM $table");
+        $q = $this->db->query("SELECT nvl(MAX($key),0)+1 N FROM $table");
         $row = $q->row(0);
         return $row;
     }
