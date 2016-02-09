@@ -143,20 +143,37 @@ class M_parameter extends CI_Model
         $oper = $this->input->post('oper');
         $id_ = $this->input->post('id');
 
+        $result = array();
+        
         switch ($oper) {
             case 'add':
-                $new_id = gen_id('P_USER_ATTRIBUTE_TYPE_ID', 'P_USER_ATTRIBUTE_TYPE');
-                $this->db->query("INSERT INTO P_USER_ATTRIBUTE_TYPE(P_USER_ATTRIBUTE_TYPE_ID,CODE,VALID_FROM,VALID_TO, DESCRIPTION,CREATION_DATE,CREATED_BY,UPDATED_DATE,UPDATED_BY)
-                                    VALUES($new_id,
-                                            '" . $this->input->post('CODE') . "',
-                                            to_date('" . $this->input->post('VALID_FROM') . "','dd/mm/yyyy'),
-                                            to_date('" . $this->input->post('VALID_TO') . "','dd/mm/yyyy'),
-                                            '" . $this->input->post('DESCRIPTION') . "',
-                                            SYSDATE,
-                                            '" . $this->session->userdata('d_user_name') . "',
-                                            SYSDATE,
-                                            '" . $this->session->userdata('d_user_name') . "'
-                                            )");
+                try {
+                    $new_id = gen_id('P_USER_ATTRIBUTE_TYPE_ID','P_USER_ATTRIBUTE_TYPE');
+                    $db_result = $this->db->query_custom("INSERT INTO P_USER_ATTRIBUTE_TYPE(P_USER_ATTRIBUTE_TYPE_ID,CODE,VALID_FROM,VALID_TO, DESCRIPTION,CREATION_DATE,CREATED_BY,UPDATED_DATE,UPDATED_BY)
+                                        VALUES($new_id,
+                                                '".$this->input->post('CODE')."',
+                                                to_date('".$this->input->post('VALID_FROM')."','dd/mm/yyyy'),
+                                                to_date('".$this->input->post('VALID_TO')."','dd/mm/yyyy'),
+                                                '".$this->input->post('DESCRIPTION')."',
+                                                SYSDATE,
+                                                '".$this->session->userdata('d_user_name')."',
+                                                SYSDATE,
+                                                '".$this->session->userdata('d_user_name')."'
+                                                )");
+                                            
+                     
+                     if($db_result != 1) {
+                        throw new Exception('Terjadi duplikasi data');
+                     }
+                                            
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                echo json_encode($result);
+                exit;
+
                 break;
             case 'edit':
                 $this->db->query("UPDATE P_USER_ATTRIBUTE_TYPE SET
