@@ -3,7 +3,7 @@
 class Parameter extends CI_Controller {
 
     private $head = "Parameter";
-	
+
 	function __construct() {
 		parent::__construct();
 
@@ -19,7 +19,7 @@ class Parameter extends CI_Controller {
 	{
 		redirect("/");
 	}
-	
+
 	public function batchType() {
         $title = "Batch Type";
         //BreadCrumb
@@ -28,14 +28,35 @@ class Parameter extends CI_Controller {
 
 		$this->load->view('parameter/list_batchtype');
 	}
-	
+
+
+	public function reference() {
+        $title = "Reference";
+        //BreadCrumb
+        $bc = array($this->head,$title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+		$result['result'] = $this->cm->getPglList();
+        $result['product'] = $this->M_param->getParamProducts();
+		$this->load->view('parameter/reference');
+	}
+
 	public function attribute_type() {
         $title = "Attribute Type";
         //BreadCrumb
         $bc = array($this->head,$title);
         $this->breadcrumb = getBreadcrumb($bc);
-		
+
 		$this->load->view('parameter/attribute_type');
+	}
+
+    public function mitra() {
+        $title = "Mitra";
+        //BreadCrumb
+        $bc = array($this->head,$title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+		$this->load->view('parameter/mitra');
 	}
 
 
@@ -324,8 +345,8 @@ class Parameter extends CI_Controller {
                 }
             }
         }
-    }    
-    
+    }
+
     public function gridUserAttributeType() {
         $page = intval($_REQUEST['page']) ;
         $limit = $_REQUEST['rows'] ;
@@ -352,9 +373,8 @@ class Parameter extends CI_Controller {
         //$req_param['field'] = array();
         //$req_param['value'] = array();
 
-        $row = $this->jqGrid->get_data($req_param)->result_array();
-		//print_r($row);exit;
-        $count = count($row);
+        $count = $this->jqGrid->countAll($req_param);
+
 
         if( $count >0 ) {
             $total_pages = ceil($count/$limit);
@@ -378,11 +398,11 @@ class Parameter extends CI_Controller {
         echo json_encode($result);
 
     }
-    
+
     public function crud_user_attribute_type(){
         $this->M_parameter->crud_user_attribute_type();
     }
-    
+
     public function gridUserAttributeList() {
 		$id = $this->input->post('parent_id');
         $page = intval($_REQUEST['page']) ;
@@ -406,16 +426,16 @@ class Parameter extends CI_Controller {
             "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
             "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
         );
-		
+
 		// Filter Table *
         $req_param['where'] = array('P_USER_ATTRIBUTE_TYPE_ID' => $id);
 
         //$req_param['field'] = array();
         //$req_param['value'] = array();
 
-        $row = $this->jqGrid->get_data($req_param)->result_array();
+        $count = $this->jqGrid->countAll($req_param);
 		//print_r($row);exit;
-        $count = count($row);
+        //$count = count($row);
 
         if( $count >0 ) {
             $total_pages = ceil($count/$limit);
@@ -445,24 +465,12 @@ class Parameter extends CI_Controller {
         echo json_encode($result);
 
     }
-	
+
 	public function crud_user_attribute_list(){
         $this->M_parameter->crud_user_attribute_list();
     }
-    	
-	
-	//Reference
-	public function reference() {
-        $title = "Reference";
-        //BreadCrumb
-        $bc = array($this->head,$title);
-        $this->breadcrumb = getBreadcrumb($bc);
-		
-		$result['result'] = $this->cm->getPglList();
-        $result['product'] = $this->M_param->getParamProducts();
-		$this->load->view('parameter/reference');
-	}
-	
+
+
 	public function gridReference() {
         $page = intval($_REQUEST['page']) ;
         $limit = $_REQUEST['rows'] ;
@@ -515,11 +523,11 @@ class Parameter extends CI_Controller {
         echo json_encode($result);
 
     }
-	
+
 	public function crud_reference(){
         $this->M_parameter->crud_reference();
     }
-	
+
 	public function gridReferenceList() {
 		$id = $this->input->post('parent_id');
         $page = intval($_REQUEST['page']) ;
@@ -543,7 +551,7 @@ class Parameter extends CI_Controller {
             "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
             "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
         );
-		
+
 		// Filter Table *
         $req_param['where'] = array('P_REFERENCE_TYPE_ID' => $id);
 
@@ -582,24 +590,212 @@ class Parameter extends CI_Controller {
         echo json_encode($result);
 
     }
-	
+
 	public function crud_reference_list(){
         $this->M_parameter->crud_reference_list();
     }
-	
+
+	public function gridCustPGL() {
+        $page = intval($_REQUEST['page']) ;
+        $limit = $_REQUEST['rows'] ;
+        $sidx = $_REQUEST['sidx'] ;
+        $sord = $_REQUEST['sord'] ;
+
+        $table = "CUST_PGL";
+
+        $req_param = array (
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+			"where" => null,
+			"where_in" => null,
+			"where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
+            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
+            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+        );
+
+        //$req_param['field'] = array();
+        //$req_param['value'] = array();
+
+        $count = $this->jqGrid->countAll($req_param);
+
+        if( $count >0 ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+
+    public function crud_cust_pgl(){
+       $this->M_parameter->crud_cust_pgl();
+    }
+
+
+	public function gridCustTEN() {
+		$id = $this->input->post('parent_id');
+        $page = intval($_REQUEST['page']) ;
+        $limit = $_REQUEST['rows'] ;
+        $sidx = $_REQUEST['sidx'] ;
+        $sord = $_REQUEST['sord'] ;
+
+        $table = "SELECT a.TEN_ID, a.NCLI, a.TEN_NAME, a.TEN_ADDR, a.TEN_CONTACT_NO, b.PGL_ID
+                    FROM CUST_TEN a
+                    LEFT JOIN PGL_TEN b ON a.TEN_ID = b.TEN_ID";
+
+        $req_param = array (
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+			"where" => null,
+			"where_in" => null,
+			"where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
+            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
+            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+        );
+
+		// Filter Table *
+        $req_param['where'] = array('b.PGL_ID = '.$id);
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+		//print_r($row);exit;
+        //$count = count($row);
+
+        if( $count >0 ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+		if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+		//$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
+
+    public function crud_cust_ten(){
+       $this->M_parameter->crud_cust_ten();
+    }
+
+    public function gridTenND() {
+		
+		$id = $this->input->post('parent_id');
+        $page = intval($_REQUEST['page']) ;
+        $limit = $_REQUEST['rows'] ;
+        $sidx = $_REQUEST['sidx'] ;
+        $sord = $_REQUEST['sord'] ;
+
+        $table = "TEN_ND";
+
+        $req_param = array (
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+			"where" => null,
+			"where_in" => null,
+			"where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
+            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
+            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+        );
+
+		// Filter Table *
+        $req_param['where'] = array('TEN_ID' => $id);
+
+        //$req_param['field'] = array();
+        //$req_param['value'] = array();
+
+        $count = $this->jqGrid->countAll($req_param);
+		//print_r($row);exit;
+        //$count = count($row);
+
+        if( $count >0 ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $this->parent_id = $id;
+		if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+		//$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+    
 	//PIC
 	public function pic() {
         $title = "PIC";
         //BreadCrumb
         $bc = array($this->head,$title);
         $this->breadcrumb = getBreadcrumb($bc);
-		
+
 		$result['result'] = $this->cm->getPglList();
         $result['product'] = $this->M_param->getParamProducts();
 		$this->load->view('parameter/pic');
 	}
-	
+
 	public function gridPic() {
+
         $page = intval($_REQUEST['page']) ;
         $limit = $_REQUEST['rows'] ;
         $sidx = $_REQUEST['sidx'] ;
@@ -651,24 +847,26 @@ class Parameter extends CI_Controller {
         echo json_encode($result);
 
     }
-	
+
 	public function crud_pic(){
         $this->M_parameter->crud_pic();
     }
-	
+
+
 	//DAT_AM
 	public function DAT_AM() {
         $title = "AM";
         //BreadCrumb
         $bc = array($this->head,$title);
         $this->breadcrumb = getBreadcrumb($bc);
-		
+
 		$result['result'] = $this->cm->getPglList();
         $result['product'] = $this->M_param->getParamProducts();
 		$this->load->view('parameter/dat_am');
 	}
-	
+
 	public function gridDAT_AM() {
+
         $page = intval($_REQUEST['page']) ;
         $limit = $_REQUEST['rows'] ;
         $sidx = $_REQUEST['sidx'] ;
@@ -690,6 +888,7 @@ class Parameter extends CI_Controller {
             "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
             "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
         );
+
 
         //$req_param['field'] = array();
         //$req_param['value'] = array();
@@ -720,7 +919,7 @@ class Parameter extends CI_Controller {
         echo json_encode($result);
 
     }
-	
+
 	public function crud_DAT_AM(){
         $this->M_parameter->crud_DAT_AM();
     }
