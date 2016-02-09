@@ -133,7 +133,14 @@ class CI_Exceptions {
 		ob_end_clean();
 		return $buffer;
 	}
-
+    
+    
+    function show_error_custom($heading, $message, $template = 'error_general', $status_code = 500)
+	{
+		$message = '<p>'.implode('</p><p>', ( ! is_array($message)) ? array($message) : $message).'</p>';
+        return $message;
+	}
+	
 	// --------------------------------------------------------------------
 
 	/**
