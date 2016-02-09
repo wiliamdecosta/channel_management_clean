@@ -163,6 +163,12 @@ class M_parameter extends CI_Model {
                 break;
             case 'del':
                 $this->db->where('P_USER_ATTRIBUTE_TYPE_ID',$id_);
+                $this->db->delete('P_USER_ATTRIBUTE');
+                
+                $this->db->where('P_USER_ATTRIBUTE_TYPE_ID',$id_);
+                $this->db->delete('P_USER_ATTRIBUTE_LIST');
+                
+                $this->db->where('P_USER_ATTRIBUTE_TYPE_ID',$id_);
                 $this->db->delete('P_USER_ATTRIBUTE_TYPE');
                 break;
         }
@@ -205,12 +211,97 @@ class M_parameter extends CI_Model {
                 break;
             case 'del':
                 $this->db->where('P_USER_ATTRIBUTE_LIST_ID',$id_);
+                $this->db->delete('P_USER_ATTRIBUTE');
+                
+                $this->db->where('P_USER_ATTRIBUTE_LIST_ID',$id_);
                 $this->db->delete('P_USER_ATTRIBUTE_LIST');
+                
                 break;
         }
 
     }	
 	
+	
+	function crud_cust_pgl(){
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+        
+        switch ($oper) {
+            case 'add':
+                $new_id = gen_id('PGL_ID','CUST_PGL');
+                $this->db->query("INSERT INTO CUST_PGL(PGL_ID,PGL_NAME,PGL_ADDR,PGL_CONTACT_NO,ENABLE_FEE)
+                                    VALUES($new_id,
+                                            '".$this->input->post('PGL_NAME')."',
+                                            '".$this->input->post('PGL_ADDR')."',
+                                            '".$this->input->post('PGL_CONTACT_NO')."',
+                                            '".$this->input->post('ENABLE_FEE')."')");
+                break;
+            case 'edit':
+                $this->db->query("UPDATE CUST_PGL SET
+                                    PGL_NAME = '".$this->input->post('PGL_NAME')."',
+                                    PGL_ADDR = '".$this->input->post('PGL_ADDR')."',
+                                    PGL_CONTACT_NO = '".$this->input->post('PGL_CONTACT_NO')."',
+                                    ENABLE_FEE = '".$this->input->post('ENABLE_FEE')."'
+                                    WHERE PGL_ID = ".$id_ );
+                break;
+            case 'del':
+               
+                $this->db->where('PGL_ID',$id_);
+                $this->db->delete('PGL_TEN');
+                
+                $this->db->where('PGL_ID',$id_);
+                $this->db->delete('CUST_PGL');
+                break;
+        }
+
+    }	
+        
+    
+    function crud_cust_ten(){
+        
+        $parent_id = $this->input->post('PARENT_ID');
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+        
+        switch ($oper) {
+            case 'add':
+                $new_id = gen_id('TEN_ID','CUST_TEN');
+                $this->db->query("INSERT INTO CUST_TEN(TEN_ID,NCLI,TEN_NAME,TEN_ADDR,TEN_CONTACT_NO)
+                                    VALUES($new_id,
+                                            '".$this->input->post('NCLI')."',
+                                            '".$this->input->post('TEN_NAME')."',
+                                            '".$this->input->post('TEN_ADDR')."',
+                                            '".$this->input->post('TEN_CONTACT_NO')."')");
+                                            
+                                            
+                $this->db->query("INSERT INTO PGL_TEN(PGL_ID, TEN_ID) VALUES(".$parent_id.",".$new_id.")");                            
+                break;
+            case 'edit':
+                $this->db->query("UPDATE CUST_TEN SET
+                                    NCLI = '".$this->input->post('NCLI')."',
+                                    TEN_NAME = '".$this->input->post('TEN_NAME')."',
+                                    TEN_ADDR = '".$this->input->post('TEN_ADDR')."',
+                                    TEN_CONTACT_NO = '".$this->input->post('TEN_CONTACT_NO')."'
+                                    WHERE TEN_ID = ".$id_ );
+                break;
+            case 'del':
+                
+                $this->db->where('TEN_ID',$id_);
+                $this->db->delete('PGL_TEN');
+                
+                $this->db->where('TEN_ID',$id_);
+                $this->db->delete('TEN_ND');
+                
+                $this->db->where('TEN_ID',$id_);
+                $this->db->delete('TEN_ND_NONPOTS');
+                
+                $this->db->where('TEN_ID',$id_);
+                $this->db->delete('CUST_TEN');
+                break;
+        }
+
+    }
+    
 	function crud_pic(){
         $oper=$this->input->post('oper');
         $id_=$this->input->post('id');
