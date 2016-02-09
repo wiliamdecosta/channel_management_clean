@@ -363,8 +363,176 @@ class M_jqGrid extends CI_Model {
 
     }
 
-
-
-
-
+    
+    public function bootgrid_countAll($param){
+                
+        $whereCondition = join(" AND ", $param['where']);
+        if(!empty($whereCondition)) {
+			$whereCondition = " WHERE ".$whereCondition;
+		}
+		
+		if($param['search'] != null && $param['search'] === 'true'){
+            $wh = "UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+        }
+        
+        if($whereCondition != "") {
+            if(!empty($wh)) {
+                $whereCondition .= " AND ".$wh;
+            }
+        }
+                
+		$sql = "SELECT COUNT(1) totalcount FROM (".$param['table'].$whereCondition.")";
+		
+		$query = $this->db->query($sql);
+		$row = $query->row_array();
+		
+		$query->free_result();
+		
+		
+		return $row['TOTALCOUNT'];
+    }
+    
+    public function bootgrid_get_data($param){
+        $this->db->_protect_identifiers = false;
+		$param['table'] = str_replace("SELECT","",strtoupper($param['table']));
+		$this->db->select($param['table']);
+		
+		$whereCondition = '';
+				
+		$whereCondition = join(" AND ", $param['where']);
+		        
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh = "UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+        }
+                        
+        if($whereCondition != "") {
+            if(!empty($wh)) {
+                $whereCondition .= " AND ".$wh;
+            }
+		    $this->db->where($whereCondition, null, false);
+        }
+                
+        if(!empty($param['sort_by']))
+		    $this->db->order_by($param['sort_by'], $param['sord']);
+		
+		if($param['limit'] != null)
+			$this->db->limit($param['limit']['end'], $param['limit']['start']);
+        
+        $queryResult = $this->db->get();
+		$items = $queryResult->result_array(); 
+		
+		$queryResult->free_result();
+		
+		return $items;
+    }
 }
