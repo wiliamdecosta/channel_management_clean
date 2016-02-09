@@ -19,6 +19,8 @@
 
     <!--JqGrid-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/ui.jqgrid.css" />
+    <!-- Date picker -->
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/css/datepicker.css" />
 
     <!-- page specific plugin styles -->
 

@@ -15,6 +15,7 @@ class Managementmitra extends CI_Controller
         $this->load->helper('download');
 
         $this->load->model('M_jqGrid', 'jqGrid');
+        $this->load->model('M_managementmitra', 'm_mitra');
 
         if (!$this->input->is_ajax_request()) {
             exit('No direct script access allowed');
@@ -65,7 +66,70 @@ class Managementmitra extends CI_Controller
 
     public function fastel()
     {
-        $this->load->view($this->folder . '/fastel');
+        // Default periode current yyyymm
+        $tahun = date("Y");
+        $bulan = date("m");
+        $data['periode'] = $tahun."".$bulan;
+
+        $this->load->view($this->folder . '/fastel',$data);
+    }
+    public function gridFastel($temp_period,$pgl_id,$ten_id)
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        if($this->input->post('searchField') == "ND1"){
+            $s_field = "B.ND";
+        }else{
+            $s_field = $this->input->post('searchField');
+        }
+
+        if($this->input->post('periode')){
+            $periode = $this->input->post('periode');
+        }else{
+            $periode = $temp_period;
+        }
+
+        //JqGrid Parameters
+        $req_param = array(
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "ten_id" => $ten_id,
+            "pgl_id" => $pgl_id,
+            "period" => $periode,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($s_field) ? $s_field : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+
+        // Get limit paging
+        $count = $this->m_mitra->getFastel($req_param)->num_rows();
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->m_mitra->getFastel($req_param)->result_array();
+        echo json_encode($result);
+
     }
 
     public function dokKontrak()
@@ -233,9 +297,11 @@ class Managementmitra extends CI_Controller
     public function lovPIC()
     {
         $data['divID'] = $this->input->post('divID');
+        $data['lov_target_id'] = $this->input->post('lov_target_id');
+        $data['modal_id'] = $this->input->post('modal_id');
         $this->load->view('managementmitra/lov_pic', $data);
     }
-    
+
     public function grid_lov_pic()
     {
         $page = intval($_REQUEST['page']); // Page
@@ -244,6 +310,70 @@ class Managementmitra extends CI_Controller
         $sord = $_REQUEST['sord']; // Asc / Desc
 
         $table = "P_PIC";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+
+    public function lovSegment()
+    {
+        $data['divID'] = $this->input->post('divID');
+        $data['lov_target_id'] = $this->input->post('lov_target_id');
+        $data['modal_id'] = $this->input->post('modal_id');
+        $this->load->view('managementmitra/lov_segment', $data);
+    }
+
+    public function grid_lov_segment()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "MV_PARAM_SEGMENT_CC";
 
         $req_param = array(
             "table" => $table,

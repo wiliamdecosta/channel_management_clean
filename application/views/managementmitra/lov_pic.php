@@ -1,4 +1,4 @@
-<div id="myModal" class="modal fade" role="dialog">
+<div id="<?php echo $modal_id;?>" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -11,6 +11,8 @@
                     <table id="grid_table_lov"></table>
                     <div id="grid_pager_lov"></div>
                     <input id="lov_value" type="text" value="<?php echo $divID;?>" hidden>
+                    <input id="lov_id" type="text" value="<?php echo $lov_target_id;?>" hidden>
+                    <input id="modal_id" type="text" value="<?php echo $modal_id;?>" hidden>
                 </div>
             </div>
             <div class="modal-footer">
@@ -43,6 +45,7 @@
                     fixed: true,
                     align: "center",
                     sortable: false,
+                    search:false,
                     formatter: function (cellvalue, options, rowObject) {
                         var ID = rowObject.P_PIC_ID;
                         var PIC_NAME = rowObject.PIC_NAME;
@@ -60,6 +63,9 @@
                     label: 'Nama PIC',
                     name: 'PIC_NAME',
                     align: "left",
+                    searchoptions: {
+                        sopt: ["cn"]
+                    },
                     editable: true,
                     editrules: {required: true}
                 },
@@ -133,7 +139,7 @@
 
         });
     });
-
+    $('#grid_table_lov').jqGrid('filterToolbar');
     //navButtons grid master
     jQuery('#grid_table_lov').jqGrid('navGrid', '#grid_pager_lov',
         { 	//navbar options
