@@ -32,18 +32,7 @@ class Parameter extends CI_Controller
 
 		$this->load->view('parameter/list_batchtype');
 	}
-
-
-	public function reference() {
-        $title = "Reference";
-        //BreadCrumb
-        $bc = array($this->head,$title);
-        $this->breadcrumb = getBreadcrumb($bc);
-
-		$result['result'] = $this->cm->getPglList();
-        $result['product'] = $this->M_param->getParamProducts();
-		$this->load->view('parameter/reference');
-	}
+    
 
 	public function attribute_type() {
 
