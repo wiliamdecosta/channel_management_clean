@@ -32,7 +32,7 @@ class Parameter extends CI_Controller
 
 		$this->load->view('parameter/list_batchtype');
 	}
-    
+
 
 	public function attribute_type() {
 
