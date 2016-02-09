@@ -409,7 +409,170 @@ class CI_DB_driver {
 
 		return $RES;
 	}
+    
+    
+    function query_custom($sql, $binds = FALSE, $return_object = TRUE)
+	{
+		if ($sql == '')
+		{
+			if ($this->db_debug)
+			{
+				log_message('error', 'Invalid query: '.$sql);
+				return $this->display_error_custom('db_invalid_query');
+			}
+			return FALSE;
+		}
 
+		// Verify table prefix and replace if necessary
+		if ( ($this->dbprefix != '' AND $this->swap_pre != '') AND ($this->dbprefix != $this->swap_pre) )
+		{
+			$sql = preg_replace("/(\W)".$this->swap_pre."(\S+?)/", "\\1".$this->dbprefix."\\2", $sql);
+		}
+
+		// Is query caching enabled?  If the query is a "read type"
+		// we will load the caching class and return the previously
+		// cached query if it exists
+		if ($this->cache_on == TRUE AND stristr($sql, 'SELECT'))
+		{
+			if ($this->_cache_init())
+			{
+				$this->load_rdriver();
+				if (FALSE !== ($cache = $this->CACHE->read($sql)))
+				{
+					return $cache;
+				}
+			}
+		}
+
+		// Compile binds if needed
+		if ($binds !== FALSE)
+		{
+			$sql = $this->compile_binds($sql, $binds);
+		}
+
+		// Save the  query for debugging
+		if ($this->save_queries == TRUE)
+		{
+			$this->queries[] = $sql;
+		}
+
+		// Start the Query Timer
+		$time_start = list($sm, $ss) = explode(' ', microtime());
+
+		// Run the Query
+		if (FALSE === ($this->result_id = $this->simple_query($sql)))
+		{
+			if ($this->save_queries == TRUE)
+			{
+				$this->query_times[] = 0;
+			}
+
+			// This will trigger a rollback if transactions are being used
+			$this->_trans_status = FALSE;
+
+			if ($this->db_debug)
+			{
+				// grab the error number and message now, as we might run some
+				// additional queries before displaying the error
+				$error_no = $this->_error_number();
+				$error_msg = $this->_error_message();
+
+				// We call this function in order to roll-back queries
+				// if transactions are enabled.  If we don't call this here
+				// the error message will trigger an exit, causing the
+				// transactions to remain in limbo.
+				$this->trans_complete();
+
+				// Log and display errors
+				log_message('error', 'Query error: '.$error_msg);
+				return $this->display_error_custom(
+										array(
+												'Error Number: '.$error_no,
+												$error_msg,
+												$sql
+											)
+										);
+			}
+
+			return FALSE;
+		}
+
+		// Stop and aggregate the query time results
+		$time_end = list($em, $es) = explode(' ', microtime());
+		$this->benchmark += ($em + $es) - ($sm + $ss);
+
+		if ($this->save_queries == TRUE)
+		{
+			$this->query_times[] = ($em + $es) - ($sm + $ss);
+		}
+
+		// Increment the query counter
+		$this->query_count++;
+
+		// Was the query a "write" type?
+		// If so we'll simply return true
+		if ($this->is_write_type($sql) === TRUE)
+		{
+			// If caching is enabled we'll auto-cleanup any
+			// existing files related to this particular URI
+			if ($this->cache_on == TRUE AND $this->cache_autodel == TRUE AND $this->_cache_init())
+			{
+				$this->CACHE->delete();
+			}
+
+			return TRUE;
+		}
+
+		// Return TRUE if we don't need to create a result object
+		// Currently only the Oracle driver uses this when stored
+		// procedures are used
+		if ($return_object !== TRUE)
+		{
+			return TRUE;
+		}
+
+		// Load and instantiate the result driver
+
+		$driver			= $this->load_rdriver();
+		$RES			= new $driver();
+		$RES->conn_id	= $this->conn_id;
+		$RES->result_id	= $this->result_id;
+
+		if ($this->dbdriver == 'oci8')
+		{
+			$RES->stmt_id		= $this->stmt_id;
+			$RES->curs_id		= NULL;
+			$RES->limit_used	= $this->limit_used;
+			$this->stmt_id		= FALSE;
+		}
+
+		// oci8 vars must be set before calling this
+		$RES->num_rows	= $RES->num_rows();
+
+		// Is query caching enabled?  If so, we'll serialize the
+		// result object and save it to a cache file.
+		if ($this->cache_on == TRUE AND $this->_cache_init())
+		{
+			// We'll create a new instance of the result object
+			// only without the platform specific driver since
+			// we can't use it with cached data (the query result
+			// resource ID won't be any good once we've cached the
+			// result object, so we'll have to compile the data
+			// and save it)
+			$CR = new CI_DB_result();
+			$CR->num_rows		= $RES->num_rows();
+			$CR->result_object	= $RES->result_object();
+			$CR->result_array	= $RES->result_array();
+
+			// Reset these since cached objects can not utilize resource IDs.
+			$CR->conn_id		= NULL;
+			$CR->result_id		= NULL;
+
+			$this->CACHE->write($sql, $CR);
+		}
+
+		return $RES;
+	}
 	// --------------------------------------------------------------------
 
 	/**
@@ -1191,7 +1354,45 @@ class CI_DB_driver {
 		echo $error->show_error($heading, $message, 'error_db');
 		exit;
 	}
+    
+    
+    function display_error_custom($error = '', $swap = '', $native = FALSE)
+	{
+		$LANG =& load_class('Lang', 'core');
+		$LANG->load('db');
 
+		$heading = $LANG->line('db_error_heading');
+
+		if ($native == TRUE)
+		{
+			$message = $error;
+		}
+		else
+		{
+			$message = ( ! is_array($error)) ? array(str_replace('%s', $swap, $LANG->line($error))) : $error;
+		}
+
+		// Find the most likely culprit of the error by going through
+		// the backtrace until the source file is no longer in the
+		// database folder.
+
+		$trace = debug_backtrace();
+
+		foreach ($trace as $call)
+		{
+			if (isset($call['file']) && strpos($call['file'], BASEPATH.'database') === FALSE)
+			{
+				// Found it - use a relative path for safety
+				$message[] = 'Filename: '.str_replace(array(BASEPATH, APPPATH), '', $call['file']);
+				$message[] = 'Line Number: '.$call['line'];
+
+				break;
+			}
+		}
+
+		$error =& load_class('Exceptions', 'core');
+		return $error->show_error_custom($heading, $message, 'error_db');
+	}
 	// --------------------------------------------------------------------
 
 	/**
