@@ -117,6 +117,10 @@ class M_admin extends CI_Model {
                 $this->db->query($qs);
                 break;
             case 'del':
+                
+                $this->db->where($key,$id_);
+                $this->db->delete('P_USER_ATTRIBUTE');
+                
                 $this->db->where($key,$id_);
                 $this->db->delete($table);
                 break;
