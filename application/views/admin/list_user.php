@@ -10,9 +10,139 @@
         <table id="grid-table"></table>
         <div id="grid-pager"></div>
     </div><!-- /.row -->
+    
+    <div class="row" id="user_attribute_row_content" style="margin-top:20px;display:none;">
+    	<div class="col-xs-12">
+    	    <div class="well well-sm"> <h4 class="blue" id="user_attribute_title"> User Attribute </h4></div>
+    		<!-- PAGE CONTENT BEGINS -->
+    		<div class="row">
+    		    <div class="col-xs-12">
+    		        <div id="user_attribute_button_group" style="display:inline-block;float:left;">
+    		            <input id="form_user_id" type="text" style="display:none;" placeholder="User ID">
+    		            <button class="btn btn-xs btn-success btn-round" id="user_attribute_btn_add">
+    						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>
+    					    Add
+    					</button>
+    
+    					<button class="btn btn-xs btn-danger btn-round" id="user_attribute_btn_delete">
+    						<i class="ace-icon glyphicon glyphicon-trash bigger-120"></i>
+    						Delete
+    					</button>
+    				</div>
+                    <div class="col-xs-12">
+    		        <table id="user_attribute_grid_selection" class="table table-striped table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th data-identifier="true" data-visible="false" data-header-align="center" data-align="center" data-column-id="P_USER_ATTRIBUTE_ID"> ID User Attribute</th>
+                         <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
+                         <th data-column-id="TYPE_CODE">Type Code</th>
+                         <th data-column-id="LIST_CODE">List Code</th>
+                         <th data-column-id="LIST_NAME">List Name</th>
+                         <th data-column-id="USER_ATTRIBUTE_VALUE">Value</th>
+                         <th data-column-id="VALID_FROM">Valid From</th>
+                         <th data-column-id="VALID_TO">Valid To</th>
+                         <th data-column-id="DESCRIPTION"> Description </th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+    		    </div>
+    	    </div>
+            <!-- PAGE CONTENT ENDS -->
+    	</div><!-- /.col -->
+    </div><!-- /.row -->
+	
+	<?php $this->load->view('parameter/user_attribute_add_edit.php'); ?>
+	
 </div><!-- /.page-content -->
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        
+        $("#user_attribute_btn_add").on(ace.click_event, function() {
+            user_attribute_show_form_add();
+        });
+
+        $("#user_attribute_btn_delete").on(ace.click_event, function(){
+            if($("#user_attribute_grid_selection").bootgrid("getSelectedRows") == "") {
+                showBootDialog(true, BootstrapDialog.TYPE_INFO, 'Information', 'Tidak ada data yang dihapus');
+            }else {
+                user_attribute_delete_records( $("#user_attribute_grid_selection").bootgrid("getSelectedRows") );
+            }
+        });
+        
+    });
+    
+    function user_attribute_delete_records(theID) {
+        BootstrapDialog.confirm({
+            type: BootstrapDialog.TYPE_WARNING,
+		    title:'Delete Confirmation',
+		    message: 'Apakah Anda yakin untuk menghapus data tersebut ?',
+		    btnCancelLabel: 'Cancel',
+            btnOKLabel: 'Yes, Delete',
+		    callback: function(result) {
+    	        if(result) {
+    	            $.post( "<?php echo site_url('User_attribute/crudUserAttribute/destroy');?>",
+            		    { items: JSON.stringify(theID) },
+                        function( response ) {
+                            var response = JSON.parse(response);
+                            if(response.success == false) {
+                	            showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                	        }else {
+                    	        showBootDialog(true, BootstrapDialog.TYPE_SUCCESS, 'Information', response.message);
+                    	        user_attribute_prepare_table($("#form_user_id").val());
+                            }
+                        }
+                	);
+    	        }
+		    }
+        });
+    }	
+    
+    function user_attribute_prepare_table(user_id) {
+        
+        $("#form_user_id").val(user_id);
+        $("#user_attribute_grid_selection").bootgrid("destroy");
+        $("#user_attribute_grid_selection").bootgrid({
+    	     formatters: {
+                "opt-edit" : function(col, row) {
+                    return '<a href="#user_attribute_form_add_edit" title="Edit" onclick="user_attribute_show_form_edit(\''+ row.P_USER_ATTRIBUTE_ID +'\')" class="blue"><i class="ace-icon fa fa-pencil bigger-130"></i></a> &nbsp; <a href="#user_attribute_form_add_edit" title="Delete" onclick="user_attribute_delete_records(\''+ row.P_USER_ATTRIBUTE_ID +'\')" class="red"><i class="ace-icon glyphicon glyphicon-trash bigger-130"></i></a>';
+                }
+             },
+    	     rowCount:[5,10,20],
+    		 ajax: true,
+    	     requestHandler:function(request) {
+    	        if(request.sort) {
+    	            var sortby = Object.keys(request.sort)[0];
+    	            request.dir = request.sort[sortby];
+
+    	            delete request.sort;
+    	            request.sort = sortby;
+    	        }
+    	        return request;
+    	     },
+    	     responseHandler:function (response) {
+    	        if(response.success == false) {
+    	            alert(response.message);
+    	        }
+    	        return response;
+    	     },
+       	     url: "<?php echo site_url('User_attribute/gridUserAttribute');?>",
+       	     post: function () {
+    	         return { user_id : user_id };
+    	     },
+    	     selection: true,
+    	     multiSelect: true,
+    	     sorting:true,
+    	     rowSelect:true
+    	});
+    	
+    	$("#user_attribute_grid_selection").bootgrid().on("loaded.rs.jquery.bootgrid", function (e){
+           $("#user_attribute_row_content").slideDown("fast", function(){});
+        });
+        
+    }
+    
     $(document).ready(function () {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
@@ -70,8 +200,11 @@
             multiboxonly: true,
             onSelectRow: function (rowid) {
                 var celValue = $('#grid-table').jqGrid('getCell', rowid, 'USER_ID');
-                alert(celValue);    
-                    
+                var uname = $('#grid-table').jqGrid('getCell', rowid, 'USER_NAME');
+                
+                user_attribute_toggle_main_content();
+                $('#user_attribute_title').text("USER ATTRIBUTE :: " +uname);
+                user_attribute_prepare_table(celValue);
             },
             onSortCol: clearSelection,
             onPaging: clearSelection,
@@ -169,7 +302,9 @@
             },
             onClick: function (e) {
                 //alert(1);
-            }
+            },
+            msg: 'Penghapusan terhadap data User akan secara otomatis menghapus data User Attribute yang berkaitan.<br>Apakah Anda yakin menghapus data tersebut?',
+            width: '400px'
         },
         {
             //search form
