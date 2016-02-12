@@ -176,10 +176,21 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/bootgrid/jquery.bootgrid.css" />
 <script src="<?php echo base_url();?>assets/bootgrid/jquery.bootgrid.min.js"></script>
 
+<link rel="stylesheet" href="<?php echo base_url();?>assets/bootdialog/bootstrap-dialog.min.css" />
+<script src="<?php echo base_url();?>assets/bootdialog/bootstrap-dialog.min.js"></script>
+<script>
+    function showBootDialog(bootclosable, boottype, boottitle, bootmessage ) {
+        BootstrapDialog.show({
+            closable: bootclosable,
+            type: boottype,
+        	title: boottitle,
+        	message: bootmessage
+        });
+    }
+    
+</script>
 
 <script src="<?php echo base_url();?>assets/js/lov.js"></script>
-
-
 
 </body>
 </html>
