@@ -120,7 +120,7 @@ class User_attribute extends CI_Controller {
             case 'create' :
                 try {
                     $new_id = gen_id('P_USER_ATTRIBUTE_ID','P_USER_ATTRIBUTE');
-                    $this->db->query(
+                    $db_result = $this->db->query_custom(
                         "INSERT INTO P_USER_ATTRIBUTE(P_USER_ATTRIBUTE_ID, USER_ID, P_USER_ATTRIBUTE_TYPE_ID, P_USER_ATTRIBUTE_LIST_ID, USER_ATTRIBUTE_VALUE, VALID_FROM, VALID_TO, DESCRIPTION, CREATION_DATE, CREATED_BY, UPDATED_DATE, UPDATED_BY)
                         VALUES(".$new_id.",
                         ".$items['USER_ID'].",
@@ -136,8 +136,13 @@ class User_attribute extends CI_Controller {
                         '".$this->session->userdata('d_user_name')."'
                         )"
                     );
+                    
+                    if($db_result != 1) {
+                        throw new Exception('Terjadi Duplikasi Data');    
+                    }
+                                                                        
                     $result['success'] = true;
-                    $result['message'] = 'Insert User Attribute Berhasil';
+                    $result['message'] = 'Data User Attribute Berhasil Ditambahkan';
                 }catch(Exception $e) {
                     $result['success'] = false;
                     $result['message'] = $e->getMessage();
@@ -147,7 +152,7 @@ class User_attribute extends CI_Controller {
             case 'update':
                 try {
                     
-                    $this->db->query(
+                    $db_result = $this->db->query_custom(
                         "UPDATE P_USER_ATTRIBUTE
                             SET P_USER_ATTRIBUTE_TYPE_ID = ".$items['P_USER_ATTRIBUTE_TYPE_ID'].",
                             P_USER_ATTRIBUTE_LIST_ID = ".(empty($items['P_USER_ATTRIBUTE_LIST_ID']) ? "NULL" : $items['P_USER_ATTRIBUTE_LIST_ID']).",
@@ -159,8 +164,13 @@ class User_attribute extends CI_Controller {
                             UPDATED_BY = '".$this->session->userdata('d_user_name')."'
                          WHERE P_USER_ATTRIBUTE_ID = ".$items['P_USER_ATTRIBUTE_ID']."
                     ");
+                    
+                    if($db_result != 1) {
+                        throw new Exception('Terjadi Duplikasi Data');
+                    }
+                    
                     $result['success'] = true;
-                    $result['message'] = 'Update User Attribute Berhasil';
+                    $result['message'] = 'Data User Attribute Berhasil Diupdate';
                 }catch (Exception $e) {
                     $result['success'] = false;
                     $result['message'] = $e->getMessage();
