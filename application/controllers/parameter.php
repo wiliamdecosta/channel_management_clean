@@ -15,43 +15,47 @@ class Parameter extends CI_Controller
         $this->load->model('M_tenant');
         $this->load->model('M_jqGrid', 'jqGrid');
         $this->load->model('M_parameter');
+        $this->load->model('Mfee');
     }
 
 
-	public function index()
-	{
-		redirect("/");
-	}
+    public function index()
+    {
+        redirect("/");
+    }
 
-	public function batchType() {
+    public function batchType()
+    {
 
         $title = "Batch Type";
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-		$this->load->view('parameter/list_batchtype');
-	}
+        $this->load->view('parameter/list_batchtype');
+    }
 
 
-	public function attribute_type() {
+    public function attribute_type()
+    {
 
         $title = "Attribute Type";
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-		$this->load->view('parameter/attribute_type');
-	}
+        $this->load->view('parameter/attribute_type');
+    }
 
-    public function mitra() {
+    public function mitra()
+    {
         $title = "Mitra";
         //BreadCrumb
-        $bc = array($this->head,$title);
+        $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-		$this->load->view('parameter/mitra');
-	}
+        $this->load->view('parameter/mitra');
+    }
 
 
     public function gridBatchType()
@@ -379,8 +383,8 @@ class Parameter extends CI_Controller
 
         $count = $this->jqGrid->countAll($req_param);
 
-        if( $count >0 ) {
-            $total_pages = ceil($count/$limit);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
         } else {
             $total_pages = 0;
         }
@@ -402,7 +406,8 @@ class Parameter extends CI_Controller
 
     }
 
-    public function crud_user_attribute_type(){
+    public function crud_user_attribute_type()
+    {
         $this->M_parameter->crud_user_attribute_type();
     }
 
@@ -470,7 +475,8 @@ class Parameter extends CI_Controller
 
     }
 
-	public function crud_user_attribute_list(){
+    public function crud_user_attribute_list()
+    {
         $this->M_parameter->crud_user_attribute_list();
     }
 
@@ -542,7 +548,8 @@ class Parameter extends CI_Controller
 
     }
 
-	public function crud_reference(){
+    public function crud_reference()
+    {
         $this->M_parameter->crud_reference();
     }
 
@@ -609,32 +616,34 @@ class Parameter extends CI_Controller
 
     }
 
-	public function crud_reference_list(){
+    public function crud_reference_list()
+    {
         $this->M_parameter->crud_reference_list();
     }
 
 
-	public function gridCustPGL() {
-        $page = intval($_REQUEST['page']) ;
-        $limit = $_REQUEST['rows'] ;
-        $sidx = $_REQUEST['sidx'] ;
-        $sord = $_REQUEST['sord'] ;
+    public function gridCustPGL()
+    {
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
 
         $table = "CUST_PGL";
 
-        $req_param = array (
+        $req_param = array(
             "table" => $table,
             "sort_by" => $sidx,
             "sord" => $sord,
             "limit" => null,
             "field" => null,
-			"where" => null,
-			"where_in" => null,
-			"where_not_in" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
             "search" => $_REQUEST['_search'],
-            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
-            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
-            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
         );
 
         //$req_param['field'] = array();
@@ -642,14 +651,14 @@ class Parameter extends CI_Controller
 
         $count = $this->jqGrid->countAll($req_param);
 
-        if( $count >0 ) {
-            $total_pages = ceil($count/$limit);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
         } else {
             $total_pages = 0;
         }
         if ($page > $total_pages)
             $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
 
         $req_param['limit'] = array(
             'start' => $start,
@@ -665,52 +674,54 @@ class Parameter extends CI_Controller
 
     }
 
-    public function crud_cust_pgl(){
-       $this->M_parameter->crud_cust_pgl();
+    public function crud_cust_pgl()
+    {
+        $this->M_parameter->crud_cust_pgl();
     }
 
 
-	public function gridCustTEN() {
-		$id = $this->input->post('parent_id');
-        $page = intval($_REQUEST['page']) ;
-        $limit = $_REQUEST['rows'] ;
-        $sidx = $_REQUEST['sidx'] ;
-        $sord = $_REQUEST['sord'] ;
+    public function gridCustTEN()
+    {
+        $id = $this->input->post('parent_id');
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
 
         $table = "SELECT a.TEN_ID, a.NCLI, a.TEN_NAME, a.TEN_ADDR, a.TEN_CONTACT_NO, b.PGL_ID
                     FROM CUST_TEN a
                     LEFT JOIN PGL_TEN b ON a.TEN_ID = b.TEN_ID";
 
-        $req_param = array (
+        $req_param = array(
             "table" => $table,
             "sort_by" => $sidx,
             "sord" => $sord,
             "limit" => null,
             "field" => null,
-			"where" => null,
-			"where_in" => null,
-			"where_not_in" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
             "search" => $_REQUEST['_search'],
-            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
-            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
-            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
         );
 
-		// Filter Table *
-        $req_param['where'] = array('b.PGL_ID = '.$id);
+        // Filter Table *
+        $req_param['where'] = array('b.PGL_ID = ' . $id);
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
-		//print_r($row);exit;
+        //print_r($row);exit;
         //$count = count($row);
 
-        if( $count >0 ) {
-            $total_pages = ceil($count/$limit);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
         } else {
             $total_pages = 0;
         }
         if ($page > $total_pages)
             $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
 
         $req_param['limit'] = array(
             'start' => $start,
@@ -718,12 +729,12 @@ class Parameter extends CI_Controller
         );
 
 
-		if ($page == 0) {
+        if ($page == 0) {
             $result['page'] = 1;
         } else {
             $result['page'] = $page;
         }
-		//$result['page'] = $page;
+        //$result['page'] = $page;
         $result['total'] = $total_pages;
         $result['records'] = $count;
 
@@ -733,53 +744,55 @@ class Parameter extends CI_Controller
 
     }
 
-    public function crud_cust_ten(){
-       $this->M_parameter->crud_cust_ten();
+    public function crud_cust_ten()
+    {
+        $this->M_parameter->crud_cust_ten();
     }
 
-    public function gridTenND() {
-		
-		$id = $this->input->post('parent_id');
-        $page = intval($_REQUEST['page']) ;
-        $limit = $_REQUEST['rows'] ;
-        $sidx = $_REQUEST['sidx'] ;
-        $sord = $_REQUEST['sord'] ;
+    public function gridTenND()
+    {
+
+        $id = $this->input->post('parent_id');
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
 
         $table = "TEN_ND";
 
-        $req_param = array (
+        $req_param = array(
             "table" => $table,
             "sort_by" => $sidx,
             "sord" => $sord,
             "limit" => null,
             "field" => null,
-			"where" => null,
-			"where_in" => null,
-			"where_not_in" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
             "search" => $_REQUEST['_search'],
-            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
-            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
-            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
         );
 
-		// Filter Table *
+        // Filter Table *
         $req_param['where'] = array('TEN_ID' => $id);
 
         //$req_param['field'] = array();
         //$req_param['value'] = array();
 
         $count = $this->jqGrid->countAll($req_param);
-		//print_r($row);exit;
+        //print_r($row);exit;
         //$count = count($row);
 
-        if( $count >0 ) {
-            $total_pages = ceil($count/$limit);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
         } else {
             $total_pages = 0;
         }
         if ($page > $total_pages)
             $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
 
         $req_param['limit'] = array(
             'start' => $start,
@@ -787,12 +800,12 @@ class Parameter extends CI_Controller
         );
 
         $this->parent_id = $id;
-		if ($page == 0) {
+        if ($page == 0) {
             $result['page'] = 1;
         } else {
             $result['page'] = $page;
         }
-		//$result['page'] = $page;
+        //$result['page'] = $page;
         $result['total'] = $total_pages;
         $result['records'] = $count;
 
@@ -800,20 +813,21 @@ class Parameter extends CI_Controller
         echo json_encode($result);
 
     }
-    
-	//PIC
-	public function pic() {
+
+    //PIC
+    public function pic()
+    {
 
         $title = "PIC";
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-		$result['result'] = $this->cm->getPglList();
+        $result['result'] = $this->cm->getPglList();
         $result['product'] = $this->M_param->getParamProducts();
 
-		$this->load->view('parameter/pic');
-	}
+        $this->load->view('parameter/pic');
+    }
 
 
     public function gridPic()
@@ -870,23 +884,25 @@ class Parameter extends CI_Controller
 
     }
 
-	public function crud_pic(){
+    public function crud_pic()
+    {
         $this->M_parameter->crud_pic();
     }
 
 
-	//DAT_AM
-	public function DAT_AM() {
+    //DAT_AM
+    public function DAT_AM()
+    {
         $title = "AM";
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-		$result['result'] = $this->cm->getPglList();
+        $result['result'] = $this->cm->getPglList();
         $result['product'] = $this->M_param->getParamProducts();
 
-		$this->load->view('parameter/dat_am');
-	}
+        $this->load->view('parameter/dat_am');
+    }
 
 
     public function gridDAT_AM()
@@ -945,7 +961,8 @@ class Parameter extends CI_Controller
     }
 
 
-	public function crud_DAT_AM(){
+    public function crud_DAT_AM()
+    {
         $this->M_parameter->crud_DAT_AM();
     }
 
@@ -1156,16 +1173,11 @@ class Parameter extends CI_Controller
                 'CREATED_DATE' => date('d/M/Y'),
                 'CREATED_BY' => $this->session->userdata('d_user_name')
             );
-            $db_debug = FALSE;
-            $this->M_parameter->insertParam($data);
-            //print_r($this->db->error());
-           // exit();
-//            if($this->db->_error_message()){
-//                print_r("ada error");
-//                exit();
-//            }
 
-
+            $check = $this->Mfee->checkDuplicateND($ten_id,$nd);
+            if($check == 0){
+                $this->M_parameter->insertFastel($data);
+            }
         }
 
         $data['success'] = true;

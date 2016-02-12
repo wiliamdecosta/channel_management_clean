@@ -144,26 +144,27 @@ class M_parameter extends CI_Model
         $id_ = $this->input->post('id');
 
         $result = array();
-        
+
         switch ($oper) {
             case 'add':
                 try {
-                    $new_id = gen_id('P_USER_ATTRIBUTE_TYPE_ID','P_USER_ATTRIBUTE_TYPE');
+                    $new_id = gen_id('P_USER_ATTRIBUTE_TYPE_ID', 'P_USER_ATTRIBUTE_TYPE');
                     $db_result = $this->db->query_custom("INSERT INTO P_USER_ATTRIBUTE_TYPE(P_USER_ATTRIBUTE_TYPE_ID,CODE,VALID_FROM,VALID_TO, DESCRIPTION,CREATION_DATE,CREATED_BY,UPDATED_DATE,UPDATED_BY)
                                         VALUES($new_id,
-                                                '".$this->input->post('CODE')."',
-                                                to_date('".$this->input->post('VALID_FROM')."','dd/mm/yyyy'),
-                                                to_date('".$this->input->post('VALID_TO')."','dd/mm/yyyy'),
-                                                '".$this->input->post('DESCRIPTION')."',
+                                                '" . $this->input->post('CODE') . "',
+                                                to_date('" . $this->input->post('VALID_FROM') . "','dd/mm/yyyy'),
+                                                to_date('" . $this->input->post('VALID_TO') . "','dd/mm/yyyy'),
+                                                '" . $this->input->post('DESCRIPTION') . "',
                                                 SYSDATE,
-                                                '".$this->session->userdata('d_user_name')."',
+                                                '" . $this->session->userdata('d_user_name') . "',
                                                 SYSDATE,
-                                                '".$this->session->userdata('d_user_name')."'
+                                                '" . $this->session->userdata('d_user_name') . "'
                                                 )");
-                                            
-                     
-                     if($db_result != 1) {
+
+
+                    if ($db_result != 1) {
                         throw new Exception('Terjadi duplikasi data');
+
                      }
                      
                      $result['success'] = true;
@@ -172,7 +173,7 @@ class M_parameter extends CI_Model
                     $result['success'] = false;
                     $result['message'] = $e->getMessage();
                 }
-                
+
                 echo json_encode($result);
                 exit;
 
@@ -207,11 +208,11 @@ class M_parameter extends CI_Model
             case 'del':
                 $this->db->where('P_USER_ATTRIBUTE_TYPE_ID', $id_);
                 $this->db->delete('P_USER_ATTRIBUTE');
-                
-                $this->db->where('P_USER_ATTRIBUTE_TYPE_ID',$id_);
+
+                $this->db->where('P_USER_ATTRIBUTE_TYPE_ID', $id_);
                 $this->db->delete('P_USER_ATTRIBUTE_LIST');
-                
-                $this->db->where('P_USER_ATTRIBUTE_TYPE_ID',$id_);
+
+                $this->db->where('P_USER_ATTRIBUTE_TYPE_ID', $id_);
                 $this->db->delete('P_USER_ATTRIBUTE_TYPE');
                 break;
         }
@@ -292,20 +293,21 @@ class M_parameter extends CI_Model
             case 'del':
                 $this->db->where('P_USER_ATTRIBUTE_LIST_ID', $id_);
                 $this->db->delete('P_USER_ATTRIBUTE');
-                
-                $this->db->where('P_USER_ATTRIBUTE_LIST_ID',$id_);
+
+                $this->db->where('P_USER_ATTRIBUTE_LIST_ID', $id_);
                 $this->db->delete('P_USER_ATTRIBUTE_LIST');
-                
+
                 break;
         }
 
     }
 
-	
-	function crud_cust_pgl(){
+
+    function crud_cust_pgl()
+    {
         $oper = $this->input->post('oper');
         $id_ = $this->input->post('id');
-        
+
         switch ($oper) {
             case 'add':
                 try {
@@ -358,66 +360,68 @@ class M_parameter extends CI_Model
                 
                 break;
             case 'del':
-               
-                $this->db->where('PGL_ID',$id_);
+
+                $this->db->where('PGL_ID', $id_);
                 $this->db->delete('PGL_TEN');
-                
-                $this->db->where('PGL_ID',$id_);
+
+                $this->db->where('PGL_ID', $id_);
                 $this->db->delete('CUST_PGL');
                 break;
         }
 
-    }	
-        
-    
-    function crud_cust_ten(){
-        
+    }
+
+
+    function crud_cust_ten()
+    {
+
         $parent_id = $this->input->post('PARENT_ID');
         $oper = $this->input->post('oper');
         $id_ = $this->input->post('id');
-        
+
         switch ($oper) {
             case 'add':
-                $new_id = gen_id('TEN_ID','CUST_TEN');
+                $new_id = gen_id('TEN_ID', 'CUST_TEN');
                 $this->db->query("INSERT INTO CUST_TEN(TEN_ID,NCLI,TEN_NAME,TEN_ADDR,TEN_CONTACT_NO)
                                     VALUES($new_id,
-                                            '".$this->input->post('NCLI')."',
-                                            '".$this->input->post('TEN_NAME')."',
-                                            '".$this->input->post('TEN_ADDR')."',
-                                            '".$this->input->post('TEN_CONTACT_NO')."')");
-                                            
-                                            
-                $this->db->query("INSERT INTO PGL_TEN(PGL_ID, TEN_ID) VALUES(".$parent_id.",".$new_id.")");                            
+                                            '" . $this->input->post('NCLI') . "',
+                                            '" . $this->input->post('TEN_NAME') . "',
+                                            '" . $this->input->post('TEN_ADDR') . "',
+                                            '" . $this->input->post('TEN_CONTACT_NO') . "')");
+
+
+                $this->db->query("INSERT INTO PGL_TEN(PGL_ID, TEN_ID) VALUES(" . $parent_id . "," . $new_id . ")");
                 break;
             case 'edit':
                 $this->db->query("UPDATE CUST_TEN SET
-                                    NCLI = '".$this->input->post('NCLI')."',
-                                    TEN_NAME = '".$this->input->post('TEN_NAME')."',
-                                    TEN_ADDR = '".$this->input->post('TEN_ADDR')."',
-                                    TEN_CONTACT_NO = '".$this->input->post('TEN_CONTACT_NO')."'
-                                    WHERE TEN_ID = ".$id_ );
+                                    NCLI = '" . $this->input->post('NCLI') . "',
+                                    TEN_NAME = '" . $this->input->post('TEN_NAME') . "',
+                                    TEN_ADDR = '" . $this->input->post('TEN_ADDR') . "',
+                                    TEN_CONTACT_NO = '" . $this->input->post('TEN_CONTACT_NO') . "'
+                                    WHERE TEN_ID = " . $id_);
                 break;
             case 'del':
-                
-                $this->db->where('TEN_ID',$id_);
+
+                $this->db->where('TEN_ID', $id_);
                 $this->db->delete('PGL_TEN');
-                
-                $this->db->where('TEN_ID',$id_);
+
+                $this->db->where('TEN_ID', $id_);
                 $this->db->delete('TEN_ND');
-                
-                $this->db->where('TEN_ID',$id_);
+
+                $this->db->where('TEN_ID', $id_);
                 $this->db->delete('TEN_ND_NONPOTS');
-                
-                $this->db->where('TEN_ID',$id_);
+
+                $this->db->where('TEN_ID', $id_);
                 $this->db->delete('CUST_TEN');
                 break;
         }
 
     }
-    
-	function crud_pic(){
-        $oper=$this->input->post('oper');
-        $id_=$this->input->post('id');
+
+    function crud_pic()
+    {
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
 
         $array_edit = array('PIC_NAME' => $this->input->post('PIC_NAME'),
             'JABATAN' => $this->input->post('JABATAN'),
@@ -624,13 +628,11 @@ class M_parameter extends CI_Model
 
     }
 
-    public function insertParam($data)
+    public function insertFastel($data)
     {
-        $q = $this->db->insert('TEN_ND', $data);
-        if (!$q) {
-            $this->db->_error_message();
-            $this->db->_error_number();
-        }
+        $this->db->_protect_identifiers = false;
+        $this->db->insert('TEN_ND', $data);
+        return $this->db->affected_rows();
     }
 
     public function deleteFastelByTenant($ten_id)

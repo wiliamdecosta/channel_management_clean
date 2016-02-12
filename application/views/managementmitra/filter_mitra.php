@@ -97,7 +97,7 @@
                 <li class="tab" id="dokNPK">
                     <a href="javascript:void(0)">Dokumen NPK</a>
                 </li>
-                <li class="tab" id="fastel">
+                <li class="tab" id="fastels">
                     <a href="javascript:void(0)">Fastel</a>
                 </li>
                 <li class="tab" id="dokKontrak">
@@ -128,7 +128,7 @@
             var mitra = $('#mitra').val();
             //var lokasisewa = $('#lokasisewa option:selected').text();
             var lokasisewa = $('#lokasisewa').val();
-            var data = {ccid:ccid,mitra:mitra,lokasisewa:lokasisewa,segment:segment}
+            var data = {ccid: ccid, mitra: mitra, lokasisewa: lokasisewa, segment: segment}
             if (checkFilter()) {
                 $('.tab').removeClass('active');
                 $('#' + ctrl).addClass('active');
@@ -150,9 +150,9 @@
     });
 </script>
 <script>
-    function checkFilter(){
+    function checkFilter() {
         v_str = "";
-        if($("#segment").val()==""){
+        if ($("#segment").val() == "") {
             v_str += "* Segmen belum dipilih\n";
         }
 //        if($("#list_cc").val()==""){
@@ -165,52 +165,70 @@
 //            v_str += "* Lokasi Sewa belum dipilih\n";
 //        }
 
-        if(v_str!=""){
-            alert(v_str);
+        if (v_str != "") {
+            swal(v_str);
             return false;
         }
-        else{
+        else {
             return true;
         }
     }
 </script>
 <script>
     $(document).ready(function () {
+        function empty_cc() {
+            $('#list_cc').html('<option value=""> Pilih CC </option>');
+        }
+
+        function empty_mitra() {
+            $('#mitra').html('<option value=""> Pilih Mitra </option>');
+        }
+
+        function empty_lokasi() {
+            $('#lokasisewa').html('<option value=""> Pilih Lokasi Sewa </option>');
+        }
+
+//        ----------------------------------------------------------------------------
         $("#segment").change(function () {
+            empty_cc();
+            empty_mitra();
+            empty_lokasi();
             var segmen = $('#segment').val();
             if (segmen) {
                 loadcc();
             } else {
-                $('#list_cc').html('<option value=""> Pilih CC </option>');
+                empty_cc();
+                empty_mitra();
+                empty_lokasi();
             }
-
         });
-    });
-</script>
-<script>
-    $(document).ready(function () {
+//     -----------------------------------------------------------------------------
+
         $("#list_cc").change(function () {
+            empty_mitra();
+            empty_lokasi();
             var list_cc = $('#list_cc').val();
             if (list_cc) {
                 loadmitra();
             } else {
-                $('#mitra').html('<option value=""> Pilih Mitra </option>');
+                empty_mitra();
+                empty_lokasi();
             }
 
         });
-    });
-</script>
-<script>
-    $(document).ready(function () {
+
+//        ------------------------------------------------------------------
         $("#mitra").change(function () {
+            empty_lokasi();
             var mitra = $('#mitra').val();
             if (mitra) {
                 loadlokasi();
             } else {
-                $('#lokasisewa').html('<option value=""> Pilih Lokasi Sewa </option>');
+                empty_lokasi();
             }
 
         });
+
     });
 </script>
 <script type="text/javascript">
@@ -249,12 +267,12 @@
 </script>
 <script type="text/javascript">
     function loadlokasi() {
-        var mitra_name = $("#mitra").val();
+        var mitra = $("#mitra").val();
         $.ajax({
             //async: false,
             url: "<?php echo base_url();?>managementmitra/listLokasiSewa",
             type: "POST",
-            data: {mitra_name: mitra_name},
+            data: {mitra: mitra},
             success: function (data) {
                 $('#lokasisewa').html(data);
 

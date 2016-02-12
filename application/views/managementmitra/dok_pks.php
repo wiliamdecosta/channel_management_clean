@@ -1,152 +1,48 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.custom.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/chosen.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/datepicker.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-timepicker.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/daterangepicker.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datetimepicker.css" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/jquery-ui.custom.css"/>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/chosen.css"/>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/datepicker.css"/>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap-timepicker.css"/>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/daterangepicker.css"/>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap-datetimepicker.css"/>
 
 <div id="dokPKS">
     <form class="form-horizontal" role="form">
         <div class="rows">
             <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">Tanggal PKS  </label>
+                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">Tanggal PKS </label>
                 <div class="col-sm-6">
                     <div class="input-group">
-                        <input class="date-picker col-sm-3" id="start_date" type="text" data-date-format="dd-mm-yyyy" placeholder="Input Date"/>
+                        <input class="date-picker col-sm-3" id="start_date" type="text" data-date-format="dd-mm-yyyy"
+                               placeholder="Input Date"/>
                         <label class="col-sm-1" style="margin-right:10px;"> s/d </label>
-                        <input class="date-picker col-sm-3" id="end_date" type="text" data-date-format="dd-mm-yyyy" placeholder="Input Date"/>
+                        <input class="date-picker col-sm-3" id="end_date" type="text" data-date-format="dd-mm-yyyy"
+                               placeholder="Input Date"/>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">No PKS </label>
                 <div class="col-sm-4">
-                    <input type="text" id="no_pks" placeholder="Di isi Nomor PKS / Amandemen yang aktif terakhit" class="form-control" value=""/>
+                    <input type="text" id="no_pks" placeholder="Di isi Nomor PKS / Amandemen yang aktif terakhit"
+                           class="form-control" value=""/>
                 </div>
             </div>
-            <div class="form-group">
+            <div id="btn_add_update" class="form-group">
                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"></label>
-                <div class="col-xs-11">
-                        <div class="clearfix">
-                        </div>
-                        <div class="table-header">
-                            Dokumen PKS
-                        </div>
-                        <div>
-                            <table id="dynamic-table" class="table table-striped table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th class="center">NO</th>
-                                    <th> Nama Dokumen</th>
-                                    <th> File Path</th>
-                                    <th> Deskripsi</th>
-                                    <th> Update By</th>
-                                    <th> Update Date</th>
-                                    <th> Action </th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                <div class="col-sm-4">
+                    <a id="btn_upload_pks" class="btn btn-white btn-sm btn-round">
+                        <i class="ace-icon fa fa-plus green"></i>
+                        Upload Dokumen
+                    </a>
+                </div>
 
-                                <?php $i = 1;
-                                foreach ($result as $content){
-
-                                    ?>
-                                    <tr>
-                                        <td class="center"><?php echo $i; ?> </td>
-                                        <td>
-                                            <a href="#"><?php echo $content->DOC_NAME; ?></a>
-                                        </td>
-                                        <td> <?php echo $content->FILE_PATH; ?> </td>
-                                        <td> <?php echo $content->DESCRIPTION; ?> </td>
-                                        <td> <?php echo $content->UPDATE_BY; ?> </td>
-                                        <td> <?php echo $content->UPDATE_DATE; ?> </td>
-                                        <td>
-                                            <div class="hidden-sm hidden-xs action-buttons">
-                                                <a class="purple" href="<?php echo site_url('home/download');?>" data-rel="tooltip" data-original-title="Download">
-                                                    <i class="ace-icon fa fa-download bigger-130"></i>
-                                                </a>
-                                                <a class="orange" href="#" data-rel="tooltip" data-original-title="Print" onClick="window.print()">
-                                                    <i class="ace-icon fa fa-print bigger-130"></i>
-                                                </a>
-                                                <a class="blue" href="#" data-rel="tooltip" data-original-title="View">
-                                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
-                                                </a>
-
-                                                <a class="green" href="#" data-rel="tooltip" data-original-title="Edit">
-                                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
-                                                </a>
-
-                                                <a class="red" href="#" data-rel="tooltip" data-original-title="Delete">
-                                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
-                                                </a>
-                                            </div>
-
-                                            <div class="hidden-md hidden-lg">
-                                                <div class="inline pos-rel">
-                                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
-                                                        <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-                                                    </button>
-
-                                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                                                        <li>
-                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="Dwonload">
-																				<span class="blue">
-																					<i class="ace-icon fa fa-download bigger-120">ss</i>
-																				</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="Print">
-																				<span class="blue">
-																					<i class="ace-icon fa fa-search-print bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="View">
-																				<span class="blue">
-																					<i class="ace-icon fa fa-search-plus bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
-
-                                                        <li>
-                                                            <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">
-																				<span class="green">
-																					<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
-
-                                                        <li>
-                                                            <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
-																				<span class="red">
-																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
-																				<span class="red">
-																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php
-                                    $i++;
-                                }
-
-                                ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">&nbsp;</label>
+                <div class="col-sm-11" id="tabel_content">
+                    <table id="grid-table"></table>
+                    <div id="grid-pager"></div>
+                </div>
             </div>
         </div>
     </form>
@@ -154,190 +50,426 @@
 
 <script type="text/javascript">
     $('.date-picker').datepicker({
-        autoclose: true,
-        todayHighlight: true
-    })
+            autoclose: true,
+            todayHighlight: true
+        })
         //show datepicker when clicking on the icon
-        .next().on(ace.click_event, function(){
-            $(this).prev().focus();
-        });
+        .next().on(ace.click_event, function () {
+        $(this).prev().focus();
+    });
 </script>
+<div id="upload_pks">
+</div>
+<!-- #section:basics/content.breadcrumbs -->
+<!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
 <script type="text/javascript">
-jQuery(function($) {
-    //initiate dataTables plugin
-    var oTable1 =
-        $('#dynamic-table')
-            //.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX)
-            .dataTable( {
-            } );
+    $("#btn_upload_pks").click(function () {
+        $.ajax({
+            // async: false,
+            url: "<?php echo base_url();?>managementmitra/modalUploadPKS",
+            type: "POST",
+            data: {upload_param: 1},
+            success: function (data) {
+                $('#upload_pks').html(data);
+                $('#modal_upload_pks').modal('show');
+            }
+        });
+    })
+    $("#update_fastel").click(function () {
+        $.ajax({
+            // async: false,
+            url: "<?php echo base_url();?>parameter/modalUploadFastel",
+            type: "POST",
+            data: {upload_param: 2},
+            success: function (data) {
+                $('#upload_fastel').html(data);
+                $('#modal_upload_fastel').modal('show');
+            }
+        });
+    })
+</script>
 
-    //TableTools settings
-    TableTools.classes.container = "btn-group btn-overlap";
-    TableTools.classes.print = {
-        "body": "DTTT_Print",
-        "info": "tableTools-alert gritter-item-wrapper gritter-info gritter-center white",
-        "message": "tableTools-print-navbar"
+<script type="text/javascript">
+    $(document).ready(function () {
+        var grid_selector = "#grid-table";
+        var pager_selector = "#grid-pager";
+        jQuery("#grid-table").jqGrid({
+            url: '<?php echo site_url('managementmitra/gridPKS');?>',
+            datatype: "json",
+            mtype: "POST",
+            caption: "Dokumen PKS",
+            colModel: [
+                {
+                    label: 'ID',
+                    name: 'P_PKS_ID',
+                    key: true,
+                    width: 200,
+                    sortable: true,
+                    editable: true,
+                    editrules: {required: true},
+                    hidden: true
+                },
+                {
+                    label: 'Nomor PKS',
+                    name: 'NO_PKS',
+                    width: 200,
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+                {
+                    label: 'Nama Dokumen',
+                    name: 'DOC_NAME',
+                    width: 200,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Tanggal Mulai PKS',
+                    name: 'PKS_START_DATE',
+                    width: 120,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Tanggal Berakhir PKS',
+                    name: 'PKS_END_DATE',
+                    width: 120,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'File Path',
+                    name: 'FILE_PATH',
+                    width: 100,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: true,
+                },
+                {
+                    label: 'Tanggal Diubah',
+                    name: 'UPDATE_DATE',
+                    width: 110,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+                {
+                    label: 'Diubah Oleh',
+                    name: 'UPDATE_BY',
+                    width: 110,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+                {
+                    label: 'Action',
+                    width: 70,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        var file_name = rowObject.FILE_PATH;
+//                        return '<a class="ui-icon ace-icon fa fa-download bigger-130 purple" href="<?php //echo site_url('managementmitra/downloadPKS');?>///'+file_name+'" data-original-title="Download" data-rel="tooltip"></a>'
+//                        +'<a class="ui-icon ace-icon fa fa-pencil bigger-130 purple" href="<?php //echo site_url('managementmitra/downloadPKS');?>///'+file_name+'" data-original-title="Download" data-rel="tooltip"></a>';
+                        // <span class="ui-icon ace-icon fa fa-plus-circle purple"></span>
+                        return '<div class="hidden-sm hidden-xs action-buttons">'
+                            + '<a class="purple" href="<?php echo site_url('managementmitra/downloadPKS');?>/'+file_name+'" data-rel="tooltip" data-original-title="Download">'
+                            + ' <i class="ace-icon fa fa-download bigger-130"></i>'
+                            + '</a>'
+//                            + '<a class="orange" href="#" data-rel="tooltip" data-original-title="Print" onClick="window.print()">'
+//                            + ' <i class="ace-icon fa fa-print bigger-130"></i>'
+//                            + '</a>'
+                            + '<a class="blue" href="<?php echo base_url();?>application/third_party/upload/pks/' + file_name + '" target="_blank" data-rel="tooltip" data-original-title="Print">'
+                            + '<i class="ace-icon fa fa-print bigger-130"></i></a>'
+                            + '</div>';
+                    }
+                }
+            ],
+            // width: '100%',
+            height: '100%',
+            scrollOffset: 0,
+            rowNum: 5,
+            viewrecords: true,
+            rowList: [5, 10, 20],
+            sortname: 'P_PKS_ID', // default sorting ID
+            rownumbers: true, // show row numbers
+            rownumWidth: 35, // the width of the row numbers columns
+            sortorder: 'asc',
+            altRows: true,
+            shrinkToFit: false,
+            multiboxonly: true,
+            onSelectRow: function (rowid) {
+
+            }, // use the onSelectRow that is triggered on row click to show a details grid
+            onSortCol: clearSelection,
+            onPaging: clearSelection,
+            //#pager merupakan div id pager
+            pager: '#grid-pager',
+            jsonReader: {
+                root: 'Data',
+                id: 'id',
+                repeatitems: false
+            },
+            loadComplete: function () {
+                $(grid_selector).jqGrid('setGridWidth', $("#tabel_content").width() - 20);
+                $(pager_selector).jqGrid('setGridWidth', $("#tabel_content").width() - 20);
+
+                var table = this;
+                setTimeout(function () {
+                    //  styleCheckbox(table);
+
+                    //  updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+            },
+            editurl: '<?php echo site_url('managementmitra/crud_pks');?>'
+
+
+        });
+    });
+
+    //navButtons grid master
+    jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
+        { 	//navbar options
+            edit: false,
+            excel: true,
+            editicon: 'ace-icon fa fa-pencil blue',
+            add: false,
+            addicon: 'ace-icon fa fa-plus-circle purple',
+            del: true,
+            delicon: 'ace-icon fa fa-trash-o red',
+            search: false,
+            searchicon: 'ace-icon fa fa-search orange',
+            refresh: true,
+            afterRefresh: function () {
+                // some code here
+                jQuery("#detailsPlaceholder").hide();
+            },
+            refreshicon: 'ace-icon fa fa-refresh green',
+            view: false,
+            viewicon: 'ace-icon fa fa-search-plus grey',
+        },
+        {
+            // options for the Edit Dialog
+            closeAfterEdit: true,
+            width: 500,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            recreateForm: true,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                style_edit_form(form);
+            }
+        },
+        {
+            //new record form
+            width: 500,
+            postData: {tes: "aa"},
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            closeAfterAdd: true,
+            recreateForm: true,
+            viewPagerButtons: false,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
+                    .wrapInner('<div class="widget-header" />')
+                style_edit_form(form);
+            },
+            beforeSubmit: function () {
+
+            },
+            onclickSubmit: function () {
+            }
+        },
+        {
+            //delete record form
+            recreateForm: true,
+            // msg : "tes",
+            // width : 700,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                if (form.data('styled')) return false;
+
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                style_delete_form(form);
+
+                form.data('styled', true);
+            }
+        },
+        {
+            //search form
+            // closeAfterSearch: true,
+            recreateForm: true,
+            afterShowSearch: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+                style_search_form(form);
+            }
+
+            ,
+            afterRedraw: function () {
+                style_search_filters($(this));
+            }
+
+//            multipleSearch: true,
+            //           showQuery: true
+            /**
+             multipleGroup:true,
+             showQuery: true
+             */
+        }
+        ,
+        {
+            //view record form
+            recreateForm: true,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+            }
+        }
+    )
+
+
+    function clearSelection() {
+        //jQuery("#jqGridDetails").jqGrid('setGridParam',{url: "empty.json", datatype: 'json'}); // the last setting is for demo purpose only
+        jQuery("#jqGridDetails").jqGrid('setCaption', 'Menu Child ::');
+        jQuery("#jqGridDetails").trigger("reloadGrid");
+
     }
 
-    //initiate TableTools extension
-    var tableTools_obj = new $.fn.dataTable.TableTools( oTable1, {
-        "sSwfPath": "../assets/js/dataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf", //in Ace demo ../assets will be replaced by correct assets path
+    function style_edit_form(form) {
+        //enable datepicker on "sdate" field and switches for "stock" field
+        //  form.find('input[name=VALID_FROM]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
 
-        "sRowSelector": "td:not(:last-child)",
-        "sRowSelect": "multi",
-        "fnRowSelected": function(row) {
-            //check checkbox when row is selected
-            try { $(row).find('input[type=checkbox]').get(0).checked = true }
-            catch(e) {}
-        },
-        "fnRowDeselected": function(row) {
-            //uncheck checkbox
-            try { $(row).find('input[type=checkbox]').get(0).checked = false }
-            catch(e) {}
-        },
-
-        "sSelectedClass": "success",
-        "aButtons": [
-            {
-                "sExtends": "copy",
-                "sToolTip": "Copy to clipboard",
-                "sButtonClass": "btn btn-white btn-primary btn-bold",
-                "sButtonText": "<i class='fa fa-copy bigger-110 pink'></i>",
-                "fnComplete": function() {
-                    this.fnInfo( '<h3 class="no-margin-top smaller">Table copied</h3>\
-									<p>Copied '+(oTable1.fnSettings().fnRecordsTotal())+' row(s) to the clipboard.</p>',
-                        1500
-                    );
-                }
-            },
-
-            {
-                "sExtends": "csv",
-                "sToolTip": "Export to CSV",
-                "sButtonClass": "btn btn-white btn-primary  btn-bold",
-                "sButtonText": "<i class='fa fa-file-excel-o bigger-110 green'></i>"
-            },
-
-            {
-                "sExtends": "pdf",
-                "sToolTip": "Export to PDF",
-                "sButtonClass": "btn btn-white btn-primary  btn-bold",
-                "sButtonText": "<i class='fa fa-file-pdf-o bigger-110 red'></i>"
-            },
-
-            {
-                "sExtends": "print",
-                "sToolTip": "Print view",
-                "sButtonClass": "btn btn-white btn-primary  btn-bold",
-                "sButtonText": "<i class='fa fa-print bigger-110 grey'></i>",
-
-                "sMessage": "<div class='navbar navbar-default'><div class='navbar-header pull-left'><a class='navbar-brand' href='#'><small>Optional Navbar &amp; Text</small></a></div></div>",
-
-                "sInfo": "<h3 class='no-margin-top'>Print view</h3>\
-									  <p>Please use your browser's print function to\
-									  print this table.\
-									  <br />Press <b>escape</b> when finished.</p>"
-            }
-        ]
-    } );
-    //we put a container before our table and append TableTools element to it
-    $(tableTools_obj.fnContainer()).appendTo($('.tableTools-container'));
-
-    //also add tooltips to table tools buttons
-    //addding tooltips directly to "A" buttons results in buttons disappearing (weired! don't know why!)
-    //so we add tooltips to the "DIV" child after it becomes inserted
-    //flash objects inside table tools buttons are inserted with some delay (100ms) (for some reason)
-    setTimeout(function() {
-        $(tableTools_obj.fnContainer()).find('a.DTTT_button').each(function() {
-            var div = $(this).find('> div');
-            if(div.length > 0) div.tooltip({container: 'body'});
-            else $(this).tooltip({container: 'body'});
-        });
-    }, 200);
-
-    //ColVis extension
-    var colvis = new $.fn.dataTable.ColVis( oTable1, {
-        "buttonText": "<i class='fa fa-search'></i>",
-        "aiExclude": [0, 6],
-        "bShowAll": true,
-        //"bRestore": true,
-        "sAlign": "right",
-        "fnLabel": function(i, title, th) {
-            return $(th).text();//remove icons, etc
-        }
-
-    });
-
-    //style it
-    $(colvis.button()).addClass('btn-group').find('button').addClass('btn btn-white btn-info btn-bold')
-
-    //and append it to our table tools btn-group, also add tooltip
-    $(colvis.button())
-        .prependTo('.tableTools-container .btn-group')
-        .attr('title', 'Show/hide columns').tooltip({container: 'body'});
-
-    //and make the list, buttons and checkboxed Ace-like
-    $(colvis.dom.collection)
-        .addClass('dropdown-menu dropdown-light dropdown-caret dropdown-caret-right')
-        .find('li').wrapInner('<a href="javascript:void(0)" />') //'A' tag is required for better styling
-        .find('input[type=checkbox]').addClass('ace').next().addClass('lbl padding-8');
+        form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
+        //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
+        //.addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');
 
 
+        //update buttons classes
+        var buttons = form.next().find('.EditButton .fm-button');
+        buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide();//ui-icon, s-icon
+        buttons.eq(0).addClass('btn-primary').prepend('<i class="ace-icon fa fa-check"></i>');
+        buttons.eq(1).prepend('<i class="ace-icon fa fa-times"></i>')
 
-    /////////////////////////////////
-    //table checkboxes
-    $('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
+        buttons = form.next().find('.navButton a');
+        buttons.find('.ui-icon').hide();
+        buttons.eq(0).append('<i class="ace-icon fa fa-chevron-left"></i>');
+        buttons.eq(1).append('<i class="ace-icon fa fa-chevron-right"></i>');
+    }
 
-    //select/deselect all rows according to table header checkbox
-    $('#dynamic-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-        var th_checked = this.checked;//checkbox inside "TH" table header
+    function style_delete_form(form) {
+        var buttons = form.next().find('.EditButton .fm-button');
+        buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide();//ui-icon, s-icon
+        buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
+        buttons.eq(1).addClass('btn-default').prepend('<i class="ace-icon fa fa-times"></i>')
+    }
 
-        $(this).closest('table').find('tbody > tr').each(function(){
-            var row = this;
-            if(th_checked) tableTools_obj.fnSelect(row);
-            else tableTools_obj.fnDeselect(row);
-        });
-    });
+    function style_search_filters(form) {
+        form.find('.delete-rule').val('X');
+        form.find('.add-rule').addClass('btn btn-xs btn-primary');
+        form.find('.add-group').addClass('btn btn-xs btn-success');
+        form.find('.delete-group').addClass('btn btn-xs btn-danger');
+    }
+    function style_search_form(form) {
+        var dialog = form.closest('.ui-jqdialog');
+        var buttons = dialog.find('.EditTable')
+        buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'ace-icon fa fa-retweet');
+        buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'ace-icon fa fa-comment-o');
+        buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'ace-icon fa fa-search');
+    }
 
-    //select/deselect a row when the checkbox is checked/unchecked
-    $('#dynamic-table').on('click', 'td input[type=checkbox]' , function(){
-        var row = $(this).closest('tr').get(0);
-        if(!this.checked) tableTools_obj.fnSelect(row);
-        else tableTools_obj.fnDeselect($(this).closest('tr').get(0));
-    });
+    function beforeDeleteCallback(e) {
+        var form = $(e[0]);
+        if (form.data('styled')) return false;
 
+        form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+        style_delete_form(form);
 
-    $(document).on('click', '#dynamic-table .dropdown-toggle', function(e) {
-        e.stopImmediatePropagation();
-        e.stopPropagation();
-        e.preventDefault();
-    });
+        form.data('styled', true);
+    }
 
-
-    //And for the first simple table, which doesn't have TableTools or dataTables
-    //select/deselect all rows according to table header checkbox
-    var active_class = 'active';
-    $('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-        var th_checked = this.checked;//checkbox inside "TH" table header
-
-        $(this).closest('table').find('tbody > tr').each(function(){
-            var row = this;
-            if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-            else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-        });
-    });
-
-    //select/deselect a row when the checkbox is checked/unchecked
-    $('#simple-table').on('click', 'td input[type=checkbox]' , function(){
-        var $row = $(this).closest('tr');
-        if(this.checked) $row.addClass(active_class);
-        else $row.removeClass(active_class);
-    });
+    function beforeEditCallback(e) {
+        var form = $(e[0]);
+        form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+        style_edit_form(form);
+    }
 
 
+    //it causes some flicker when reloading or navigating grid
+    //it may be possible to have some custom formatter to do this as the grid is being created to prevent this
+    //or go back to default browser checkbox styles for the grid
+    function styleCheckbox(table) {
+        /**
+         $(table).find('input:checkbox').addClass('ace')
+         .wrap('<label />')
+         .after('<span class="lbl align-top" />')
 
-    /********************************/
-        //add tooltip for small view action buttons in dropdown menu
+
+         $('.ui-jqgrid-labels th[id*="_cb"]:first-child')
+         .find('input.cbox[type=checkbox]').addClass('ace')
+         .wrap('<label />').after('<span class="lbl align-top" />');
+         */
+    }
+
+
+    //unlike navButtons icons, action icons in rows seem to be hard-coded
+    //you can change them like this in here if you want
+    function updateActionIcons(table) {
+        /**
+         var replacement =
+         {
+             'ui-ace-icon fa fa-pencil' : 'ace-icon fa fa-pencil blue',
+             'ui-ace-icon fa fa-trash-o' : 'ace-icon fa fa-trash-o red',
+             'ui-icon-disk' : 'ace-icon fa fa-check green',
+             'ui-icon-cancel' : 'ace-icon fa fa-times red'
+         };
+         $(table).find('.ui-pg-div span.ui-icon').each(function(){
+						var icon = $(this);
+						var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+						if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+					})
+         */
+    }
+
+    //replace icons with FontAwesome icons like above
+    function updatePagerIcons(table) {
+        var replacement =
+        {
+            'ui-icon-seek-first': 'ace-icon fa fa-angle-double-left bigger-140',
+            'ui-icon-seek-prev': 'ace-icon fa fa-angle-left bigger-140',
+            'ui-icon-seek-next': 'ace-icon fa fa-angle-right bigger-140',
+            'ui-icon-seek-end': 'ace-icon fa fa-angle-double-right bigger-140'
+        };
+        $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
+            var icon = $(this);
+            var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+
+            if ($class in replacement) icon.attr('class', 'ui-icon ' + replacement[$class]);
+        })
+    }
+
+    function enableTooltips(table) {
+        $('.navtable .ui-pg-button').tooltip({container: 'body'});
+        $(table).find('.ui-pg-div').tooltip({container: 'body'});
+    }
+    //add tooltip for small view action buttons in dropdown menu
     $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
 
     //tooltip placement on right or left
@@ -350,13 +482,8 @@ jQuery(function($) {
         var off2 = $source.offset();
         //var w2 = $source.width();
 
-        if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
+        if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
         return 'left';
     }
 
-    $(function() {
-     //   $( document ).tooltip();
-    });
-
-})
 </script>

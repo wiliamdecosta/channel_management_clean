@@ -304,7 +304,7 @@
                     editable: true,
                     editrules: {required: true}
                 },
-                {label: 'Lokasi PKS', name: 'PKS', align: "left", editable: true, editrules: {required: true}},
+                {label: 'Lokasi PKS', name: 'LOKASI', align: "left", editable: true, editrules: {required: true}},
                 {label: 'No PKS', name: 'NO_PKS', align: "left", editable: true, editrules: {required: true}},
                 {
                     label: 'Nama PIC',

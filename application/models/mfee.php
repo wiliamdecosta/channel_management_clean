@@ -16,11 +16,28 @@ class mfee extends CI_Model
         $sql = $this->db->query($q);
         return $sql;
     }
-    public function getLokasisewaByMitra($mitra_name)
+    public function getLokasisewaByMitra($mitra)
     {
-        $q = "SELECT LOKASI_SEWA NAME,ID_MITRA ID FROM p_map_mit_cc WHERE NAMA_MITRA = '".$mitra_name."'";
+        $q = "SELECT LOKASI NAME,P_MP_LOKASI_ID ID FROM P_MP_LOKASI a,P_MAP_MIT_CC b WHERE b.PGL_ID = '".$mitra."' AND a.P_MAP_MIT_CC_ID = b.P_MAP_MIT_CC_ID";
         $sql = $this->db->query($q);
         return $sql;
+    }
+
+    public function checkDuplicateND($ten_id,$nd) {
+        $this->db->where('ND',$nd);
+        $this->db->where('TEN_ID',$ten_id);
+        $query = $this->db->get('TEN_ND');
+
+        return  $query->num_rows();
+
+    }
+
+    public function checkDuplicate($table,$field,$value) {
+        $this->db->where($field,$value);
+        $query = $this->db->get($table);
+
+        return  $query->num_rows();
+
     }
 
 

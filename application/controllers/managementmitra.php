@@ -16,10 +16,11 @@ class Managementmitra extends CI_Controller
 
         $this->load->model('M_jqGrid', 'jqGrid');
         $this->load->model('M_managementmitra', 'm_mitra');
+        $this->load->model('Mfee');
 
-        if (!$this->input->is_ajax_request()) {
-            exit('No direct script access allowed');
-        }
+//        if (!$this->input->is_ajax_request()) {
+//            exit('No direct script access allowed');
+//        }
     }
 
     public function index()
@@ -64,31 +65,32 @@ class Managementmitra extends CI_Controller
         $this->load->view($this->folder . '/dok_npk', $result);
     }
 
-    public function fastel()
+    public function fastels()
     {
         // Default periode current yyyymm
         $tahun = date("Y");
         $bulan = date("m");
-        $data['periode'] = $tahun."".$bulan;
+        $data['periode'] = $tahun . "" . $bulan;
 
-        $this->load->view($this->folder . '/fastel',$data);
+        $this->load->view($this->folder . '/fastel', $data);
     }
-    public function gridFastel($temp_period,$pgl_id,$ten_id)
+
+    public function gridFastel($temp_period, $pgl_id, $ten_id)
     {
         $page = intval($_REQUEST['page']); // Page
         $limit = intval($_REQUEST['rows']); // Number of record/page
         $sidx = $_REQUEST['sidx']; // Field name
         $sord = $_REQUEST['sord']; // Asc / Desc
 
-        if($this->input->post('searchField') == "ND1"){
+        if ($this->input->post('searchField') == "ND1") {
             $s_field = "B.ND";
-        }else{
+        } else {
             $s_field = $this->input->post('searchField');
         }
 
-        if($this->input->post('periode')){
+        if ($this->input->post('periode')) {
             $periode = $this->input->post('periode');
-        }else{
+        } else {
             $periode = $temp_period;
         }
 
@@ -148,14 +150,6 @@ class Managementmitra extends CI_Controller
         $this->load->view($this->folder . '/evaluasi_mitra', $result);
     }
 
-    public function downloadDokPKS()
-    {
-        $data = file_get_contents(base_url('')); // Read the file's contents
-        $name = 'myphoto.jpg';
-
-        force_download($name, $data);
-    }
-
     public function listCC()
     {
         $this->load->model('mfee');
@@ -204,14 +198,14 @@ class Managementmitra extends CI_Controller
     public function listLokasiSewa()
     {
         $this->load->model('mfee');
-        $mitra_name = $this->input->post('mitra_name');
-        $result = $this->mfee->getLokasisewaByMitra($mitra_name);
+        $mitra = $this->input->post('mitra');
+        $result = $this->mfee->getLokasisewaByMitra($mitra);
 
         $option = "";
         if ($result->num_rows() > 0) {
             $option .= "<option value=''> Pilih Lokasi Sewa </option>";
             foreach ($result->result() as $content) {
-                $option .= "<option value='" . $content->NAME . "'>" . $content->NAME . "</option>";
+                $option .= "<option value='" . $content->ID . "'>" . $content->NAME . "</option>";
 
             }
 
@@ -255,13 +249,19 @@ class Managementmitra extends CI_Controller
 
         $segment = $this->input->post('segment');
         $ccid = $this->input->post('ccid');
-        $pgl_id = $this->input->post('mitra');
+        $mitra = $this->input->post('mitra');
         $lokasisewa = $this->input->post('lokasisewa');
         if ($segment) {
             $req_param['where'] = array('SEGMENT' => $segment);
         }
         if ($ccid) {
             $req_param['where'] = array('ID_CC' => $ccid);
+        }
+        if ($mitra) {
+            $req_param['where'] = array('PGL_ID' => $mitra);
+        }
+        if ($lokasisewa) {
+            $req_param['where'] = array('P_MP_LOKASI_ID' => $lokasisewa);
         }
 
 
@@ -422,5 +422,266 @@ class Managementmitra extends CI_Controller
 
     }
 
+    public function gridPKS()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "P_PKS";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+
+    public function modalUploadPKS()
+    {
+        $this->load->view($this->folder . '/modal_upload_pks');
+    }
+
+    public function modalUploadKontrak()
+    {
+        $this->load->view($this->folder . '/modal_upload_kontrak');
+    }
+
+    public function pks_uploaddo()
+    {
+        $no_pks = trim(strtoupper($this->input->post("no_pks")));
+        $doc_name = trim(strtoupper($this->input->post("doc_name")));
+        $start_date_pks = $this->input->post("start_date_pks");
+        $end_date_pks = $this->input->post("end_date_pks");
+        $lokasi_pks = 5;
+
+        if ($lokasi_pks != "") {
+            // Upload Process
+            $config['upload_path'] = './application/third_party/upload/pks';
+            $config['allowed_types'] = 'docx|pdf';
+            $config['max_size'] = '0';
+            $config['overwrite'] = TRUE;
+            $file_id = time();
+            $config['file_name'] = str_replace(" ", "_", $doc_name) . "_" . $file_id;
+
+            $this->load->library('upload');
+            $this->upload->initialize($config);
+
+            //cek duplicate
+            $ck = $this->Mfee->checkDuplicate('P_PKS', 'DOC_NAME', $doc_name);
+
+            if ($ck == 1) {
+
+                $data['status'] = false;
+                $data['msg'] = "<br><div class='alert alert-danger'>" . "
+											<button type='button' class='close' data-dismiss='alert'>
+												<i class='ace-icon fa fa-times'></i>
+											</button> Dokumen sudah ada !
+										</div>";
+                echo json_encode($data);
+            } else {
+                if (!$this->upload->do_upload("filename")) {
+                    $error = $this->upload->display_errors();
+                    $data['status'] = "F";
+                    $data['msg'] = "<br><div class='alert alert-danger'>" . "
+											<button type='button' class='close' data-dismiss='alert'>
+												<i class='ace-icon fa fa-times'></i>
+											</button>
+											    " . $error . "
+										</div>";
+                    echo json_encode($data);
+                } else {
+                    // Do Upload
+                    $data = $this->upload->data();
+                    $datas = array(
+                        "NO_PKS" => $no_pks,
+                        "DOC_NAME" => $doc_name,
+                        "FILE_PATH" => $data['file_name'],
+                        "PKS_START_DATE" => date('d/M/Y', strtotime($start_date_pks)),
+                        "PKS_END_DATE" => date('d/M/Y', strtotime($end_date_pks)),
+                        "UPDATE_DATE" => date('d/M/Y'),
+                        "UPDATE_BY" => $this->session->userdata('d_user_name')
+                    );
+
+                    $this->m_mitra->insertPKS($datas);
+                    $data['success'] = true;
+                    $data['msg'] = "Upload Berhasil";
+                    echo json_encode($data);
+
+                }
+            }
+
+        }
+
+    }
+
+    public function kontrak_uploaddo()
+    {
+        $doc_name = trim(strtoupper($this->input->post("doc_name")));
+        // Upload Process
+        $config['upload_path'] = './application/third_party/upload/kontrak';
+        $config['allowed_types'] = 'docx|pdf|doc|gif|jpg|png';
+        $config['max_size'] = '0';
+        $config['overwrite'] = TRUE;
+        $file_id = time();
+        $config['file_name'] = str_replace(" ", "_", $doc_name) . "_" . $file_id;
+
+        $this->load->library('upload');
+        $this->upload->initialize($config);
+
+        //cek duplicate
+        $ck = $this->Mfee->checkDuplicate('P_DOK_KONTRAK', 'DOC_NAME', $doc_name);
+
+        if ($ck == 1) {
+
+            $data['status'] = false;
+            $data['msg'] = "Nama dokumen sudah ada !";
+            echo json_encode($data);
+        } else {
+            if (!$this->upload->do_upload("filename")) {
+                $error = $this->upload->display_errors();
+                $data['status'] = "F";
+                $data['msg'] =  $error ;
+                echo json_encode($data);
+            } else {
+                // Do Upload
+                $data = $this->upload->data();
+                $datas = array(
+                    "DOC_NAME" => $doc_name,
+                    "FILE_PATH" => $data['file_name'],
+                    "UPDATE_DATE" => date('d/M/Y'),
+                    "UPDATE_BY" => $this->session->userdata('d_user_name')
+                );
+
+                $this->m_mitra->insertDokKontrak($datas);
+                $data['success'] = true;
+                $data['msg'] = "Upload Berhasil";
+                echo json_encode($data);
+
+            }
+        }
+
+
+    }
+
+    public function downloadPKS($FILE_PATH)
+    {
+        //$FILE_PATH = $this->input->post('FILE_PATH');
+        $data = file_get_contents("./application/third_party/upload/pks/" . $FILE_PATH);
+        force_download($FILE_PATH, $data);
+    }
+
+        public function downloadDokKontrak($FILE_PATH)
+    {
+        $data = file_get_contents("./application/third_party/upload/kontrak/" . $FILE_PATH);
+        force_download($FILE_PATH, $data);
+    }
+
+    public function crud_pks()
+    {
+        $this->m_mitra->crud_pks();
+    }
+
+    public function crud_kontrak()
+    {
+        $this->m_mitra->crud_kontrak();
+    }
+
+    public function gridDocKontrak()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "P_DOK_KONTRAK";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
 
 }
