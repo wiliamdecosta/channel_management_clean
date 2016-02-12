@@ -50,6 +50,7 @@
     <script src="<?php echo base_url();?>assets/js/html5shiv.js"></script>
     <script src="<?php echo base_url();?>assets/js/respond.js"></script>
     <![endif]-->
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/bootgrid/modification.css" />
 </head>
 
 <body class="no-skin">
