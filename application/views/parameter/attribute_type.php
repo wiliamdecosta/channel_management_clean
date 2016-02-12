@@ -244,6 +244,15 @@
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
+            },
+            afterSubmit: function (response) {
+                
+                var response = JSON.parse(response.responseText);
+                if(response.success == false) {
+                    showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                }
+                
+                return [true, '', response.responseText];
             }
         },
         {
@@ -260,6 +269,16 @@
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                     .wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
+            },
+            
+            afterSubmit: function (response) {
+                
+                var response = JSON.parse(response.responseText);
+                if(response.success == false) {
+                    showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                }
+                
+                return [true, '', response.responseText];
             }
         },
         {
@@ -276,7 +295,9 @@
             },
             onClick: function (e) {
                 //alert(1);
-            }
+            },
+            msg: 'Penghapusan terhadap data Attribute Type akan secara otomatis menghapus data Attribut List & data Attribut User yang berkaitan.<br>Apakah Anda yakin untuk menghapus data tersebut?',
+            width:'400px'
         },
         {
             //search form
@@ -338,6 +359,7 @@
     }
 
     function style_delete_form(form) {
+        
         var buttons = form.next().find('.EditButton .fm-button');
         buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide();//ui-icon, s-icon
         buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
@@ -620,19 +642,25 @@
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
+            },
+            afterSubmit: function (response) {
+                
+                var response = JSON.parse(response.responseText);
+                if(response.success == false) {
+                    showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                }
+                
+                return [true, '', response.responseText];
             }
         },
         {
-
+            // options for the Edit Dialog
             editData: {
                 PARENT_ID: function () {
                     var data = jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
                     var parent_id = data.parent_id;
                     return parent_id;
                 }
-            },
-            onClickButton: function () {
-                alert('sss');
             },
             //new record form
             width: 500,
@@ -647,6 +675,15 @@
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                     .wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
+            },
+            afterSubmit: function (response) {
+                
+                var response = JSON.parse(response.responseText);
+                if(response.success == false) {
+                    showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                }
+                
+                return [true, '', response.responseText];
             }
 
         },
@@ -664,7 +701,9 @@
             },
             onClick: function (e) {
                 //alert(1);
-            }
+            },
+            msg: 'Penghapusan terhadap data Attribute List akan secara otomatis menghapus data Attribut User yang berkaitan.<br>Apakah Anda yakin untuk menghapus data tersebut?',
+            width:'400px'
         },
         {
             //search form
