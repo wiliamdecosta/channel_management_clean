@@ -165,7 +165,9 @@ class M_parameter extends CI_Model
                      if($db_result != 1) {
                         throw new Exception('Terjadi duplikasi data');
                      }
-                                            
+                     
+                     $result['success'] = true;
+                     $result['message'] = 'Data berhasil ditambahkan';                       
                 }catch(Exception $e) {
                     $result['success'] = false;
                     $result['message'] = $e->getMessage();
@@ -176,15 +178,31 @@ class M_parameter extends CI_Model
 
                 break;
             case 'edit':
-                $this->db->query("UPDATE P_USER_ATTRIBUTE_TYPE SET
-                                    CODE = '" . $this->input->post('CODE') . "',
-                                    VALID_FROM = to_date('" . $this->input->post('VALID_FROM') . "','dd/mm/yyyy'),
-                                    VALID_TO = to_date('" . $this->input->post('VALID_TO') . "','dd/mm/yyyy'),
-                                    DESCRIPTION = '" . $this->input->post('DESCRIPTION') . "',
-                                    UPDATED_DATE = SYSDATE,
-                                    UPDATED_BY = '" . $this->session->userdata('d_user_name') . "'
-                                    WHERE
-                                    P_USER_ATTRIBUTE_TYPE_ID = " . $id_);
+                try {
+                    $db_result = $this->db->query_custom("UPDATE P_USER_ATTRIBUTE_TYPE SET
+                                        CODE = '" . $this->input->post('CODE') . "',
+                                        VALID_FROM = to_date('" . $this->input->post('VALID_FROM') . "','dd/mm/yyyy'),
+                                        VALID_TO = to_date('" . $this->input->post('VALID_TO') . "','dd/mm/yyyy'),
+                                        DESCRIPTION = '" . $this->input->post('DESCRIPTION') . "',
+                                        UPDATED_DATE = SYSDATE,
+                                        UPDATED_BY = '" . $this->session->userdata('d_user_name') . "'
+                                        WHERE
+                                        P_USER_ATTRIBUTE_TYPE_ID = " . $id_);
+                    
+                    if($db_result != 1) {
+                        throw new Exception('Terjadi duplikasi data');
+                    }
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Data berhasil diupdate';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                echo json_encode($result);
+                exit;
+                
                 break;
             case 'del':
                 $this->db->where('P_USER_ATTRIBUTE_TYPE_ID', $id_);
@@ -209,31 +227,67 @@ class M_parameter extends CI_Model
 
         switch ($oper) {
             case 'add':
-                $new_id = gen_id('P_USER_ATTRIBUTE_LIST_ID', 'P_USER_ATTRIBUTE_LIST');
-                $this->db->query("INSERT INTO P_USER_ATTRIBUTE_LIST(P_USER_ATTRIBUTE_LIST_ID,P_USER_ATTRIBUTE_TYPE_ID, CODE, NAME, VALID_FROM,VALID_TO, DESCRIPTION,CREATION_DATE,CREATED_BY,UPDATED_DATE,UPDATED_BY)
-                                    VALUES(" . $new_id . "," . $parent_id . ",
-                                            '" . $this->input->post('CODE') . "',
-                                            '" . $this->input->post('NAME') . "',
-                                            to_date('" . $this->input->post('VALID_FROM') . "','dd/mm/yyyy'),
-                                            to_date('" . $this->input->post('VALID_TO') . "','dd/mm/yyyy'),
-                                            '" . $this->input->post('DESCRIPTION') . "',
-                                            SYSDATE,
-                                            '" . $this->session->userdata('d_user_name') . "',
-                                            SYSDATE,
-                                            '" . $this->session->userdata('d_user_name') . "'
-                                            )");
+                try {
+                    $new_id = gen_id('P_USER_ATTRIBUTE_LIST_ID', 'P_USER_ATTRIBUTE_LIST');
+                    $db_result = $this->db->query_custom("INSERT INTO P_USER_ATTRIBUTE_LIST(P_USER_ATTRIBUTE_LIST_ID,P_USER_ATTRIBUTE_TYPE_ID, CODE, NAME, VALID_FROM,VALID_TO, DESCRIPTION,CREATION_DATE,CREATED_BY,UPDATED_DATE,UPDATED_BY)
+                                        VALUES(" . $new_id . "," . $parent_id . ",
+                                                '" . $this->input->post('CODE') . "',
+                                                '" . $this->input->post('NAME') . "',
+                                                to_date('" . $this->input->post('VALID_FROM') . "','dd/mm/yyyy'),
+                                                to_date('" . $this->input->post('VALID_TO') . "','dd/mm/yyyy'),
+                                                '" . $this->input->post('DESCRIPTION') . "',
+                                                SYSDATE,
+                                                '" . $this->session->userdata('d_user_name') . "',
+                                                SYSDATE,
+                                                '" . $this->session->userdata('d_user_name') . "'
+                                                )");
+                    
+                     if($db_result != 1) {
+                        throw new Exception('Terjadi duplikasi data');
+                     }
+                     
+                     $result['success'] = true;
+                     $result['message'] = 'Data berhasil ditambahkan';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                echo json_encode($result);
+                exit;
+                
                 break;
             case 'edit':
-                $this->db->query("UPDATE P_USER_ATTRIBUTE_LIST SET
-                                    CODE = '" . $this->input->post('CODE') . "',
-                                    NAME = '" . $this->input->post('NAME') . "',
-                                    VALID_FROM = to_date('" . $this->input->post('VALID_FROM') . "','dd/mm/yyyy'),
-                                    VALID_TO = to_date('" . $this->input->post('VALID_TO') . "','dd/mm/yyyy'),
-                                    DESCRIPTION = '" . $this->input->post('DESCRIPTION') . "',
-                                    UPDATED_DATE = SYSDATE,
-                                    UPDATED_BY = '" . $this->session->userdata('d_user_name') . "'
-                                    WHERE
-                                    P_USER_ATTRIBUTE_LIST_ID = " . $id_);
+                try {
+                    
+                    $db_result = $this->db->query_custom("UPDATE P_USER_ATTRIBUTE_LIST SET
+                                        CODE = '" . $this->input->post('CODE') . "',
+                                        NAME = '" . $this->input->post('NAME') . "',
+                                        VALID_FROM = to_date('" . $this->input->post('VALID_FROM') . "','dd/mm/yyyy'),
+                                        VALID_TO = to_date('" . $this->input->post('VALID_TO') . "','dd/mm/yyyy'),
+                                        DESCRIPTION = '" . $this->input->post('DESCRIPTION') . "',
+                                        UPDATED_DATE = SYSDATE,
+                                        UPDATED_BY = '" . $this->session->userdata('d_user_name') . "'
+                                        WHERE
+                                        P_USER_ATTRIBUTE_LIST_ID = " . $id_);
+                    
+                    if($db_result != 1) {
+                        throw new Exception('Terjadi duplikasi data');
+                    }
+                     
+                    $result['success'] = true;
+                    $result['message'] = 'Data berhasil diupdate';
+                    
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                echo json_encode($result);
+                exit;
+                
                 break;
             case 'del':
                 $this->db->where('P_USER_ATTRIBUTE_LIST_ID', $id_);
@@ -254,21 +308,54 @@ class M_parameter extends CI_Model
         
         switch ($oper) {
             case 'add':
-                $new_id = gen_id('PGL_ID','CUST_PGL');
-                $this->db->query("INSERT INTO CUST_PGL(PGL_ID,PGL_NAME,PGL_ADDR,PGL_CONTACT_NO,ENABLE_FEE)
-                                    VALUES($new_id,
-                                            '".$this->input->post('PGL_NAME')."',
-                                            '".$this->input->post('PGL_ADDR')."',
-                                            '".$this->input->post('PGL_CONTACT_NO')."',
-                                            '".$this->input->post('ENABLE_FEE')."')");
+                try {
+                    $new_id = gen_id('PGL_ID','CUST_PGL');
+                    $db_result = $this->db->query_custom("INSERT INTO CUST_PGL(PGL_ID,PGL_NAME,PGL_ADDR,PGL_CONTACT_NO,ENABLE_FEE)
+                                        VALUES($new_id,
+                                                '".$this->input->post('PGL_NAME')."',
+                                                '".$this->input->post('PGL_ADDR')."',
+                                                '".$this->input->post('PGL_CONTACT_NO')."',
+                                                '".$this->input->post('ENABLE_FEE')."')");
+                    
+                    if($db_result != 1) {
+                        throw new Exception('Terjadi duplikasi data');
+                    }
+                     
+                    $result['success'] = true;
+                    $result['message'] = 'Data berhasil ditambahkan';
+                
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();        
+                }
+                
+                echo json_encode($result);
+                exit;
+                
                 break;
             case 'edit':
-                $this->db->query("UPDATE CUST_PGL SET
-                                    PGL_NAME = '".$this->input->post('PGL_NAME')."',
-                                    PGL_ADDR = '".$this->input->post('PGL_ADDR')."',
-                                    PGL_CONTACT_NO = '".$this->input->post('PGL_CONTACT_NO')."',
-                                    ENABLE_FEE = '".$this->input->post('ENABLE_FEE')."'
-                                    WHERE PGL_ID = ".$id_ );
+                try {
+                    $db_result = $this->db->query_custom("UPDATE CUST_PGL SET
+                                        PGL_NAME = '".$this->input->post('PGL_NAME')."',
+                                        PGL_ADDR = '".$this->input->post('PGL_ADDR')."',
+                                        PGL_CONTACT_NO = '".$this->input->post('PGL_CONTACT_NO')."',
+                                        ENABLE_FEE = '".$this->input->post('ENABLE_FEE')."'
+                                        WHERE PGL_ID = ".$id_ );
+                    
+                    if($db_result != 1) {
+                        throw new Exception('Terjadi duplikasi data');
+                    }
+                     
+                    $result['success'] = true;
+                    $result['message'] = 'Data berhasil diupdate';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();   
+                }
+                echo json_encode($result);
+                exit;
+                
                 break;
             case 'del':
                
