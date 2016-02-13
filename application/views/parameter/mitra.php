@@ -198,7 +198,8 @@
                 
                 var response = JSON.parse(response.responseText);
                 if(response.success == false) {
-                    showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    swal("Perhatian", response.message, "warning");
                 }
                 
                 return [true, '', response.responseText];
@@ -223,7 +224,8 @@
                 
                 var response = JSON.parse(response.responseText);
                 if(response.success == false) {
-                    showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    swal("Perhatian", response.message, "warning");
                 }
                 
                 return [true, '', response.responseText];
