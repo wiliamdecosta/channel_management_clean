@@ -185,6 +185,7 @@
     }    
     
     function showResponsePrivilegeFormSubmit(responseText, statusText, xhr, $form)  { 
+        swal("Berhasil", "Data berhasil disimpan", "success");
         getPrivilegeTable(responseText);
     } 
     
