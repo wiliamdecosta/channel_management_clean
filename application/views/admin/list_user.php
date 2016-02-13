@@ -65,7 +65,8 @@
 
         $("#user_attribute_btn_delete").on(ace.click_event, function(){
             if($("#user_attribute_grid_selection").bootgrid("getSelectedRows") == "") {
-                showBootDialog(true, BootstrapDialog.TYPE_INFO, 'Information', 'Tidak ada data yang dihapus');
+                //showBootDialog(true, BootstrapDialog.TYPE_INFO, 'Information', 'Tidak ada data yang dihapus');
+                swal("Informasi", "Tidak ada data yang dipilih untuk dihapus", "info");
             }else {
                 user_attribute_delete_records( $("#user_attribute_grid_selection").bootgrid("getSelectedRows") );
             }
@@ -74,7 +75,7 @@
     });
     
     function user_attribute_delete_records(theID) {
-        BootstrapDialog.confirm({
+        /*BootstrapDialog.confirm({
             type: BootstrapDialog.TYPE_WARNING,
 		    title:'Delete Confirmation',
 		    message: 'Apakah Anda yakin untuk menghapus data tersebut ?',
@@ -96,6 +97,37 @@
                 	);
     	        }
 		    }
+        });*/
+        
+        swal({
+            title: "Konfirmasi Hapus",
+            text: "Apakah Anda yakin untuk menghapus data tersebut?",
+            type: "warning",
+            showCancelButton: true,
+            showLoaderOnConfirm: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus",
+            cancelButtonText: "Tidak, Batalkan",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                $.post( "<?php echo site_url('User_attribute/crudUserAttribute/destroy');?>",
+            	    { items: JSON.stringify(theID) },
+                     function( response ) {
+                         var response = JSON.parse(response);
+                         if(response.success == false) {
+                            //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                            swal("Perhatian", response.message, "warning");
+                        }else {
+                 	        //showBootDialog(true, BootstrapDialog.TYPE_SUCCESS, 'Information', response.message);
+                 	        swal("Berhasil", "Data berhasil dihapus", "success");
+                 	        user_attribute_prepare_table($("#form_user_id").val());
+                        }
+                     }
+                );
+            }
         });
     }	
     
