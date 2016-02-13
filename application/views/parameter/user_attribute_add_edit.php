@@ -130,7 +130,8 @@
         
         $("#btn_lov_user_attribute_list").on(ace.click_event, function() {
             if( $("#form_p_user_attribute_type_id").val() == "") {
-                showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', 'Inputkan Attribute Type Terlebih Dahulu');
+                //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', 'Inputkan Attribute Type Terlebih Dahulu');
+                swal("Informasi", "Inputkan Attribute Type Terlebih Dahulu", "info");
                 return;
             }
             $("#modal_lov_user_attribute_list_grid_selection").bootgrid("destroy");
@@ -173,7 +174,8 @@
             function( response ) {
                 var response = JSON.parse(response);
                 if(response.success == false) {
-                    showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    swal("Perhatian", response.message, "warning");
                 }else {
         	        var obj = response.rows[0];
         	        
@@ -220,9 +222,11 @@
                 
                 var response = JSON.parse(response);
                 if(response.success == false) {
-                    showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    swal({title: "Perhatian",text: response.message, html: true, type : 'warning'});
                 }else {
-        	        showBootDialog(true, BootstrapDialog.TYPE_SUCCESS, 'Information', response.message);
+        	        //showBootDialog(true, BootstrapDialog.TYPE_SUCCESS, 'Information', response.message);
+        	        swal("Berhasil", response.message, "success");
         	        user_attribute_toggle_main_content();
         	        user_attribute_prepare_table($("#form_user_id").val());
                 }
