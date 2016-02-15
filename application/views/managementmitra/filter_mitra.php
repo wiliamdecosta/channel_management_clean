@@ -155,18 +155,18 @@
         if ($("#segment").val() == "") {
             v_str += "* Segmen belum dipilih\n";
         }
-//        if($("#list_cc").val()==""){
-//            v_str += "* CC belum dipilih\n";
-//        }
-//        if($("#mitra").val()==""){
-//            v_str += "* Mitra belum dipilih\n";
-//        }
-//        if($("#lokasisewa").val()==""){
-//            v_str += "* Lokasi Sewa belum dipilih\n";
-//        }
+        if($("#list_cc").val()==""){
+            v_str += "* CC belum dipilih\n";
+        }
+        if($("#mitra").val()==""){
+            v_str += "* Mitra belum dipilih\n";
+        }
+        if($("#lokasisewa").val()==""){
+            v_str += "* Lokasi PKS belum dipilih\n";
+        }
 
         if (v_str != "") {
-            swal(v_str);
+            swal("", v_str,"warning");
             return false;
         }
         else {

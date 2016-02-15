@@ -8,212 +8,7 @@
     <table id="grid-table"></table>
     <div id="grid-pager"></div>
 </div>
-<div id="form_mitra" style="display:none;">
-    <div style="margin-bottom: 10px;">
-        <button class="btn btn-white btn-sm btn-round" id="back">
-            <i class="ace-icon fa fa-arrow-circle-left green"></i>
-            Kembali
-        </button>
-    </div>
-    <br>
-    <form class="form-horizontal" role="form" id="mitraForm">
-        <div class="row">
-            <div class="col-xs-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Nama Segment</label>
-                    <div class="col-sm-6">
-                        <input type="text" id="mitraForm_segment" class="form-control required"
-                               value="" readonly>
-                    </div>
-                    <a type="button" class="btn btn-white btn-info btn-sm" onclick="getLovSegment()"> <i
-                            class="ace-icon fa fa-search bigger-120"></i>Pilih</a>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Nama CC </label>
-                    <div class="col-sm-6">
-                        <input type="text" id="cc_name" class="form-control required"
-                               value="" readonly>
-                        <br>
-                        <input type="text" id="cc_id" class="form-control required"
-                               value="" readonly>
-                    </div>
-                    <a type="button" class="btn btn-white btn-info btn-sm" onclick="getLov()"> <i
-                            class="ace-icon fa fa-search bigger-120"></i>Pilih</a>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1"> Contract
-                        Type </label>
-                    <div class="col-sm-6">
-                        <?php echo buatcombo('contact', 'contact', 'P_REFERENCE_LIST', 'REFERENCE_NAME', 'P_REFERENCE_LIST_ID', array('P_REFERENCE_TYPE_ID' => 1), ''); ?>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Nama PIC </label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="picname" placeholder="Text Field" class="form-control required"
-                               value="Amirudin" readonly>
-                        <br>
-                        <input type="text" id="pic_id" placeholder="Text Field" class="form-control required"
-                               value="" readonly>
-                    </div>
-                    <a type="button" class="btn btn-white btn-info btn-sm" onclick="getLovPIC()"> <i
-                            class="ace-icon fa fa-search bigger-120"></i>Pilih</a>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Jabatan </label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="jabatan" placeholder="Text Field" class="form-control"
-                               value="Direktur" readonly/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Alamat </label>
-
-                    <div class="col-sm-6">
-                        <textarea class="form-control limited" id="alamat" maxlength="50" readonly>Gedung Attira Lt.9 Jl.
-                            Jendral Sudirman Kav 45 Jakarta</textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label no-padding-right" for="form-field-1-1">Email </label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="email" placeholder="Text Field" class="form-control"
-                               value="amirudin@attira.com" readonly/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">No HP </label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="no_hp" placeholder="Text Field" class="form-control"
-                               value="021-102938" readonly/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Fax</label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="fax" placeholder="Text Field" class="form-control"
-                               value="021-102934" readonly/>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xs-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Nama Mitra</label>
-                    <div class="col-sm-6">
-                        <input type="text" id="mitra_name" class="form-control required"
-                               value="" readonly>
-                        <br>
-                        <input type="text" id="pgl_id" class="form-control required"
-                               value="" readonly>
-                    </div>
-                    <a type="button" class="btn btn-white btn-info btn-sm" onclick="getLov()"> <i
-                            class="ace-icon fa fa-search bigger-120"></i>Pilih</a>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Lokasi PKS </label>
-                    <div class="col-sm-6">
-                        <input type="text" id="lokasi_pks" class="form-control required"
-                               value="" readonly>
-                        <br>
-                        <input type="text" id="lokasi_pks_id" class="form-control required"
-                               value="" readonly>
-                    </div>
-                    <a type="button" class="btn btn-white btn-info btn-sm" onclick="getLov()"> <i
-                            class="ace-icon fa fa-search bigger-120"></i>Pilih</a>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Nama EAM</label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control"
-                               value="Sigit"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">NIK </label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control"
-                               value="740099"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">Email </label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="email" placeholder="Text Field" class="form-control"
-                               value="sigit@telkom.co.id"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1-1">No Hp </label>
-
-                    <div class="col-sm-6">
-                        <input type="text" id="form-field-1-1" placeholder="Text Field" class="form-control"
-                               value="081290237909"/>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-12">
-                <hr>
-            </div>
-
-            <div id="button-form" class="col-xs-12">
-        <span id="group1" style="float: left">
-            <button class="btn btn-white btn-info btn-bold">
-                <i class="ace-icon fa fa-cloud-download bigger-120 green"></i>
-                Download
-            </button>
-            <button class="btn btn-white btn-info btn-bold">
-                <i class="ace-icon fa fa-print bigger-120 green"></i>
-                Print
-            </button>
-        </span>
-        <span id="group2" style="float: right">
-            <a class="btn btn-white btn-info btn-bold" id="save">
-                <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
-                Save
-            </a>
-            <a class="btn btn-white btn-warning btn-bold" id="edit">
-                <i class="ace-icon fa fa-pencil-square-o bigger-120 orange"></i>
-                Edit
-            </a>
-            <a class="btn btn-white btn-default btn-bold">
-                <i class="ace-icon fa fa-times red2"></i>
-                Delete
-            </a>
-        </span>
-            </div>
-        </div>
-    </form>
-    <script type="text/javascript">
-        $('#mitraForm').find('input[type=text],select,textarea').each(function () {
-            //   $(this).attr('disabled', true);
-            // $('#contract').attr("disabled", true);
-        });
-
-        $("#edit").click(function () {
-            $('#mitraForm').find('input[type=text],select,textarea').each(function () {
-                $(this).attr('disabled', false);
-                // $('#contract').attr("disabled", true);
-            })
-        });
-        $("#save").click(function () {
-            $('#mitraForm').find('input[type=text],select,textarea').each(function () {
-                $(this).attr('disabled', true);
-                // $('#contract').attr("disabled", true);
-            })
-        });
-
-
-    </script>
-
+<div id="form_mitra" style="display: none;">
 </div>
 <div id="lov_pic" class="lov_content"></div>
 <div id="lov_segment" class="lov_content"></div>
@@ -589,8 +384,18 @@
 </script>
 <script>
     $("#add_mitra").click(function () {
-        $("#tbl_pic").hide("slow");
-        $("#form_mitra").show("slow");
+        $.ajax({
+            // async: false,
+            url: "<?php echo base_url();?>managementmitra/add_mitra_form",
+            type: "POST",
+            data: {},
+            success: function (data) {
+                $('#form_mitra').html(data);
+                $("#tbl_pic").hide("slow");
+                $("#form_mitra").show("slow");
+            }
+        });
+
     });
 
     $("#back").click(function () {

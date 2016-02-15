@@ -684,4 +684,8 @@ class Managementmitra extends CI_Controller
 
     }
 
+    public function add_mitra_form(){
+        $this->load->view('managementmitra/add_mitra');
+    }
+
 }

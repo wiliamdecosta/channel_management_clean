@@ -73,7 +73,7 @@ class M_user extends CI_Model {
 	
 	public function getUserProfile($user_id) {
 	    $result = array();
-	    $sql = "SELECT A.PROF_ID, B.PROF_NAME FROM APP_USERS A, APP_PROFILE B ".
+	    $sql = "SELECT A.PROF_ID, B.PROF_NAME FROM APP_USER_PROFILE A, APP_PROFILE B ".
 			"WHERE A.PROF_ID=B.PROF_ID AND A.USER_ID=".$user_id;
 		$q = $this->db->query($sql);
 		if($q->num_rows() > 0) {
