@@ -13,14 +13,14 @@ class M_user extends CI_Model {
 	    $result = array();
 		$sql = "SELECT * FROM APP_USERS";
 		if($cond!='') $sql .= " WHERE ".$cond;
-		$sql .= " ORDER BY NIK";
+		$sql .= " ORDER BY USER_NAME";
 		$q = $this->db->query($sql); 
 		if($q->num_rows() > 0) $result = $q->result();
 		return $result;
     }
-    public function getUserPwd($nik,$pwd) {
-        $sql = "SELECT * FROM APP_USERS WHERE NIK = ? AND PASSWD = ? ";
-        $qs = $this->db->query($sql, array($nik, $pwd));
+    public function getUserPwd($username,$pwd) {
+        $sql = "SELECT * FROM APP_USERS WHERE USER_NAME = ? AND PASSWD = ? ";
+        $qs = $this->db->query($sql, array($username, $pwd));
         return $qs;
     }
 

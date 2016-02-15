@@ -58,7 +58,7 @@
                         <div class="form-group">
                             <label class="block clearfix">
                                         <span class="block input-icon input-icon-right">
-                                        <input type="text" class="form-control" placeholder="NIK" id="nik" name="nik" required="true"/>
+                                        <input type="text" class="form-control" placeholder="User Name" id="username" name="username" required="true"/>
                                         <i class="ace-icon fa fa-user"></i>
                                         </span>
                             </label>

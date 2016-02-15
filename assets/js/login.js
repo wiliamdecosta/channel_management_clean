@@ -41,10 +41,10 @@ $('#mytextbox').on("paste",function(e)
 $(document).ready(function() {
     $("#login").click(function(event) {
         event.preventDefault();
-        var nik = $("#nik").val();
+        var username = $("#username").val();
         var password = $("#pwd").val();
-        if(!nik || !password){
-            $('#nik').effect("shake", { times:3 }, 500);
+        if(!username || !password){
+            $('#username').effect("shake", { times:3 }, 500);
             $('#pwd').effect("shake", { times:3 }, 500);
             return false;
         }
@@ -53,7 +53,7 @@ $(document).ready(function() {
             type: "POST",
             url: site+"auth/login",
             dataType: 'json',
-            data: {nik: nik, pwd: password, csrf_token:token_val},
+            data: {username: username, pwd: password, csrf_token:token_val},
             cache :false,
             success: function(data) {
                 if (data.success){

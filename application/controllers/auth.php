@@ -36,12 +36,12 @@ class Auth extends CI_Controller
     public function login()
     {
         $this->load->model('M_user');
-        $nik = strtoupper($this->security->xss_clean($this->input->post('nik')));
+        $username = strtoupper($this->security->xss_clean($this->input->post('username')));
         $pwd = MD5($this->security->xss_clean($this->input->post('pwd')));
 
         //Returns TRUE if every character in text is either a letter or a digit, FALSE otherwise.
-        if (ctype_alnum($nik)) {
-            $rc = $this->M_user->getUserPwd($this->security->xss_clean($nik), $pwd)->result();
+        if (ctype_alnum($username)) {
+            $rc = $this->M_user->getUserPwd($this->security->xss_clean($username), $pwd)->result();
             if (count($rc) == 1 AND $rc[0]->PASSWD == $pwd) {
                 $sessions = array(
                     'd_user_id' => $rc[0]->USER_ID,
@@ -73,7 +73,7 @@ class Auth extends CI_Controller
                 echo json_encode($data);
                 // redirect("/home");
             } else {
-                $rc = $this->M_user->getLists("NIK='" . strtoupper($nik) . "'");
+                $rc = $this->M_user->getLists("USER_NAME='" . strtoupper($username) . "'");
                 if (count($rc) > 0) {
                     // $this->session->set_userdata('d_message', "Password is wrong !");
                     echo json_encode(array('msg' => "Password is wrong !"));

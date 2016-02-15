@@ -202,7 +202,6 @@
                 {label: 'Address Street', name: 'ADDR_STREET', width: 150, align: "left", editable: true},
                 {label: 'City', name: 'ADDR_CITY', width: 90, align: "left", editable: true},
                 {label: 'Phone', name: 'CONTACT_NO', width: 90, align: "left", editable: true},
-                {label: 'Profile', name: 'PROF_NAME', width: 90, align: "left", editable: true},
                 {
                     label: 'Password',
                     name: 'PASSWD',

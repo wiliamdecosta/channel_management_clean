@@ -315,7 +315,7 @@ class Admin extends CI_Controller
         $sidx = $_REQUEST['sidx']; // Field name
         $sord = $_REQUEST['sord']; // Asc / Desc
 
-        $table = "V_USER"; // *
+        $table = "APP_USERS"; // *
 
         //JqGrid Parameters
         $req_param = array(
