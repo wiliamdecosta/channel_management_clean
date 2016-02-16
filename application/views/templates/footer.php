@@ -68,9 +68,12 @@
                         $("#ajaxContent").html(data);
                     },
                     error: function(jqXHR, textStatus, errorThrown){
+                        if(textStatus === 'timeout'){
+                            swal('Oops..Time Out','Please reload this page','warning');
+                        }
                         $("#ajaxContent").html(errorThrown);
                     },
-                    timeout: 10000 // sets timeout to 10 seconds
+                    timeout: 1000// sets timeout to 10 seconds
                 });
                 return false;
             }

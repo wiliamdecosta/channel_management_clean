@@ -365,7 +365,7 @@ class M_jqGrid extends CI_Model {
 
     
     public function bootgrid_countAll($param){
-                
+
         $whereCondition = join(" AND ", $param['where']);
         if(!empty($whereCondition)) {
 			$whereCondition = " WHERE ".$whereCondition;
@@ -437,7 +437,7 @@ class M_jqGrid extends CI_Model {
         }
                 
 		$sql = "SELECT COUNT(1) totalcount FROM (".$param['table'].$whereCondition.")";
-		
+
 		$query = $this->db->query($sql);
 		$row = $query->row_array();
 		
@@ -451,9 +451,9 @@ class M_jqGrid extends CI_Model {
         $this->db->_protect_identifiers = false;
 		$param['table'] = str_replace("SELECT","",strtoupper($param['table']));
 		$this->db->select($param['table']);
-		
+
 		$whereCondition = '';
-				
+
 		$whereCondition = join(" AND ", $param['where']);
 		        
         if($param['search'] != null && $param['search'] === 'true'){
@@ -534,5 +534,163 @@ class M_jqGrid extends CI_Model {
 		$queryResult->free_result();
 		
 		return $items;
+    }
+
+    public function countAllQuery($param){
+        $this->db->_protect_identifiers = false;
+        $param['table'] = str_replace("SELECT","",strtoupper($param['table']));
+        $this->db->select($param['table']);
+
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh = "UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+            $this->db->where($wh);
+        }
+
+        ($param['where'] != null && $param['where'] != '' ? $this->db->where($param['where']): '' );
+        ($param['where_in'] != null ? $this->db->where_in($param['where_in']['field'],$param['where_in']['value']) : '');
+        ($param['where_not_in'] != null ? $this->db->where_not_in($param['where_not_in']['field'],$param['where_not_in']['value']) : '');
+
+
+        ($param['limit'] != null ? $this->db->limit($param['limit']['end'], $param['limit']['start']) : '');
+        ($param['sort_by'] != null ? $this->db->order_by($param['sort_by'], $param['sord']) : '');
+
+
+        $items = $this->db->get()->num_rows();
+        return $items;
+
+    }
+
+    public function get_dataQuery($param){
+        $this->db->_protect_identifiers = false;
+        $param['table'] = str_replace("SELECT","",strtoupper($param['table']));
+        $this->db->select($param['table']);
+
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh = "UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+            $this->db->where($wh);
+        }
+
+        ($param['where'] != null && $param['where'] != '' ? $this->db->where($param['where']): '' );
+        ($param['where_in'] != null ? $this->db->where_in($param['where_in']['field'],$param['where_in']['value']) : '');
+        ($param['where_not_in'] != null ? $this->db->where_not_in($param['where_not_in']['field'],$param['where_not_in']['value']) : '');
+
+
+        ($param['limit'] != null ? $this->db->limit($param['limit']['end'], $param['limit']['start']) : '');
+        ($param['sort_by'] != null ? $this->db->order_by($param['sort_by'], $param['sord']) : '');
+
+
+        $items = $this->db->get()->result_array();
+        return $items;
+
     }
 }

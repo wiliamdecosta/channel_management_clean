@@ -8,50 +8,8 @@
     <table id="grid-table"></table>
     <div id="grid-pager"></div>
 </div>
-<div id="form_mitra" style="display: none;">
-</div>
-<div id="lov_pic" class="lov_content"></div>
-<div id="lov_segment" class="lov_content"></div>
-<div id="lov_cc" class="lov_content"></div>
-<div id="lov_mitra" class="lov_content"></div>
-<div id="lov_lokasi_pks" class="lov_content"></div>
+<div id="form_mitra" style="display: none;"></div>
 
-<script type="text/javascript">
-    function getLovPIC() {
-        var divID = "pic_id#~#picname#~#jabatan#~#alamat#~#email#~#no_hp#~#fax"; // Parameter id input
-        var lov_target_id = "lov_pic"; // Harus sama dengan id class lov
-        var modal_id = "modal_lov_pic"; // Terserah
-        $(".lov_content").html("");
-        $.ajax({
-            // async: false,
-            url: "<?php echo base_url();?>managementmitra/lovPIC",
-            type: "POST",
-            data: {divID: divID,lov_target_id:lov_target_id,modal_id:modal_id},
-            success: function (data) {
-                $('#'+lov_target_id).html(data);
-                $('#'+modal_id).modal('show');
-            }
-        });
-    }
-
-    function getLovSegment() {
-        var divID = "mitraForm_segment"; //// Parameter id input
-        var lov_target_id = "lov_segment"; // Harus sama dengan id class lov
-        var modal_id = "modal_lov_segment"; // Terserah
-        $(".lov_content").html("");
-        $.ajax({
-             async: false,
-            url: "<?php echo base_url();?>managementmitra/lovSegment",
-            type: "POST",
-            data: {divID: divID,lov_target_id:lov_target_id,modal_id:modal_id},
-            success: function (data) {
-                $('#'+lov_target_id).html(data);
-                $('#'+modal_id).modal('show');
-            }
-        });
-    }
-
-</script>
 <script type="text/javascript">
     $(document).ready(function () {
         var grid_selector = "#grid-table";
@@ -390,7 +348,7 @@
             type: "POST",
             data: {},
             success: function (data) {
-                $('#form_mitra').html(data);
+                $("#form_mitra").html(data);
                 $("#tbl_pic").hide("slow");
                 $("#form_mitra").show("slow");
             }

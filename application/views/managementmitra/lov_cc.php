@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
+                <h4 class="modal-title">LOV CC</h4>
             </div>
             <div class="modal-body">
                 <div id="btn-reset">
@@ -32,25 +32,27 @@
     $(document).ready(function () {
         var grid = $('#grid_table_lov');
         var pager = $('#grid_pager_lov');
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            grid.jqGrid('setGridWidth', '570');
+        });
+        $(window).on('resize.jqGrid', function () {
+            pager.jqGrid('setGridWidth', '570');
+        });
 
         grid.jqGrid({
-            url: '<?php echo site_url('managementmitra/grid_lov_segment');?>',
+            url: '<?php echo site_url('managementmitra/grid_lov_cc');?>',
             datatype: "json",
             mtype: "POST",
+            postData: {cc_name: '<?php echo $cc_name;?>'},
             colModel: [
+                {label: 'ID', name: 'ID', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {
-                    label: 'Segment',
-                    name: 'CODE_SGM',
-                    key: true,
-                    width: 270,
-                    sorttype: 'number',
-                    sopt: ['bw']
-                },
-                {
-                    label: 'Nama Segment',
-                    name: 'SEGMENT_NAME',
-                    width: 270,
-                    sorttype: 'number',
+                    label: 'Nama CC',
+                    name: 'CC',
+                    align: "left",
+                    width: 570,
+                    editable: true,
                     sopt: ['bw']
                 }
             ],
@@ -77,12 +79,6 @@
                 repeatitems: false
             },
             loadComplete: function () {
-                $(window).on('resize.jqGrid', function () {
-                    grid.jqGrid('setGridWidth', '570');
-                });
-                $(window).on('resize.jqGrid', function () {
-                    pager.jqGrid('setGridWidth', '570');
-                });
                 var table = this;
                 setTimeout(function () {
                     updatePagerIcons(table);
@@ -90,7 +86,12 @@
                 }, 0);
             },
             ondblClickRow: function (rowid) {
-                returnValue(rowid);
+                var rowKey = grid.jqGrid('getGridParam', 'selrow');
+
+                var ID = grid.jqGrid('getCell', rowKey, 'ID');
+                var CC = grid.jqGrid('getCell', rowKey, 'CC');
+                var params = ID + "#~#" + CC;
+                return returnValue(params);
             }
         });
 
@@ -144,7 +145,7 @@
                 recreateForm: true,
                 viewPagerButtons: false,
                 beforeShowForm: function (e, form) {
-                    //var form = $(e[0]);
+                    var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                         .wrapInner('<div class="widget-header" />');
                     style_edit_form(form);
@@ -170,6 +171,7 @@
                 //search form
                 // closeAfterSearch: true,
                 recreateForm: true,
+                searchOnEnter: true,
                 afterShowSearch: function (e) {
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />');
@@ -178,6 +180,7 @@
                 afterRedraw: function () {
                     style_search_filters($(this));
                 }
+
 
             },
             {

@@ -76,7 +76,7 @@ class Auth extends CI_Controller
                 $rc = $this->M_user->getLists("USER_NAME='" . strtoupper($username) . "'");
                 if (count($rc) > 0) {
                     // $this->session->set_userdata('d_message', "Password is wrong !");
-                    echo json_encode(array('msg' => "Password is wrong !"));
+                    echo json_encode(array('msg' => "Username / Password salah !"));
                 } else {
                     //$this->session->set_userdata('d_message', "User belum terdaftar !");
                     echo json_encode(array('msg' => "User belum terdaftar !"));

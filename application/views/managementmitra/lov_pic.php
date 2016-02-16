@@ -7,6 +7,12 @@
                 <h4 class="modal-title">Modal Header</h4>
             </div>
             <div class="modal-body">
+                <div id="btn-reset">
+                    <button id="blank" class="btn btn-sm btn-success" type="button" onclick="blank()">
+                        <span aria-hidden="true" class="fa fa-pencil-square-o"></span> BLANK
+                    </button>
+                </div>
+                &nbsp;
                 <div id="tbl_pic">
                     <table id="grid_table_lov"></table>
                     <div id="grid_pager_lov"></div>
