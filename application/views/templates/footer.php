@@ -73,7 +73,7 @@
                         }
                         $("#ajaxContent").html(errorThrown);
                     },
-                    timeout: 1000// sets timeout to 10 seconds
+                    timeout: 10000// sets timeout to 10 seconds
                 });
                 return false;
             }
