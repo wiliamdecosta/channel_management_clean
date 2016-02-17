@@ -33,7 +33,7 @@
             mtype: "POST",
             colModel: [
                 {label: 'ID', name: 'ID_MITRA', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {
+                /*{
                     label: 'Nama Mitra',
                     name: 'PGL_NAME',
                     width: 200,
@@ -57,8 +57,7 @@
                     editable: true,
                     editrules: {required: true}
                 },
-                {label: 'Lokasi PKS', name: 'LOKASI', align: "left", editable: true, editrules: {required: true}},
-                {label: 'No PKS', name: 'NO_PKS', align: "left", editable: true, editrules: {required: true}},
+                {label: 'No PKS', name: 'NO_PKS', align: "left", editable: true, editrules: {required: true}},*/
                 {
                     label: 'Nama PIC',
                     name: 'PIC_NAME',
@@ -130,10 +129,10 @@
         //navButtons grid master
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             { 	//navbar options
-                edit: true,
+                edit: false,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
-                add: true,
+                add: false,
                 addicon: 'ace-icon fa fa-plus-circle purple',
                 del: true,
                 delicon: 'ace-icon fa fa-trash-o red',
@@ -344,9 +343,9 @@
     $("#add_mitra").click(function () {
         $.ajax({
             // async: false,
-            url: "<?php echo base_url();?>managementmitra/add_mitra_form",
+            url: "<?php echo base_url();?>managementmitra/mitra_form",
             type: "POST",
-            data: {},
+            data: {action:"add"},
             success: function (data) {
                 $("#form_mitra").html(data);
                 $("#tbl_pic").hide("slow");

@@ -87,7 +87,7 @@
         <div class="tabbable">
             <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="mytab">
                 <li class="tab" id="detailMitra">
-                    <a href="javascript:void(0)">Detail Mitra</a>
+                    <a href="javascript:void(0)">Detail PIC</a>
                 </li>
 
                 <li class="tab" id="dokPKS">

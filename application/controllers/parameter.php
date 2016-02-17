@@ -1185,5 +1185,31 @@ class Parameter extends CI_Controller
         echo json_encode($data);
     }
 
+    public function mitra_segment(){
+        //BreadCrumb
+        $title = $_POST['title'];
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        $this->load->view('parameter/mitra_segment');
+    }
+    public function addmitra(){
+        $data["action"] = $this->input->post("action");
+        $this->load->view('parameter/mitra_form',$data);
+    }
+
+    public function crud_detailmitra(){
+        $return = $this->M_parameter->crud_detailmitra();
+        if($return == 1){
+            $data["success"] = true;
+            $data["message"] = "Data berhasil ditambahakan";
+
+        }else{
+            $data["success"] = false;
+            $data["message"] = "Gagal menambah data";
+        }
+        echo json_encode($data);
+    }
+
 
 }

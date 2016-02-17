@@ -108,8 +108,6 @@
 <script src="<?php echo base_url();?>assets/swal/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/swal/sweetalert.css" />
 
-<script src="<?php echo base_url();?>assets/js/jquery_notification.js"></script>
-
 <!--<script src="--><?php //echo base_url();?><!--assets/js/jquery-ui.custom.js"></script>-->
 <script src="<?php echo base_url();?>assets/js/jquery.blockUI.js"></script>
 <script src="<?php echo base_url();?>assets/js/jquery.ui.touch-punch.js"></script>

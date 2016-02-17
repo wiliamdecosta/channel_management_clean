@@ -101,7 +101,8 @@
              },*/
             stringResult: true,
             autosearch: true,
-            searchOnEnter: false
+            searchOnEnter: false,
+            defaultSearch : 'cn'
         });
         //navButtons grid master
         grid.jqGrid('navGrid', '#grid_pager_lov',

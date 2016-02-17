@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
+                <h4 class="modal-title">LOV Segment</h4>
             </div>
             <div class="modal-body">
                 <div id="btn-reset">
@@ -100,7 +100,8 @@
              },*/
             stringResult: true,
             autosearch: true,
-            searchOnEnter: false
+            searchOnEnter: false,
+            defaultSearch : 'cn'
         });
         //navButtons grid master
         grid.jqGrid('navGrid', '#grid_pager_lov',

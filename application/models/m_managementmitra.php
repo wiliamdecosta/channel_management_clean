@@ -132,7 +132,7 @@ class M_managementmitra extends CI_Model
     {
 
         $this->db->_protect_identifiers = false;
-       // $this->db->protect_identifiers('TEN_ND', FALSE);
+        // $this->db->protect_identifiers('TEN_ND', FALSE);
         $oper = $this->input->post('oper');
         $id = $this->input->post('id');
 
@@ -149,7 +149,7 @@ class M_managementmitra extends CI_Model
                 //$this->db->update($table, $data);
                 break;
             case 'del':
-               // $this->db->where('ND', $ND);
+                // $this->db->where('ND', $ND);
                 $this->db->where('P_PKS_ID', $id);
                 $this->db->delete($table);
                 break;
@@ -179,6 +179,60 @@ class M_managementmitra extends CI_Model
                 break;
         }
 
+    }
+
+    public function crud_detailmitra()
+    {
+        $this->db->_protect_identifiers = false;
+
+        $table = "P_MAP_MIT_CC";
+        $pk = "P_MAP_MIT_CC_ID";
+
+        //$segment = $this->input->post("segment_code");
+        $cc_id = $this->input->post("cc_id");
+        $mitra_id = $this->input->post("mitra_id");
+        $pic_id = $this->input->post("pic_id");
+        $contact = $this->input->post("contact");
+        $eam_id = $this->input->post("eam_id");
+        $lokasi_pks = $this->input->post("lokasi_pks");
+        $action = $this->input->post("action");
+        $CREATED_DATE = date('d/M/Y');
+        $CREATED_BY = $this->session->userdata('d_user_name');
+
+
+        $data = array('PGL_ID' => $mitra_id,
+            'P_PIC_ID' => $pic_id,
+            'P_CONTACT_TYPE_ID' => $contact,
+            'P_DAT_AM_ID' => $eam_id,
+            'ID_CC' => $cc_id,
+            'CREATION_DATE' => $CREATED_DATE,
+            'CREATE_BY' => $CREATED_BY
+        );
+
+        if ($action == "add") {
+            $new_id = gen_id($pk, $table);
+            $this->db->set($pk, $new_id);
+            $this->db->insert($table, $data);
+            if ($this->db->affected_rows() == 1) {
+
+                $gen_lokasi_id = gen_id("P_MP_LOKASI_ID", "P_MP_LOKASI");
+                $data_lokasi = array('P_MAP_MIT_CC_ID' => $new_id,
+                    'LOKASI' => $lokasi_pks,
+                    'CREATE_BY' => $CREATED_BY,
+                    'CREATION_DATE' => $CREATED_DATE
+                );
+
+                $this->db->set("P_MP_LOKASI_ID", $gen_lokasi_id);
+                $this->db->insert("P_MP_LOKASI", $data_lokasi);
+
+                return $this->db->affected_rows();
+            }
+
+        } elseif ($action == "edit") {
+
+        } else {
+            echo "unknown";
+        }
     }
 
 
