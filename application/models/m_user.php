@@ -18,12 +18,18 @@ class M_user extends CI_Model {
 		if($q->num_rows() > 0) $result = $q->result();
 		return $result;
     }
+    
     public function getUserPwd($username,$pwd) {
         $sql = "SELECT * FROM APP_USERS WHERE USER_NAME = ? AND PASSWD = ? ";
         $qs = $this->db->query($sql, array($username, $pwd));
         return $qs;
     }
 
+    public function getUserItem($user_id) {
+        $sql = "SELECT * FROM APP_USERS WHERE USER_ID = ?";
+        $qs = $this->db->query($sql, array($user_id))->row_array();
+        return $qs;
+    }
     
     public function insert($nik, $user_name, $email, $loker, $addr_street, $addr_city, $contact_no) {
 	    $new_id = $this->getNewUserId();
