@@ -236,7 +236,7 @@
                     					<label for="form-field-pass1" class="col-sm-3 control-label no-padding-right">Password</label>
                     
                     					<div class="col-sm-9">
-                    						<input type="password" id="form-field-pass1" name="user_password"> *Min. 6 Karakter
+                    						<input type="password" id="form-field-pass1" name="user_password" maxlength="8"> *Min. 6 Karakter
                     					</div>
                     				</div>
                     
@@ -246,7 +246,7 @@
                     					<label for="form-field-pass2" class="col-sm-3 control-label no-padding-right">Konfirmasi Password</label>
                     
                     					<div class="col-sm-9">
-                    						<input type="password" id="form-field-pass2">
+                    						<input type="password" id="form-field-pass2" maxlength="8">
                     					</div>
                     				</div>
                     			</div>
