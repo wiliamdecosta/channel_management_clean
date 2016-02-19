@@ -56,13 +56,15 @@ class Submit_profile extends CI_Controller {
     	        throw new Exception("Maaf, Mitra/Admin yang bersangkutan tidak terdaftar. Parameter URL tidak valid");
     	    }
     	    
-    	    
     	    $sql = "SELECT COUNT(1) AS TOTAL_COUNT FROM T_USER_LEGAL_DOC WHERE USER_ID = ".$data['user_id_mitra'];
 	        $rc = $this->M_user->db->query($sql)->row_array();
 	        
 	        if($rc['TOTAL_COUNT'] > 0) {
     	        throw new Exception("Maaf, Anda sudah pernah melakukan upload profile.");
     	    }
+    	    
+    	    $item_user = $this->M_user->getUserItem($data['user_id_mitra']);
+    	    $data['USER_NAME'] = $item_user['USER_NAME'];
     	    
 	    }catch(Exception $e) {
 	        $data['error_message'] = $e->getMessage();
@@ -122,12 +124,13 @@ class Submit_profile extends CI_Controller {
         }else {
             
             $itemuser = $this->M_user->getUserItem($id_mitra);
+            $itemadmin = $this->M_user->getUserItem($id_admin);
             
             $upload_result = $this->upload->data();
             $file_name = $config['file_name'].$upload_result['file_ext'];
             
             $sql = "INSERT INTO T_USER_LEGAL_DOC(T_USER_LEGAL_DOC_ID, USER_ID, JENIS_IDENTITAS, FILE_NAME, DESCRIPTION, CREATION_DATE, CREATED_BY)
-                        VALUES(T_USER_LEGAL_DOC_SEQ.NEXTVAL, ".$id_mitra.",'".$jenis_identitas."', '".$file_name."', '', SYSDATE, '".$itemuser['USER_NAME']."')";
+                        VALUES(T_USER_LEGAL_DOC_SEQ.NEXTVAL, ".$id_mitra.",'".$jenis_identitas."', '".$file_name."', '', SYSDATE, '".$itemadmin['USER_NAME']."')";
             $this->M_user->db->query($sql);
             
             $sql = "UPDATE APP_USERS

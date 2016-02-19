@@ -220,8 +220,19 @@
                     			</div>
                     		    <div class="tab-pane" id="edit-password">
                     				<div class="space-10"></div>
-                    
                     				<div class="form-group">
+                    				    <p class="green"><strong>Silahkan tentukan password Anda untuk dapat login pada aplikasi Channel Management.</strong></p>
+                    				    
+                    				</div>
+                    				
+                                    <div class="form-group">
+                    					<label for="form-field-username" class="col-sm-3 control-label no-padding-right">Username Anda</label>
+                    
+                    					<div class="col-sm-9">
+                    						<input type="text" id="form-field-username" name="user_name" value="<?php echo $USER_NAME; ?>" readonly>
+                    					</div>
+                    				</div>
+                                    <div class="form-group">
                     					<label for="form-field-pass1" class="col-sm-3 control-label no-padding-right">Password</label>
                     
                     					<div class="col-sm-9">
