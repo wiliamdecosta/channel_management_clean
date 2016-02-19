@@ -197,6 +197,7 @@ class Auth extends CI_Controller
     public function update_profile() {
         $this->load->model('M_user');
         
+        $user_password_old = $this->security->xss_clean($this->input->post('user_password_old'));
         $user_password1 = $this->security->xss_clean($this->input->post('user_password1'));
 		$user_password2 = $this->security->xss_clean($this->input->post('user_password2'));
 
@@ -222,12 +223,21 @@ class Auth extends CI_Controller
             if(empty($user_realname)) {
                 throw new Exception("Nama Lengkap harus diisi");    
             }
-                        
-            if (!empty($user_password1)){
-               if (strcmp($user_password1, $user_password2) != 0) throw new Exception("Password tidak sama. Silahkan diperiksa lagi.");
+            
+            if (!empty($user_password1) or !empty($user_password_old)){
+               if (strcmp($user_password1, $user_password2) != 0) throw new Exception("Password baru tidak sama dengan konfirmasi password. Silahkan diperiksa lagi.");
 
-               if (strlen($user_password1) < 6) throw new Exception("Password minimal 6 karakter");
-
+               if (strlen($user_password1) < 6) throw new Exception("Password baru minimal 6 karakter");
+               
+               if(empty($user_password_old)) {
+                    throw new Exception("Password Lama harus diisi");    
+               }
+                
+               $data_user = $this->M_user->getUserItem($user_id);
+    	       if(md5($user_password_old) != $data_user['PASSWD']) {
+                    throw new Exception("Password lama Anda salah");
+               }
+	        
                $record['PASSWD'] = md5($user_password1);
 	        }
 	        
@@ -240,9 +250,9 @@ class Auth extends CI_Controller
                     throw new Exception("Format email Anda salah. Silahkan diperbaiki");    	                
 	            }    
 	        }
-	        
-	        $record = array('EMAIL' => $user_email,
-	                        'FULL_NAME' => $user_realname);
+	           
+	        $record['EMAIL'] = $user_email;
+	        $record['FULL_NAME'] = $user_realname;
             
 	        $this->M_user->db->set($record);
 			$this->M_user->db->where("USER_ID", $user_id);
