@@ -145,7 +145,7 @@
                     			<li>
                     				<a href="#edit-password" data-toggle="tab">
                     					<i class="blue ace-icon fa fa-key bigger-125"></i>
-                    					Password
+                    					Setting Password
                     				</a>
                     			</li>
                     		</ul>
