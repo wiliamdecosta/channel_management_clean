@@ -99,22 +99,22 @@
         <img class="nav-user-photo" src="<?php echo base_url();?>assets/avatars/nouser.png" alt="Avatar" />
 								<span class="user-info">
 									<small>Welcome,</small>
-                                    <?php echo $this->session->userdata("d_nik"); ?>
+                                    <?php echo $this->session->userdata("d_full_name"); ?>
 								</span>
 
         <i class="ace-icon fa fa-caret-down"></i>
     </a>
 
     <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-        <li>
+        <!-- <li>
             <a href="#">
                 <i class="ace-icon fa fa-cog"></i>
                 Settings
             </a>
-        </li>
+        </li> -->
 
         <li>
-            <a href="<?php echo site_url("/auth/profile");?>">
+            <a href="#" id="user-profile-button">
                 <i class="ace-icon fa fa-user"></i>
                 Profile
             </a>

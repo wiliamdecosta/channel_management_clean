@@ -44,8 +44,7 @@
     });
     // Ajax setup csrf token.
     var csfrData = {};
-    csfrData['<?php echo $this->security->get_csrf_token_name(); ?>'] = '<?php echo
-    $this->security->get_csrf_hash(); ?>';
+    csfrData['<?php echo $this->security->get_csrf_token_name(); ?>'] = '<?php echo $this->security->get_csrf_hash(); ?>';
     $.ajaxSetup({
         data: csfrData
     });
@@ -78,7 +77,28 @@
                 return false;
             }
 
-        })
+        });
+        
+        $('#user-profile-button').click(function(){
+            $("#nav_lvl1").removeClass('active');
+            $(".setting_nav").removeClass('active');
+            
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url();?>auth/profile",
+                success: function(data) {
+                    $("#ajaxContent").html(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    if(textStatus === 'timeout'){
+                        swal('Oops..Time Out','Please reload this page','warning');
+                    }
+                    $("#ajaxContent").html(errorThrown);
+                },
+                timeout: 10000// sets timeout to 10 seconds
+            });
+
+        });
     })
 
 </script>

@@ -149,6 +149,7 @@ class Auth extends CI_Controller
     
     
     public function checkUserProfile($user_id) {
+        $this->load->model('M_user');
         $profs = $this->M_user->getUserProfile($user_id);
 
         if (count($profs) == 0) {
@@ -173,6 +174,7 @@ class Auth extends CI_Controller
         $sessions = array(
             'd_user_id' => $data_user['USER_ID'],
             'd_user_name' => $data_user['USER_NAME'],
+            'd_full_name' => $data_user['FULL_NAME'],
             'd_nik' => $data_user['NIK'],
             'd_email' => $data_user['EMAIL']
         );
@@ -182,9 +184,85 @@ class Auth extends CI_Controller
     }
     
     public function profile()
-    {
-        $this->load->view('templates/interval');
+    {   
+        $this->load->model('M_user');
+        $user_id = $this->session->userdata('d_user_id');
+        
+        $data_user = $this->M_user->getUserItem($user_id);
+        
+        $this->load->view('templates/user_profile', $data_user);
     }
 
+    
+    public function update_profile() {
+        $this->load->model('M_user');
+        
+        $user_password1 = $this->security->xss_clean($this->input->post('user_password1'));
+		$user_password2 = $this->security->xss_clean($this->input->post('user_password2'));
 
+		$user_email = $this->security->xss_clean($this->input->post('user_email'));
+		$user_realname = $this->security->xss_clean($this->input->post('user_realname'));
+
+        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');    
+        
+        $user_id = $this->session->userdata('d_user_id');
+        
+        try {
+            /*
+                $this->db->set($this->record);
+			    $this->db->where($this->pkey, $this->record[$this->pkey]);
+			    $this->db->update( $this->table );
+            */    
+            $record = array();
+            
+            if(empty($user_id)) {
+                throw new Exception("Session Anda telah habis");    
+            }
+            
+            if(empty($user_realname)) {
+                throw new Exception("Nama Lengkap harus diisi");    
+            }
+                        
+            if (!empty($user_password1)){
+               if (strcmp($user_password1, $user_password2) != 0) throw new Exception("Password tidak sama. Silahkan diperiksa lagi.");
+
+               if (strlen($user_password1) < 6) throw new Exception("Password minimal 6 karakter");
+
+               $record['PASSWD'] = md5($user_password1);
+	        }
+	        
+	        if(empty($user_email)) {
+	            throw new Exception("Email harus diisi"); 
+	        }
+	        
+	        if(!empty($user_email)) {
+	            if(!$this->isValidEmail($user_email)) {
+                    throw new Exception("Format email Anda salah. Silahkan diperbaiki");    	                
+	            }    
+	        }
+	        
+	        $record = array('EMAIL' => $user_email,
+	                        'FULL_NAME' => $user_realname);
+            
+	        $this->M_user->db->set($record);
+			$this->M_user->db->where("USER_ID", $user_id);
+			$this->M_user->db->update( "APP_USERS" );
+			
+			$this->session->set_userdata('d_full_name', $user_realname);
+			$this->session->set_userdata('d_email', $user_email);
+			
+			$data['success'] = true;
+	        $data['message'] = 'Data profile berhasil diupdate';
+	        
+        }catch(Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+        
+        echo json_encode($data);
+        exit;
+    }
+    
+    public function isValidEmail($email){ 
+        return filter_var($email, FILTER_VALIDATE_EMAIL) && preg_match('/@.+\./', $email);
+    }
 }

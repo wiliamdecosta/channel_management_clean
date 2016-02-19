@@ -148,8 +148,9 @@ class Submit_profile extends CI_Controller {
     }
     
     public function isValidEmail($email){ 
-    return filter_var($email, FILTER_VALIDATE_EMAIL) && preg_match('/@.+\./', $email);
-}
+        return filter_var($email, FILTER_VALIDATE_EMAIL) && preg_match('/@.+\./', $email);
+    }
+    
     public function sendMail($itemuser, $email_admin) {
         
         $sql = "  BEGIN ".
