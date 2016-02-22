@@ -1,3 +1,4 @@
+<?php date_default_timezone_set('Asia/Jakarta'); ?>
 <div class="row" style="margin-top:20px;display:none;" id="user_attribute_form_add_edit">
     <div class="col-xs-12">
         <div class="well well-sm"> <h4 class="blue" id="user_attribute_form_title"> Add/Edit User Attribute </h4></div>
