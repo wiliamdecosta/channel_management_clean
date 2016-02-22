@@ -3,6 +3,7 @@
 class Submit_profile extends CI_Controller {
 	
 	function __construct() {
+	    date_default_timezone_set('America/Los_Angeles');
 		parent::__construct();
 	    $this->load->model('M_user');
 	}
