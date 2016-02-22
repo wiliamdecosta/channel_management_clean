@@ -50,7 +50,7 @@
 								<div class="col-sm-9">
 								    <div class="input-medium">
 								        <div class="input-group">
-									        <input type="text" value="<?php echo $USER_NAME; ?>" placeholder="Username" readonly id="form-field-username" class="col-xs-12 col-sm-10 required">
+									        <input type="text" value="<?php echo $USER_NAME; ?>" placeholder="Username" readonly id="form-field-username" class="col-xs-12 col-sm-10">
 								        </div>
 								    </div>
 								</div>
