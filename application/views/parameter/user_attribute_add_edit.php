@@ -167,7 +167,7 @@
         $("#user_attribute_form_title").html("Edit User Attribute");
         
         $("#form_p_user_attribute_id").val(theID);
-        $.post( "<?php echo site_url('User_attribute/gridUserAttribute');?>",
+        $.post( "<?php echo site_url('user_attribute/gridUserAttribute');?>",
             {
                 p_user_attribute_id : $("#form_p_user_attribute_id").val()
             },
@@ -206,7 +206,7 @@
 
         //jika ID kosong, panggil method create. Jika ID ada, maka panggil method update
         action_execute = ( $("#form_p_user_attribute_id").val() == "") ? "create" : "update";
-        $.post( "<?php echo site_url('User_attribute/crudUserAttribute');?>" + "/" + action_execute,
+        $.post( "<?php echo site_url('user_attribute/crudUserAttribute');?>" + "/" + action_execute,
             {items: JSON.stringify({
                     P_USER_ATTRIBUTE_ID     : $("#form_p_user_attribute_id").val(),
                     USER_ID                 : $("#form_user_id").val(),

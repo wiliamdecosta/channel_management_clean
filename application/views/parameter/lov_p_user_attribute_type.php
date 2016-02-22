@@ -102,7 +102,7 @@
     	        }
     	        return response;
     	     },
-       	     url: "<?php echo site_url('User_attribute/gridLovUserAttributeType');?>",
+       	     url: "<?php echo site_url('user_attribute/gridLovUserAttributeType');?>",
     	     selection: true,
     	     sorting:true
     	});

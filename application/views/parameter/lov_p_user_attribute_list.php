@@ -101,7 +101,7 @@
     	        }
     	        return response;
     	     },
-       	     url: "<?php echo site_url('User_attribute/gridLovUserAttributeList');?>",
+       	     url: "<?php echo site_url('user_attribute/gridLovUserAttributeList');?>",
        	     post: function () {
     	         return { p_user_attribute_type_id : $("#form_p_user_attribute_type_id").val() };
     	     },

@@ -113,7 +113,7 @@
         },
         function(isConfirm){
             if (isConfirm) {
-                $.post( "<?php echo site_url('User_attribute/crudUserAttribute/destroy');?>",
+                $.post( "<?php echo site_url('user_attribute/crudUserAttribute/destroy');?>",
             	    { items: JSON.stringify(theID) },
                      function( response ) {
                          var response = JSON.parse(response);
@@ -159,7 +159,7 @@
     	        }
     	        return response;
     	     },
-       	     url: "<?php echo site_url('User_attribute/gridUserAttribute');?>",
+       	     url: "<?php echo site_url('user_attribute/gridUserAttribute');?>",
        	     post: function () {
     	         return { user_id : user_id };
     	     },
