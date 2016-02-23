@@ -1,116 +1,84 @@
-<div id="content">
-    <div class="breadcrumbs" id="breadcrumbs">
-        <?= $this->breadcrumb; ?>
-    </div>
-
-    <div class="page-content">
-
-        <div class="row">
-            <div class="col-xs-12">
-
+<div class="breadcrumbs" id="breadcrumbs">
+    <?= $this->breadcrumb; ?>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <br>
+            <form class="form-horizontal" role="form">
                 <div class="row">
-                    <div class="vspace-12-sm"></div>
-                    <div class="col-sm-12">
-                        <div class="widget-box transparent">
-                            <div class="widget-header red widget-header-flat">
-                                <h4 class="widget-title lighter">
-                                    Daftar Mitra
-                                </h4>
-
-                                <div class="widget-toolbar">
-                                    <a href="#" data-action="collapse">
-                                        <i class="ace-icon fa fa-chevron-up"></i>
-                                    </a>
-                                </div>
+                    <div class="col-xs-6">
+                        <label class="col-sm-3 control-label no-padding-right"
+                               for="form-field-1"> Nama Segment </label>
+                        <div class="form-group" id="segmen_notif">
+                            <div class="col-sm-8">
+                                <?php echo combo_segmen(); ?>
                             </div>
-                            <div class="widget-body">
-                                <br>
+                        </div>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                            Nama CC </label>
+                        <div class="form-group">
+                            <div class="col-sm-8">
+                                <select class="form-control" id="list_cc">
+                                    <option value="">Pilih CC</option>
 
-                                <form class="form-horizontal" role="form">
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <label class="col-sm-3 control-label no-padding-right"
-                                                   for="form-field-1"> Nama Segment </label>
-                                            <div class="form-group" id="segmen_notif">
-                                                <div class="col-sm-8">
-                                                    <?php echo combo_segmen(); ?>
-                                                </div>
-                                            </div>
-                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
-                                                Nama CC </label>
-                                            <div class="form-group">
-                                                <div class="col-sm-8">
-                                                    <select class="form-control" id="list_cc">
-                                                        <option value="">Pilih CC</option>
-
-                                                    </select>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <label class="col-sm-3 control-label no-padding-right"
-                                                   for="form-field-1-1"> Nama Mitra </label>
-                                            <div class="form-group">
-                                                <div class="col-sm-8">
-                                                    <select class="form-control" id="mitra">
-                                                        <option value="">Pilih Mitra</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <label class="col-sm-3 control-label no-padding-right"
-                                                   for="form-field-1-1">Nama Lokasi PKS </label>
-                                            <div class="form-group">
-                                                <div class="col-sm-8">
-                                                    <select class="form-control" id="lokasisewa">
-                                                        <option value="">Pilih Lokasi PKS</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </form>
+                                </select>
                             </div>
-                            <!-- PAGE CONTENT ENDS -->
+
                         </div>
                     </div>
+                    <div class="col-xs-6">
+                        <label class="col-sm-3 control-label no-padding-right"
+                               for="form-field-1-1"> Nama Mitra </label>
+                        <div class="form-group">
+                            <div class="col-sm-8">
+                                <select class="form-control" id="mitra">
+                                    <option value="">Pilih Mitra</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label class="col-sm-3 control-label no-padding-right"
+                               for="form-field-1-1">Nama Lokasi PKS </label>
+                        <div class="form-group">
+                            <div class="col-sm-8">
+                                <select class="form-control" id="lokasisewa">
+                                    <option value="">Pilih Lokasi PKS</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <!-- /.widget-box -->
-            </div>
-            <!-- /.col -->
-
-
+            </form>
         </div>
-        <!-- /.row -->
+    </div>
 
-        <div class="tabbable">
-            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="mytab">
-                <li class="tab" id="detailMitra">
-                    <a href="javascript:void(0)">Detail PIC</a>
-                </li>
+    <div class="tabbable">
+        <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="mytab">
+            <li class="tab" id="detailMitra">
+                <a href="javascript:void(0)">Detail Mitra</a>
+            </li>
 
-                <li class="tab" id="dokPKS">
-                    <a href="javascript:void(0)">Dokumen PKS</a>
-                </li>
+            <li class="tab" id="dokPKS">
+                <a href="javascript:void(0)">Dokumen PKS</a>
+            </li>
 
-                <li class="tab" id="dokNPK">
-                    <a href="javascript:void(0)">Dokumen NPK</a>
-                </li>
-                <li class="tab" id="fastels">
-                    <a href="javascript:void(0)">Fastel</a>
-                </li>
-                <li class="tab" id="dokKontrak">
-                    <a href="javascript:void(0)">Dokumen Kontrak</a>
-                </li>
-                <li class="tab" id="evaluasiMitra">
-                    <a href="javascript:void(0)">Evaluasi Mitra</a>
-                </li>
-            </ul>
+            <li class="tab" id="dokNPK">
+                <a href="javascript:void(0)">Dokumen NPK</a>
+            </li>
+            <li class="tab" id="fastels">
+                <a href="javascript:void(0)">Fastel</a>
+            </li>
+            <li class="tab" id="dokKontrak">
+                <a href="javascript:void(0)">Dokumen Kontrak</a>
+            </li>
+            <li class="tab" id="evaluasiMitra">
+                <a href="javascript:void(0)">Evaluasi Mitra</a>
+            </li>
+        </ul>
 
-            <div class="tab-content">
-                <div id="main_content" style="min-height: 400px;">
-                </div>
+        <div class="tab-content">
+            <div id="main_content" style="min-height: 400px;">
             </div>
         </div>
     </div>
@@ -155,18 +123,18 @@
         if ($("#segment").val() == "") {
             v_str += "* Segmen belum dipilih\n";
         }
-        if($("#list_cc").val()==""){
+        if ($("#list_cc").val() == "") {
             v_str += "* CC belum dipilih\n";
         }
-        if($("#mitra").val()==""){
+        if ($("#mitra").val() == "") {
             v_str += "* Mitra belum dipilih\n";
         }
-        if($("#lokasisewa").val()==""){
+        if ($("#lokasisewa").val() == "") {
             v_str += "* Lokasi PKS belum dipilih\n";
         }
 
         if (v_str != "") {
-            swal("", v_str,"warning");
+            swal("", v_str, "warning");
             return false;
         }
         else {

@@ -1,364 +1,90 @@
-<div id="tbl_pic">
-    <div style="margin-bottom: 10px;">
-        <button class="btn btn-white btn-sm btn-round" id="add_mitra">
-            <i class="ace-icon fa fa-plus green"></i>
-            Tambah Mitra
-        </button>
+<div class="row">
+    <div class="">
+        <div class="profile-user-info profile-user-info-striped">
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Nama AM</div>
+
+                <div class="profile-info-value">
+                    <span class="editable"><b><?php echo $am['AM_NAME'];?></b></span>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="profile-info-name"> NIK</div>
+
+                <div class="profile-info-value">
+                    <span class="editable"><?php echo $am['NIK'];?></span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Email</div>
+
+                <div class="profile-info-value">
+                    <span class="editable"><?php echo $am['AM_EMAIL'];?></span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name">No Hp</div>
+                <div class="profile-info-value">
+                    <span class="editable" id="username"><?php echo $am['AM_NO_HP'];?></span>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <table id="grid-table"></table>
-    <div id="grid-pager"></div>
 </div>
-<div id="form_mitra" style="display: none;"></div>
+&nbsp;
+<div class="row">
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="clearfix">
+            </div>
+            <div class="table-header">
+                Evaluasi Mitra
+            </div>
+            <div>
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="center">NO</th>
+                        <th> Nama PIC</th>
+                        <th> Jenis Kontak</th>
+                        <th> Alamat</th>
+                        <th> Kota</th>
+                        <th> Kode Pos</th>
+                        <th> Email</th>
+                        <th> No. HP</th>
+                        <th> Fax</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        var grid_selector = "#grid-table";
-        var pager_selector = "#grid-pager";
-        //resize to fit page size
-        $(window).on('resize.jqGrid', function () {
-            $(grid_selector).jqGrid('setGridWidth', $("#tbl_pic").width());
-        });
-        $(window).on('resize.jqGrid', function () {
-            $(pager_selector).jqGrid('setGridWidth', $("#tbl_pic").width());
-        });
+                    <?php $i = 1;
+                    foreach ($result as $content){
 
-        var ccid = '<?php echo $ccid;?>';
-        var mitra = '<?php echo $mitra;?>';
-        var lokasisewa = '<?php echo $lokasisewa;?>';
-        var segment = '<?php echo $segment;?>';
-        var data = {ccid: ccid, mitra: mitra, lokasisewa: lokasisewa, segment: segment};
-        jQuery("#grid-table").jqGrid({
-            url: '<?php echo site_url('managementmitra/gridPIC');?>',
-            datatype: "json",
-            mtype: "POST",
-            colModel: [
-                {label: 'ID', name: 'ID_MITRA', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                /*{
-                    label: 'Nama Mitra',
-                    name: 'PGL_NAME',
-                    width: 200,
-                    align: "left",
-                    editable: true,
-                    editrules: {required: true}
-                },
-                {
-                    label: 'Nama CC',
-                    name: 'CC_NAME',
-                    width: 200,
-                    align: "left",
-                    editable: true,
-                    editrules: {required: true}
-                },
-                {
-                    label: 'Segment',
-                    name: 'SEGMENT',
-                    width: 90,
-                    align: "left",
-                    editable: true,
-                    editrules: {required: true}
-                },
-                {label: 'No PKS', name: 'NO_PKS', align: "left", editable: true, editrules: {required: true}},*/
-                {
-                    label: 'Nama PIC',
-                    name: 'PIC_NAME',
-                    width: 150,
-                    align: "left",
-                    editable: true,
-                    editrules: {required: true}
-                },
-                {
-                    label: 'Contact Type',
-                    name: 'CODE',
-                    width: 150,
-                    align: "left",
-                    editable: true,
-                    editrules: {required: true},
-                    editoptions: {size: 45}
-                },
-                {label: 'Jabatan', name: 'JABATAN', width: 150, align: "left", editable: true},
-                {label: 'Alamat', name: 'ADDRESS_1', width: 300, align: "left", editable: true},
-                {label: 'Kota', name: 'KOTA', width: 150, align: "left", editable: true},
-                {label: 'Zip Code', name: 'ZIP_CODE', width: 100, align: "left", editable: true},
-                {label: 'Email', name: 'EMAIL_PIC', width: 150, align: "left", editable: true},
-                {label: 'No Hp', name: 'NO_HP_PIC', width: 100, align: "left", editable: true},
-                {label: 'No Telp', name: 'NO_TELP', width: 100, align: "left", editable: true},
-                {label: 'Fax', name: 'FAX', width: 100, align: "left"},
-                {label: 'Valid From', name: 'VALID_FROM', width: 100, align: "left"},
-                {label: 'Valid Until', name: 'VALID_T0', width: 100, align: "left"},
-                {label: 'NAMA EAM', name: 'AM_NAME', width: 150, align: "left"},
-                {label: 'NIK', name: 'NIK', width: 100, align: "left"},
-                {label: 'EMAIL AM', name: 'EMAIL_AM', width: 150, align: "left"},
-                {label: 'NO HP AM', name: 'NO_HP_AM', width: 150, align: "left"}
-            ],
-            postData: data,
-            width: '100%',
-            AutoWidth: true,
-            height: '100%',
-            scrollOffset: 0,
-            rowNum: 5,
-            viewrecords: true,
-            rowList: [5, 10, 20],
-            sortname: 'P_MAP_MIT_CC_ID', // default sorting ID
-            rownumbers: true, // show row numbers
-            rownumWidth: 35,
-            sortorder: 'asc',
-            altRows: true,
-            shrinkToFit: false,
-            multiboxonly: true,
-            onSortCol: clearSelection,
-            onPaging: clearSelection,
-            pager: '#grid-pager',
-            jsonReader: {
-                root: 'Data',
-                id: 'id',
-                repeatitems: false
-            },
-            loadComplete: function () {
-                var table = this;
-                setTimeout(function () {
-                    updatePagerIcons(table);
-                    enableTooltips(table);
-                }, 0);
-            },
-            editurl: '<?php echo site_url('admin/crud_user');?>',
-            caption: "List PIC Mitra"
+                        ?>
+                        <tr>
+                            <td class="center"><?php echo $i; ?> </td>
+                            <td>
+                                <a href="#"><?php echo $content['PIC_NAME']; ?></a>
+                            </td>
+                            <td> <?php echo $content['CODE']; ?> </td>
+                            <td> <?php echo $content['ADDRESS_1']; ?> </td>
+                            <td> <?php echo $content['KOTA']; ?> </td>
+                            <td> <?php echo $content['ZIP_CODE']; ?> </td>
+                            <td> <?php echo $content['EMAIL']; ?> </td>
+                            <td> <?php echo $content['NO_HP']; ?> </td>
+                            <td> <?php echo $content['FAX']; ?> </td>
+                        </tr>
+                        <?php
+                        $i++;
+                    }
 
-        });
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-        //navButtons grid master
-        jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
-            { 	//navbar options
-                edit: false,
-                excel: true,
-                editicon: 'ace-icon fa fa-pencil blue',
-                add: false,
-                addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
-                delicon: 'ace-icon fa fa-trash-o red',
-                search: true,
-                searchicon: 'ace-icon fa fa-search orange',
-                refresh: true,
-                refreshicon: 'ace-icon fa fa-refresh green',
-                view: true,
-                viewicon: 'ace-icon fa fa-search-plus grey'
-            },
-            {
-                // options for the Edit Dialog
-                closeAfterEdit: true,
-                width: 600,
-                errorTextFormat: function (data) {
-                    return 'Error: ' + data.responseText
-                },
-                recreateForm: true,
-                beforeShowForm: function (e, form) {
-                    var form = $(e[0]);
-                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-                    style_edit_form(form);
-
-                }
-            },
-            {
-                //new record form
-                width: 400,
-                errorTextFormat: function (data) {
-                    return 'Error: ' + data.responseText
-                },
-                closeAfterAdd: true,
-                recreateForm: true,
-                viewPagerButtons: false,
-                beforeShowForm: function (e, form) {
-                    var form = $(e[0]);
-                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
-                        .wrapInner('<div class="widget-header" />')
-                    style_edit_form(form);
-                    $("#tr_PASSWD", form).show();
-                }
-            },
-            {
-                //delete record form
-                recreateForm: true,
-                beforeShowForm: function (e) {
-                    var form = $(e[0]);
-                    if (form.data('styled')) return false;
-
-                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-                    style_delete_form(form);
-
-                    form.data('styled', true);
-                },
-                onClick: function (e) {
-                    //alert(1);
-                }
-            },
-            {
-                //search form
-                // closeAfterSearch: true,
-                recreateForm: true,
-                afterShowSearch: function (e) {
-                    var form = $(e[0]);
-                    form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
-                    style_search_form(form);
-                },
-                afterRedraw: function () {
-                    style_search_filters($(this));
-                }
-
-            },
-            {
-                //view record form
-                width: 500,
-                recreateForm: true,
-                beforeShowForm: function (e) {
-                    var form = $(e[0]);
-                    form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
-                }
-            }
-        );
-
-        function clearSelection() {
-
-        }
-
-        function style_edit_form(form) {
-            //enable datepicker on "sdate" field and switches for "stock" field
-            form.find('input[name=sdate]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
-
-            form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
-            //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
-            //.addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');
-
-
-            //update buttons classes
-            var buttons = form.next().find('.EditButton .fm-button');
-            buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide();//ui-icon, s-icon
-            buttons.eq(0).addClass('btn-primary').prepend('<i class="ace-icon fa fa-check"></i>');
-            buttons.eq(1).prepend('<i class="ace-icon fa fa-times"></i>')
-
-            buttons = form.next().find('.navButton a');
-            buttons.find('.ui-icon').hide();
-            buttons.eq(0).append('<i class="ace-icon fa fa-chevron-left"></i>');
-            buttons.eq(1).append('<i class="ace-icon fa fa-chevron-right"></i>');
-        }
-
-        function style_delete_form(form) {
-            var buttons = form.next().find('.EditButton .fm-button');
-            buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide();//ui-icon, s-icon
-            buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
-            buttons.eq(1).addClass('btn-default').prepend('<i class="ace-icon fa fa-times"></i>')
-        }
-
-        function style_search_filters(form) {
-            form.find('.delete-rule').val('X');
-            form.find('.add-rule').addClass('btn btn-xs btn-primary');
-            form.find('.add-group').addClass('btn btn-xs btn-success');
-            form.find('.delete-group').addClass('btn btn-xs btn-danger');
-        }
-
-        function style_search_form(form) {
-            var dialog = form.closest('.ui-jqdialog');
-            var buttons = dialog.find('.EditTable')
-            buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'ace-icon fa fa-retweet');
-            buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'ace-icon fa fa-comment-o');
-            buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'ace-icon fa fa-search');
-        }
-
-        function beforeDeleteCallback(e) {
-            var form = $(e[0]);
-            if (form.data('styled')) return false;
-
-            form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-            style_delete_form(form);
-
-            form.data('styled', true);
-        }
-
-        function beforeEditCallback(e) {
-            var form = $(e[0]);
-            form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-            style_edit_form(form);
-        }
-
-
-        //it causes some flicker when reloading or navigating grid
-        //it may be possible to have some custom formatter to do this as the grid is being created to prevent this
-        //or go back to default browser checkbox styles for the grid
-        function styleCheckbox(table) {
-            /**
-             $(table).find('input:checkbox').addClass('ace')
-             .wrap('<label />')
-             .after('<span class="lbl align-top" />')
-
-
-             $('.ui-jqgrid-labels th[id*="_cb"]:first-child')
-             .find('input.cbox[type=checkbox]').addClass('ace')
-             .wrap('<label />').after('<span class="lbl align-top" />');
-             */
-        }
-
-
-        //unlike navButtons icons, action icons in rows seem to be hard-coded
-        //you can change them like this in here if you want
-        function updateActionIcons(table) {
-            /**
-             var replacement =
-             {
-                 'ui-ace-icon fa fa-pencil' : 'ace-icon fa fa-pencil blue',
-                 'ui-ace-icon fa fa-trash-o' : 'ace-icon fa fa-trash-o red',
-                 'ui-icon-disk' : 'ace-icon fa fa-check green',
-                 'ui-icon-cancel' : 'ace-icon fa fa-times red'
-             };
-             $(table).find('.ui-pg-div span.ui-icon').each(function(){
-						var icon = $(this);
-						var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
-						if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
-					})
-             */
-        }
-
-        //replace icons with FontAwesome icons like above
-        function updatePagerIcons(table) {
-            var replacement =
-            {
-                'ui-icon-seek-first': 'ace-icon fa fa-angle-double-left bigger-140',
-                'ui-icon-seek-prev': 'ace-icon fa fa-angle-left bigger-140',
-                'ui-icon-seek-next': 'ace-icon fa fa-angle-right bigger-140',
-                'ui-icon-seek-end': 'ace-icon fa fa-angle-double-right bigger-140'
-            };
-            $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
-                var icon = $(this);
-                var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
-
-                if ($class in replacement) icon.attr('class', 'ui-icon ' + replacement[$class]);
-            })
-        }
-
-        function enableTooltips(table) {
-            $('.navtable .ui-pg-button').tooltip({container: 'body'});
-            $(table).find('.ui-pg-div').tooltip({container: 'body'});
-        }
-    });
-</script>
-<script>
-    $("#add_mitra").click(function () {
-        $.ajax({
-            // async: false,
-            url: "<?php echo base_url();?>managementmitra/mitra_form",
-            type: "POST",
-            data: {action:"add"},
-            success: function (data) {
-                $("#form_mitra").html(data);
-                $("#tbl_pic").hide("slow");
-                $("#form_mitra").show("slow");
-            }
-        });
-
-    });
-
-    $("#back").click(function () {
-        $("#form_mitra").hide("fast");
-        $("#tbl_pic").show("slow");
-
-    });
-
-</script>

@@ -42,10 +42,14 @@ class Managementmitra extends CI_Controller
 
     public function detailMitra()
     {
-        $data['ccid'] = $this->input->post('ccid');
-        $data['mitra'] = $this->input->post('mitra');
-        $data['lokasisewa'] = $this->input->post('lokasisewa');
-        $data['segment'] = $this->input->post('segment');
+        $result = $this->m_mitra->getMapPIC();
+        if($result->num_rows() > 0){
+            $data['result'] = $result->result_array();
+            $data['am'] = $result->row_array(0);
+        }else{
+            $data['result'] = array();
+            $data['am'] = null;
+        }
         $this->load->view($this->folder . '/detail_mitra', $data);
     }
 
@@ -212,9 +216,7 @@ class Managementmitra extends CI_Controller
         } else {
             $option .= "<option value=''> Tidak ada Lokasi Sewa </option>";
         }
-
         echo $option;
-
 
     }
 
@@ -225,7 +227,7 @@ class Managementmitra extends CI_Controller
         $sidx = $_REQUEST['sidx']; // Field name
         $sord = $_REQUEST['sord']; // Asc / Desc
 
-        $table = "V_MAP_MIT_CC";
+        $table = "V_MP_PIC";
 
         $req_param = array(
             "table" => $table,
@@ -245,21 +247,8 @@ class Managementmitra extends CI_Controller
             "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
         );
 
-        // Filter Table *
-
-        $segment = $this->input->post('segment');
-        $ccid = $this->input->post('ccid');
-        $mitra = $this->input->post('mitra');
         $lokasisewa = $this->input->post('lokasisewa');
-        if ($segment) {
-            $req_param['where'] = array('SEGMENT' => $segment);
-        }
-        if ($ccid) {
-            $req_param['where'] = array('ID_CC' => $ccid);
-        }
-        if ($mitra) {
-            $req_param['where'] = array('PGL_ID' => $mitra);
-        }
+
         if ($lokasisewa) {
             $req_param['where'] = array('P_MP_LOKASI_ID' => $lokasisewa);
         }
@@ -301,6 +290,7 @@ class Managementmitra extends CI_Controller
         $data['modal_id'] = $this->input->post('modal_id');
         $this->load->view('managementmitra/lov_pic', $data);
     }
+
     public function lovSegment()
     {
         $data['divID'] = $this->input->post('divID');
@@ -317,6 +307,7 @@ class Managementmitra extends CI_Controller
         $data['cc_name'] = $this->input->post('cc_name');
         $this->load->view('managementmitra/lov_cc', $data);
     }
+
     public function lovMitra()
     {
         $data['divID'] = $this->input->post('divID');
@@ -357,10 +348,10 @@ class Managementmitra extends CI_Controller
             "search" => null,
             "search_field" => null,
             "search_operator" => null,
-            "search_str" =>  null
+            "search_str" => null
         );
 
-        if($this->input->post('_search') == "true"){
+        if ($this->input->post('_search') == "true") {
             $filter = json_decode($this->input->post('filters'));
             $req_param['search'] = "true";
             $req_param['search_field'] = $filter->rules[0]->field;
@@ -421,10 +412,10 @@ class Managementmitra extends CI_Controller
             "search" => null,
             "search_field" => null,
             "search_operator" => null,
-            "search_str" =>  null
+            "search_str" => null
         );
 
-        if($this->input->post('_search') == "true"){
+        if ($this->input->post('_search') == "true") {
             $filter = json_decode($this->input->post('filters'));
             $req_param['search'] = "true";
             $req_param['search_field'] = $filter->rules[0]->field;
@@ -485,11 +476,11 @@ class Managementmitra extends CI_Controller
             "search" => null,
             "search_field" => null,
             "search_operator" => null,
-            "search_str" =>  null
+            "search_str" => null
         );
 
         $req_param["where"] = array("CODE_SGM" => $this->input->post("cc_name"));
-        if($this->input->post('_search') == "true"){
+        if ($this->input->post('_search') == "true") {
             $filter = json_decode($this->input->post('filters'));
             $req_param['search'] = "true";
             $req_param['search_field'] = $filter->rules[0]->field;
@@ -526,7 +517,6 @@ class Managementmitra extends CI_Controller
     }
 
 
-
     public function grid_lov_segment()
     {
         $page = intval($_REQUEST['page']); // Page
@@ -547,11 +537,11 @@ class Managementmitra extends CI_Controller
             "where_not_in" => null,
             "search" => null,
             "search_field" => null,
-            "search_operator" =>  null,
-            "search_str" =>  null
+            "search_operator" => null,
+            "search_str" => null
         );
 
-        if($this->input->post('_search') == "true"){
+        if ($this->input->post('_search') == "true") {
             $filter = json_decode($this->input->post('filters'));
             $req_param['search'] = "true";
             $req_param['search_field'] = $filter->rules[0]->field;
@@ -613,10 +603,10 @@ class Managementmitra extends CI_Controller
             "search" => null,
             "search_field" => null,
             "search_operator" => null,
-            "search_str" =>  null
+            "search_str" => null
         );
 
-        if($this->input->post('_search') == "true"){
+        if ($this->input->post('_search') == "true") {
             $filter = json_decode($this->input->post('filters'));
             $req_param['search'] = "true";
             $req_param['search_field'] = $filter->rules[0]->field;
@@ -678,6 +668,10 @@ class Managementmitra extends CI_Controller
             "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
             "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
         );
+
+        if($this->input->post('no_pks')){
+            $param['where'] = array('NO_PKS' => $this->input->post('no_pks'));
+        }
 
         // Get limit paging
         $count = $this->jqGrid->countAll($req_param);
@@ -812,7 +806,7 @@ class Managementmitra extends CI_Controller
             if (!$this->upload->do_upload("filename")) {
                 $error = $this->upload->display_errors();
                 $data['status'] = "F";
-                $data['msg'] =  $error ;
+                $data['msg'] = $error;
                 echo json_encode($data);
             } else {
                 // Do Upload
@@ -842,7 +836,7 @@ class Managementmitra extends CI_Controller
         force_download($FILE_PATH, $data);
     }
 
-        public function downloadDokKontrak($FILE_PATH)
+    public function downloadDokKontrak($FILE_PATH)
     {
         $data = file_get_contents("./application/third_party/upload/kontrak/" . $FILE_PATH);
         force_download($FILE_PATH, $data);
@@ -914,18 +908,20 @@ class Managementmitra extends CI_Controller
 
     }
 
-    public function mitra_form(){
+    public function mitra_form()
+    {
         $data["action"] = $this->input->post("action");
-        $this->load->view('managementmitra/add_mitra',$data);
+        $this->load->view('managementmitra/add_mitra', $data);
     }
 
-    public function crud_detailmitra(){
+    public function crud_detailmitra()
+    {
         $return = $this->m_mitra->crud_detailmitra();
-        if($return == 1){
+        if ($return == 1) {
             $data["success"] = true;
             $data["message"] = "Data berhasil ditambahakan";
 
-        }else{
+        } else {
             $data["success"] = false;
             $data["message"] = "Gagal menambah data";
         }

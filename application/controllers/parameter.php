@@ -195,12 +195,6 @@ class Parameter extends CI_Controller
 
     }
 
-    public function nddel($ten_id, $nd)
-    {
-        $this->M_tenant->delNDTen($ten_id, $nd);
-        redirect("/ten/nd/" . $ten_id);
-    }
-
     public function nduploadparse($file_name, $file_ext, $cprod, $ten_id = "", $confirm)
     {
         error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
@@ -353,6 +347,11 @@ class Parameter extends CI_Controller
 
     }
 
+    public function nddel($ten_id, $nd)
+    {
+        $this->M_tenant->delNDTen($ten_id, $nd);
+        redirect("/ten/nd/" . $ten_id);
+    }
 
     public function gridUserAttributeType()
     {
@@ -1174,8 +1173,8 @@ class Parameter extends CI_Controller
                 'CREATED_BY' => $this->session->userdata('d_user_name')
             );
 
-            $check = $this->Mfee->checkDuplicateND($ten_id,$nd);
-            if($check == 0){
+            $check = $this->Mfee->checkDuplicateND($ten_id, $nd);
+            if ($check == 0) {
                 $this->M_parameter->insertFastel($data);
             }
         }
@@ -1185,7 +1184,71 @@ class Parameter extends CI_Controller
         echo json_encode($data);
     }
 
-    public function mitra_segment(){
+    public function gridMapMitraSegment()
+    {
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 5;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : null;
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : null;
+
+        $table = "V_MAP_MIT_CC";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Filter Table *
+
+        $P_MAP_MIT_CC_ID = $this->input->post('P_MAP_MIT_CC_ID');
+        if ($P_MAP_MIT_CC_ID) {
+            $req_param['where'] = array('P_MAP_MIT_CC_ID' => $P_MAP_MIT_CC_ID);
+        }
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+
+    public function mitra_segment()
+    {
         //BreadCrumb
         $title = $_POST['title'];
         $bc = array($this->head, $title);
@@ -1193,22 +1256,190 @@ class Parameter extends CI_Controller
 
         $this->load->view('parameter/mitra_segment');
     }
-    public function addmitra(){
+
+    public function addmitra()
+    {
         $data["action"] = $this->input->post("action");
-        $this->load->view('parameter/mitra_form',$data);
+        $this->load->view('parameter/mitra_form', $data);
     }
 
-    public function crud_detailmitra(){
-        $return = $this->M_parameter->crud_detailmitra();
-        if($return == 1){
-            $data["success"] = true;
-            $data["message"] = "Data berhasil ditambahakan";
+    public function editmitra()
+    {
+        $data["action"] = $this->input->post("action");
+        $this->load->view('parameter/mitra_form', $data);
+    }
 
-        }else{
-            $data["success"] = false;
-            $data["message"] = "Gagal menambah data";
+    public function crud_detailmitra()
+    {
+        $this->M_parameter->crud_detailmitra();
+    }
+
+    public function mapping_mitra()
+    {
+        $this->load->view('parameter/mapping_mitra');
+    }
+
+    public function mapping_lokasi()
+    {
+        $data["p_map_mit_cc_id"] = $this->input->post("P_MAP_MIT_CC_ID");
+        $this->load->view('parameter/mapping_lokasi', $data);
+    }
+    public function mapping_pic()
+    {
+        $data["P_MP_LOKASI_ID"] = $this->input->post("P_MP_LOKASI_ID");
+        $this->load->view('parameter/mapping_pic', $data);
+    }
+
+    public function gridMapMitraLokasi()
+    {
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 5;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : null;
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : null;
+
+        $table = "P_MP_LOKASI";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Filter Table *
+
+        $P_MAP_MIT_CC_ID = $this->input->post('P_MAP_MIT_CC_ID');
+        if ($P_MAP_MIT_CC_ID) {
+            $req_param['where'] = array('P_MAP_MIT_CC_ID' => $P_MAP_MIT_CC_ID);
         }
-        echo json_encode($data);
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+    }
+
+    public function gridMapPIC()
+    {
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 5;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : null;
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : null;
+
+        $table = "V_MP_PIC";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Filter Table *
+
+        $P_MP_LOKASI_ID = $this->input->post('P_MP_LOKASI_ID');
+        if ($P_MP_LOKASI_ID) {
+            $req_param['where'] = array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID);
+        }
+        $P_MP_PIC_ID = $this->input->post('P_MP_PIC_ID');
+        if ($P_MP_PIC_ID) {
+            $req_param['where'] = array('P_MP_PIC_ID' => $P_MP_PIC_ID);
+        }
+
+
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+    }
+
+    public function crud_lokasimitra(){
+        $this->M_parameter->crud_lokasimitra();
+    }
+
+    public function add_pic()
+    {
+        $data["action"] = $this->input->post("action");
+        $data["P_MP_LOKASI_ID"] = $this->input->post("P_MP_LOKASI_ID");
+        $this->load->view('parameter/mapping_pic_form', $data);
+    }
+
+    public function crud_pic_mapping(){
+        $this->M_parameter->crud_mapping_pic();
+    }
+
+    public function edit_mapping_pic()
+    {
+        $data["action"] = $this->input->post("action");
+        $data["P_MP_LOKASI_ID"] = $this->input->post("P_MP_LOKASI_ID");
+        $this->load->view('parameter/mapping_pic_form', $data);
     }
 
 

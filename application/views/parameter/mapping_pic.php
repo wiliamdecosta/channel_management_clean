@@ -1,314 +1,232 @@
-<div id="dokPKS">
-    <form class="form-horizontal" role="form">
-        <div class="rows">
-            <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">Tanggal PKS </label>
-                <div class="col-sm-6">
-                    <input class="date-picker col-sm-3" id="start_date" type="text" data-date-format="dd-mm-yyyy"
-                           placeholder="Input Date"/>
-                    <label class="col-sm-1" style="margin-right:10px;"> s/d </label>
-                    <input class="date-picker col-sm-3" id="end_date" type="text" data-date-format="dd-mm-yyyy"
-                           placeholder="Input Date"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right">No PKS </label>
-                <div class="col-sm-4">
-                    <input type="text" id="no_pks" name="no_pks"
-                           placeholder="Di isi Nomor PKS / Amandemen yang aktif terakhit"
-                           class="form-control"/>
-                </div>
-                <a id="cari_pks"
-                   class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
-                    <span class="ace-icon fa fa-search"></span>Cari</a>
-            </div>
-
-            <div id="btn_add_update" class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"></label>
-                <div class="col-sm-4">
-                    <a id="btn_upload_pks" class="btn btn-white btn-sm btn-round">
-                        <i class="ace-icon fa fa-plus green"></i>
-                        Upload Dokumen
-                    </a>
-                </div>
-
-            </div>
-            <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">&nbsp;</label>
-                <div class="col-sm-11" id="tabel_content">
-                    <table id="grid-table"></table>
-                    <div id="grid-pager"></div>
-                </div>
-            </div>
-        </div>
-    </form>
+<div id="tbl_pic">
+    <button class="btn btn-white btn-sm btn-round" id="add_pic" style="margin-bottom:10px">
+        <i class="ace-icon fa fa-plus green"></i>
+        Tambah PIC
+    </button>
+    &nbsp;
+    <table id="grid_table_pic"></table>
+    <div id="grid_pager_pic"></div>
 </div>
-
-<script type="text/javascript">
-    $('.date-picker').datepicker({
-            autoclose: true,
-            todayHighlight: true
-        })
-        //show datepicker when clicking on the icon
-        .next().on(ace.click_event, function () {
-        $(this).prev().focus();
-    });
-</script>
-<div id="upload_pks">
+<div id="form_pic" style="display: none;">
 </div>
-<!-- #section:basics/content.breadcrumbs -->
-<!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
-<script type="text/javascript">
-    $("#btn_upload_pks").click(function () {
-        $.ajax({
-            // async: false,
-            url: "<?php echo base_url();?>managementmitra/modalUploadPKS",
-            type: "POST",
-            data: {upload_param: 1},
-            success: function (data) {
-                $('#upload_pks').html(data);
-                $('#modal_upload_pks').modal('show');
-            }
-        });
-    })
-    $("#update_fastel").click(function () {
-        $.ajax({
-            // async: false,
-            url: "<?php echo base_url();?>parameter/modalUploadFastel",
-            type: "POST",
-            data: {upload_param: 2},
-            success: function (data) {
-                $('#upload_fastel').html(data);
-                $('#modal_upload_fastel').modal('show');
-            }
-        });
-    })
-
-    $("#cari_pks").click(function () {
-        var grid = $("#grid-table");
-        var no_pks = $("#no_pks").val();
-        var postdata = grid.jqGrid('getGridParam', 'postData');
-        $.extend(postdata, {no_pks: no_pks});
-        grid.trigger("reloadGrid", [{page: 1}]);
-
-    });
-
-
-</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var grid = $("#grid-table");
-        var pager = $("#grid-pager");
+        var grid = $("#grid_table_pic");
+        var pager = $("#grid_pager_pic");
         grid.jqGrid({
-            url: '<?php echo site_url('managementmitra/gridPKS');?>',
+            url: '<?php echo site_url('parameter/gridMapPIC');?>',
             datatype: "json",
             mtype: "POST",
-            caption: "Dokumen PKS",
             colModel: [
                 {
                     label: 'ID',
-                    name: 'P_PKS_ID',
+                    name: 'P_MP_PIC_ID',
                     key: true,
-                    width: 200,
-                    sortable: true,
-                    editable: true,
-                    editrules: {required: true},
+                    width: 5,
+                    sorttype: 'number',
+                    editable: false,
                     hidden: true
                 },
                 {
-                    label: 'Nomor PKS',
-                    name: 'NO_PKS',
-                    width: 200,
-                    sortable: true,
+                    label: 'P_MP_LOKASI_ID',
+                    name: 'P_MP_LOKASI_ID',
+                    width: 5,
+                    sorttype: 'number',
                     editable: false,
-                    hidden: false
+                    hidden: true
                 },
                 {
-                    label: 'Nama Dokumen',
-                    name: 'DOC_NAME',
+                    label: 'P_PIC_ID',
+                    name: 'P_PIC_ID',
                     width: 200,
                     align: "left",
-                    sortable: true,
                     editable: true,
-                    editrules: {required: true}
+                    hidden: true
                 },
                 {
-                    label: 'Tanggal Mulai PKS',
-                    name: 'PKS_START_DATE',
-                    width: 120,
+                    label: 'P_CONTACT_TYPE_ID',
+                    name: 'P_CONTACT_TYPE_ID',
+                    width: 200,
                     align: "left",
-                    sortable: true,
                     editable: true,
-                    editrules: {required: true}
+                    hidden: true
                 },
                 {
-                    label: 'Tanggal Berakhir PKS',
-                    name: 'PKS_END_DATE',
-                    width: 120,
+                    label: 'Nama PIC',
+                    name: 'PIC_NAME',
+                    width: 200,
                     align: "left",
-                    sortable: true,
                     editable: true,
-                    editrules: {required: true}
+                    editrules: {required: true},
+                    editoptions: {size: 45}
                 },
                 {
-                    label: 'File Path',
-                    name: 'FILE_PATH',
+                    label: 'Jenis Kontak',
+                    name: 'CODE',
+                    width: 200,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true},
+                    editoptions: {size: 45}
+                },
+                {
+                    label: 'Alamat 1',
+                    name: 'ADDRESS_1',
+                    width: 250,
+                    align: "left",
+                    editable: true,
+                    editoptions: {size: 45, value: {Tes: 'asdad'}}
+                },
+                {
+                    label: 'Kota',
+                    name: 'KOTA',
                     width: 100,
                     align: "left",
                     sortable: true,
-                    editable: false,
-                    hidden: true,
-                },
-                {
-                    label: 'Tanggal Diubah',
-                    name: 'UPDATE_DATE',
-                    width: 110,
-                    align: "left",
-                    sortable: true,
-                    editable: false,
+                    editable: true,
+                    editoptions: {size: 45, value: {Tes: 'asdad'}},
                     hidden: false
                 },
                 {
-                    label: 'Diubah Oleh',
-                    name: 'UPDATE_BY',
-                    width: 110,
-                    align: "left",
-                    sortable: true,
-                    editable: false,
-                    hidden: false
-                },
-                {
-                    label: 'Action',
+                    label: 'Kode Pos',
+                    name: 'ZIP_CODE',
                     width: 70,
                     align: "left",
                     sortable: true,
-                    editable: false,
-                    hidden: false,
-                    formatter: function (cellvalue, options, rowObject) {
-                        var file_name = rowObject.FILE_PATH;
-//                        return '<a class="ui-icon ace-icon fa fa-download bigger-130 purple" href="<?php //echo site_url('managementmitra/downloadPKS');?>///'+file_name+'" data-original-title="Download" data-rel="tooltip"></a>'
-//                        +'<a class="ui-icon ace-icon fa fa-pencil bigger-130 purple" href="<?php //echo site_url('managementmitra/downloadPKS');?>///'+file_name+'" data-original-title="Download" data-rel="tooltip"></a>';
-                        // <span class="ui-icon ace-icon fa fa-plus-circle purple"></span>
-                        return '<div class="hidden-sm hidden-xs action-buttons">'
-                            + '<a class="purple" href="<?php echo site_url('managementmitra/downloadPKS');?>/' + file_name + '" data-rel="tooltip" data-original-title="Download">'
-                            + ' <i class="ace-icon fa fa-download bigger-130"></i>'
-                            + '</a>'
-//                            + '<a class="orange" href="#" data-rel="tooltip" data-original-title="Print" onClick="window.print()">'
-//                            + ' <i class="ace-icon fa fa-print bigger-130"></i>'
-//                            + '</a>'
-                            + '<a class="blue" href="<?php echo base_url();?>application/third_party/upload/pks/' + file_name + '" target="_blank" data-rel="tooltip" data-original-title="Print">'
-                            + '<i class="ace-icon fa fa-print bigger-130"></i></a>'
-                            + '</div>';
-                    }
+                    editable: true,
+                    editrules :{number:true},
+                    hidden: false
+                },
+                {
+                    label: 'Email',
+                    name: 'EMAIL',
+                    width: 150,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editoptions: {size: 45, value: {Tes: 'asdad'}},
+                    hidden: false
+                },
+                {
+                    label: 'No. HP',
+                    name: 'NO_HP',
+                    width: 100,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editoptions: {size: 45, value: {Tes: 'asdad'}},
+                    hidden: false
+                },
+                {
+                    label: 'Fax',
+                    name: 'FAX',
+                    width: 100,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editoptions: {size: 45, value: {Tes: 'asdad'}},
+                    hidden: false
                 }
             ],
-            // width: '100%',
+            postData: {P_MP_LOKASI_ID: <?php echo $P_MP_LOKASI_ID;?>},
+            width: '1090',
+            AutoWidth: true,
             height: '100%',
             scrollOffset: 0,
             rowNum: 5,
             viewrecords: true,
             rowList: [5, 10, 20],
-            sortname: 'P_PKS_ID', // default sorting ID
+            sortname: 'P_MP_PIC_ID', // default sorting ID
             rownumbers: true, // show row numbers
-            rownumWidth: 35, // the width of the row numbers columns
+            rownumWidth: 35,
             sortorder: 'asc',
             altRows: true,
-            shrinkToFit: false,
+            shrinkToFit: true,
             multiboxonly: true,
-            onSelectRow: function (rowid) {
-
-            }, // use the onSelectRow that is triggered on row click to show a details grid
             onSortCol: clearSelection,
             onPaging: clearSelection,
-            //#pager merupakan div id pager
-            pager: '#grid-pager',
+            pager: '#grid_pager_pic',
             jsonReader: {
                 root: 'Data',
                 id: 'id',
                 repeatitems: false
             },
             loadComplete: function () {
-                grid.jqGrid('setGridWidth', $("#tabel_content").width() - 20);
-                pager.jqGrid('setGridWidth', $("#tabel_content").width() - 20);
+                $(window).on('resize.jqGrid', function () {
+                    grid.jqGrid('setGridWidth', 1090);
+                });
+                $(window).on('resize.jqGrid', function () {
+                    pager.jqGrid('setGridWidth', 1090);
+                });
 
                 var table = this;
                 setTimeout(function () {
-                    //  styleCheckbox(table);
-
-                    //  updateActionIcons(table);
                     updatePagerIcons(table);
                     enableTooltips(table);
                 }, 0);
             },
-            editurl: '<?php echo site_url('managementmitra/crud_pks');?>'
-
+            editurl: '<?php echo site_url('parameter/crud_pic_mapping');?>',
+            caption: "List Lokasi Mitra"
 
         });
 
 
         //navButtons grid master
-        grid.jqGrid('navGrid', '#grid-pager',
+        grid.jqGrid('navGrid', '#grid_pager_pic',
             { 	//navbar options
                 edit: false,
-                excel: true,
+                excel: false,
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: false,
                 addicon: 'ace-icon fa fa-plus-circle purple',
                 del: true,
                 delicon: 'ace-icon fa fa-trash-o red',
-                search: false,
+                search: true,
                 searchicon: 'ace-icon fa fa-search orange',
                 refresh: true,
-                afterRefresh: function () {
-                    // some code here
-                    jQuery("#detailsPlaceholder").hide();
-                },
                 refreshicon: 'ace-icon fa fa-refresh green',
                 view: false,
-                viewicon: 'ace-icon fa fa-search-plus grey',
+                viewicon: 'ace-icon fa fa-search-plus grey'
             },
             {
                 // options for the Edit Dialog
                 closeAfterEdit: true,
-                width: 500,
+                width: 600,
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
                 },
                 recreateForm: true,
-                beforeShowForm: function (e) {
+                beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
+
                 }
             },
             {
                 //new record form
-                width: 500,
-                postData: {tes: "aa"},
+                width: 600,
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
                 },
                 closeAfterAdd: true,
                 recreateForm: true,
                 viewPagerButtons: false,
-                beforeShowForm: function (e) {
+                beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                         .wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
                 },
-                beforeSubmit: function () {
-
-                },
                 onclickSubmit: function () {
+                    //var ten_id = $("#list_cc").val();
+
                 }
             },
             {
                 //delete record form
                 recreateForm: true,
-                // msg : "tes",
-                // width : 700,
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
                     if (form.data('styled')) return false;
@@ -317,6 +235,9 @@
                     style_delete_form(form);
 
                     form.data('styled', true);
+                },
+                onClick: function (e) {
+                    //alert(1);
                 }
             },
             {
@@ -327,31 +248,75 @@
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                     style_search_form(form);
-                }
-
-                ,
+                },
                 afterRedraw: function () {
                     style_search_filters($(this));
                 }
 
-//            multipleSearch: true,
-                //           showQuery: true
-                /**
-                 multipleGroup:true,
-                 showQuery: true
-                 */
-            }
-            ,
+            },
             {
                 //view record form
+                width: 500,
                 recreateForm: true,
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 }
-            }
-        )
+            }).navButtonAdd('#grid_pager_pic', {
+            caption: "",
+            buttonicon: "ace-icon fa fa-pencil blue",
+            onClickButton: edit,
+            position: "first",
+            title: "Edit Record",
+            cursor: "pointer",
+            id: "edit"
+        });
 
+        function edit() {
+            var rowKey = grid.jqGrid('getGridParam', 'selrow');
+            var P_MP_PIC_ID = grid.jqGrid('getCell', rowKey, 'P_MP_PIC_ID');
+
+            if (rowKey) {
+                $.ajax({
+                    // async: false,
+                    url: "<?php echo base_url();?>parameter/edit_mapping_pic",
+                    type: "POST",
+                    data: {action: "edit"},
+                    success: function (data) {
+                        $("#form_pic").html(data);
+                        $.post("<?php echo site_url('parameter/gridMapPIC');?>",
+                            {
+                                P_MP_PIC_ID: P_MP_PIC_ID
+                            },
+                            function (response) {
+                                var response = JSON.parse(response);
+                                var obj = response.Data[0];
+                                $("#pic_name").val(obj.PIC_NAME);
+                                $("#pic_id").val(obj.P_PIC_ID);
+                                $("#contact").val(obj.P_REFERENCE_LIST_ID);
+                                $("#p_mp_lokasi_id").val(obj.P_MP_LOKASI_ID);
+                                $("#p_mp_pic_id").val(obj.P_MP_PIC_ID);
+
+                                $("#form_created_by").val(obj.CREATED_BY);
+                                $("#form_creation_date").val(obj.CREATE_DATE);
+                                $("#form_updated_by").val(obj.UPDATE_BY);
+                                $("#form_updated_date").val(obj.UPDATE_DATE);
+                            }
+                        );
+
+                        $("#tbl_pic").hide("slow");
+                        $("#form_pic").show("slow");
+
+
+                    }
+                });
+            }
+
+            else {
+                // alert("Please Select Row !!!");
+                $.jgrid.viewModal("#alertmod_" + this.id, {toTop: true, jqm: true});
+            }
+        }
 
         function clearSelection() {
 
@@ -359,7 +324,7 @@
 
         function style_edit_form(form) {
             //enable datepicker on "sdate" field and switches for "stock" field
-            //  form.find('input[name=VALID_FROM]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
+            form.find('input[name=sdate]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
 
             form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
             //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
@@ -474,22 +439,22 @@
             $('.navtable .ui-pg-button').tooltip({container: 'body'});
             $(table).find('.ui-pg-div').tooltip({container: 'body'});
         }
-
-        //add tooltip for small view action buttons in dropdown menu
-        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-
-        //tooltip placement on right or left
-        function tooltip_placement(context, source) {
-            var $source = $(source);
-            var $parent = $source.closest('table')
-            var off1 = $parent.offset();
-            var w1 = $parent.width();
-
-            var off2 = $source.offset();
-            //var w2 = $source.width();
-
-            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
-            return 'left';
-        }
     });
+</script>
+
+<script>
+    $("#add_pic").click(function () {
+        $.ajax({
+            // async: false,
+            url: "<?php echo base_url();?>parameter/add_pic",
+            type: "POST",
+            data: {action: "add", P_MP_LOKASI_ID:<?php echo $P_MP_LOKASI_ID;?>},
+            success: function (data) {
+                $("#form_pic").html(data);
+                $("#tbl_pic").hide("slow");
+                $("#form_pic").show("slow");
+            }
+        });
+    });
+
 </script>

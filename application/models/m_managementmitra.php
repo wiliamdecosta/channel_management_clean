@@ -235,5 +235,13 @@ class M_managementmitra extends CI_Model
         }
     }
 
+    public function getMapPIC(){
+        $lokasisewa = $this->input->post('lokasisewa');
+
+        $this->db->where('P_MP_LOKASI_ID', $lokasisewa);
+        $q = $this->db->get("V_MP_PIC");
+        return $q;
+
+    }
 
 }

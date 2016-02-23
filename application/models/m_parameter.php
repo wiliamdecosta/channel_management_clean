@@ -165,11 +165,11 @@ class M_parameter extends CI_Model
                     if ($db_result != 1) {
                         throw new Exception('Terjadi duplikasi data');
 
-                     }
-                     
-                     $result['success'] = true;
-                     $result['message'] = 'Data berhasil ditambahkan';                       
-                }catch(Exception $e) {
+                    }
+
+                    $result['success'] = true;
+                    $result['message'] = 'Data berhasil ditambahkan';
+                } catch (Exception $e) {
                     $result['success'] = false;
                     $result['message'] = $e->getMessage();
                 }
@@ -189,21 +189,21 @@ class M_parameter extends CI_Model
                                         UPDATED_BY = '" . $this->session->userdata('d_user_name') . "'
                                         WHERE
                                         P_USER_ATTRIBUTE_TYPE_ID = " . $id_);
-                    
-                    if($db_result != 1) {
+
+                    if ($db_result != 1) {
                         throw new Exception('Terjadi duplikasi data');
                     }
-                    
+
                     $result['success'] = true;
                     $result['message'] = 'Data berhasil diupdate';
-                    
-                }catch(Exception $e) {
+
+                } catch (Exception $e) {
                     $result['success'] = false;
                     $result['message'] = $e->getMessage();
                 }
                 echo json_encode($result);
                 exit;
-                
+
                 break;
             case 'del':
                 $this->db->where('P_USER_ATTRIBUTE_TYPE_ID', $id_);
@@ -242,26 +242,26 @@ class M_parameter extends CI_Model
                                                 SYSDATE,
                                                 '" . $this->session->userdata('d_user_name') . "'
                                                 )");
-                    
-                     if($db_result != 1) {
+
+                    if ($db_result != 1) {
                         throw new Exception('Terjadi duplikasi data');
-                     }
-                     
-                     $result['success'] = true;
-                     $result['message'] = 'Data berhasil ditambahkan';
-                    
-                }catch(Exception $e) {
+                    }
+
+                    $result['success'] = true;
+                    $result['message'] = 'Data berhasil ditambahkan';
+
+                } catch (Exception $e) {
                     $result['success'] = false;
                     $result['message'] = $e->getMessage();
                 }
-                
+
                 echo json_encode($result);
                 exit;
-                
+
                 break;
             case 'edit':
                 try {
-                    
+
                     $db_result = $this->db->query_custom("UPDATE P_USER_ATTRIBUTE_LIST SET
                                         CODE = '" . $this->input->post('CODE') . "',
                                         NAME = '" . $this->input->post('NAME') . "',
@@ -272,23 +272,23 @@ class M_parameter extends CI_Model
                                         UPDATED_BY = '" . $this->session->userdata('d_user_name') . "'
                                         WHERE
                                         P_USER_ATTRIBUTE_LIST_ID = " . $id_);
-                    
-                    if($db_result != 1) {
+
+                    if ($db_result != 1) {
                         throw new Exception('Terjadi duplikasi data');
                     }
-                     
+
                     $result['success'] = true;
                     $result['message'] = 'Data berhasil diupdate';
-                    
-                    
-                }catch(Exception $e) {
+
+
+                } catch (Exception $e) {
                     $result['success'] = false;
                     $result['message'] = $e->getMessage();
                 }
-                
+
                 echo json_encode($result);
                 exit;
-                
+
                 break;
             case 'del':
                 $this->db->where('P_USER_ATTRIBUTE_LIST_ID', $id_);
@@ -311,53 +311,53 @@ class M_parameter extends CI_Model
         switch ($oper) {
             case 'add':
                 try {
-                    $new_id = gen_id('PGL_ID','CUST_PGL');
+                    $new_id = gen_id('PGL_ID', 'CUST_PGL');
                     $db_result = $this->db->query_custom("INSERT INTO CUST_PGL(PGL_ID,PGL_NAME,PGL_ADDR,PGL_CONTACT_NO,ENABLE_FEE)
                                         VALUES($new_id,
-                                                '".$this->input->post('PGL_NAME')."',
-                                                '".$this->input->post('PGL_ADDR')."',
-                                                '".$this->input->post('PGL_CONTACT_NO')."',
-                                                '".$this->input->post('ENABLE_FEE')."')");
-                    
-                    if($db_result != 1) {
+                                                '" . $this->input->post('PGL_NAME') . "',
+                                                '" . $this->input->post('PGL_ADDR') . "',
+                                                '" . $this->input->post('PGL_CONTACT_NO') . "',
+                                                '" . $this->input->post('ENABLE_FEE') . "')");
+
+                    if ($db_result != 1) {
                         throw new Exception('Terjadi duplikasi data');
                     }
-                     
+
                     $result['success'] = true;
                     $result['message'] = 'Data berhasil ditambahkan';
-                
-                }catch(Exception $e) {
+
+                } catch (Exception $e) {
                     $result['success'] = false;
-                    $result['message'] = $e->getMessage();        
+                    $result['message'] = $e->getMessage();
                 }
-                
+
                 echo json_encode($result);
                 exit;
-                
+
                 break;
             case 'edit':
                 try {
                     $db_result = $this->db->query_custom("UPDATE CUST_PGL SET
-                                        PGL_NAME = '".$this->input->post('PGL_NAME')."',
-                                        PGL_ADDR = '".$this->input->post('PGL_ADDR')."',
-                                        PGL_CONTACT_NO = '".$this->input->post('PGL_CONTACT_NO')."',
-                                        ENABLE_FEE = '".$this->input->post('ENABLE_FEE')."'
-                                        WHERE PGL_ID = ".$id_ );
-                    
-                    if($db_result != 1) {
+                                        PGL_NAME = '" . $this->input->post('PGL_NAME') . "',
+                                        PGL_ADDR = '" . $this->input->post('PGL_ADDR') . "',
+                                        PGL_CONTACT_NO = '" . $this->input->post('PGL_CONTACT_NO') . "',
+                                        ENABLE_FEE = '" . $this->input->post('ENABLE_FEE') . "'
+                                        WHERE PGL_ID = " . $id_);
+
+                    if ($db_result != 1) {
                         throw new Exception('Terjadi duplikasi data');
                     }
-                     
+
                     $result['success'] = true;
                     $result['message'] = 'Data berhasil diupdate';
-                    
-                }catch(Exception $e) {
+
+                } catch (Exception $e) {
                     $result['success'] = false;
-                    $result['message'] = $e->getMessage();   
+                    $result['message'] = $e->getMessage();
                 }
                 echo json_encode($result);
                 exit;
-                
+
                 break;
             case 'del':
 
@@ -648,21 +648,19 @@ class M_parameter extends CI_Model
         $table = "P_MAP_MIT_CC";
         $pk = "P_MAP_MIT_CC_ID";
 
-        //$segment = $this->input->post("segment_code");
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+
+        $p_map_mit_cc = $this->input->post("p_map_mit_cc");
         $cc_id = $this->input->post("cc_id");
         $mitra_id = $this->input->post("mitra_id");
-        $pic_id = $this->input->post("pic_id");
-        $contact = $this->input->post("contact");
         $eam_id = $this->input->post("eam_id");
-        $lokasi_pks = $this->input->post("lokasi_pks");
         $action = $this->input->post("action");
         $CREATED_DATE = date('d/M/Y');
         $CREATED_BY = $this->session->userdata('d_user_name');
 
 
         $data = array('PGL_ID' => $mitra_id,
-            'P_PIC_ID' => $pic_id,
-            'P_CONTACT_TYPE_ID' => $contact,
             'P_DAT_AM_ID' => $eam_id,
             'ID_CC' => $cc_id,
             'CREATION_DATE' => $CREATED_DATE,
@@ -672,32 +670,189 @@ class M_parameter extends CI_Model
         if ($action == "add") {
             $new_id = gen_id($pk, $table);
             $this->db->set($pk, $new_id);
-            if($this->db->insert($table, $data)){
-                print_r("sukses");
-                exit;
-            }else{
-                print_r("gagal");
-                exit;
-            }
-            if ($this->db->affected_rows() == 1) {
-
-                $gen_lokasi_id = gen_id("P_MP_LOKASI_ID", "P_MP_LOKASI");
-                $data_lokasi = array('P_MAP_MIT_CC_ID' => $new_id,
-                    'LOKASI' => $lokasi_pks,
-                    'CREATE_BY' => $CREATED_BY,
-                    'CREATION_DATE' => $CREATED_DATE
-                );
-
-                $this->db->set("P_MP_LOKASI_ID", $gen_lokasi_id);
-                $this->db->insert("P_MP_LOKASI", $data_lokasi);
-
-                return $this->db->affected_rows();
+            $this->db->insert($table, $data);
+            if ($this->db->affected_rows() > 0) {
+                $data["success"] = true;
+                $data["message"] = "Data berhasil ditambahakan";
+            } else {
+                $data["success"] = false;
+                $data["message"] = "Gagal menambah data";
             }
 
         } elseif ($action == "edit") {
-
+            $this->db->where($pk, $p_map_mit_cc);
+            $this->db->update($table, $data);
+            if ($this->db->affected_rows() > 0) {
+                $data["success"] = true;
+                $data["message"] = "Edit data berhasil";
+            } else {
+                $data["success"] = false;
+                $data["message"] = "Gagal edit data";
+            }
+        } elseif ($oper == 'del') {
+            $this->db->where($pk, $id_);
+            $this->db->delete($table);
         } else {
-            echo "unknown";
+            $data["success"] = false;
+            $data["message"] = "Unknown Error";
         }
+        echo json_encode($data);
     }
+
+    public function crud_lokasimitra()
+    {
+        $this->db->_protect_identifiers = false;
+
+        //$this->db->protect_identifiers('TEN_ND', FALSE);
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+
+        $table = "P_MP_LOKASI";
+        $pk = "P_MP_LOKASI_ID";
+
+        $NO_PKS = strtoupper($this->input->post('NO_PKS'));
+        $LOKASI = $this->input->post('LOKASI');
+        $P_MAP_MIT_CC_ID = $this->input->post('P_MAP_MIT_CC_ID');
+        $CREATION_DATE = date('d/M/Y');
+        $UPDATE_DATE = date('d/M/Y');
+        $CREATE_BY = $this->session->userdata('d_user_name');
+        $UPDATE_BY = $this->session->userdata('d_user_name');
+        $VALID_FROM = $this->input->post('VALID_FROM');
+        $VALID_UNTIL = $this->input->post('VALID_UNTIL');
+
+
+        switch ($oper) {
+            case 'add':
+                $data = array('P_MAP_MIT_CC_ID' => $P_MAP_MIT_CC_ID,
+                    'LOKASI' => $LOKASI,
+                    'VALID_FROM' => $VALID_FROM,
+                    'VALID_UNTIL' => $VALID_UNTIL,
+                    'CREATE_BY' => $CREATE_BY,
+                    'CREATION_DATE' => $CREATION_DATE,
+                    'NO_PKS' => $NO_PKS
+                );
+
+                $new_id = gen_id($pk, $table);
+                $this->db->set($pk, $new_id);
+                $this->db->insert($table, $data);
+                if ($this->db->affected_rows() > 0) {
+                    $data["success"] = true;
+                    $data["message"] = "Data berhasil ditambahakan";
+                } else {
+                    $data["success"] = false;
+                    $data["message"] = "Gagal menambah data";
+                }
+                break;
+            case 'edit':
+                $data = array(
+                    'LOKASI' => $LOKASI,
+                    'VALID_FROM' => $VALID_FROM,
+                    'VALID_UNTIL' => $VALID_UNTIL,
+                    'UPDATE_BY' => $UPDATE_BY,
+                    'UPDATE_DATE' => $UPDATE_DATE,
+                    'NO_PKS' => $NO_PKS
+                );
+                $this->db->where($pk, $id_);
+                $this->db->update($table, $data);
+                if ($this->db->affected_rows() > 0) {
+                    $data["success"] = true;
+                    $data["message"] = "Edit data berhasil";
+                } else {
+                    $data["success"] = false;
+                    $data["message"] = "Gagal edit data";
+                }
+                break;
+            case 'del':
+                $this->db->where($pk, $id_);
+                $this->db->delete($table);
+                if ($this->db->affected_rows() > 0) {
+                    $data["success"] = true;
+                    $data["message"] = "Data berhasil dihapus";
+                } else {
+                    $data["success"] = false;
+                    $data["message"] = "Gagal menghapus data !";
+                }
+                break;
+        }
+        echo json_encode($data);
+
+    }
+
+    public function crud_mapping_pic()
+    {
+        $this->db->_protect_identifiers = false;
+
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+
+        $table = "P_MP_PIC";
+        $pk = "P_MP_PIC_ID";
+
+        $P_MP_PIC_ID = $this->input->post("p_mp_pic_id");
+        $contact = $this->input->post('contact');
+        $p_mp_lokasi_id = $this->input->post('p_mp_lokasi_id');
+        $pic_id = $this->input->post('pic_id');
+
+        $CREATE_DATE = date('d/M/Y');
+        $UPDATE_DATE = date('d/M/Y');
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATE_BY = $this->session->userdata('d_user_name');
+
+
+
+        switch ($oper) {
+            case 'add':
+                $data = array('P_MP_LOKASI_ID' => $p_mp_lokasi_id,
+                    'P_CONTACT_TYPE_ID' => $contact,
+                    'P_PIC_ID' => $pic_id,
+                    'CREATED_BY' => $CREATED_BY,
+                    'CREATE_DATE' => $CREATE_DATE,
+                    'UPDATE_DATE' => $UPDATE_DATE,
+                    'UPDATE_BY' => $UPDATE_BY
+                );
+
+                $new_id = gen_id($pk, $table);
+                $this->db->set($pk, $new_id);
+                $this->db->insert($table, $data);
+                if ($this->db->affected_rows() > 0) {
+                    $datas["success"] = true;
+                    $datas["message"] = "Data berhasil ditambahakan";
+                } else {
+                    $datas["success"] = false;
+                    $datas["message"] = "Gagal menambah data";
+                }
+                break;
+            case 'edit':
+                $data = array('P_MP_LOKASI_ID' => $p_mp_lokasi_id,
+                    'P_CONTACT_TYPE_ID' => $contact,
+                    'P_PIC_ID' => $pic_id,
+                    'UPDATE_DATE' => $UPDATE_DATE,
+                    'UPDATE_BY' => $UPDATE_BY
+                );
+                $this->db->where($pk, $P_MP_PIC_ID);
+                $this->db->update($table, $data);
+                if ($this->db->affected_rows() > 0) {
+                    $datas["success"] = true;
+                    $datas["message"] = "Edit data berhasil";
+                } else {
+                    $datas["success"] = false;
+                    $datas["message"] = "Gagal edit data";
+                }
+                break;
+            case 'del':
+                $this->db->where($pk, $id_);
+                $this->db->delete($table);
+                if ($this->db->affected_rows() > 0) {
+                    $datas["success"] = true;
+                    $datas["message"] = "Data berhasil dihapus";
+                } else {
+                    $datas["success"] = false;
+                    $datas["message"] = "Gagal menghapus data !";
+                }
+                break;
+        }
+        echo json_encode($datas);
+
+    }
+
 }
