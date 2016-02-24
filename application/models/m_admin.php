@@ -78,41 +78,56 @@ class M_admin extends CI_Model {
         $key = 'USER_ID';
         $table = 'APP_USERS';
 
-        $NIK = strtoupper($this->input->post('NIK'));
+        $FULL_NAME = strtoupper($this->input->post('FULL_NAME'));
         $USER_NAME = strtoupper($this->input->post('USER_NAME'));
-        $EMAIL = $this->input->post('EMAIL');
+        $EMAIL = strtolower($this->input->post('EMAIL'));
         $LOKER= $this->input->post('LOKER');
         $ADDR_STREET = $this->input->post('ADDR_STREET');
         $ADDR_CITY= $this->input->post('ADDR_CITY');
         $CONTACT_NO = $this->input->post('CONTACT_NO');
         $PASSWD = MD5($this->input->post('PASSWD'));
+        $IS_EMPLOYEE = $this->input->post('IS_EMPLOYEE');
+        
+        if($IS_EMPLOYEE == 'N') {
+            /* khusus non karyawan, user akan menentukan passwordnya sendiri ketika masuk halaman submit profile. 
+                halaman submit profile akan dikirimkan ke email user ketika sudah mapping user mitra
+                oleh admin.
+                
+                untuk sementara password non-karyawan diset dengan settingan di bawah ini.
+            */
+            $PASSWD = md5('apaajaboleh987654321!@#$%^&*(');
+        }
+        
 
         switch ($oper) {
             case 'add':
                 $new_id = gen_id($key,$table);
               //  $this->db->set($key,$new_id);
-                $qs = "INSERT INTO APP_USERS(USER_ID,NIK,USER_NAME,EMAIL,LOKER,ADDR_STREET,ADDR_CITY,CONTACT_NO,PASSWD) VALUES(
+                $qs = "INSERT INTO APP_USERS(USER_ID,FULL_NAME,USER_NAME,EMAIL,LOKER,ADDR_STREET,ADDR_CITY,CONTACT_NO,PASSWD, IS_EMPLOYEE, P_USER_STATUS_ID) VALUES(
                         '".$new_id."',
-                        '".$NIK."',
+                        '".$FULL_NAME."',
                         '".$USER_NAME."',
                         '".$EMAIL."',
                         '".$LOKER."',
                         '".$ADDR_STREET."',
                         '".$ADDR_CITY."',
                         '".$CONTACT_NO."',
-                        '".$PASSWD."'
+                        '".$PASSWD."',
+                        '".$IS_EMPLOYEE."',
+                        1
                         )" ;
                 $this->db->query($qs);
                 break;
             case 'edit':
                 $this->db->where($key,$id_);
                 $qs = "UPDATE APP_USERS SET
-                         USER_NAME = '".$USER_NAME."',
+                         FULL_NAME = '".$FULL_NAME."',
                          EMAIL = '".$EMAIL."',
                          LOKER = '".$LOKER."',
                          ADDR_STREET = '".$ADDR_STREET."',
                          ADDR_CITY = '".$ADDR_CITY."',
-                         CONTACT_NO = '".$CONTACT_NO."'
+                         CONTACT_NO = '".$CONTACT_NO."',
+                         IS_EMPLOYEE = '".$IS_EMPLOYEE."'
                        WHERE USER_ID = ".$id_;
                 $this->db->query($qs);
                 break;
@@ -122,13 +137,19 @@ class M_admin extends CI_Model {
                 $this->db->delete('P_USER_ATTRIBUTE');
                 
                 $this->db->where($key,$id_);
+                $this->db->delete('T_USER_LEGAL_DOC');
+                
+                $this->db->where($key,$id_);
+                $this->db->delete('APP_USER_C2BI');
+                
+                $this->db->where($key,$id_);
                 $this->db->delete($table);
                 break;
         }
 
     }
-    public function resetPwd($uid,$nik){
-        $qs = "UPDATE APP_USERS SET PASSWD = '".$nik."' WHERE USER_ID=".$uid;
+    public function resetPwd($uid,$user_name){
+        $qs = "UPDATE APP_USERS SET PASSWD = '".$user_name."' WHERE USER_ID=".$uid;
         $this->db->query($qs);
 
     }
