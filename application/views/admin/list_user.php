@@ -195,8 +195,8 @@
             //colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
             colModel: [
                 {label: 'ID', name: 'USER_ID', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'NIK', name: 'NIK', width: 90, align: "left", editable: true, editrules: {required: true}},
-                {label: 'User Name', name: 'USER_NAME', width: 150, align: "left", editable: true},
+                {label: 'User Name', name: 'USER_NAME', width: 150, align: "left", editable: true, editrules: {required: true}},
+                {label: 'Full Name', name: 'FULL_NAME', width: 150, align: "left", editable: true, editrules: {required: true}},
                 {label: 'Email', name: 'EMAIL', width: 100, align: "left", editable: true},
                 {label: 'Loker', name: 'LOKER', width: 100, align: "left", editable: true},
                 {label: 'Address Street', name: 'ADDR_STREET', width: 150, align: "left", editable: true},
@@ -211,6 +211,17 @@
                     edittype: 'password',
                     hidden: true,
                     editoption: {}
+                },
+                {   
+                    label :'Is Employee ?',
+                    name : 'IS_EMPLOYEE',
+                    width:200,
+                    sortable:true,
+                    align:'center',
+                    editable:true,
+                    edittype: 'select', 
+                    formatter: 'select',
+                    editoptions:{value: {'Y' : 'YES','N' : 'NO'}}
                 }
             ],
             width: 1120,
@@ -255,6 +266,8 @@
                     updatePagerIcons(table);
                     enableTooltips(table);
                 }, 0);
+                
+                $("#user_attribute_row_content").hide();
             },
 
             //memanggil controller jqgrid yang ada di controller crud
@@ -298,7 +311,7 @@
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
-                $("#NIK").prop("readonly", true);
+                $("#USER_NAME").prop("readonly", true);
 
             }
         },
@@ -386,14 +399,14 @@
     function resetPwd() {
         var grid = $("#grid-table");
         var rowKey = grid.jqGrid('getGridParam', 'selrow');
-        var NIK = $('#grid-table').jqGrid('getCell', rowKey, 'NIK');
+        var USER_NAME = $('#grid-table').jqGrid('getCell', rowKey, 'USER_NAME');
 
         if (rowKey) {
-            var c = confirm('Reset Password ' + NIK + ' ?')
+            var c = confirm('Reset Password ' + USER_NAME + ' ?')
             if (c == true) {
                 $.ajax({
                     url: '<?php echo site_url('admin/resetPWD');?>',
-                    data: {user_id: rowKey, nik: NIK},
+                    data: {user_id: rowKey, user_name: USER_NAME},
                     type: 'POST',
                     success: function (data) {
                         $("#notif").html("<div class='alert alert-success'> " +
