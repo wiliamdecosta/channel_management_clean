@@ -93,7 +93,7 @@ class M_admin extends CI_Model {
                 halaman submit profile akan dikirimkan ke email user ketika sudah mapping user mitra
                 oleh admin.
                 
-                untuk sementara password non-karyawan diset dengan settingan di bawah ini.
+                password non-karyawan diset dengan settingan di bawah ini(agar sulit ditebak).
             */
             $PASSWD = md5('apaajaboleh987654321!@#$%^&*(');
         }
