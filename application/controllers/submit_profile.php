@@ -135,7 +135,8 @@ class Submit_profile extends CI_Controller {
             $this->M_user->db->query($sql);
             
             $sql = "UPDATE APP_USERS
-                        SET PASSWD = '".$password."'
+                        SET PASSWD = '".$password."',
+                        P_USER_STATUS_ID = 1
                         WHERE USER_ID = ".$id_mitra;
             
             $this->M_user->db->query($sql);
