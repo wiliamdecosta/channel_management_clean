@@ -33,6 +33,7 @@
                             <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                                    value="<?php echo
                                    $this->security->get_csrf_hash(); ?>">
+                            <input type="hidden" name="pgl_id" id="pgl_id" value="<?php echo $pgl_id;?>">
                             <br>
                             <div id="output" class="row">
                             </div>

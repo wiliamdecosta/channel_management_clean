@@ -33,18 +33,6 @@
                        id="filter_cari">
                         <span class="ace-icon fa fa-search"></span>Cari</a>
                 </div>
-                <!--                <div class="col-sm-8">-->
-                <!--                    <div id="btn_add_update" style="float: right;">-->
-                <!--                        <a id="add_fastel" class="btn btn-white btn-sm btn-round">-->
-                <!--                            <i class="ace-icon fa fa-plus green"></i>-->
-                <!--                            Add Fastel-->
-                <!--                        </a>-->
-                <!--                        <a id="update_fastel" class="btn btn-white btn-sm btn-round">-->
-                <!--                            <i class="ace-icon fa fa-upload green"></i>-->
-                <!--                            Update Fastel-->
-                <!--                        </a>-->
-                <!--                    </div>-->
-                <!--                </div>-->
             </div>
         </div>
 
@@ -75,8 +63,9 @@
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: "<?php echo site_url(); ?>managementmitra/gridFastel/<?php echo $periode;?>/261/2933",
+            url: "<?php echo site_url(); ?>managementmitra/gridFastel",
             datatype: "json",
+            postData: {pgl_id: <?php echo $pgl_id;?>, periode:<?php echo $periode;?>},
             mtype: "POST",
             colModel: [
                 //{ label: 'ID', name: 'USER_ID', key: true, width:5, sorttype:'number', editable: true,hidden:true },
@@ -255,7 +244,7 @@
             //width: '100%',
             height: '100%',
             scrollOffset: 0,
-            rowNum: 10,
+            rowNum: 5,
             viewrecords: true,
             rowList: [10, 20, 50],
             sortname: 'ND1', // default sorting ID
@@ -515,30 +504,48 @@
         var grid_selector = "#grid-table2";
         var pager_selector = "#grid-pager2";
 
-        var data = [
-            {nofastel: "3577", total: "3000", abonemen: "8000", diskon: "4500", flag: "Lunas"},
-            {nofastel: "1234", total: "1000", abonemen: "6000", diskon: "2500", flag: "Lunas"},
-            {nofastel: "2345", total: "2000", abonemen: "7000", diskon: "3500", flag: "Lunas"}
-        ];
         jQuery("#grid-table2").jqGrid({
-            datatype: "local",
-            data: data,
+            url: "<?php echo site_url(); ?>managementmitra/gridDatin",
+            postData: {pgl_id: <?php echo $pgl_id;?>, periode:<?php echo $periode;?>},
+            datatype: "json",
+            mtype: "POST",
             colModel: [
-                {label: 'NO AKUN ', name: 'nofastel', width: 200, align: "left", hidden: false},
-                {label: 'TOTAL TAGIHAN', name: 'total', width: 200, align: "right", editable: true},
-                {label: 'ABONEMEN', name: 'abonemen', width: 200, align: "right", editable: true},
-                {label: 'DISKON', name: 'diskon', width: 200, align: "right", editable: true},
-                {label: 'RESTITUSI', name: 'lokal', width: 200, align: "right", editable: true},
+                {label: 'NO AKUN ', name: 'ACCOUNT_NUM', width: 200, align: "left", hidden: false},
+                {
+                    label: 'TOTAL TAGIHAN',
+                    name: 'PRODUCT_MNY',
+                    width: 200,
+                    align: "right",
+                    editable: true,
+                    formatter: 'integer',
+                },
+                {
+                    label: 'ABONEMEN',
+                    name: 'ABONDEMEN',
+                    width: 200,
+                    align: "right",
+                    editable: true,
+                    formatter: 'integer',
+                },
+                {label: 'DISKON', name: 'DISCOUNT', width: 200, align: "right", editable: true, formatter: 'integer',},
+                {
+                    label: 'RESTITUSI',
+                    name: 'RESTITUSI',
+                    width: 200,
+                    align: "right",
+                    editable: true,
+                    formatter: 'integer',
+                },
                 {label: 'FLAG BAYAR', name: 'flag', width: 200, align: "center", editable: true}
 
             ],
             //width: '100%',
             height: '100%',
             scrollOffset: 0,
-            rowNum: 10,
+            rowNum: 5,
             viewrecords: true,
             rowList: [10, 20, 50],
-            sortname: 'nofastel', // default sorting ID
+            // sortname: 'nofastel',
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             sortorder: 'asc',
@@ -580,7 +587,7 @@
             addicon: 'ace-icon fa fa-plus-circle purple',
             del: false,
             delicon: 'ace-icon fa fa-trash-o red',
-            search: false,
+            search: true,
             searchicon: 'ace-icon fa fa-search orange',
             refresh: false,
             afterRefresh: function () {
@@ -774,21 +781,24 @@
     }
 
 
-
 </script>
 <script>
-    $("#filter_cari").click(function(){
+    $("#filter_cari").click(function () {
         var grid = jQuery("#grid-table");
+        var grid2 = jQuery("#grid-table2");
         var bulan = $("#bulan").val();
         var tahun = $("#tahun").val();
-        var periode = tahun+""+bulan;
-        if(bulan && tahun){
-            var postdata = grid.jqGrid('getGridParam','postData');
-            $.extend(postdata,{periode:periode});
-            //grid.jqGrid('setGridParam', { search: text.length>0, postData: postdata });
-            grid.trigger("reloadGrid",[{page:1}]);
-        }else{
-            alert('Bulan dan tahun harus dipilih !');
+        var periode = tahun + "" + bulan;
+        if (bulan && tahun) {
+            var postdata = grid.jqGrid('getGridParam', 'postData');
+            $.extend(postdata, {periode: periode});
+            grid.trigger("reloadGrid", [{page: 1}]);
+
+            var postdata2 = grid2.jqGrid('getGridParam', 'postData');
+            $.extend(postdata2, {periode: periode});
+            grid2.trigger("reloadGrid", [{page: 1}]);
+        } else {
+            swal('Warning','Bulan dan tahun harus dipilih !','warning');
             return false;
         }
     });

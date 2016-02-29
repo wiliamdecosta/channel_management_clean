@@ -710,7 +710,6 @@ class M_parameter extends CI_Model
         $table = "P_MP_LOKASI";
         $pk = "P_MP_LOKASI_ID";
 
-        $NO_PKS = strtoupper($this->input->post('NO_PKS'));
         $LOKASI = $this->input->post('LOKASI');
         $P_MAP_MIT_CC_ID = $this->input->post('P_MAP_MIT_CC_ID');
         $CREATION_DATE = date('d/M/Y');
@@ -728,8 +727,7 @@ class M_parameter extends CI_Model
                     'VALID_FROM' => $VALID_FROM,
                     'VALID_UNTIL' => $VALID_UNTIL,
                     'CREATE_BY' => $CREATE_BY,
-                    'CREATION_DATE' => $CREATION_DATE,
-                    'NO_PKS' => $NO_PKS
+                    'CREATION_DATE' => $CREATION_DATE
                 );
 
                 $new_id = gen_id($pk, $table);
@@ -749,8 +747,7 @@ class M_parameter extends CI_Model
                     'VALID_FROM' => $VALID_FROM,
                     'VALID_UNTIL' => $VALID_UNTIL,
                     'UPDATE_BY' => $UPDATE_BY,
-                    'UPDATE_DATE' => $UPDATE_DATE,
-                    'NO_PKS' => $NO_PKS
+                    'UPDATE_DATE' => $UPDATE_DATE
                 );
                 $this->db->where($pk, $id_);
                 $this->db->update($table, $data);
@@ -799,7 +796,6 @@ class M_parameter extends CI_Model
         $UPDATE_BY = $this->session->userdata('d_user_name');
 
 
-
         switch ($oper) {
             case 'add':
                 $data = array('P_MP_LOKASI_ID' => $p_mp_lokasi_id,
@@ -838,6 +834,100 @@ class M_parameter extends CI_Model
                     $datas["success"] = false;
                     $datas["message"] = "Gagal edit data";
                 }
+                break;
+            case 'del':
+                $this->db->where($pk, $id_);
+                $this->db->delete($table);
+                if ($this->db->affected_rows() > 0) {
+                    $datas["success"] = true;
+                    $datas["message"] = "Data berhasil dihapus";
+                } else {
+                    $datas["success"] = false;
+                    $datas["message"] = "Gagal menghapus data !";
+                }
+                break;
+        }
+        echo json_encode($datas);
+
+    }
+
+    public function crud_pks()
+    {
+        $this->db->_protect_identifiers = false;
+
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+
+        $table = "P_MP_PKS";
+        $pk = "P_MP_PKS_ID";
+
+        $P_MP_PKS_ID = $this->input->post('P_MP_PKS_ID');
+        $NO_PKS = strtoupper($this->input->post("NO_PKS"));
+        $P_MP_LOKASI_ID = $this->input->post('P_MP_LOKASI_ID');
+        $VALID_FROM = $this->input->post('VALID_FROM');
+        $VALID_UNTIL = $this->input->post('VALID_UNTIL');
+
+        $CREATED_DATE = date('d/M/Y');
+        $UPDATED_DATE = date('d/M/Y');
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+
+
+        switch ($oper) {
+            case 'add':
+                $data = array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID,
+                    'NO_PKS' => $NO_PKS,
+                    'VALID_FROM' => $VALID_FROM,
+                    'VALID_UNTIL' => $VALID_UNTIL,
+                    'CREATED_BY' => $CREATED_BY,
+                    'CREATED_DATE' => $CREATED_DATE,
+                    'UPDATED_DATE' => $UPDATED_DATE,
+                    'UPDATED_BY' => $UPDATED_BY
+                );
+                $ck = $this->Mfee->checkDuplicate($table, 'NO_PKS', $NO_PKS);
+                if ($ck > 0) {
+                    $datas["success"] = false;
+                    $datas["message"] = "No PKS sudah ada !";
+                } else {
+                    $new_id = gen_id($pk, $table);
+                    $this->db->set($pk, $new_id);
+
+                    $this->db->insert($table, $data);
+                    if ($this->db->affected_rows() > 0) {
+                        $datas["success"] = true;
+                        $datas["message"] = "Data berhasil ditambahakan";
+                    } else {
+                        $datas["success"] = false;
+                        $datas["message"] = "Gagal menambah data";
+                    }
+                }
+
+
+                break;
+            case 'edit':
+                $data = array(
+                    'NO_PKS' => $NO_PKS,
+                    'VALID_FROM' => $VALID_FROM,
+                    'VALID_UNTIL' => $VALID_UNTIL,
+                    'UPDATED_DATE' => $UPDATED_DATE,
+                    'UPDATED_BY' => $UPDATED_BY
+                );
+                $ck = $this->Mfee->checkDuplicate($table, 'NO_PKS', $NO_PKS);
+                if ($ck > 0) {
+                    $datas["success"] = false;
+                    $datas["message"] = "No PKS sudah ada !";
+                }else{
+                    $this->db->where($pk, $P_MP_PKS_ID);
+                    $this->db->update($table, $data);
+                    if ($this->db->affected_rows() > 0) {
+                        $datas["success"] = true;
+                        $datas["message"] = "Edit data berhasil";
+                    } else {
+                        $datas["success"] = false;
+                        $datas["message"] = "Gagal edit data";
+                    }
+                }
+
                 break;
             case 'del':
                 $this->db->where($pk, $id_);

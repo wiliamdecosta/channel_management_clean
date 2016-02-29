@@ -16,7 +16,7 @@
                                     <label>No PKS</label>
                                 </div>
                                 <div class="col-xs-9">
-                                    <input type="text" id="no_pks" name="no_pks" class="form-control" required>
+                                    <input type="text" id="no_pks" name="no_pks" class="form-control required" required>
                                 </div>
                             </div>
                             &nbsp;
@@ -25,7 +25,7 @@
                                     <label>Nama Dokumen</label>
                                 </div>
                                 <div class="col-xs-9">
-                                    <input type="text" id="doc_name" name="doc_name" class="form-control" required>
+                                    <input type="text" id="doc_name" name="doc_name" class="form-control required" required>
                                 </div>
                             </div>
                             &nbsp;
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="col-xs-9">
                                     <input type="text" id="start_date_pks" name="start_date_pks"
-                                           class="col-xs-10 col-sm-5 date-picker" data-date-format="dd-mm-yyyy"
+                                           class="col-xs-10 col-sm-5 date-picker required" data-date-format="dd-mm-yyyy"
                                            required>
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="col-xs-9">
                                     <input type="text" id="end_date_pks" name="end_date_pks"
-                                           class="col-xs-10 col-sm-5 date-picker" data-date-format="dd-mm-yyyy"
+                                           class="col-xs-10 col-sm-5 date-picker required" data-date-format="dd-mm-yyyy"
                                            required>
                                 </div>
                             </div>
@@ -114,12 +114,12 @@
             {
                 if (data.success == true) {
                     var grid = jQuery("#grid-table");
-                    alert(data.msg);
+                    swal("Berhasil",data.msg,"success");
                     grid.trigger("reloadGrid", [{page: 1}]);
                     $("#modal_upload_pks").modal("hide");
 
                 } else {
-                    $("#output").html(data.msg);
+                    swal("Error",data.msg,"error");
                 }
             }
         });

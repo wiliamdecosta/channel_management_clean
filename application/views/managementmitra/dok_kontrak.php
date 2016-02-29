@@ -38,7 +38,7 @@
             // async: false,
             url: "<?php echo base_url();?>managementmitra/modalUploadKontrak",
             type: "POST",
-            data: {upload_param: 1},
+            data: {upload_param: 1, pgl_id:<?php echo $pgl_id;?>},
             success: function (data) {
                 $('#upload_kontrak').html(data);
                 $('#modal_upload_kontrak').modal('show');
@@ -55,6 +55,7 @@
         jQuery("#grid-table").jqGrid({
             url: '<?php echo site_url('managementmitra/gridDocKontrak');?>',
             datatype: "json",
+            postData : {pgl_id:<?php echo $pgl_id;?>},
             mtype: "POST",
             caption: "Dokumen Kontrak",
             colModel: [
@@ -84,7 +85,7 @@
                     align: "left",
                     sortable: true,
                     editable: false,
-                    hidden: true,
+                    hidden: true
                 },
                 {
                     label: 'Tanggal Diubah',
@@ -129,7 +130,7 @@
                     }
                 }
             ],
-            // width: '100%',
+            width: 1000,
             height: '100%',
             scrollOffset: 0,
             rowNum: 5,

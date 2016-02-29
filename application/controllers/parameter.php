@@ -1352,6 +1352,66 @@ class Parameter extends CI_Controller
         echo json_encode($result);
     }
 
+    public function gridMapPKS()
+    {
+        $P_MP_LOKASI_ID = $this->input->post('P_MP_LOKASI_ID');
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 5;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : null;
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : null;
+
+        $table = "P_MP_PKS";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Filter Table *
+
+        $req_param['where'] = array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID);
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+    }
+
     public function gridMapPIC()
     {
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
@@ -1423,6 +1483,10 @@ class Parameter extends CI_Controller
     public function crud_lokasimitra(){
         $this->M_parameter->crud_lokasimitra();
     }
+    public function crud_pks(){
+        $this->M_parameter->crud_pks();
+    }
+
 
     public function add_pic()
     {

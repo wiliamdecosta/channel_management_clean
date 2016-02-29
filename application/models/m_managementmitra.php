@@ -94,6 +94,81 @@ class M_managementmitra extends CI_Model
 
     }
 
+    public function getDatin($param)
+    {
+        $this->db->_protect_identifiers = false;
+        if ($param['search'] != null && $param['search'] === 'true') {
+            $wh = "UPPER(" . $param['search_field'] . ")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('" . $param['search_str'] . "%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%" . $param['search_str'] . "')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%" . $param['search_str'] . "%')";
+                    break;
+                case "eq": // equal =
+                    if (is_numeric($param['search_str'])) {
+                        $wh .= " = '" . $param['search_str'] . "'";
+                    } else {
+                        $wh .= " = UPPER('" . $param['search_str'] . "')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if (is_numeric($param['search_str'])) {
+                        $wh .= " <> " . $param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('" . $param['search_str'] . "')";
+                    }
+                    break;
+                case "lt":
+                    if (is_numeric($param['search_str'])) {
+                        $wh .= " < " . $param['search_str'];
+                    } else {
+                        $wh .= " < '" . $param['search_str'] . "'";
+                    }
+                    break;
+                case "le":
+                    if (is_numeric($param['search_str'])) {
+                        $wh .= " <= " . $param['search_str'];
+                    } else {
+                        $wh .= " <= '" . $param['search_str'] . "'";
+                    }
+                    break;
+                case "gt":
+                    if (is_numeric($param['search_str'])) {
+                        $wh .= " > " . $param['search_str'];
+                    } else {
+                        $wh .= " > '" . $param['search_str'] . "'";
+                    }
+                    break;
+                case "ge":
+                    if (is_numeric($param['search_str'])) {
+                        $wh .= " >= " . $param['search_str'];
+                    } else {
+                        $wh .= " >= '" . $param['search_str'] . "'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+            $this->db->where($wh);
+        }
+
+
+        ($param['limit'] != null ? $this->db->limit($param['limit']['end'], $param['limit']['start']) : '');
+        ($param['sort_by'] != null ? $this->db->order_by($param['sort_by'], $param['sord']) : '');
+
+        $this->db->where('BILL_PRD', $param['periode']);
+        $this->db->where('PGL_ID', $param['pgl_id']);
+
+        $qs = $this->db->get('V_FASTEL_DATIN');
+        return $qs;
+
+    }
+
 
     public function excelRinta($period, $pgl_id, $ten_id)
     {
@@ -130,30 +205,101 @@ class M_managementmitra extends CI_Model
 
     public function crud_pks()
     {
-
         $this->db->_protect_identifiers = false;
-        // $this->db->protect_identifiers('TEN_ND', FALSE);
         $oper = $this->input->post('oper');
         $id = $this->input->post('id');
 
+        $form_doc_name = trim(ucfirst($this->input->post("form_doc_name")));
+        $form_p_mp_pks_id = $this->input->post("form_p_mp_pks_id");
+        $form_p_pks_id = $this->input->post("form_p_pks_id");
+        $form_description = trim(ucfirst($this->input->post("form_description")));
+
+
+        $CREATED_DATE = date('d/M/Y');
+        $UPDATED_DATE = date('d/M/Y');
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+
         $table = "P_PKS";
+        $pk = "P_PKS_ID";
 
         switch ($oper) {
             case 'add':
-                // $this->db->set('CREATED_DATE', 'SYSDATE', FALSE);
-                //$this->db->insert($table, $data);
+
+                $config['upload_path'] = './application/third_party/upload/pks';
+                $config['allowed_types'] = 'docx|pdf|doc';
+                $config['max_size'] = '0';
+                $config['overwrite'] = TRUE;
+                $file_id = time();
+                $config['file_name'] = str_replace(" ", "_", $form_doc_name) . "_" . $file_id;
+
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+
+
+                if (!$this->upload->do_upload("filename")) {
+                    $error = $this->upload->display_errors();
+                    $datas['success'] = false;
+                    $datas['message'] = $error;
+                } else {
+                    // Do Upload
+                    $data = $this->upload->data();
+
+                    $datas = array(
+                        "DOC_NAME" => $form_doc_name,
+                        "DESCRIPTION" => $form_description,
+                        "P_MP_PKS_ID" => $form_p_mp_pks_id,
+                        "FILE_NAME" =>$data['client_name'],
+                        "FILE_PATH" => $data['file_name'],
+                        'CREATED_BY' => $CREATED_BY,
+                        'CREATED_DATE' => $CREATED_DATE,
+                        'UPDATED_DATE' => $UPDATED_DATE,
+                        'UPDATED_BY' => $UPDATED_BY
+
+                    );
+                    // Set New PK
+                    $new_id = gen_id($pk, $table);
+                    $this->db->set($pk, $new_id);
+
+                    // DO Insert
+                    $this->db->insert($table, $datas);
+                    if ($this->db->affected_rows() > 0) {
+                        $datas["success"] = true;
+                        $datas["message"] = "Data berhasil ditambahakan";
+                    } else {
+                        $datas["success"] = false;
+                        $datas["message"] = "Gagal menambah data";
+                    }
+                }
+
                 break;
             case 'edit':
-                //$this->db->where('ND', $ND);
-                //$this->db->where('TEN_ID', $TEN_ID);
-                //$this->db->update($table, $data);
+                $datas = array(
+                    "DOC_NAME" => $form_doc_name,
+                    "DESCRIPTION" => $form_description,
+                    "P_MP_PKS_ID" => $form_p_mp_pks_id,
+                    'UPDATED_DATE' => $UPDATED_DATE,
+                    'UPDATED_BY' => $UPDATED_BY
+
+                );
+
+                $this->db->where($pk, $form_p_pks_id);
+                $this->db->update($table, $datas);
+                if ($this->db->affected_rows() > 0) {
+                    $datas["success"] = true;
+                    $datas["message"] = "Edit data berhasil";
+                } else {
+                    $datas["success"] = false;
+                    $datas["message"] = "Gagal edit data";
+                }
+
                 break;
             case 'del':
-                // $this->db->where('ND', $ND);
-                $this->db->where('P_PKS_ID', $id);
+                $this->db->where($pk, $id);
                 $this->db->delete($table);
                 break;
         }
+        echo json_encode($datas);
 
     }
 
@@ -235,7 +381,8 @@ class M_managementmitra extends CI_Model
         }
     }
 
-    public function getMapPIC(){
+    public function getMapPIC()
+    {
         $lokasisewa = $this->input->post('lokasisewa');
 
         $this->db->where('P_MP_LOKASI_ID', $lokasisewa);
@@ -244,4 +391,9 @@ class M_managementmitra extends CI_Model
 
     }
 
+    public function getListPKSByLokasi()
+    {
+        $query = ("SELECT DISTINCT(NO_PKS) FROM P_MP_MPKS WHERE P_MP_LOKASI_ID = ");
+
+    }
 }

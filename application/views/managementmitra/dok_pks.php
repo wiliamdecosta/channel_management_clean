@@ -1,22 +1,20 @@
-<div id="dokPKS">
+<div id="dok_pks">
     <form class="form-horizontal" role="form">
         <div class="rows">
             <div class="form-group">
                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">Tanggal PKS </label>
                 <div class="col-sm-6">
-                    <input class="date-picker col-sm-3" id="start_date" type="text" data-date-format="dd-mm-yyyy"
-                           placeholder="Input Date"/>
-                    <label class="col-sm-1" style="margin-right:10px;"> s/d </label>
-                    <input class="date-picker col-sm-3" id="end_date" type="text" data-date-format="dd-mm-yyyy"
-                           placeholder="Input Date"/>
+                    <input class="date-picker col-sm-3" id="valid_from" type="text" data-date-format="dd-mm-yyyy"
+                           placeholder="Tgl Mulai PKS" style="margin-right:10px;"/>
+                    <label></label>
+                    <input class="date-picker col-sm-3" id="valid_until" type="text" data-date-format="dd-mm-yyyy"
+                           placeholder="Tgl berakhir PKS"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-1 control-label no-padding-right">No PKS </label>
                 <div class="col-sm-4">
-                    <input type="text" id="no_pks" name="no_pks"
-                           placeholder="Di isi Nomor PKS / Amandemen yang aktif terakhit"
-                           class="form-control"/>
+                    <?php echo buatcombo("list_pks","list_pks","P_MP_PKS","NO_PKS","P_MP_PKS_ID",array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID),"Pilih PKS");?>
                 </div>
                 <a id="cari_pks"
                    class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
@@ -26,24 +24,181 @@
             <div id="btn_add_update" class="form-group">
                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"></label>
                 <div class="col-sm-4">
-                    <a id="btn_upload_pks" class="btn btn-white btn-sm btn-round">
+                    <a id="add_pks" class="btn btn-white btn-sm btn-round">
                         <i class="ace-icon fa fa-plus green"></i>
                         Upload Dokumen
                     </a>
+                    <!--<a id="btn_edit" class="btn btn-white btn-sm btn-round">
+                        <i class="ace-icon fa fa-plus green"></i>
+                        Edit Dokumen
+                    </a>-->
+                </div>
+                <div class="col-sm-4">
+
                 </div>
 
             </div>
             <div class="form-group">
                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">&nbsp;</label>
-                <div class="col-sm-11" id="tabel_content">
-                    <table id="grid-table"></table>
-                    <div id="grid-pager"></div>
+                <div class="col-sm-11">
+                    <div id="jqgrid">
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </form>
 </div>
+<div id="div_pks" style="display: none;">
+    <div id="" style="margin-top: 20px;" class="row">
+        <div class="col-xs-12">
+            <div class="well well-sm"><h4 id="pks_form_title" class="blue">Add/Edit PKS</h4></div>
+            <form class="form-horizontal" role="form" id="form_pks" method="post" enctype="multipart/form-data"
+                  accept-charset="utf-8">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">Nomor PKS</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="form_pks_name" name="form_pks_name" placeholder="Pilih PKS"
+                               class="col-xs-10 col-sm-5 required" required>
+                        <input type="hidden" id="form_p_mp_pks_id" name="form_p_mp_pks_id" required>
 
+                        <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
+                               value="<?php echo $this->security->get_csrf_hash(); ?>">
+                        <input type="hidden" name="oper" id="oper">
+                        <input type="hidden" id="form_p_pks_id" name="form_p_pks_id" required>
+                    <span class="input-group-btn">
+                        <button class="btn btn-warning btn-sm" type="button" id="btn_lov_pks">
+                            <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                        </button>
+                    </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"> Nama Dokumen </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="form_doc_name" name="form_doc_name" placeholder="Input Nama Dokumen"
+                               class="col-xs-10 col-sm-5 required" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"> File Dok </label>
+                    <div class="col-sm-4">
+                        <input type="file" id="filename" name="filename"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"> Description </label>
+                    <div class="col-sm-9">
+                        <textarea id="form_description" name="form_description" class="col-xs-10 col-sm-5"
+                                  type="text"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"> Created By </label>
+                    <div class="col-sm-9">
+                        <input type="text" value="<?php echo $this->session->userdata('d_user_name'); ?>" disabled=""
+                               id="form_created_by">
+                        &nbsp; <input type="text" value="<?php echo date("d-m-Y"); ?>" disabled=""
+                                      id="form_creation_date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"> Updated By </label>
+                    <div class="col-sm-9">
+                        <input type="text" value="<?php echo $this->session->userdata('d_user_name'); ?>" disabled=""
+                               id="form_updated_by">
+                        &nbsp; <input type="text" value="<?php echo date("d-m-Y"); ?>" disabled=""
+                                      id="form_updated_date">
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            Save
+                        </button>
+                        &nbsp; &nbsp;
+                        <button class="btn" type="reset" id="back">
+                            <i class="ace-icon fa fa-arrow-circle-left bigger-110"></i>
+                            Back
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="lov_pks" class="lov_content"></div>
+
+    <script type="text/javascript">
+        $("#btn_lov_pks").click(function () {
+            var divID = "form_p_mp_pks_id#~#form_pks_name"; // Parameter id input
+            var lov_target_id = "lov_pks"; // Harus sama dengan id class lov
+            var modal_id = "modal_lov_pks"; // Terserah
+            var lokasi_id = '<?php echo $P_MP_LOKASI_ID;?>';
+            $(".lov_content").html("");
+            $.ajax({
+                url: "<?php echo base_url();?>managementmitra/lovPKS",
+                type: "POST",
+                data: {divID: divID, lov_target_id: lov_target_id, modal_id: modal_id, lokasi_id: lokasi_id},
+                success: function (data) {
+                    $('#' + lov_target_id).html(data);
+                    $('#' + modal_id).modal('show');
+                }
+            });
+        });
+
+        $("#form_pks").on('submit', (function (e) {
+            e.preventDefault();
+            var data = new FormData(this);
+            $.ajax({
+                url: "<?php echo site_url('managementmitra/crud_pks');?>",
+                type: "POST",
+                data: data,
+                contentType: false,       // The content type used when sending data to the server.
+                cache: false,             // To unable request pages to be cached
+                processData: false,
+                dataType: "json",
+                success: function (data) {
+                    if (data.success == true) {
+                        swal("Sukses", data.message, "success");
+                        $("#grid-table").trigger("reloadGrid", [{page: 1}]);
+                        $("#div_pks").hide("slow");
+                        $("#dok_pks").show("slow");
+                        $('#form_pks')[0].reset();
+                        var $el = $('#filename');
+                        $el.wrap('<form>').closest('form').get(0).reset();
+                        $el.unwrap();
+                        $(".ace-file-name").removeAttr('data-title');
+
+
+                    } else {
+                        swal("Error", data.message, "error");
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
+                }
+            });
+
+        }));
+        $('#filename').ace_file_input({
+            no_file: 'No File ...',
+            btn_choose: 'Choose',
+            btn_change: 'Change',
+            droppable: false,
+            onchange: null,
+            thumbnail: false
+        });
+    </script>
+
+
+</div>
 <script type="text/javascript">
     $('.date-picker').datepicker({
             autoclose: true,
@@ -53,48 +208,79 @@
         .next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-</script>
-<div id="upload_pks">
-</div>
-<!-- #section:basics/content.breadcrumbs -->
-<!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
-<script type="text/javascript">
-    $("#btn_upload_pks").click(function () {
-        $.ajax({
-            // async: false,
-            url: "<?php echo base_url();?>managementmitra/modalUploadPKS",
-            type: "POST",
-            data: {upload_param: 1},
-            success: function (data) {
-                $('#upload_pks').html(data);
-                $('#modal_upload_pks').modal('show');
-            }
-        });
-    })
-    $("#update_fastel").click(function () {
-        $.ajax({
-            // async: false,
-            url: "<?php echo base_url();?>parameter/modalUploadFastel",
-            type: "POST",
-            data: {upload_param: 2},
-            success: function (data) {
-                $('#upload_fastel').html(data);
-                $('#modal_upload_fastel').modal('show');
-            }
-        });
-    })
 
-    $("#cari_pks").click(function () {
-        var grid = $("#grid-table");
-        var no_pks = $("#no_pks").val();
-        var postdata = grid.jqGrid('getGridParam', 'postData');
-        $.extend(postdata, {no_pks: no_pks});
-        grid.trigger("reloadGrid", [{page: 1}]);
+    $("#add_pks").click(function () {
+        $("#oper").val("add");
+        $("#dok_pks").hide("slow");
+        $("#div_pks").show("slow");
+    });
+    $("#btn_edit").click(function () {
+        var rowKey =  $("#grid-table").jqGrid('getGridParam', 'selrow');
+        if(rowKey){
+
+            $.post("<?php echo site_url('managementmitra/gridPKS');?>",
+                {
+                    P_MP_PKS_ID: rowKey
+                },
+                function (response) {
+                    var response = JSON.parse(response);
+                    var obj = response.Data[0];
+                    $("#form_pks_name").val(obj.NO_PKS);
+                    $("#form_pks_id").val(obj.P_PKS_ID);
+                    $("#form_doc_name").val(obj.DOC_NAME);
+                    $("#form_description").val(obj.DESCRIPTION);
+                    $("#form_p_mp_pks_id").val(obj.P_MP_PKS_ID);
+
+                    $("#form_created_by").val(obj.CREATED_BY);
+                    $("#form_created_date").val(obj.CREATED_DATE);
+                    $("#form_updated_by").val(obj.UPDATED_BY);
+                    $("#form_updated_date").val(obj.UPDATED_DATE);
+                }
+            );
+
+            $("#oper").val("edit");
+            $("#dok_pks").hide("slow");
+            $("#div_pks").show("slow");
+        }else{
+            swal("Warning","Silahkan pilih row PKS !","warning");
+
+        }
 
     });
 
+    $("#back").click(function () {
+        $("#div_pks").hide("slow");
+        $("#dok_pks").show("slow");
+        $('#form_pks')[0].reset();
+        var $el = $('#filename');
+        $el.wrap('<form>').closest('form').get(0).reset();
+        $el.unwrap();
+        $(".ace-file-name").removeAttr('data-title');
 
+    })
+
+    $("#list_pks").change(function () {
+        var pks_id = $("#list_pks").val();
+        var grid = $("#grid-table");
+        var pager = $("#grid-pager");
+        var postdata = grid.jqGrid('getGridParam', 'postData');
+        $.extend(postdata, {pks_id: pks_id});
+        grid.trigger("reloadGrid", [{page: 1}]);
+
+
+    });
+    $("#cari_pks").click(function () {
+        var valid_from = $("#valid_from").val();
+        var valid_until = $("#valid_until").val();
+        var grid = $("#grid-table");
+        var pager = $("#grid-pager");
+        var postdata = grid.jqGrid('getGridParam', 'postData');
+        $.extend(postdata, {valid_from: valid_from, valid_until:valid_until});
+        grid.trigger("reloadGrid", [{page: 1}]);
+    });
 </script>
+<div id="upload_pks">
+</div>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -104,6 +290,7 @@
             url: '<?php echo site_url('managementmitra/gridPKS');?>',
             datatype: "json",
             mtype: "POST",
+            postData : {P_MP_LOKASI_ID:<?php echo $P_MP_LOKASI_ID;?>},
             caption: "Dokumen PKS",
             colModel: [
                 {
@@ -117,14 +304,6 @@
                     hidden: true
                 },
                 {
-                    label: 'Nomor PKS',
-                    name: 'NO_PKS',
-                    width: 200,
-                    sortable: true,
-                    editable: false,
-                    hidden: false
-                },
-                {
                     label: 'Nama Dokumen',
                     name: 'DOC_NAME',
                     width: 200,
@@ -134,18 +313,27 @@
                     editrules: {required: true}
                 },
                 {
-                    label: 'Tanggal Mulai PKS',
-                    name: 'PKS_START_DATE',
-                    width: 120,
+                    label: 'No PKS',
+                    name: 'NO_PKS',
+                    width: 200,
                     align: "left",
                     sortable: true,
                     editable: true,
                     editrules: {required: true}
                 },
                 {
-                    label: 'Tanggal Berakhir PKS',
-                    name: 'PKS_END_DATE',
-                    width: 120,
+                    label: 'Tgl mulai PKS',
+                    name: 'VALID_FROM',
+                    width: 150,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Tgl berakhir PKS',
+                    name: 'VALID_UNTIL',
+                    width: 150,
                     align: "left",
                     sortable: true,
                     editable: true,
@@ -161,18 +349,9 @@
                     hidden: true,
                 },
                 {
-                    label: 'Tanggal Diubah',
-                    name: 'UPDATE_DATE',
-                    width: 110,
-                    align: "left",
-                    sortable: true,
-                    editable: false,
-                    hidden: false
-                },
-                {
-                    label: 'Diubah Oleh',
-                    name: 'UPDATE_BY',
-                    width: 110,
+                    label: 'Deskripsi',
+                    name: 'DESCRIPTION',
+                    width: 400,
                     align: "left",
                     sortable: true,
                     editable: false,
@@ -187,23 +366,17 @@
                     hidden: false,
                     formatter: function (cellvalue, options, rowObject) {
                         var file_name = rowObject.FILE_PATH;
-//                        return '<a class="ui-icon ace-icon fa fa-download bigger-130 purple" href="<?php //echo site_url('managementmitra/downloadPKS');?>///'+file_name+'" data-original-title="Download" data-rel="tooltip"></a>'
-//                        +'<a class="ui-icon ace-icon fa fa-pencil bigger-130 purple" href="<?php //echo site_url('managementmitra/downloadPKS');?>///'+file_name+'" data-original-title="Download" data-rel="tooltip"></a>';
-                        // <span class="ui-icon ace-icon fa fa-plus-circle purple"></span>
                         return '<div class="hidden-sm hidden-xs action-buttons">'
                             + '<a class="purple" href="<?php echo site_url('managementmitra/downloadPKS');?>/' + file_name + '" data-rel="tooltip" data-original-title="Download">'
                             + ' <i class="ace-icon fa fa-download bigger-130"></i>'
                             + '</a>'
-//                            + '<a class="orange" href="#" data-rel="tooltip" data-original-title="Print" onClick="window.print()">'
-//                            + ' <i class="ace-icon fa fa-print bigger-130"></i>'
-//                            + '</a>'
                             + '<a class="blue" href="<?php echo base_url();?>application/third_party/upload/pks/' + file_name + '" target="_blank" data-rel="tooltip" data-original-title="Print">'
                             + '<i class="ace-icon fa fa-print bigger-130"></i></a>'
                             + '</div>';
                     }
                 }
             ],
-            // width: '100%',
+            width: '980',
             height: '100%',
             scrollOffset: 0,
             rowNum: 5,
@@ -214,7 +387,7 @@
             rownumWidth: 35, // the width of the row numbers columns
             sortorder: 'asc',
             altRows: true,
-            shrinkToFit: false,
+            shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
 
@@ -229,8 +402,8 @@
                 repeatitems: false
             },
             loadComplete: function () {
-                grid.jqGrid('setGridWidth', $("#tabel_content").width() - 20);
-                pager.jqGrid('setGridWidth', $("#tabel_content").width() - 20);
+                grid.jqGrid('setGridWidth', 980);
+                pager.jqGrid('setGridWidth', 980);
 
                 var table = this;
                 setTimeout(function () {

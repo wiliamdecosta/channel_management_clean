@@ -40,5 +40,13 @@ class mfee extends CI_Model
 
     }
 
+    public function checkDuplicated($table,$field) {
+        $this->db->where($field);
+        $query = $this->db->get($table);
+
+        return  $query->num_rows();
+
+    }
+
 
 }
