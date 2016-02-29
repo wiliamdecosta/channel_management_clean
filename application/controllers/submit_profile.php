@@ -83,7 +83,7 @@ class Submit_profile extends CI_Controller {
         $email_admin = $this->input->post("email_admin");
         
         $jenis_identitas = $this->input->post("jenis_identitas");
-        $password = md5($this->input->post("password"));
+        $password = md5($this->input->post("user_password"));
         
         
         $data = array('success' => false, 'message' => '');
@@ -103,7 +103,6 @@ class Submit_profile extends CI_Controller {
             exit;
     	}
     	
-        
         
         // Upload Process
         $config = array();
@@ -136,7 +135,8 @@ class Submit_profile extends CI_Controller {
             
             $sql = "UPDATE APP_USERS
                         SET PASSWD = '".$password."',
-                        P_USER_STATUS_ID = 1
+                        P_USER_STATUS_ID = 1,
+                        FAIL_PWD = NULL
                         WHERE USER_ID = ".$id_mitra;
             
             $this->M_user->db->query($sql);
