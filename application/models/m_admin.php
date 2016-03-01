@@ -88,6 +88,7 @@ class M_admin extends CI_Model {
         $PASSWD = MD5($this->input->post('PASSWD'));
         $IS_EMPLOYEE = $this->input->post('IS_EMPLOYEE');
         
+        $P_USER_STATUS_ID = "1";
         if($IS_EMPLOYEE == 'N') {
             /* khusus non karyawan, user akan menentukan passwordnya sendiri ketika masuk halaman submit profile. 
                 halaman submit profile akan dikirimkan ke email user ketika sudah mapping user mitra
@@ -96,6 +97,7 @@ class M_admin extends CI_Model {
                 password non-karyawan diset dengan settingan di bawah ini(agar sulit ditebak).
             */
             $PASSWD = md5('apaajaboleh987654321!@#$%^&*(');
+            $P_USER_STATUS_ID = "NULL";
         }
         
 
@@ -114,7 +116,7 @@ class M_admin extends CI_Model {
                         '".$CONTACT_NO."',
                         '".$PASSWD."',
                         '".$IS_EMPLOYEE."',
-                        1
+                        ".$P_USER_STATUS_ID."
                         )" ;
                 $this->db->query($qs);
                 break;
