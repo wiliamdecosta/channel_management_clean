@@ -215,7 +215,7 @@ class Submit_profile extends CI_Controller {
 	        $rc = $this->M_user->db->query($sql)->row_array();
 	        
 	        if($rc['TOTAL_COUNT'] < 1) {
-    	        throw new Exception("Maaf, Mitra yang bersangkutan tidak mengupload data profile. Parameter URL tidak valid");
+    	        throw new Exception("Maaf, Mitra yang bersangkutan tidak mengupload data profile atau telah dihapus");
     	    }
     	    
     	    $sql = "SELECT * FROM T_USER_LEGAL_DOC WHERE USER_ID = ".$data['user_id_mitra'];
