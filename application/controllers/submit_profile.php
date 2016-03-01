@@ -238,6 +238,67 @@ class Submit_profile extends CI_Controller {
 	    
     }
     
+    public function cek_validasi_data() {
+        $is_user_valid = $this->input->post("btn_user_valid");
+        $is_user_not_valid  = $this->input->post("btn_user_not_valid");
+        
+        $user_id_mitra  = $this->input->post("id_mitra");
+        $user_id_admin  = $this->input->post("id_admin");
+        $email_user  = $this->input->post("email_user");
+        
+        $data = array('success' => false, 'message' => '');
+        
+        if(!empty($is_user_valid)) {
+            $sql = "UPDATE APP_USERS SET
+                         P_USER_STATUS_ID = 1
+                       WHERE USER_ID = ".$user_id_mitra;
+            $this->M_user->db->query($sql);            
+            
+            /*send email success. tambahkan keterangan username, password, dan link login.*/
+            $itemadmin = $this->M_user->getUserItem($user_id_admin);
+            
+            $email_to = $email_user;
+            $subject = 'Channel Management : User telah diaktifasi';
+            $content = 'User Anda telah diaktifasi. Silahkan gunakan Username dan Password Anda untuk login pada aplikasi Channel Management. : <br><br>';
+            $content .= base_url();
+            $content .= '<br>';
+
+            $this->sendMail($subject, $content, $email_to);
+
+            $data['success'] = true;
+            $data['message'] = 'Email telah dikirimkan ke User bersangkutan dan User telah Aktif.';
+            
+        }else if(!empty($is_user_not_valid)) {
+            
+            $sql = "UPDATE APP_USERS SET
+                         P_USER_STATUS_ID = 4
+                       WHERE USER_ID = ".$user_id_mitra;
+            $this->M_user->db->query($sql);
+            
+            
+            $sql = "DELETE FROM T_USER_LEGAL_DOC WHERE USER_ID = ".$user_id_mitra;
+            $this->M_user->db->query($sql);
+            
+            
+            $itemadmin = $this->M_user->getUserItem($user_id_admin);
+            
+            $email_to = $email_user;
+            $subject = 'Channel Management : User Profile tidak valid';
+            $content = 'User profile yang Anda kirimkan dinyatakan tidak valid oleh Administrator. Silahkan inputkan ulang user profile Anda dengan mengklik link di bawah ini : <br>';
+            $content .= site_url('submit_profile/page/'.base64_encode($user_id_mitra.'|'.$user_id_admin.'|'.$itemadmin['EMAIL']));
+                  
+            $this->sendMail($subject, $content, $email_to);
+            
+            /* send email untuk upload profile ulang */
+            $data['success'] = true;
+            $data['message'] = 'Email telah dikirimkan dan User telah diminta untuk mengirimkan profile ulang.';
+        }
+        
+        echo json_encode($data);
+        exit;
+    }
+    
+    
     public function isValidEmail($email){ 
         return filter_var($email, FILTER_VALIDATE_EMAIL) && preg_match('/@.+\./', $email);
     }
