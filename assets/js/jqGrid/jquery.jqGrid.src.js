@@ -7642,6 +7642,7 @@ $.jgrid.extend({
 				}
 				$(obj.p.colModel).each( function(i) {
 					nm = this.name;
+
 					// hidden fields are included in the form
 					if(this.editrules && this.editrules.edithidden === true) {
 						hc = false;
@@ -7681,6 +7682,13 @@ $.jgrid.extend({
 						if( $.inArray(this.edittype, ['text','textarea','password','select']) > -1) {
 							$(elc).addClass("ui-widget-content ui-corner-all");
 						}
+
+						/*Modified @gery 29/02/2016*/
+						if(this.editrules && this.editrules.required === true) {
+							$(elc).addClass("jqgrid-required");
+
+						}
+
 						trdata = $(tb).find("tr[rowpos="+rp+"]");
 						if(frmopt.rowabove) {
 							var newdata = $("<tr><td class='contentinfo' colspan='"+(maxcols*2)+"'>"+frmopt.rowcontent+"</td></tr>");
@@ -8532,7 +8540,7 @@ $.jgrid.extend({
 
 			var dh = isNaN(rp_ge[$(this)[0].p.id].dataheight) ? rp_ge[$(this)[0].p.id].dataheight : rp_ge[$(this)[0].p.id].dataheight+"px",
 			dw = isNaN(rp_ge[$(this)[0].p.id].datawidth) ? rp_ge[$(this)[0].p.id].datawidth : rp_ge[$(this)[0].p.id].datawidth+"px",
-			frm = $("<form name='FormPost' id='"+frmgr_id+"' class='FormGrid' style='width:"+dw+";overflow:auto;position:relative;height:"+dh+";'></form>"),
+			frm = $("<form name='FormPost' id='"+frmgr_id+"' class='FormGridwww' style='width:"+dw+";overflow:auto;position:relative;height:"+dh+";'></form>"),
 			tbl =$("<table id='"+frmtb_id+"' class='EditTable' cellspacing='1' cellpadding='2' border='0' style='table-layout:fixed'><tbody></tbody></table>");
 			if(onBeforeInit) {
 				showFrm = onBeforeInit.call($t,$("#"+frmgr));

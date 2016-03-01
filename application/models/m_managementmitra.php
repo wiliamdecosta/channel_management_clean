@@ -203,6 +203,17 @@ class M_managementmitra extends CI_Model
 
     }
 
+    public function insertDokEvaluasi($data)
+    {
+        $this->db->_protect_identifiers = false;
+
+        $new_id = gen_id('P_DOK_EVALUASI_ID', 'P_DOK_EVALUASI');
+        $this->db->set('P_DOK_EVALUASI_ID', $new_id);
+        $this->db->insert('P_DOK_EVALUASI', $data);
+        return $this->db->affected_rows();
+
+    }
+
     public function crud_pks()
     {
         $this->db->_protect_identifiers = false;
@@ -327,6 +338,30 @@ class M_managementmitra extends CI_Model
 
     }
 
+    public function crud_evaluasi()
+    {
+
+        $this->db->_protect_identifiers = false;
+        $oper = $this->input->post('oper');
+        $id = $this->input->post('id');
+
+        $table = "P_DOK_EVALUASI";
+
+        switch ($oper) {
+            case 'add':
+
+                break;
+            case 'edit':
+
+                break;
+            case 'del':
+                $this->db->where('P_DOK_EVALUASI_ID', $id);
+                $this->db->delete($table);
+                break;
+        }
+
+    }
+
     public function crud_detailmitra()
     {
         $this->db->_protect_identifiers = false;
@@ -391,9 +426,4 @@ class M_managementmitra extends CI_Model
 
     }
 
-    public function getListPKSByLokasi()
-    {
-        $query = ("SELECT DISTINCT(NO_PKS) FROM P_MP_MPKS WHERE P_MP_LOKASI_ID = ");
-
-    }
 }

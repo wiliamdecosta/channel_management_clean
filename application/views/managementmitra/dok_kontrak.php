@@ -7,8 +7,8 @@
                     Upload Dokumen
                 </a>
             </div>
+            <br>
         </div>
-        &nbsp;
         <div class="form-group">
             <div class="col-sm-12" id="tabel_content">
                 <table id="grid-table"></table>

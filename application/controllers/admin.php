@@ -381,8 +381,10 @@ class Admin extends CI_Controller
         $table = "SELECT a.USER_ID,a.NIK,a.USER_NAME,a.EMAIL,a.LOKER,a.ADDR_STREET,
                     a.ADDR_CITY,a.CONTACT_NO,a.PASSWD,a.FULL_NAME,a.P_USER_STATUS_ID,
                     a.EXPIRED_USER,a.EXPIRED_PWD,a.FAIL_PWD,a.EMPLOYEE_NO, nvl(a.IS_EMPLOYEE,'N') AS IS_EMPLOYEE,
-                    a.IP_ADDRESS,a.IS_NEW_USER,a.LAST_LOGIN_TIME
-                    FROM APP_USERS a";
+                    a.IP_ADDRESS,a.IS_NEW_USER,a.LAST_LOGIN_TIME,b.PROF_ID,c.PROF_NAME
+                    FROM APP_USERS a
+                    LEFT JOIN APP_USER_PROFILE b ON a.USER_ID=b.USER_ID
+                    LEFT JOIN APP_PROFILE c ON b.PROF_ID=c.PROF_ID";
 
         $req_param = array(
             "table" => $table,
@@ -522,5 +524,16 @@ class Admin extends CI_Controller
             $return_id = $p_app_menu_profile_id[$idx];
         }
         echo $return_id;
+    }
+
+    public function listProfile(){
+        $result = $this->M_admin->getListProfile();
+        echo "<select>";
+        foreach($result  as $value ){
+        echo "<option value=".$value['PROF_ID'].">".$value['PROF_NAME']."</option>";
+        }
+        echo "</select>";
+     //   $str = implode(" ", $result);
+        //echo(implode(",",$profile));
     }
 }

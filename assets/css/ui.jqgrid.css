@@ -169,3 +169,9 @@ a.g-menu-item, a.soptclass, a.clearsearchclass { cursor: pointer; }
 .ui-jqgrid .ui-jqgrid-view button {
     font-size: 11px
 }
+
+.jqgrid-required {
+    background: #fbec88 url("images/ui-bg_flat_55_fbec88_40x100.png") repeat-x scroll 50% 50%;
+    border: 1px solid #fad42e;
+    color: #363636;
+}

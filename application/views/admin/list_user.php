@@ -10,171 +10,177 @@
         <table id="grid-table"></table>
         <div id="grid-pager"></div>
     </div><!-- /.row -->
-    
+
     <div class="row" id="user_attribute_row_content" style="margin-top:20px;display:none;">
-    	<div class="col-xs-12">
-    	    <div class="well well-sm"> <h4 class="blue" id="user_attribute_title"> User Attribute </h4></div>
-    		<!-- PAGE CONTENT BEGINS -->
-    		<div class="row">
-    		    <div class="col-xs-12">
-    		        <div id="user_attribute_button_group" style="display:inline-block;float:left;">
-    		            <input id="form_user_id" type="text" style="display:none;" placeholder="User ID">
-    		            <button class="btn btn-xs btn-success btn-round" id="user_attribute_btn_add">
-    						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>
-    					    Add
-    					</button>
-    
-    					<button class="btn btn-xs btn-danger btn-round" id="user_attribute_btn_delete">
-    						<i class="ace-icon glyphicon glyphicon-trash bigger-120"></i>
-    						Delete
-    					</button>
-    				</div>
+        <div class="col-xs-12">
+            <div class="well well-sm"><h4 class="blue" id="user_attribute_title"> User Attribute </h4></div>
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="user_attribute_button_group" style="display:inline-block;float:left;">
+                        <input id="form_user_id" type="text" style="display:none;" placeholder="User ID">
+                        <button class="btn btn-xs btn-success btn-round" id="user_attribute_btn_add">
+                            <i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>
+                            Add
+                        </button>
+
+                        <button class="btn btn-xs btn-danger btn-round" id="user_attribute_btn_delete">
+                            <i class="ace-icon glyphicon glyphicon-trash bigger-120"></i>
+                            Delete
+                        </button>
+                    </div>
                     <div class="col-xs-12">
-    		        <table id="user_attribute_grid_selection" class="table table-striped table-bordered table-hover">
-                    <thead>
-                      <tr>
-                        <th data-identifier="true" data-visible="false" data-header-align="center" data-align="center" data-column-id="P_USER_ATTRIBUTE_ID"> ID User Attribute</th>
-                         <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
-                         <th data-column-id="TYPE_CODE">Type Code</th>
-                         <th data-column-id="LIST_CODE">List Code</th>
-                         <th data-column-id="LIST_NAME">List Name</th>
-                         <th data-column-id="USER_ATTRIBUTE_VALUE">Value</th>
-                         <th data-column-id="VALID_FROM">Valid From</th>
-                         <th data-column-id="VALID_TO">Valid To</th>
-                         <th data-column-id="DESCRIPTION"> Description </th>
-                      </tr>
-                    </thead>
-                  </table>
+                        <table id="user_attribute_grid_selection"
+                               class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th data-identifier="true" data-visible="false" data-header-align="center"
+                                    data-align="center" data-column-id="P_USER_ATTRIBUTE_ID"> ID User Attribute
+                                </th>
+                                <th data-header-align="center" data-align="center" data-formatter="opt-edit"
+                                    data-sortable="false" data-width="100">Options
+                                </th>
+                                <th data-column-id="TYPE_CODE">Type Code</th>
+                                <th data-column-id="LIST_CODE">List Code</th>
+                                <th data-column-id="LIST_NAME">List Name</th>
+                                <th data-column-id="USER_ATTRIBUTE_VALUE">Value</th>
+                                <th data-column-id="VALID_FROM">Valid From</th>
+                                <th data-column-id="VALID_TO">Valid To</th>
+                                <th data-column-id="DESCRIPTION"> Description</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
-    		    </div>
-    	    </div>
+            </div>
             <!-- PAGE CONTENT ENDS -->
-    	</div><!-- /.col -->
+        </div><!-- /.col -->
     </div><!-- /.row -->
-	
-	<?php $this->load->view('parameter/user_attribute_add_edit.php'); ?>
-	
+
+    <?php $this->load->view('parameter/user_attribute_add_edit.php'); ?>
+
 </div><!-- /.page-content -->
 
 <script type="text/javascript">
     $(document).ready(function () {
-        
-        $("#user_attribute_btn_add").on(ace.click_event, function() {
+
+        $("#user_attribute_btn_add").on(ace.click_event, function () {
             user_attribute_show_form_add();
         });
 
-        $("#user_attribute_btn_delete").on(ace.click_event, function(){
-            if($("#user_attribute_grid_selection").bootgrid("getSelectedRows") == "") {
+        $("#user_attribute_btn_delete").on(ace.click_event, function () {
+            if ($("#user_attribute_grid_selection").bootgrid("getSelectedRows") == "") {
                 //showBootDialog(true, BootstrapDialog.TYPE_INFO, 'Information', 'Tidak ada data yang dihapus');
                 swal("Informasi", "Tidak ada data yang dipilih untuk dihapus", "info");
-            }else {
-                user_attribute_delete_records( $("#user_attribute_grid_selection").bootgrid("getSelectedRows") );
+            } else {
+                user_attribute_delete_records($("#user_attribute_grid_selection").bootgrid("getSelectedRows"));
             }
         });
-        
+
     });
-    
+
     function user_attribute_delete_records(theID) {
         /*BootstrapDialog.confirm({
-            type: BootstrapDialog.TYPE_WARNING,
-		    title:'Delete Confirmation',
-		    message: 'Apakah Anda yakin untuk menghapus data tersebut ?',
-		    btnCancelLabel: 'Cancel',
-            btnOKLabel: 'Yes, Delete',
-		    callback: function(result) {
-    	        if(result) {
-    	            $.post( "<?php echo site_url('User_attribute/crudUserAttribute/destroy');?>",
-            		    { items: JSON.stringify(theID) },
-                        function( response ) {
+         type: BootstrapDialog.TYPE_WARNING,
+         title:'Delete Confirmation',
+         message: 'Apakah Anda yakin untuk menghapus data tersebut ?',
+         btnCancelLabel: 'Cancel',
+         btnOKLabel: 'Yes, Delete',
+         callback: function(result) {
+         if(result) {
+         $.post( "<?php echo site_url('User_attribute/crudUserAttribute/destroy');?>",
+         { items: JSON.stringify(theID) },
+         function( response ) {
+         var response = JSON.parse(response);
+         if(response.success == false) {
+         showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+         }else {
+         showBootDialog(true, BootstrapDialog.TYPE_SUCCESS, 'Information', response.message);
+         user_attribute_prepare_table($("#form_user_id").val());
+         }
+         }
+         );
+         }
+         }
+         });*/
+
+        swal({
+                title: "Konfirmasi Hapus",
+                text: "Apakah Anda yakin untuk menghapus data tersebut?",
+                type: "warning",
+                showCancelButton: true,
+                showLoaderOnConfirm: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Ya, Hapus",
+                cancelButtonText: "Tidak, Batalkan",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.post("<?php echo site_url('user_attribute/crudUserAttribute/destroy');?>",
+                        {items: JSON.stringify(theID)},
+                        function (response) {
                             var response = JSON.parse(response);
-                            if(response.success == false) {
-                	            showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
-                	        }else {
-                    	        showBootDialog(true, BootstrapDialog.TYPE_SUCCESS, 'Information', response.message);
-                    	        user_attribute_prepare_table($("#form_user_id").val());
+                            if (response.success == false) {
+                                //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                                swal("Perhatian", response.message, "warning");
+                            } else {
+                                //showBootDialog(true, BootstrapDialog.TYPE_SUCCESS, 'Information', response.message);
+                                swal("Berhasil", "Data berhasil dihapus", "success");
+                                user_attribute_prepare_table($("#form_user_id").val());
                             }
                         }
-                	);
-    	        }
-		    }
-        });*/
-        
-        swal({
-            title: "Konfirmasi Hapus",
-            text: "Apakah Anda yakin untuk menghapus data tersebut?",
-            type: "warning",
-            showCancelButton: true,
-            showLoaderOnConfirm: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Ya, Hapus",
-            cancelButtonText: "Tidak, Batalkan",
-            closeOnConfirm: false,
-            closeOnCancel: true
-        },
-        function(isConfirm){
-            if (isConfirm) {
-                $.post( "<?php echo site_url('user_attribute/crudUserAttribute/destroy');?>",
-            	    { items: JSON.stringify(theID) },
-                     function( response ) {
-                         var response = JSON.parse(response);
-                         if(response.success == false) {
-                            //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
-                            swal("Perhatian", response.message, "warning");
-                        }else {
-                 	        //showBootDialog(true, BootstrapDialog.TYPE_SUCCESS, 'Information', response.message);
-                 	        swal("Berhasil", "Data berhasil dihapus", "success");
-                 	        user_attribute_prepare_table($("#form_user_id").val());
-                        }
-                     }
-                );
-            }
-        });
-    }	
-    
+                    );
+                }
+            });
+    }
+
     function user_attribute_prepare_table(user_id) {
-        
+
         $("#form_user_id").val(user_id);
         $("#user_attribute_grid_selection").bootgrid("destroy");
         $("#user_attribute_grid_selection").bootgrid({
-    	     formatters: {
-                "opt-edit" : function(col, row) {
-                    return '<a href="#user_attribute_form_add_edit" title="Edit" onclick="user_attribute_show_form_edit(\''+ row.P_USER_ATTRIBUTE_ID +'\')" class="blue"><i class="ace-icon fa fa-pencil bigger-130"></i></a> &nbsp; <a href="#user_attribute_form_add_edit" title="Delete" onclick="user_attribute_delete_records(\''+ row.P_USER_ATTRIBUTE_ID +'\')" class="red"><i class="ace-icon glyphicon glyphicon-trash bigger-130"></i></a>';
+            formatters: {
+                "opt-edit": function (col, row) {
+                    return '<a href="#user_attribute_form_add_edit" title="Edit" onclick="user_attribute_show_form_edit(\'' + row.P_USER_ATTRIBUTE_ID + '\')" class="blue"><i class="ace-icon fa fa-pencil bigger-130"></i></a> &nbsp; <a href="#user_attribute_form_add_edit" title="Delete" onclick="user_attribute_delete_records(\'' + row.P_USER_ATTRIBUTE_ID + '\')" class="red"><i class="ace-icon glyphicon glyphicon-trash bigger-130"></i></a>';
                 }
-             },
-    	     rowCount:[5,10,20],
-    		 ajax: true,
-    	     requestHandler:function(request) {
-    	        if(request.sort) {
-    	            var sortby = Object.keys(request.sort)[0];
-    	            request.dir = request.sort[sortby];
+            },
+            rowCount: [5, 10, 20],
+            ajax: true,
+            requestHandler: function (request) {
+                if (request.sort) {
+                    var sortby = Object.keys(request.sort)[0];
+                    request.dir = request.sort[sortby];
 
-    	            delete request.sort;
-    	            request.sort = sortby;
-    	        }
-    	        return request;
-    	     },
-    	     responseHandler:function (response) {
-    	        if(response.success == false) {
-    	            alert(response.message);
-    	        }
-    	        return response;
-    	     },
-       	     url: "<?php echo site_url('user_attribute/gridUserAttribute');?>",
-       	     post: function () {
-    	         return { user_id : user_id };
-    	     },
-    	     selection: true,
-    	     multiSelect: true,
-    	     sorting:true,
-    	     rowSelect:true
-    	});
-    	
-    	$("#user_attribute_grid_selection").bootgrid().on("loaded.rs.jquery.bootgrid", function (e){
-           $("#user_attribute_row_content").slideDown("fast", function(){});
+                    delete request.sort;
+                    request.sort = sortby;
+                }
+                return request;
+            },
+            responseHandler: function (response) {
+                if (response.success == false) {
+                    alert(response.message);
+                }
+                return response;
+            },
+            url: "<?php echo site_url('user_attribute/gridUserAttribute');?>",
+            post: function () {
+                return {user_id: user_id};
+            },
+            selection: true,
+            multiSelect: true,
+            sorting: true,
+            rowSelect: true
         });
-        
+
+        $("#user_attribute_grid_selection").bootgrid().on("loaded.rs.jquery.bootgrid", function (e) {
+            $("#user_attribute_row_content").slideDown("fast", function () {
+            });
+        });
+
     }
-    
+
     $(document).ready(function () {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
@@ -187,7 +193,10 @@
         $(window).on('resize.jqGrid', function () {
             $(pager_selector).jqGrid('setGridWidth', $("#contentJgGrid").width());
         });
-        
+
+
+        //  console.log(a.status)
+
         jQuery("#grid-table").jqGrid({
             url: '<?php echo site_url('admin/gridUser');?>',
             datatype: "json",
@@ -195,13 +204,66 @@
             //colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
             colModel: [
                 {label: 'ID', name: 'USER_ID', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'User Name', name: 'USER_NAME', width: 150, align: "left", editable: true, editrules: {required: true}},
-                {label: 'Full Name', name: 'FULL_NAME', width: 150, align: "left", editable: true, editrules: {required: true}},
-                {label: 'Email', name: 'EMAIL', width: 100, align: "left", editable: true},
-                {label: 'Loker', name: 'LOKER', width: 100, align: "left", editable: true},
-                {label: 'Address Street', name: 'ADDR_STREET', width: 150, align: "left", editable: true},
-                {label: 'City', name: 'ADDR_CITY', width: 90, align: "left", editable: true},
-                {label: 'Phone', name: 'CONTACT_NO', width: 90, align: "left", editable: true},
+                {
+                    label: 'User Name',
+                    name: 'USER_NAME',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    editoptions: {
+                        size: 30
+                    },
+                    editrules: {required: true}
+
+                },
+                {
+                    label: 'Full Name',
+                    name: 'FULL_NAME',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    editoptions: {
+                        size: 45
+                    },
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Email',
+                    name: 'EMAIL',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    editoptions: {
+                        size: 30
+                    }
+                },
+                {
+                    label: 'Loker', name: 'LOKER', width: 100, align: "left", editable: true, editoptions: {
+                    size: 30
+                }
+                },
+                {
+                    label: 'Address Street',
+                    name: 'ADDR_STREET',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    edittype: 'textarea',
+                    editoptions: {
+                        rows: "2",
+                        cols: "40"
+                    }
+                },
+                {
+                    label: 'City', name: 'ADDR_CITY', width: 200, align: "left", editable: true, editoptions: {
+                    size: 30
+                }
+                },
+                {
+                    label: 'Phone', name: 'CONTACT_NO', width: 90, align: "left", editable: true, editoptions: {
+                    size: 30
+                }
+                },
                 {
                     label: 'Password',
                     name: 'PASSWD',
@@ -210,18 +272,32 @@
                     editable: true,
                     edittype: 'password',
                     hidden: true,
-                    editoption: {}
+                    editoption: {},
+                    editoptions: {
+                        size: 30
+                    }
                 },
-                {   
-                    label :'Is Employee ?',
-                    name : 'IS_EMPLOYEE',
-                    width:200,
-                    sortable:true,
-                    align:'center',
-                    editable:true,
-                    edittype: 'select', 
+                {
+                    label: 'Profile',
+                    name: 'PROF_NAME',
+                    width: 100,
+                    sortable: true,
+                    align: 'center',
+                    editable: true,
+                    edittype: 'select',
+                  //  formatter: 'select'
+                    editoptions: {dataUrl: '<?php echo site_url('admin/listProfile');?>'}
+                },
+                {
+                    label: 'Is Employee ?',
+                    name: 'IS_EMPLOYEE',
+                    width: 100,
+                    sortable: true,
+                    align: 'center',
+                    editable: true,
+                    edittype: 'select',
                     formatter: 'select',
-                    editoptions:{value: {'Y' : 'YES','N' : 'NO'}}
+                    editoptions: {value: {'Y': 'YES', 'N': 'NO'}}
                 }
             ],
             width: 1120,
@@ -243,9 +319,9 @@
             onSelectRow: function (rowid) {
                 var celValue = $('#grid-table').jqGrid('getCell', rowid, 'USER_ID');
                 var uname = $('#grid-table').jqGrid('getCell', rowid, 'USER_NAME');
-                
+
                 user_attribute_toggle_main_content();
-                $('#user_attribute_title').text("USER ATTRIBUTE :: " +uname);
+                $('#user_attribute_title').text("USER ATTRIBUTE :: " + uname);
                 user_attribute_prepare_table(celValue);
             },
             onSortCol: clearSelection,
@@ -258,6 +334,7 @@
                 repeatitems: false
             },
             loadComplete: function () {
+
                 var table = this;
                 setTimeout(function () {
                     //  styleCheckbox(table);
@@ -266,7 +343,7 @@
                     updatePagerIcons(table);
                     enableTooltips(table);
                 }, 0);
-                
+
                 $("#user_attribute_row_content").hide();
             },
 
@@ -276,7 +353,14 @@
 
         });
     });
-
+    /*    function listProfile(){
+     $.post("<?php echo site_url('admin/listProfile');?>",
+     function (response) {
+     // var listProfile = JSON.parse(response);
+     return response;
+     }
+     );
+     }*/
 
     //navButtons grid master
     jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
@@ -317,7 +401,7 @@
         },
         {
             //new record form
-            width: 400,
+            width: 500,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
@@ -445,6 +529,7 @@
         //enable datepicker on "sdate" field and switches for "stock" field
         form.find('input[name=sdate]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
 
+        form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
         form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
         //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
         //.addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');

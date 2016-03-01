@@ -87,6 +87,8 @@ class M_admin extends CI_Model {
         $CONTACT_NO = $this->input->post('CONTACT_NO');
         $PASSWD = MD5($this->input->post('PASSWD'));
         $IS_EMPLOYEE = $this->input->post('IS_EMPLOYEE');
+        $PROF_ID = $this->input->post('PROF_NAME');
+
         
         $P_USER_STATUS_ID = "1";
         if($IS_EMPLOYEE == 'N') {
@@ -119,6 +121,10 @@ class M_admin extends CI_Model {
                         ".$P_USER_STATUS_ID."
                         )" ;
                 $this->db->query($qs);
+                if ($this->db->affected_rows() == 1){
+                    // Insert Privilege
+                    $this->db->insert("APP_USER_PROFILE", array('USER_ID' =>$new_id, 'PROF_ID' => $PROF_ID ));
+                }
                 break;
             case 'edit':
                 $this->db->where($key,$id_);
@@ -132,6 +138,20 @@ class M_admin extends CI_Model {
                          IS_EMPLOYEE = '".$IS_EMPLOYEE."'
                        WHERE USER_ID = ".$id_;
                 $this->db->query($qs);
+                if ($this->db->affected_rows() == 1){
+                    // Edit Privilege
+                    $this->load->model('Mfee');
+                    $ck = $this->Mfee->checkDuplicated('APP_USER_PROFILE',array('USER_ID' => $id_));
+                    if($ck > 0){
+                        // do edit
+                        $this->db->where('USER_ID', $id_);
+                        $this->db->update('APP_USER_PROFILE', array('PROF_ID' => $PROF_ID));
+                    }else{
+                        // insert privilege
+                        $this->db->insert("APP_USER_PROFILE", array('USER_ID' =>$id_, 'PROF_ID' => $PROF_ID ));
+                    }
+
+                }
                 break;
             case 'del':
                 
@@ -182,6 +202,12 @@ class M_admin extends CI_Model {
                 WHERE P_APP_RMDIS_OBJECT_ID = ".$item['P_APP_RMDIS_OBJECT_ID'];   
     
         $this->db->query($qs);
+    }
+
+    public function getListProfile(){
+        $this->db->order_by("PROF_NAME", "ASC");
+        $q = $this->db->get('APP_PROFILE');
+        return $q->result_array();
     }
 	
 }

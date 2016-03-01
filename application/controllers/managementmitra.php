@@ -43,10 +43,10 @@ class Managementmitra extends CI_Controller
     public function detailMitra()
     {
         $result = $this->m_mitra->getMapPIC();
-        if($result->num_rows() > 0){
+        if ($result->num_rows() > 0) {
             $data['result'] = $result->result_array();
             $data['am'] = $result->row_array(0);
-        }else{
+        } else {
             $data['result'] = array();
             $data['am'] = null;
         }
@@ -58,7 +58,7 @@ class Managementmitra extends CI_Controller
         $lokasi_id = $this->input->post("lokasisewa");
         $result["P_MP_LOKASI_ID"] = $lokasi_id;
 
-     //   $this->m_mm_mitra->getListPKSByLokasi();
+        //   $this->m_mm_mitra->getListPKSByLokasi();
 
         $this->load->view($this->folder . '/dok_pks', $result);
     }
@@ -199,9 +199,7 @@ class Managementmitra extends CI_Controller
 
     public function evaluasiMitra()
     {
-
-        $result['result'] = $this->db->get_where('DOC', array('DOC_TYPE_ID' => '4'))->result();
-
+        $result['pgl_id'] = $this->input->post("mitra");
         $this->load->view($this->folder . '/evaluasi_mitra', $result);
     }
 
@@ -802,17 +800,17 @@ class Managementmitra extends CI_Controller
         $valid_from = $this->input->post('valid_from');
         $valid_until = $this->input->post('valid_until');
 
-        if($P_MP_LOKASI_ID){
+        if ($P_MP_LOKASI_ID) {
             $req_param['where'] = array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID);
         }
-        if($pks_id){
+        if ($pks_id) {
             $req_param['where'] = array('P_MP_PKS_ID' => $pks_id);
-           // $req_param['where'] = array('UPPER(NO_PKS) LIKE ' => strtoupper('%'.$this->input->post('no_pks').'%'));
+            // $req_param['where'] = array('UPPER(NO_PKS) LIKE ' => strtoupper('%'.$this->input->post('no_pks').'%'));
         }
-        if($valid_from){
+        if ($valid_from) {
             $req_param['where'] = array('VALID_FROM' => $valid_from);
         }
-        if($valid_until){
+        if ($valid_until) {
             $req_param['where'] = array('VALID_UNTIL' => $valid_until);
         }
 
@@ -847,14 +845,19 @@ class Managementmitra extends CI_Controller
 
     public function modalUploadPKS()
     {
-
         $this->load->view($this->folder . '/modal_upload_pks');
     }
 
     public function modalUploadKontrak()
     {
         $data['pgl_id'] = $this->input->post("pgl_id");
-        $this->load->view($this->folder . '/modal_upload_kontrak',$data);
+        $this->load->view($this->folder . '/modal_upload_kontrak', $data);
+    }
+
+    public function modalUploadEvaluasi()
+    {
+        $data['pgl_id'] = $this->input->post("pgl_id");
+        $this->load->view($this->folder . '/modal_upload_evaluasi', $data);
     }
 
     public function pks_uploaddo()
@@ -933,7 +936,7 @@ class Managementmitra extends CI_Controller
         $this->upload->initialize($config);
 
         //cek duplicate
-        $ck = $this->Mfee->checkDuplicated('P_DOK_KONTRAK', array('DOC_NAME' => $doc_name,'PGL_ID' => $pgl_id));
+        $ck = $this->Mfee->checkDuplicated('P_DOK_KONTRAK', array('DOC_NAME' => $doc_name, 'PGL_ID' => $pgl_id));
 
         if ($ck == 1) {
 
@@ -968,6 +971,57 @@ class Managementmitra extends CI_Controller
 
     }
 
+    public function evaluasi_uploaddo()
+    {
+        $doc_name = trim(ucfirst($this->input->post("doc_name")));
+        $pgl_id = $this->input->post("pgl_id");
+        // Upload Process
+        $config['upload_path'] = './application/third_party/upload/kontrak';
+        $config['allowed_types'] = 'docx|pdf|doc|jpg|png';
+        $config['max_size'] = '0';
+        $config['overwrite'] = TRUE;
+        $file_id = time();
+        $config['file_name'] = str_replace(" ", "_", $doc_name) . "_" . $file_id;
+
+        $this->load->library('upload');
+        $this->upload->initialize($config);
+
+        //cek duplicate
+        $ck = $this->Mfee->checkDuplicated('P_DOK_EVALUASI', array('DOC_NAME' => $doc_name, 'PGL_ID' => $pgl_id));
+
+        if ($ck == 1) {
+
+            $data['status'] = false;
+            $data['msg'] = "Nama dokumen sudah ada !";
+            echo json_encode($data);
+        } else {
+            if (!$this->upload->do_upload("filename")) {
+                $error = $this->upload->display_errors();
+                $data['status'] = "F";
+                $data['msg'] = $error;
+                echo json_encode($data);
+            } else {
+                // Do Upload
+                $data = $this->upload->data();
+                $datas = array(
+                    "DOC_NAME" => $doc_name,
+                    "FILE_PATH" => $data['file_name'],
+                    "UPDATE_DATE" => date('d/M/Y'),
+                    "UPDATE_BY" => $this->session->userdata('d_user_name'),
+                    "PGL_ID" => $pgl_id
+                );
+
+                $this->m_mitra->insertDokEvaluasi($datas);
+                $data['success'] = true;
+                $data['msg'] = "Upload Berhasil";
+                echo json_encode($data);
+
+            }
+        }
+
+
+    }
+
     public function downloadPKS($FILE_PATH)
     {
         //$FILE_PATH = $this->input->post('FILE_PATH');
@@ -989,6 +1043,11 @@ class Managementmitra extends CI_Controller
     public function crud_kontrak()
     {
         $this->m_mitra->crud_kontrak();
+    }
+
+    public function crud_evaluasi()
+    {
+        $this->m_mitra->crud_evaluasi();
     }
 
     public function gridDocKontrak()
@@ -1019,7 +1078,69 @@ class Managementmitra extends CI_Controller
         );
 
         $pgl_id = $this->input->post("pgl_id");
-        if($pgl_id){
+        if ($pgl_id) {
+            $req_param['where'] = array('PGL_ID' => $pgl_id);
+        }
+
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+
+    public function gridDocEvaluasi()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "P_DOK_EVALUASI";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        $pgl_id = $this->input->post("pgl_id");
+        if ($pgl_id) {
             $req_param['where'] = array('PGL_ID' => $pgl_id);
         }
 
