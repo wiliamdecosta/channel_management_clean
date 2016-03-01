@@ -215,11 +215,9 @@
 
                     		</div> <!-- /.tab-content -->						
                         </div> <!-- /.tabbabel -->
-                        
-                    														
+                        													
                     </form> <!-- /.form-horizontal -->		            
                 </div>
-                                
                 
 		    </div>
 		    
