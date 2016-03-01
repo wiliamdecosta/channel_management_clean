@@ -223,7 +223,9 @@ class Submit_profile extends CI_Controller {
             
             
             $itemuser = $this->M_user->getUserItem($data['user_id_mitra']);
-            
+            if($itemuser['P_USER_STATUS_ID'] == '1') {
+                throw new Exception("Maaf, User yang bersangkutan telah diaktivasi");    
+            }
             
             $data['jenis_identitas'] = $qs['JENIS_IDENTITAS'];
             $data['file_name'] = $qs['FILE_NAME'];
