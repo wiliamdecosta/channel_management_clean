@@ -129,11 +129,15 @@ class Auth extends CI_Controller
                     if( empty($retfsplit[0]) or $retfsplit[1] != "0" ) { /* if user_id == 0 or user_id == "" */ 
                         echo json_encode(array('success' => false, 'msg' => $retfsplit[2]));    
                     }else {
-                        
                         $rc = $this->M_user->getUserPwd($this->security->xss_clean($username), $pwd_md5)->result_array();
                    	    $this->setUserSession($rc[0]);
                    	    $this->checkUserProfile($rc[0]['USER_ID']);
-                   	    
+
+                        $c2bi = $this->M_user->cekUserC2BI(($rc[0]['USER_ID']));
+                        if($c2bi->num_rows() > 0){
+                            // Set Session PGL ID
+                            $this->session->set_userdata('d_pgl_id', $c2bi->row()->PGL_ID);
+                        }
                    	    echo json_encode(array('success' => true, 'msg' => "You will be direct .. !"));
                    	    
                     }

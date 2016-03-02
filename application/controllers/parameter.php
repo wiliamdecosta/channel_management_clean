@@ -1287,6 +1287,7 @@ class Parameter extends CI_Controller
     public function mapping_pic()
     {
         $data["P_MP_LOKASI_ID"] = $this->input->post("P_MP_LOKASI_ID");
+        $data["p_map_mit_cc_id"] = $this->input->post("P_MAP_MIT_CC_ID");
         $this->load->view('parameter/mapping_pic', $data);
     }
 

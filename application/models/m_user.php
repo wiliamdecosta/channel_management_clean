@@ -166,6 +166,12 @@ class M_user extends CI_Model {
     }
     
     // ========== Authentication & Authorization :: EOL ========== //
+
+
+	public function cekUserC2BI($user_id){
+		$this->db->where('USER_ID',$user_id);
+		return $this->db->get('APP_USER_C2BI');
+	}
     
 }
-?>
+

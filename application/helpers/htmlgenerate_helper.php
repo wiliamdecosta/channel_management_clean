@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 
 if (!function_exists('generatehtml')) {
@@ -74,7 +74,20 @@ if (!function_exists('generatehtml')) {
         $CI =& get_instance();
         $CI->load->model('mcrud');
 
-        $q = $CI->db->query("SELECT DISTINCT(segmen) as SEGMENS,segmen||' - ' ||segment_6_lname as SEGMEN_NAME FROM cbase_dives_2016@DWHMART_AON")->result();
+        $pgl_id = $CI->session->userdata('d_pgl_id');
+        if ($pgl_id) {
+            $q = $CI->db->query("SELECT DISTINCT(CODE_SGM) SEGMENS,CODE_SGM||' - '||SEGMENT_NAME SEGMEN_NAME
+                                  FROM MV_PARAM_SEGMENT_CC
+                                  WHERE ID IN
+                                (
+                                SELECT ID_CC FROM P_MAP_MIT_CC
+                                    WHERE PGL_ID = ".$pgl_id."
+                                )
+                                ")->result();
+        } else {
+            $q = $CI->db->query("SELECT DISTINCT(CODE_SGM) SEGMENS,CODE_SGM||' - '||SEGMENT_NAME SEGMEN_NAME
+                                  FROM MV_PARAM_SEGMENT_CC")->result();
+        }
 
         echo "<select name='segment' id='segment'  class='form-control'>";
 

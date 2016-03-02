@@ -207,8 +207,13 @@ class Managementmitra extends CI_Controller
     {
         $this->load->model('mfee');
         $segmen = $this->input->post('segmen');
-        $result = $this->mfee->getCCbySEGMEN($segmen);
 
+        $pgl_id = $this->session->userdata('d_pgl_id');
+        if($pgl_id){
+            $result = $this->mfee->getCCbySEGMENPGL_ID($segmen);
+        }else{
+            $result = $this->mfee->getCCbySEGMEN($segmen);
+        }
 
         $option = "";
         if ($result->num_rows() > 0) {
@@ -229,8 +234,14 @@ class Managementmitra extends CI_Controller
     {
         $this->load->model('mfee');
         $ccid = intval($this->input->post('ccid'));
-        $result = $this->mfee->getMitraByCC($ccid);
 
+
+        $pgl_id = $this->session->userdata('d_pgl_id');
+        if($pgl_id){
+            $result = $this->mfee->getMitraByCCPGL_ID($ccid);
+        }else{
+            $result = $this->mfee->getMitraByCC($ccid);
+        }
 
         $option = "";
         if ($result->num_rows() > 0) {

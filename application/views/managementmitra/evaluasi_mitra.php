@@ -50,7 +50,7 @@
             colModel: [
                 {
                     label: 'ID',
-                    name: 'P_DOK_EVALUASI',
+                    name: 'P_DOK_EVALUASI_ID',
                     key: true,
                     width: 200,
                     sortable: true,

@@ -99,7 +99,7 @@ class M_admin extends CI_Model {
                 password non-karyawan diset dengan settingan di bawah ini(agar sulit ditebak).
             */
             $PASSWD = md5('apaajaboleh987654321!@#$%^&*(');
-            $P_USER_STATUS_ID = "NULL";
+            $P_USER_STATUS_ID = 4;
         }
         
 

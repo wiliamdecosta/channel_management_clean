@@ -340,7 +340,6 @@ class M_managementmitra extends CI_Model
 
     public function crud_evaluasi()
     {
-
         $this->db->_protect_identifiers = false;
         $oper = $this->input->post('oper');
         $id = $this->input->post('id');
