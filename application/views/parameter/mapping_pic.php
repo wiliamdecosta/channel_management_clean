@@ -1,5 +1,4 @@
 <div class="col-sm-12">
-    <!-- #section:elements.tab -->
     <div class="tabbable">
         <ul class="nav nav-tabs" id="myTab">
             <li class="">
@@ -20,9 +19,7 @@
                     PIC
                 </a>
             </li>
-
         </ul>
-
         <div class="tab-content">
             <div id="home" class="tab-pane fade active in">
                 <div id="tbl_pic">
@@ -39,7 +36,6 @@
 
             </div>
         </div>
-        <!-- /section:elements.tab -->
     </div>
 
     <script type="text/javascript">

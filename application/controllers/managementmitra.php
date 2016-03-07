@@ -38,6 +38,7 @@ class Managementmitra extends CI_Controller
         }
 
         $this->load->view($this->folder . '/filter_mitra', $result);
+        $this->load->view($this->folder . '/mm_tab', $result);
     }
 
     public function detailMitra()
