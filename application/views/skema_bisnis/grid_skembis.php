@@ -75,12 +75,12 @@
                     name: 'NET_REVENUE',
                     width: 100,
                     align: "right",
-                    formatter: 'string',
+                    formatter: 'number',
                     // summaryType: 'sum',
                     //summaryTpl: "Total: {0}", // set the summary template to show the group summary
                     //formatoptions: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 4, defaultValue: '0.0000' },
 
-                    formatoptions: {prefix: 'Rp. '},
+                    formatoptions: {prefix: 'Rp. ',decimalPlaces: 2},
                     sortable: true,
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
@@ -93,7 +93,7 @@
                     align: "right",
                     // summaryType: 'sum',
                     formatter: 'number',
-                    formatoptions: {prefix: 'Rp. '},
+                    formatoptions: {prefix: 'Rp. ',decimalPlaces: 2},
                     sortable: true,
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
