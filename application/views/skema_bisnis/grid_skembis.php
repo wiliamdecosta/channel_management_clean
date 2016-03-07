@@ -121,7 +121,7 @@
                 }
             ],
 
-            width: '1190',
+            width: 1093,
             AutoWidth: true,
             height: '100%',
             scrollOffset: 0,
@@ -144,12 +144,12 @@
                 repeatitems: false
             },
             loadComplete: function () {
-                $(window).on('resize.jqGrid', function () {
-                    grid.jqGrid('setGridWidth', 1090);
-                });
-                $(window).on('resize.jqGrid', function () {
-                    pager.jqGrid('setGridWidth', 1090);
-                });
+                //$(window).on('resize.jqGrid', function () {
+                    grid.jqGrid('setGridWidth', $('#tbl_skema').width());
+               // });
+               // $(window).on('resize.jqGrid', function () {
+                    pager.jqGrid('setGridWidth', $('#tbl_skema').width());
+                //});
 
                 var table = this;
                 setTimeout(function () {

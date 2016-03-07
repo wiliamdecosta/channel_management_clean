@@ -12,7 +12,7 @@ class M_skembis extends CI_Model
     public function getCompfeeSMRY()
     {
         $this->db->where('CF_TYPE', 'SMRY');
-        $this->db->where_not_in('CF_NAME', array('PPN','BPH_JASTEL'));
+        $this->db->where_not_in('CF_NAME', array('PPN','BPH_JASTEL','MARFEE_BEFORE_TAX'));
         return $this->db->get('COM_FEE')->result_array();
 
     }

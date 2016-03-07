@@ -113,6 +113,7 @@ class Skema_bisnis extends CI_Controller
 
         $PPN = intval($this->input->post("PPN"));
         $BPH_JASTEL = intval($this->input->post("BPH_JASTEL"));
+        $MARFEE_BEFORE_TAX = intval($this->input->post("MARFEE_BEFORE_TAX"));
 
         $comp = $this->m_skembis->getComfeeByProduct();
         $arrComp = array();
@@ -132,6 +133,11 @@ class Skema_bisnis extends CI_Controller
             'CF_ID' => 7,
             'VALUE' => $BPH_JASTEL
         );
+        $arrBPHJ = array('CF_NAME' => "MARFEE_BEFORE_TAX",
+            'CF_ID' => 33,
+            'VALUE' => $MARFEE_BEFORE_TAX
+        );
+
         /*$smry = $this->m_skembis->getCompfeeSMRY();
         foreach ($comp as $comp_fee) {
             $arrComp[] = array('CF_NAME' => $comp_fee['CF_NAME'],
