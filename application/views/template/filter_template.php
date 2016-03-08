@@ -33,18 +33,21 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Jenis Dokumen </label>
 
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-6" id="JenisDok">
                                                     <?php echo buatcombo('doc_type','doc_type','DOC_TYPE','DOC_TYPE_NAME','DOC_TYPE_ID',null,'Pilih Dok');?>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Pilih Template </label>
 
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-6" id="PilihanTemp">
                                                     <?php echo buatcombo('doc_lang','doc_lang','DOC_LANG','DESCRIPTION','DOC_LANG_ID',null,'Pilih Template');?>
                                                 </div>
                                             </div>
-                                        </div>
+											<div class="">
+											<button type="button" id="find_document" class="btn btn-primary btn-sm"  style="float:right;">Cari Dokumen</button>
+										</div>
+                                        </div>										
                                     </div>
                                 </form>
                             </div><!-- PAGE CONTENT ENDS -->
@@ -60,8 +63,8 @@
                     <a href="javascript:void(0)">Data</a>
                 </li>
 
-                <li class="tab" id="dokPKS">
-                    <a href="javascript:void(0)">Create New Templete</a>
+                <li class="tab" id="create_template">
+                    <a href="javascript:void(0)">Create New Template</a>
                 </li>
 
                 <li class="tab" id="create_user">
@@ -100,5 +103,20 @@
             return false;
         })
     })
-
+			var JDok = document.getElementById("doc_type");
+			var JDokHasil = JDok.options[JDok.selectedIndex].text;
+			var PilTemp = document.getElementById("doc_lang");
+			var PilTempHasil = PilTemp.options[PilTemp.selectedIndex].text;
+	$('#Finishing_Edit').click(function () {
+        $.ajax({
+            type: "POST",
+           dataType: "html",
+            url: "<?php echo site_url('template/parseBackTemplate');?>",
+            data: {title1:document.getElementById('docx_name').value, title2:document.getElementById('docx_descript').value},
+            success: function (data) {
+               alert(data[1]);
+			   alert(data[2]);
+            }
+        });
+		})	
 </script>

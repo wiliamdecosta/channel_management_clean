@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/daterangepicker.css" />
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datetimepicker.css" />
 
-<div id="dokPKS">
+<div id="list_template"> <!--harusnya dokPKS -->
     <form class="form-horizontal" role="form">
         <div class="rows">
             <div class="form-group">

@@ -79,6 +79,11 @@
 
 
 <script type="text/javascript">
+	//$(Document).ready(function(){
+		
+		//alert("Test 123");
+		
+	//});
     $("#mitra").change(function () {
         var mitra = $("#mitra").val();
 
@@ -117,6 +122,7 @@
             + "  1 User berhasil ditambahkan."
             + "    <br>"
             + " </div>");
+			alert("test 123456");
     })
     $('#view_user').click(function () {
         $.ajax({

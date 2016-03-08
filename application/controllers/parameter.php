@@ -1506,6 +1506,279 @@ class Parameter extends CI_Controller
         $data["P_MP_LOKASI_ID"] = $this->input->post("P_MP_LOKASI_ID");
         $this->load->view('parameter/mapping_pic_form', $data);
     }
+	
+	public function mapping_datin()
+    {
+        $title = "Mapping Datin";
+        //BreadCrumb
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+		$this->load->model('M_cm', 'cm');
+		$result['result'] = $this->cm->mapDatinRequest();
+        $this->load->view('parameter/map_datin',$result);
+    }
+	
+	    public function gridCustMapDatin()
+    {	
+		$ACCOUNT_NUM = $this->input->post('account_num');
+		$ID_PGL = $this->input->post('pgl_id');
+		
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $table = "SELECT DISTINCT a.PGL_ID PGID, a.ACCOUNT_NUM ANNM, a.VALID_UNTIL VU, 
+				a.CREATED_BY CB, a.UPDATE_BY UB, a.CREATION_DATE CD, a.VALID_FROM VF,
+				a.UPDATE_DATE UD, a.P_MAP_DATIN_ACC_ID PMD
+				FROM P_MAP_DATIN_ACC a
+				WHERE a.PGL_ID ='". $ID_PGL ."' AND a.ACCOUNT_NUM = '". $ACCOUNT_NUM ."'";
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        $count = $this->jqGrid->countAllQuery($req_param);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_dataQuery($req_param);
+        echo json_encode($result);
+
+    }
+	    public function crud_map_datin()
+    {
+        $this->M_parameter->crud_map_datin();
+    }
+	public function gridmapDatin() {
+
+        $user_id = $this->input->post('user_id');
+        $p_user_attribute_id = $this->input->post('p_user_attribute_id');
+
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT a.p_user_attribute_id, a.user_id, a.p_user_attribute_type_id,
+                       a.p_user_attribute_list_id, a.user_attribute_value, a.valid_from,
+                       a.valid_to, a.description, b.code type_code, c.code list_code,
+                       c.NAME list_name, a.creation_date, a.created_by, a.updated_date, a.updated_by
+                  FROM p_user_attribute a LEFT JOIN p_user_attribute_type b
+                       ON a.p_user_attribute_type_id = b.p_user_attribute_type_id
+                       LEFT JOIN p_user_attribute_list c
+                       ON a.p_user_attribute_list_id = c.p_user_attribute_list_id";
+
+        $req_param = array (
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+			"search" => $searchPhrase
+        );
+    
+        if(!empty($user_id)) {
+            $req_param['where'][] = "a.user_id = ".$user_id;
+        }
+
+        if(!empty($searchPhrase)) {
+             $req_param['where'][] = "(upper(a.user_attribute_value) LIKE upper('%".$searchPhrase."%') OR upper(b.code) LIKE upper('%".$searchPhrase."%') OR upper(c.code) LIKE upper('%".$searchPhrase."%') OR upper(c.name) LIKE upper('%".$searchPhrase."%'))";
+        }
+
+        if(!empty($p_user_attribute_id)) {
+            $req_param['where'][] = "a.p_user_attribute_id = ".$p_user_attribute_id;
+        }
 
 
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if( $count > 0 && !empty($limit) ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+		if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+//-----------------------------------------------------
+    public function gridMapDatin_pgl() {
+
+        $p_user_attribute_type_id = $this->input->post('P_PGL_ID');
+
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT * FROM cust_pgl";
+
+        $req_param = array (
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+			"search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+        
+        if(!empty($p_user_attribute_type_id)) {
+            $req_param['where'][] = "PGL_ID = ".$p_user_attribute_type_id;
+        }
+        
+        if(!empty($searchPhrase)) {
+             $req_param['where'][] = "(upper(PGL_NAME) LIKE upper('%".$searchPhrase."%') OR upper(PGL_ADDR) LIKE upper('%".$searchPhrase."%'))";
+        }
+        
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if( $count > 0 && !empty($limit) ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+		if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+	
+	public function gridMapDatin_acc() {
+
+        $ACCOUNT_NUM = $this->input->post('P_ACC_NUM');
+
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = 	"SELECT ACCOUNT_NUM, CUSTOMER_REF FROM MV_LIS_ACCOUNT_NP";
+
+        $req_param = array (
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+			"search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+        
+        if(!empty($ACCOUNT_NUM)) {
+            $req_param['where'][] = "ACCOUNT_NUM = ".$ACCOUNT_NUM;
+        }
+        
+        if(!empty($searchPhrase)) {
+             $req_param['where'][] = "(upper(ACCOUNT_NUM) LIKE upper('%".$searchPhrase."%') OR upper(CUSTOMER_REF) LIKE upper('%".$searchPhrase."%'))";
+        }
+        
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if( $count > 0 && !empty($limit) ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+		if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+	public function list_Dynamic_Pengelola() {
+        $id_pg = $this->input->post("id_pgl_grid");
+		$id_acc = $this->input->post("form_nama_akun_code");
+        $result = $this->cm->getListPglAcc($id_pg,$id_acc);
+
+        $option = "";
+        foreach($result as $content){
+            $option  .= "<option value=".$content->PG.">".$content->PG."</option>";
+        }
+        echo $option;
+    }
 }

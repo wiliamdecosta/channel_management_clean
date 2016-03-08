@@ -944,5 +944,65 @@ class M_parameter extends CI_Model
         echo json_encode($datas);
 
     }
+	function crud_map_datin()
+    {
+        $this->db->_protect_identifiers = false;
+        $this->db->protect_identifiers('PGID', FALSE);
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+		if(empty($id_)) {
+			$id_ = "NULL";
+		}
+		
+        $table = "P_MAP_DATIN_ACC";
+        $PGL_ID = $this->input->post('PGID');
+        $ACCOUNT_NUM = $this->input->post('ANNM');
+        $VALID_FROM = $this->input->post('VF');
+        $CREATED_BY = $this->session->userdata('d_user_name');
+		$UPDATE_BY = $this->session->userdata('d_user_name');
+        $VALID_UNTIL = $this->input->post('VU');
+        $CREATION_DATE = $this->input->post('CD');
+		$UPDATE_DATE = $this->input->post('UD');
+		$P_MAP_DATIN_ACC_ID = $this->input->post('PMD');
+
+        $data = array('PGL_ID' => $PGL_ID,
+            'ACCOUNT_NUM' => $ACCOUNT_NUM,
+            'VALID_FROM' => $VALID_FROM,
+            'VALID_UNTIL' => $VALID_UNTIL,
+            'CREATED_BY' => $CREATED_BY,
+			'UPDATE_BY' => $UPDATE_BY,
+			'CREATION_DATE' => $CREATION_DATE,
+			'UPDATE_DATE' => $UPDATE_DATE,
+			'P_MAP_DATIN_ACC_ID' => $P_MAP_DATIN_ACC_ID
+        );
+
+        switch ($oper) {
+            case 'add':
+				$data['P_MAP_DATIN_ACC_ID'] = gen_id('P_MAP_DATIN_ACC_ID','P_MAP_DATIN_ACC');
+                $this->db->insert($table, $data);
+                break;
+            case 'edit':
+                $this->db->where('P_MAP_DATIN_ACC_ID', $id_);	
+                $this->db->update($table, $data);
+                break;
+            case 'del':
+                $this->db->where('P_MAP_DATIN_ACC_ID', $id_);				
+                $this->db->delete($table);
+                break;
+        }
+
+    }
+	public function getListPglAcc($id_pg,$id_acc) {
+        $result = array();
+        $sql = "SELECT B.* FROM APP_USER_C2BI A, CUST_PGL B WHERE A.PGL_ID=B.PGL_ID AND A.USER_ID=".$user_id;
+        $sql .= " ORDER BY B.PGL_NAME";
+		$sql = "select a.pgl_id PG, a.ACCOUNT_NUM AN from P_MAP_DATIN_ACC a, cust_pgl b, MV_LIS_ACCOUNT_NP c where b.". $id_pg . " = a.pgl_id AND c.". $id_acc ." = a.ACCOUNT_NUM";
+        $q = $this->db->query($sql);
+        if($q->num_rows() > 0) {
+            $result = $q->result();
+        }
+        return $result;
+
+    }
 
 }
