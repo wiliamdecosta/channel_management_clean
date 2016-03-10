@@ -245,7 +245,7 @@ class M_cm extends CI_Model {
 	
 	public function postDocTemp($data1, $data2, $data3, $data4, $data5, $data6){	
 		$sql = "insert into DOC (doc_id,doc_type_id,file_path, update_date, update_by, doc_name, description,content,doc_lang_id) 
-		values(doc_inc_id.nextval,1,'/default_path','".$data6."','".$data4."','".$data1."','".$data2."','".$data3."',".$data5.")";
+		values(doc_inc_id.nextval,1,'/default_path', sysdate,'".$data4."','".$data1."','".$data2."','".$data3."',".$data5.")";
 		$this->db->query($sql);
 	}
 	
