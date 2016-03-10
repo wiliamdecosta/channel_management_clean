@@ -15,7 +15,7 @@
                 <div class="col-sm-8">
                     <input id="form_pgl_id" type="text" style="display:none;" placeholder="PGL ID">                    
                     <input id="form_pgl_type_id" type="text"  style="display:none;">
-                    <input id="form_pgl_code" type="text" class="col-xs-10 col-sm-5 required" placeholder="Pilih Pengelola">
+                    <input id="form_pgl_code" type="text" class="col-xs-10 col-sm-5 required" placeholder="Pilih Pengelola" readonly>
                     <span class="input-group-btn">
 						<button class="btn btn-warning btn-sm" type="button" id="btn_lov_pgl">
 							<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
@@ -28,7 +28,7 @@
                 <label class="col-sm-3 control-label no-padding-right"> Nama Akun</label>
                 <div class="col-sm-8">
                     <input id="form_nama_akun_id" type="text" style="display:none;">
-                    <input id="form_nama_akun_code" type="text" class="col-xs-10 col-sm-5"  placeholder="Pilih Nama Akun">
+                    <input id="form_nama_akun_code" type="text" class="col-xs-10 col-sm-5"  placeholder="Pilih Nama Akun" readonly>
                     <span>
 						<button class="btn btn-warning btn-sm" type="button" id="btn_lov_user_acc_num">
 							<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
