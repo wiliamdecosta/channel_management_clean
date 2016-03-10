@@ -5,8 +5,8 @@
     </button>
     &nbsp;
 
-        <table id="grid_table_pic"></table>
-        <div id="grid_pager_pic"></div>
+    <table id="grid_table_pic"></table>
+    <div id="grid_pager_pic"></div>
 
 
 </div>
@@ -29,6 +29,46 @@
                     label: 'ID',
                     name: '',
                     key: true,
+                    width: 5,
+                    sorttype: 'number',
+                    editable: false,
+                    hidden: true
+                },
+                {
+                    label: 'SCHM_FEE_ID',
+                    name: 'SCHM_FEE_ID',
+                    width: 5,
+                    sorttype: 'number',
+                    editable: false,
+                    hidden: true
+                },
+                {
+                    label: 'PGL_ID',
+                    name: 'PGL_ID',
+                    width: 5,
+                    sorttype: 'number',
+                    editable: false,
+                    hidden: true
+                },
+                {
+                    label: 'CF_ID',
+                    name: 'CF_ID',
+                    width: 5,
+                    sorttype: 'number',
+                    editable: false,
+                    hidden: true
+                },
+                {
+                    label: 'FLAG_CAL',
+                    name: 'FLAG_CAL',
+                    width: 5,
+                    sorttype: 'number',
+                    editable: false,
+                    hidden: true
+                },
+                {
+                    label: 'METHOD_ID',
+                    name: 'METHOD_ID',
                     width: 5,
                     sorttype: 'number',
                     editable: false,
@@ -80,7 +120,7 @@
                     //summaryTpl: "Total: {0}", // set the summary template to show the group summary
                     //formatoptions: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 4, defaultValue: '0.0000' },
 
-                    formatoptions: {prefix: 'Rp. ',decimalPlaces: 2},
+                    formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
                     sortable: true,
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
@@ -93,7 +133,7 @@
                     align: "right",
                     // summaryType: 'sum',
                     formatter: 'number',
-                    formatoptions: {prefix: 'Rp. ',decimalPlaces: 2},
+                    formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
                     sortable: true,
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
@@ -125,7 +165,7 @@
             AutoWidth: true,
             height: '100%',
             scrollOffset: 0,
-            rowNum: 20,
+            rowNum: 5,
             viewrecords: true,
             rowList: [5, 10, 20],
             sortname: 'CF_ID', // default sorting ID
@@ -145,10 +185,10 @@
             },
             loadComplete: function () {
                 //$(window).on('resize.jqGrid', function () {
-                    grid.jqGrid('setGridWidth', $('#tbl_skema').width());
-               // });
-               // $(window).on('resize.jqGrid', function () {
-                    pager.jqGrid('setGridWidth', $('#tbl_skema').width());
+                grid.jqGrid('setGridWidth', $('#tbl_skema').width());
+                // });
+                // $(window).on('resize.jqGrid', function () {
+                pager.jqGrid('setGridWidth', $('#tbl_skema').width());
                 //});
 
                 var table = this;
@@ -274,42 +314,52 @@
 
         function edit() {
             var rowKey = grid.jqGrid('getGridParam', 'selrow');
-            var P_MP_PIC_ID = grid.jqGrid('getCell', rowKey, 'P_MP_PIC_ID');
+            var PGL_ID = grid.jqGrid('getCell', rowKey, 'PGL_ID');
+            var SCHM_FEE_ID = grid.jqGrid('getCell', rowKey, 'SCHM_FEE_ID');
+            var CF_ID = grid.jqGrid('getCell', rowKey, 'CF_ID');
+            var METHOD_ID = grid.jqGrid('getCell', rowKey, 'METHOD_ID');
+            var FLAG_CAL = grid.jqGrid('getCell', rowKey, 'FLAG_CAL');
+            /*alert(FLAG_CAL);
+            return false;*/
+            if(rowKey) {
+                if(FLAG_CAL == 'Y'){
+                    swal('','Data ini tidak bisa diedit karena sudah diproses !','warning')
+                }else{
+                    $.ajax({
+                        // async: false,
+                        url: "<?php echo base_url();?>skema_bisnis/edit_skemabisnis",
+                        type: "POST",
+                        data: {PGL_ID:PGL_ID,SCHM_FEE_ID:SCHM_FEE_ID,CF_ID:CF_ID,METHOD_ID:METHOD_ID},
+                        success: function (data) {
+                            $("#main_content").html(data);
+                            /*$.post("<?php echo site_url('parameter/gridMapPIC');?>",
+                                {
+                                    P_MP_PIC_ID: P_MP_PIC_ID
+                                },
+                                function (response) {
+                                    var response = JSON.parse(response);
+                                    var obj = response.Data[0];
+                                    $("#pic_name").val(obj.PIC_NAME);
+                                    $("#pic_id").val(obj.P_PIC_ID);
+                                    $("#contact").val(obj.P_REFERENCE_LIST_ID);
+                                    $("#p_mp_lokasi_id").val(obj.P_MP_LOKASI_ID);
+                                    $("#p_mp_pic_id").val(obj.P_MP_PIC_ID);
 
-            if (rowKey) {
-                $.ajax({
-                    // async: false,
-                    url: "<?php echo base_url();?>parameter/edit_mapping_pic",
-                    type: "POST",
-                    data: {action: "edit"},
-                    success: function (data) {
-                        $("#form_pic").html(data);
-                        $.post("<?php echo site_url('parameter/gridMapPIC');?>",
-                            {
-                                P_MP_PIC_ID: P_MP_PIC_ID
-                            },
-                            function (response) {
-                                var response = JSON.parse(response);
-                                var obj = response.Data[0];
-                                $("#pic_name").val(obj.PIC_NAME);
-                                $("#pic_id").val(obj.P_PIC_ID);
-                                $("#contact").val(obj.P_REFERENCE_LIST_ID);
-                                $("#p_mp_lokasi_id").val(obj.P_MP_LOKASI_ID);
-                                $("#p_mp_pic_id").val(obj.P_MP_PIC_ID);
+                                    $("#form_created_by").val(obj.CREATED_BY);
+                                    $("#form_creation_date").val(obj.CREATE_DATE);
+                                    $("#form_updated_by").val(obj.UPDATE_BY);
+                                    $("#form_updated_date").val(obj.UPDATE_DATE);
+                                }
+                            );*/
 
-                                $("#form_created_by").val(obj.CREATED_BY);
-                                $("#form_creation_date").val(obj.CREATE_DATE);
-                                $("#form_updated_by").val(obj.UPDATE_BY);
-                                $("#form_updated_date").val(obj.UPDATE_DATE);
-                            }
-                        );
-
-                        $("#tbl_pic").hide("slow");
-                        $("#form_pic").show("slow");
+                            $("#tbl_pic").hide("slow");
+                            $("#form_pic").show("slow");
 
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
 
             else {

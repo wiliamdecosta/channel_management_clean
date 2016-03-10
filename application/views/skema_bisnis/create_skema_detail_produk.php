@@ -55,6 +55,18 @@
                 success: function (data) {
                     if (data.success == true) {
                         swal("", data.message, "success");
+                        $('#form_create_skemas').trigger("reset");
+                        $("#form_skembis").hide("slow");
+                        $("#tbl_skema").show("slow");
+                        var grid = $("#grid_table_pic");
+                        var pager = $("#grid_pager_pic");
+                        grid.trigger("reloadGrid", [{page: 1}]);
+                        $(window).on('resize.jqGrid', function () {
+                        grid.jqGrid('setGridWidth', $('#tbl_skema').width());
+                         });
+                         $(window).on('resize.jqGrid', function () {
+                        pager.jqGrid('setGridWidth', $('#tbl_skema').width());
+                        });
                     } else {
                         swal("", data.message, "error");
 

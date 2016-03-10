@@ -133,7 +133,7 @@ class Skema_bisnis extends CI_Controller
             'CF_ID' => 7,
             'VALUE' => $BPH_JASTEL
         );
-        $arrBPHJ = array('CF_NAME' => "MARFEE_BEFORE_TAX",
+        $arrBefTax = array('CF_NAME' => "MARFEE_BEFORE_TAX",
             'CF_ID' => 33,
             'VALUE' => $MARFEE_BEFORE_TAX
         );
@@ -149,6 +149,7 @@ class Skema_bisnis extends CI_Controller
 
         $arrComp[] = $arrPPN;
         $arrComp[] = $arrBPHJ;
+        $arrComp[] = $arrBefTax;
 
 
         if ($pgl_id) {
@@ -222,9 +223,79 @@ class Skema_bisnis extends CI_Controller
 
     }
 
-    /*public function add_skema(){
-        $this->load->view('')
-    }*/
+    public function edit_skemabisnis()
+    {
+        $schm_id = $this->input->post("SCHM_FEE_ID");
+        //$data['comp'] = $this->m_skembis->getComfeeByProduct();
+        $arr = $this->m_skembis->getComfeeByProduct();
+        $arrSchm = $this->m_skembis->getSchmByID($schm_id);
+
+
+        $CF_NAME = array();
+        foreach ($arrSchm as $arrcomp) {
+            $CF_NAME[] = array("CF_NAME" => $arrcomp['CF_NAME'],
+                "CF_TYPE" => $arrcomp['CF_TYPE'],
+                "CF_ID" => $arrcomp['CF_ID'],
+                "PERCENTAGE" => $arrcomp['PERCENTAGE'],
+            );
+        }
+
+        $data['comp_json'] = json_encode($CF_NAME);
+
+        $data['PGL_ID'] = $this->input->post("PGL_ID");
+        $data['SCHM_FEE_ID'] = $this->input->post("SCHM_FEE_ID");
+        $data['CF_ID'] = $this->input->post("CF_ID");
+        $data['METHOD_ID'] = $this->input->post("METHOD_ID");
+        $data['comp'] = $arr;
+        $this->load->view($this->folder . '/form_edit_skembis', $data);
+    }
+
+    public function edit_action_skembis(){
+        $pgl_id = $this->input->post("PGL_ID");
+
+        $PPN = intval($this->input->post("PPN"));
+        $BPH_JASTEL = intval($this->input->post("BPH_JASTEL"));
+        $MARFEE_BEFORE_TAX = intval($this->input->post("MARFEE_BEFORE_TAX"));
+
+        $comp = $this->m_skembis->getComfeeByProduct();
+        $arrComp = array();
+        foreach ($comp as $comp_fee) {
+            if ($this->input->post($comp_fee['CF_NAME']) != null) {
+                $arrComp[] = array('CF_NAME' => $comp_fee['CF_NAME'],
+                    'CF_ID' => $comp_fee['CF_ID'],
+                    'VALUE' => $this->input->post($comp_fee['CF_NAME'])
+                );
+            }
+        }
+        $arrPPN = array('CF_NAME' => "PPN",
+            'CF_ID' => 6,
+            'VALUE' => $PPN
+        );
+        $arrBPHJ = array('CF_NAME' => "BPH_JASTEL",
+            'CF_ID' => 7,
+            'VALUE' => $BPH_JASTEL
+        );
+        $arrBefTax = array('CF_NAME' => "MARFEE_BEFORE_TAX",
+            'CF_ID' => 33,
+            'VALUE' => $MARFEE_BEFORE_TAX
+        );
+
+        $arrComp[] = $arrPPN;
+        $arrComp[] = $arrBPHJ;
+        $arrComp[] = $arrBefTax;
+
+
+        if ($pgl_id) {
+            $this->m_skembis->editSkema($arrComp);
+            $data['success'] = true;
+            $data['message'] = "Skema berhasil diupdate";
+            echo json_encode($data);
+        } else {
+            $data['success'] = false;
+            $data['message'] = "Mitra tidak ada";
+            echo json_encode($data);
+        }
+    }
 
 
 }

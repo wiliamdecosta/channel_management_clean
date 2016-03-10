@@ -17,6 +17,11 @@ class M_skembis extends CI_Model
 
     }
 
+    public function getSchmByID($id){
+        $this->db->where('SCHM_FEE_ID', $id);
+        return $this->db->get('V_SKEMBIS')->result_array();
+    }
+
     public function createSkema($arrComp)
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -53,6 +58,56 @@ class M_skembis extends CI_Model
                 'CREATED_BY' => $CREATED_BY,
                 'CREATED_DATE' => $CREATED_DATE,
                 'VALID_FROM' => $VALID_FROM)
+            );
+
+        }
+    }
+
+    public function clearSkemaByID($pgl_id,$SCHM_FEE_ID,$skema_id){
+        $this->db->where('PGL_ID', $pgl_id);
+        $this->db->where('SCHM_FEE_ID', $SCHM_FEE_ID);
+        $this->db->where('METHOD_ID', $skema_id);
+        $this->db->delete('SCHM_FEE');
+    }
+
+    public function editSkema($arrComp)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $table = "SCHM_FEE";
+        $pgl_id = $this->input->post("PGL_ID");
+        $SCHM_FEE_ID = $this->input->post("SCHM_FEE_ID");
+        $skema_id = $this->input->post("METHOD_ID");
+
+        $CREATED_DATE = date('d-M-Y');
+        $VALID_FROM = date('d-M-Y');
+        $CREATED_BY = $this->session->userdata('d_user_name');
+
+        // Clear Skema before insert
+        $this->clearSkemaByID($pgl_id,$SCHM_FEE_ID,$skema_id);
+
+        for ($i = 0; $i < count($arrComp); $i++) {
+            $data = array('CF_ID' => $arrComp[$i]['CF_ID'],
+                'SCHM_FEE_ID' => $SCHM_FEE_ID,
+                'PGL_ID' => $pgl_id,
+                'METHOD_ID' => $skema_id,
+                'PERCENTAGE' => $arrComp[$i]['VALUE'],
+                'CREATED_BY' => $CREATED_BY,
+                'CREATED_DATE' => $CREATED_DATE,
+                'VALID_FROM' => $VALID_FROM
+            );
+            $this->db->insert($table,$data);
+        }
+
+        $smry = $this->getCompfeeSMRY();
+        foreach ($smry as $smryfee) {
+            $this->db->insert($table,array( 'SCHM_FEE_ID' => $SCHM_FEE_ID,
+                    'CF_ID' => $smryfee['CF_ID'],
+                    'PGL_ID' => $pgl_id,
+                    'METHOD_ID' => $skema_id,
+                    'PERCENTAGE' => 0,
+                    'CREATED_BY' => $CREATED_BY,
+                    'CREATED_DATE' => $CREATED_DATE,
+                    'VALID_FROM' => $VALID_FROM)
             );
 
         }
