@@ -964,6 +964,15 @@ class M_parameter extends CI_Model
         $CREATION_DATE = $this->input->post('CD');
 		$UPDATE_DATE = $this->input->post('UD');
 		$P_MAP_DATIN_ACC_ID = $this->input->post('PMD');
+		$timefr = strtotime($VALID_FROM);
+		$timeutl = strtotime($VALID_UNTIL);
+		$time_create = strtotime($CREATION_DATE);
+		$time_update = strtotime($UPDATE_DATE);
+		$VALID_FROM = date('d-M-Y',$timefr);
+		$VALID_UNTIL = date('d-M-Y',$timeutl);
+		$CREATION_DATE = date('d-M-Y',$time_create);
+		$UPDATE_DATE = date('d-M-Y',$time_update);
+		
 
         $data = array('PGL_ID' => $PGL_ID,
             'ACCOUNT_NUM' => $ACCOUNT_NUM,
