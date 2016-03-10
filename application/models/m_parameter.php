@@ -978,7 +978,7 @@ class M_parameter extends CI_Model
 
         switch ($oper) {
             case 'add':
-				$data['P_MAP_DATIN_ACC_ID'] = gen_id('P_MAP_DATIN_ACC_ID','P_MAP_DATIN_ACC');
+				$data['P_MAP_DATIN_ACC_ID'] = gen_id('P_MAP_DATIN_ACC_ID','P_MAP_DATIN_ACC')+1;
                 $this->db->insert($table, $data);
                 break;
             case 'edit':
