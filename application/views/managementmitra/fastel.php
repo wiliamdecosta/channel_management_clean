@@ -539,7 +539,7 @@
                     formatter: 'string',
                 },
                 {
-                    label: 'Alamat',
+                    label: 'Alamat Instalasi',
                     name: 'PRODUCT_NAME',
                     width: 300,
                     align: "right",
