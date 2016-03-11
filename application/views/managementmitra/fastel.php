@@ -532,19 +532,19 @@
                 {label: 'NO AKUN ', name: 'ACCOUNT_NUM', width: 200, align: "left", hidden: false},
                 {
                     label: 'SID',
-                    name: '',
+                    name: 'PRODUCT_LABEL',
                     width: 200,
                     align: "right",
                     editable: true,
-                    formatter: 'integer',
+                    formatter: 'string',
                 },
                 {
                     label: 'Alamat',
-                    name: '',
+                    name: 'PRODUCT_NAME',
                     width: 300,
                     align: "right",
                     editable: true,
-                    formatter: 'integer',
+                    formatter: 'string',
                 },
                 {
                     label: 'TOTAL TAGIHAN',

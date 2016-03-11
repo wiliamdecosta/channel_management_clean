@@ -27,6 +27,7 @@
                  colModel: [
                      //{ label: 'ID', name: 'USER_ID', key: true, width:5, sorttype:'number', editable: true,hidden:true },
                      { label: 'ND', name: 'ND1', width:110, frozen:true, align:"left", editable:true,editrules : { required: true}},
+                     { label: 'ALamat', name: '', width:110, frozen:true, align:"left", editable:true,editrules : { required: true}},
                      { label: 'NAMA PLG', name: 'NOM', width:250, frozen:true, align:"left", editable:true,editrules : { required: true}},
                      { label: 'ABONEMEN', name: 'ABONEMEN',formatter:'integer', width:100, align:"right", editable:true},
                      { label: 'KREDIT', name: 'MNT_TCK_C',formatter:'integer', width:100, align:"right", editable:true},
