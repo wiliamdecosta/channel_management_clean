@@ -42,7 +42,8 @@ class Mapping_user_mitra extends CI_Controller
                     a.IP_ADDRESS,a.IS_NEW_USER,a.LAST_LOGIN_TIME, c.PGL_NAME, c.PGL_ID
                     FROM APP_USERS a
                     LEFT JOIN APP_USER_C2BI b ON a.USER_ID = b.USER_ID
-                    LEFT JOIN CUST_PGL c ON b.PGL_ID = c.PGL_ID";
+                    LEFT JOIN CUST_PGL c ON b.PGL_ID = c.PGL_ID
+                    LEFT JOIN APP_USER_PROFILE d ON a.USER_ID = d.USER_ID";
 
         $req_param = array(
             "table" => $table,
@@ -61,7 +62,8 @@ class Mapping_user_mitra extends CI_Controller
 
         // Filter Table *
         $req_param['where'] = array("nvl(a.IS_EMPLOYEE, 'N') = 'N'",
-                                    "a.USER_NAME NOT IN('DEV','ADMIN')");
+                                    "a.USER_NAME NOT IN('DEV','ADMIN')",
+                                    "d.PROF_ID = 3");
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
         //print_r($row);exit;

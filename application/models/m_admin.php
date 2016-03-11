@@ -91,15 +91,15 @@ class M_admin extends CI_Model {
 
         
         $P_USER_STATUS_ID = "1";
-        if($IS_EMPLOYEE == 'N') {
-            /* khusus non karyawan, user akan menentukan passwordnya sendiri ketika masuk halaman submit profile. 
+        if($IS_EMPLOYEE == 'N' and $PROF_ID == 3) { //khusus C2BI
+            /* khusus non karyawan dan C2BI, user akan menentukan passwordnya sendiri ketika masuk halaman submit profile. 
                 halaman submit profile akan dikirimkan ke email user ketika sudah mapping user mitra
                 oleh admin.
                 
                 password non-karyawan diset dengan settingan di bawah ini(agar sulit ditebak).
             */
             $PASSWD = md5('apaajaboleh987654321!@#$%^&*(');
-            $P_USER_STATUS_ID = 4;
+            $P_USER_STATUS_ID = "NULL";
         }
         
 
@@ -168,7 +168,7 @@ class M_admin extends CI_Model {
                 $this->db->delete($table);
                 break;
         }
-
+        
     }
     public function resetPwd($uid,$user_name){
         $qs = "UPDATE APP_USERS SET PASSWD = '".$user_name."' WHERE USER_ID=".$uid;
