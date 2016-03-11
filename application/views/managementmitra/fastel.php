@@ -78,6 +78,24 @@
                     editable: true,
                     editrules: {required: true}
                 },
+                {
+                    label: 'M4L',
+                    name: '',
+                    width: 75,
+                    frozen: true,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Alamat',
+                    name: '',
+                    width: 175,
+                    frozen: true,
+                    align: "left",
+                    editable: true,
+                    editrules: {required: true}
+                },
                 {label: 'Created Date', name: 'CREATED_DATE', width: 100, align: "right", editable: true},
                 {label: 'Valid From', name: 'VALID_FROM', width: 100, align: "right", editable: true},
                 {
@@ -97,6 +115,7 @@
                         }
                     }
                 },
+
                 {
                     label: 'NAMA PLG',
                     name: 'NOM',
@@ -512,6 +531,22 @@
             colModel: [
                 {label: 'NO AKUN ', name: 'ACCOUNT_NUM', width: 200, align: "left", hidden: false},
                 {
+                    label: 'SID',
+                    name: '',
+                    width: 200,
+                    align: "right",
+                    editable: true,
+                    formatter: 'integer',
+                },
+                {
+                    label: 'Alamat',
+                    name: '',
+                    width: 300,
+                    align: "right",
+                    editable: true,
+                    formatter: 'integer',
+                },
+                {
                     label: 'TOTAL TAGIHAN',
                     name: 'PRODUCT_MNY',
                     width: 200,
@@ -519,6 +554,7 @@
                     editable: true,
                     formatter: 'integer',
                 },
+
                 {
                     label: 'ABONEMEN',
                     name: 'ABONDEMEN',
@@ -539,7 +575,7 @@
                 {label: 'FLAG BAYAR', name: 'flag', width: 200, align: "center", editable: true}
 
             ],
-            //width: '100%',
+            width: '100%',
             height: '100%',
             scrollOffset: 0,
             rowNum: 5,
@@ -550,7 +586,7 @@
             rownumWidth: 35, // the width of the row numbers columns
             sortorder: 'asc',
             altRows: true,
-            shrinkToFit: false,
+            shrinkToFit: true,
             multiboxonly: true,
             onSortCol: clearSelection,
             onPaging: clearSelection,
@@ -798,7 +834,7 @@
             $.extend(postdata2, {periode: periode});
             grid2.trigger("reloadGrid", [{page: 1}]);
         } else {
-            swal('Warning','Bulan dan tahun harus dipilih !','warning');
+            swal('Warning', 'Bulan dan tahun harus dipilih !', 'warning');
             return false;
         }
     });

@@ -19,7 +19,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" for="form-field-1-1"> BPH JASTEL </label>
+    <label class="col-sm-3 control-label" for="form-field-1-1"> BHP JASTEL </label>
     <div class="col-sm-2 input-group">
         <input type="text" id="BPH_JASTEL" name="BPH_JASTEL" placeholder="Diisi % benefit mitra" value="0" class="form-control"/>
         <span class="input-group-addon">%</span>
