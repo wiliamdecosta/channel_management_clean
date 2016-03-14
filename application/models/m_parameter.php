@@ -724,14 +724,14 @@ class M_parameter extends CI_Model
             case 'add':
                 $data = array('P_MAP_MIT_CC_ID' => $P_MAP_MIT_CC_ID,
                     'LOKASI' => $LOKASI,
-                    'VALID_FROM' => $VALID_FROM,
-                    'VALID_UNTIL' => $VALID_UNTIL,
                     'CREATE_BY' => $CREATE_BY,
                     'CREATION_DATE' => $CREATION_DATE
                 );
 
                 $new_id = gen_id($pk, $table);
                 $this->db->set($pk, $new_id);
+                $this->db->set('VALID_FROM',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                $this->db->set('VALID_UNTIL',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
                 $this->db->insert($table, $data);
                 if ($this->db->affected_rows() > 0) {
                     $data["success"] = true;
@@ -744,11 +744,11 @@ class M_parameter extends CI_Model
             case 'edit':
                 $data = array(
                     'LOKASI' => $LOKASI,
-                    'VALID_FROM' => $VALID_FROM,
-                    'VALID_UNTIL' => $VALID_UNTIL,
                     'UPDATE_BY' => $UPDATE_BY,
                     'UPDATE_DATE' => $UPDATE_DATE
                 );
+                $this->db->set('VALID_FROM',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                $this->db->set('VALID_UNTIL',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
                 $this->db->where($pk, $id_);
                 $this->db->update($table, $data);
                 if ($this->db->affected_rows() > 0) {
@@ -877,8 +877,8 @@ class M_parameter extends CI_Model
             case 'add':
                 $data = array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID,
                     'NO_PKS' => $NO_PKS,
-                    'VALID_FROM' => $VALID_FROM,
-                    'VALID_UNTIL' => $VALID_UNTIL,
+                  //  'VALID_FROM' => $VALID_FROM,
+                  //  'VALID_UNTIL' => $VALID_UNTIL,
                     'CREATED_BY' => $CREATED_BY,
                     'CREATED_DATE' => $CREATED_DATE,
                     'UPDATED_DATE' => $UPDATED_DATE,
@@ -891,6 +891,9 @@ class M_parameter extends CI_Model
                 } else {
                     $new_id = gen_id($pk, $table);
                     $this->db->set($pk, $new_id);
+
+                    $this->db->set('VALID_FROM',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                    $this->db->set('VALID_UNTIL',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
 
                     $this->db->insert($table, $data);
                     if ($this->db->affected_rows() > 0) {
@@ -907,8 +910,8 @@ class M_parameter extends CI_Model
             case 'edit':
                 $data = array(
                     'NO_PKS' => $NO_PKS,
-                    'VALID_FROM' => $VALID_FROM,
-                    'VALID_UNTIL' => $VALID_UNTIL,
+                   // 'VALID_FROM' => $VALID_FROM,
+                   // 'VALID_UNTIL' => $VALID_UNTIL,
                     'UPDATED_DATE' => $UPDATED_DATE,
                     'UPDATED_BY' => $UPDATED_BY
                 );
@@ -917,6 +920,8 @@ class M_parameter extends CI_Model
                     $datas["success"] = false;
                     $datas["message"] = "No PKS sudah ada !";
                 }else{
+                    $this->db->set('VALID_FROM',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                    $this->db->set('VALID_UNTIL',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
                     $this->db->where($pk, $P_MP_PKS_ID);
                     $this->db->update($table, $data);
                     if ($this->db->affected_rows() > 0) {

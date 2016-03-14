@@ -4,8 +4,6 @@
 
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
-
-
     <div class="row">
         <div class="col-xs-12">
             <!-- PAGE CONTENT BEGINS -->
@@ -28,7 +26,27 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#grid-table").jqGrid({
+        var grid = $("#grid-table");
+        var pager = $("#grid-pager");
+
+        var grid2 = $("#jqGridDetails");
+        var pager2 = $("#jqGridDetailsPager");
+
+        //resize to fit page size
+        var parent_column = grid.closest('[class*="col-"]');
+        $(window).on('resize.jqGrid', function () {
+            grid.jqGrid( 'setGridWidth', $(".page-content").width()-1 );
+            grid2.jqGrid( 'setGridWidth', $(".page-content").width()-1 );
+        })
+        //optional: resize on sidebar collapse/expand and container fixed/unfixed
+        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
+            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
+                grid.jqGrid( 'setGridWidth', parent_column.width() );
+                grid2.jqGrid( 'setGridWidth', parent_column.width() );
+            }
+        })
+        var width =  $(".page-content").width();
+        grid.jqGrid({
             url: '<?php echo site_url('admin/gridmenu');?>',
             datatype: "json",
             mtype: "POST",
@@ -55,10 +73,10 @@
                 {label: 'Icon', name: 'MENU_ICON', width: 145, align: "left", editable: true},
                 {label: 'Desc', name: 'MENU_DESC', width: 165, align: "left", editable: true}
             ],
-            width: 1120,
+            width: width,
             //width: '100%',
             height: '100%',
-            autowidth: true,
+           // autowidth: true,
             rowNum: 5,
             page: 1,
             viewrecords: true,
@@ -224,7 +242,7 @@
                 {label: 'Controller', name: 'MENU_LINK',  editable: true},
                 {label: 'View', name: 'FILE_NAME', editable: true}
             ],
-            width: 1120,
+            width: width,
             height: '100%',
             rowNum: 5,
             page: 1,

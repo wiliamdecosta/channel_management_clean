@@ -80,7 +80,7 @@
                 },
                 {
                     label: 'M4L',
-                    name: '',
+                    name: 'FLAG',
                     width: 75,
                     frozen: true,
                     align: "left",
@@ -100,11 +100,11 @@
                 {label: 'Valid From', name: 'VALID_FROM', width: 100, align: "right", editable: true},
                 {
                     label: 'Status',
-                    name: 'CPROD',
+                    name: 'AKTIF',
                     width: 110,
                     frozen: true,
                     align: "left",
-                    editable: true,
+                    editable: true
                     formatter: function (cellvalue, options, rowObject) {
                         var status = rowObject.CPROD;
                         if (status == '1') {

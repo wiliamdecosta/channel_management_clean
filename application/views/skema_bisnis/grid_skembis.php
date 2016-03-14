@@ -95,7 +95,7 @@
                     name: 'PERCENTAGE',
                     width: 50,
                     align: "left",
-                    formatter: 'number',
+                    formatter: 'string',
                     formatoptions: {suffix: ' %'},
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}}

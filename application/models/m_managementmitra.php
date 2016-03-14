@@ -81,10 +81,13 @@ class M_managementmitra extends CI_Model
         //$db2->where('b.nd',1);
         $db2->where('C.PGL_ID', $param['pgl_id']);
 
-        $sql = "b.nd nd1,A.* " .
+        $sql = "b.nd nd1, b.AKTIF, " .
+            " decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag, " .
+            " A.* " .
             " FROM CUST_RINTA PARTITION(PERIOD_" . $param['period'] . ") A" .
             " INNER JOIN TEN_ND B ON B.ND=A.ND" .
-            " INNER JOIN PGL_TEN C ON C.TEN_ID=B.TEN_ID";
+            " INNER JOIN PGL_TEN C ON C.TEN_ID=B.TEN_ID" .
+            " INNER JOIN CC_DATAREF@NONPOTS_OP D ON A.ND = D.P_NOTEL";
 
 //        $sql = "SELECT b.nd nd1,A.* ".
 //            " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B WHERE A.ND(+)=B.ND AND B.TEN_ID=".$param['ten_id'];
@@ -260,7 +263,7 @@ class M_managementmitra extends CI_Model
                         "DOC_NAME" => $form_doc_name,
                         "DESCRIPTION" => $form_description,
                         "P_MP_PKS_ID" => $form_p_mp_pks_id,
-                        "FILE_NAME" =>$data['client_name'],
+                        "FILE_NAME" => $data['client_name'],
                         "FILE_PATH" => $data['file_name'],
                         'CREATED_BY' => $CREATED_BY,
                         'CREATED_DATE' => $CREATED_DATE,

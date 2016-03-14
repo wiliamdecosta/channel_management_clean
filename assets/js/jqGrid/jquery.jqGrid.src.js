@@ -891,7 +891,7 @@ $.fn.jqGrid = function( pin ) {
 				if(this.resizing) {
 					var diff = x.clientX-this.resizing.startX,
 					h = this.headers[this.resizing.idx],
-					newWidth = p.direction === "ltr" ? h.width + diff : h.width - diff, hn, nWn;
+					newWidth = p.direction === "ltr" ? h.width+1 + diff : h.width - diff, hn, nWn;
 					if(newWidth > 33) {
 						this.curGbox.css({left:this.resizing.sOL+diff});
 						if(p.forceFit===true ){
@@ -2576,7 +2576,7 @@ $.fn.jqGrid = function( pin ) {
 		$(gv).css("width",grid.width+"px");
 		thead = $("thead:first",ts).get(0);
 		var	tfoot = "";
-		if(ts.p.footerrow) { tfoot += "<table role='grid' style='width:"+ts.p.tblwidth+"px' class='ui-jqgrid-ftable' cellspacing='0' cellpadding='0' border='0'><tbody><tr role='row' class='ui-widget-content footrow footrow-"+dir+"'>"; }
+		if(ts.p.footerrow) { tfoot += "<table role='grid' style='width:"+ts.p.tblwidth+1+"px' class='ui-jqgrid-ftable' cellspacing='0' cellpadding='0' border='0'><tbody><tr role='row' class='ui-widget-content footrow footrow-"+dir+"'>"; }
 		var thr = $("tr:first",thead),
 		firstr = "<tr class='jqgfirstrow' role='row' style='height:auto'>";
 		ts.p.disableClick=false;
@@ -2674,7 +2674,7 @@ $.fn.jqGrid = function( pin ) {
 		thead = null;
 		grid.hDiv = document.createElement("div");
 		$(grid.hDiv)
-			.css({ width: grid.width+"px"})
+			.css({ width: grid.width+1+"px"})
 			.addClass("ui-state-default ui-jqgrid-hdiv")
 			.append(hb);
 		$(hb).append(hTable);
@@ -2684,7 +2684,7 @@ $.fn.jqGrid = function( pin ) {
 			// TBD -- escape ts.p.pager here?
 			if(typeof ts.p.pager === "string") {if(ts.p.pager.substr(0,1) !== "#") { ts.p.pager = "#"+ts.p.pager;} }
 			else { ts.p.pager = "#"+ $(ts.p.pager).attr("id");}
-			$(ts.p.pager).css({width: grid.width+"px"}).addClass('ui-state-default ui-jqgrid-pager ui-corner-bottom').appendTo(eg);
+			$(ts.p.pager).css({width: grid.width+1+"px"}).addClass('ui-state-default ui-jqgrid-pager ui-corner-bottom').appendTo(eg);
 			if(hg) {$(ts.p.pager).hide();}
 			setPager(ts.p.pager,'');
 		}
@@ -2811,7 +2811,7 @@ $.fn.jqGrid = function( pin ) {
 		$(grid.bDiv)
 			.append($('<div style="position:relative;'+(isMSIE && $.jgrid.msiever() < 8 ? "height:0.01%;" : "")+'"></div>').append('<div></div>').append(this))
 			.addClass("ui-jqgrid-bdiv")
-			.css({ height: ts.p.height+(isNaN(ts.p.height)?"":"px"), width: (grid.width)+"px"})
+			.css({ height: ts.p.height+(isNaN(ts.p.height)?"":"px"), width: (grid.width+1)+"px"})
 			.scroll(grid.scrollGrid);
 		$("table:first",grid.bDiv).css({width:ts.p.tblwidth+"px"});
 		if( !$.support.tbody ) { //IE
@@ -2843,7 +2843,7 @@ $.fn.jqGrid = function( pin ) {
 				$(grid.ubDiv).addClass("ui-userdata ui-state-default").attr("id","tb_"+this.id).insertAfter(grid.hDiv);
 				if(hg)  {$(grid.ubDiv).hide();}
 			} else {
-				$(grid.uDiv).width(grid.width).addClass("ui-userdata ui-state-default").attr("id","t_"+this.id);
+				$(grid.uDiv).width(grid.width+1).addClass("ui-userdata ui-state-default").attr("id","t_"+this.id);
 			}
 			if(hg) {$(grid.uDiv).hide();}
 		}
@@ -2851,13 +2851,13 @@ $.fn.jqGrid = function( pin ) {
 			ts.p.toppager = $.jgrid.jqID(ts.p.id)+"_toppager";
 			grid.topDiv = $("<div id='"+ts.p.toppager+"'></div>")[0];
 			ts.p.toppager = "#"+ts.p.toppager;
-			$(grid.topDiv).addClass('ui-state-default ui-jqgrid-toppager').width(grid.width).insertBefore(grid.hDiv);
+			$(grid.topDiv).addClass('ui-state-default ui-jqgrid-toppager').width(grid.width+1).insertBefore(grid.hDiv);
 			setPager(ts.p.toppager,'_t');
 		}
 		if(ts.p.footerrow) {
 			grid.sDiv = $("<div class='ui-jqgrid-sdiv'></div>")[0];
 			hb = $("<div class='ui-jqgrid-hbox"+(dir==="rtl"?"-rtl":"")+"'></div>");
-			$(grid.sDiv).append(hb).width(grid.width).insertAfter(grid.hDiv);
+			$(grid.sDiv).append(hb).width(grid.width+1).insertAfter(grid.hDiv);
 			$(hb).append(tfoot);
 			grid.footers = $(".ui-jqgrid-ftable",grid.sDiv)[0].rows[0].cells;
 			if(ts.p.rownumbers) { grid.footers[0].className = 'ui-state-default jqgrid-rownum'; }
@@ -4694,7 +4694,7 @@ $.jgrid.extend({
 
 			$firstRow = $theadInTable.find("tr.jqg-first-row-header");
 			$(ts).bind('jqGridResizeStop.setGroupHeaders', function (e, nw, idx) {
-				$firstRow.find('th').eq(idx).width(nw);
+				$firstRow.find('th').eq(idx).width(nw+1);
 			});
 		});				
 	},
