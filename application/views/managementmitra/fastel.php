@@ -81,7 +81,7 @@
                 {
                     label: 'M4L',
                     name: 'FLAG',
-                    width: 75,
+                    width: 155,
                     frozen: true,
                     align: "left",
                     editable: true,
@@ -104,9 +104,9 @@
                     width: 110,
                     frozen: true,
                     align: "left",
-                    editable: true
+                    editable: true,
                     formatter: function (cellvalue, options, rowObject) {
-                        var status = rowObject.CPROD;
+                        var status = rowObject.AKTIF;
                         if (status == '1') {
                             return "Aktif";
                         }

@@ -27,6 +27,24 @@
                  colModel: [
                      //{ label: 'ID', name: 'USER_ID', key: true, width:5, sorttype:'number', editable: true,hidden:true },
                      { label: 'ND', name: 'ND1', width:110, frozen:true, align:"left", editable:true,editrules : { required: true}},
+                     { label: 'M4L', name: 'FLAG', width:110, frozen:true, align:"left", editable:true,editrules : { required: true}},
+                     {
+                         label: 'Status',
+                         name: 'AKTIF',
+                         width: 110,
+                         frozen: true,
+                         align: "left",
+                         editable: true,
+                         formatter: function (cellvalue, options, rowObject) {
+                             var status = rowObject.AKTIF;
+                             if (status == '1') {
+                                 return "Aktif";
+                             }
+                             else {
+                                 return "Tidak Aktif";
+                             }
+                         }
+                     },
                      { label: 'ALamat', name: '', width:110, frozen:true, align:"left", editable:true,editrules : { required: true}},
                      { label: 'NAMA PLG', name: 'NOM', width:250, frozen:true, align:"left", editable:true,editrules : { required: true}},
                      { label: 'ABONEMEN', name: 'ABONEMEN',formatter:'integer', width:100, align:"right", editable:true},

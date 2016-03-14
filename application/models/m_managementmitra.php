@@ -87,7 +87,7 @@ class M_managementmitra extends CI_Model
             " FROM CUST_RINTA PARTITION(PERIOD_" . $param['period'] . ") A" .
             " INNER JOIN TEN_ND B ON B.ND=A.ND" .
             " INNER JOIN PGL_TEN C ON C.TEN_ID=B.TEN_ID" .
-            " INNER JOIN CC_DATAREF@NONPOTS_OP D ON A.ND = D.P_NOTEL";
+            " LEFT JOIN CC_DATAREF@NONPOTS_OP D ON A.ND = D.P_NOTEL";
 
 //        $sql = "SELECT b.nd nd1,A.* ".
 //            " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B WHERE A.ND(+)=B.ND AND B.TEN_ID=".$param['ten_id'];
