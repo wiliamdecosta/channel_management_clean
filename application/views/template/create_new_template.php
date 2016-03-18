@@ -66,18 +66,17 @@
 				echo	'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<td><td>';
 				echo	$content->NAME.'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>';
 				};
-			 //echo 'a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>a</br>';		
-			 echo '</tbody></table></div></td></tr></table></div>'; ?>
+			echo '</tbody></table></div></td></tr></table></div>'; ?>
 	<div id="notif_success"></div>
 		<form id="text_editor" method="post"> 
 			</br>	   
 			<div class="col-xs-3">
 				<label for="email">Document Name:</label>
-				<input type="email" class="form-control" id="docx_name" name="docx_nama">
+				<input type="email" class="col-xs-10 col-sm-5 required form-control" id="docx_name" name="docx_nama" placeholder="Tulis nama file disini">
 			</div>
 			<div class="col-xs-6">
 				<label for="pwd">Description:</label>
-				<input type="email" class="form-control" id="docx_descript" name="docx_deskrip">
+				<input type="text"  class="col-xs-10 col-sm-5 required form-control" id="docx_descript" name="docx_deskrip" placeholder="Tulis deskripsi disini">
 			</div></br></br></br></br>
 			<div id="Bahasa" class="col-sm-4">
 				<select id="Bhs" class="form-control" name="Languages">
