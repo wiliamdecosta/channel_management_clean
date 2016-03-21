@@ -15,7 +15,7 @@
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Pilih Skema
                         Bisnis </label>
                     <div class="col-sm-6">
-                        <?php echo buatcombo("form_skembis_type","form_skembis_type","P_REFERENCE_LIST","REFERENCE_NAME","P_REFERENCE_LIST_ID",array('P_REFERENCE_TYPE_ID' => 3),"Pilih Skema Bisnis");?>
+                        <?php echo buatcombo("form_skembis_type", "form_skembis_type", "P_REFERENCE_LIST", "REFERENCE_NAME", "P_REFERENCE_LIST_ID", array('P_REFERENCE_TYPE_ID' => 3), "Pilih Skema Bisnis"); ?>
                     </div>
                 </div>
                 <div class="form-group" id="div_benefit">
@@ -23,7 +23,7 @@
                             id="benefit_mitra_caption">Benefit Mitra</span> </label>
                     <div class="col-sm-6">
                         <select class="form-control" id="select_benefit_mitra" name="form_benefit_mitra">
-                            <option value="">Pilih Benefit Mitra </option>
+                            <option value="">Pilih Benefit Mitra</option>
                         </select>
 
                     </div>
@@ -97,6 +97,51 @@
                     $.ajax({
                         type: 'POST',
                         url: "<?php echo site_url();?>skema_bisnis/loadFlatRevenue",
+                        data: {},
+                        timeout: 10000,
+                        success: function (data) {
+                            $("#benefit_mitra_detail").html(data);
+                        }
+
+                    })
+                    return false;
+                    break;
+
+                case '9' : // MTR
+                    $('#div_benefit').hide();
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo site_url();?>skema_bisnis/loadMTR",
+                        data: {},
+                        timeout: 10000,
+                        success: function (data) {
+                            $("#benefit_mitra_detail").html(data);
+                        }
+
+                    })
+                    return false;
+                    break;
+
+                case '7' : // Custom
+                    $('#div_benefit').hide();
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo site_url();?>skema_bisnis/loadSkemaCustom",
+                        data: {},
+                        timeout: 10000,
+                        success: function (data) {
+                            $("#benefit_mitra_detail").html(data);
+                        }
+
+                    })
+                    return false;
+                    break;
+
+                case '13' : // Progressif
+                    $('#div_benefit').hide();
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo site_url();?>skema_bisnis/loadSkemaProgressif",
                         data: {},
                         timeout: 10000,
                         success: function (data) {

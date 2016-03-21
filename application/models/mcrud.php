@@ -22,7 +22,8 @@ class mcrud extends CI_Model
 
     public function getCombo($table, $field,$pk)
     {
-        $this->db->distinct($field);
+        $this->db->select($field);
+        $this->db->distinct();
         $this->db->select($pk);
 
         $this->db->order_by($field, 'asc');
