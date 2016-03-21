@@ -183,7 +183,7 @@
             rowNum: 10,
             viewrecords: true,
             rowList: [10, 25, 50],
-            sortname: 'CF_ID', // default sorting ID
+            sortname: 'SCHM_FEE_ID', // default sorting ID
             //rownumbers: true, // show row numbers
             rownumWidth: 35,
             sortorder: 'asc',

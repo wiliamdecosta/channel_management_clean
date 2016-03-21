@@ -444,7 +444,7 @@ class Skema_bisnis extends CI_Controller
 
     }
 
-    public function addCompMT(){
+    public function addCompMTR(){
         $comp = $this->input->post("comp");
         if($comp){
             $this->m_skembis->add_comp_mtr();
