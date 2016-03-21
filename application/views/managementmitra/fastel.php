@@ -572,7 +572,7 @@
                     editable: true,
                     formatter: 'integer',
                 },
-                {label: 'FLAG BAYAR', name: 'flag', width: 200, align: "center", editable: true}
+                {label: 'FLAG BAYAR', name: 'FLAG_BYR', width: 200, align: "center", editable: true}
 
             ],
             width: '100%',

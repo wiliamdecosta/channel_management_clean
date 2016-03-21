@@ -8,9 +8,6 @@
                     <div class="col-sm-6">
                         <select class="form-control" id="contract" name="form_method">
                             <option value="">Net/Gros</option>
-                            <option value="1">...</option>
-                            <option value="2">....</option>
-                            <option value="3">.....</option>
                         </select>
                     </div>
                 </div>
@@ -21,7 +18,7 @@
                         <?php echo buatcombo("form_skembis_type","form_skembis_type","P_REFERENCE_LIST","REFERENCE_NAME","P_REFERENCE_LIST_ID",array('P_REFERENCE_TYPE_ID' => 3),"Pilih Skema Bisnis");?>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="div_benefit">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> <span
                             id="benefit_mitra_caption">Benefit Mitra</span> </label>
                     <div class="col-sm-6">
@@ -74,7 +71,7 @@
 
         $('#form_skembis_type').on('change', function () {
             $("#benefit_mitra_detail").html("");
-
+            $('#div_benefit').show();
 
             switch (this.value) {
 
@@ -93,6 +90,21 @@
                     $('#select_benefit_mitra').append('<option value="createSkemaRC100"> Revenue Commitment = 100%  </option>');
                     $('#select_benefit_mitra').append('<option value="createSkemaRCGreater100"> Revenue Commitment > 100%  </option>');
                     $('#select_benefit_mitra').append('<option value="createSkemaPAYG"> Pay as you grow (PAYG)  </option>');
+                    break;
+
+                case '10' : // Net Revenue
+                    $('#div_benefit').hide();
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo site_url();?>skema_bisnis/loadFlatRevenue",
+                        data: {},
+                        timeout: 10000,
+                        success: function (data) {
+                            $("#benefit_mitra_detail").html(data);
+                        }
+
+                    })
+                    return false;
                     break;
 
                 default :

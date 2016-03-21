@@ -1,44 +1,39 @@
-<div id="tbl_skema">
-    <button class="btn btn-white btn-sm btn-round" id="add_skema" style="margin-bottom:10px">
-        <i class="ace-icon fa fa-plus green"></i>
-        Tambah Skema
-    </button>
-    &nbsp;
+<div id="tbl_skema_calculate">
     <div class="row">
         <div class="col-xs-12">
-            <table id="grid_table_pic"></table>
-            <div id="grid_pager_pic"></div>
+            <table id="grid_calculate"></table>
+            <div id="pager_calculate"></div>
         </div>
     </div>
 </div>
-<div id="form_skembis" style="display: none;">
-    <?php $this->load->view('skema_bisnis/create_skema'); ?>
-</div>
-
 <script type="text/javascript">
     $(document).ready(function () {
-        var grid = $("#grid_table_pic");
-        var pager = $("#grid_pager_pic");
+        var grid = $("#grid_calculate");
+        var pager = $("#pager_calculate");
 
         var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid( 'setGridWidth', $(".tab-content").width()-1);
-            pager.jqGrid( 'setGridWidth', $(".tab-content").width()-1);
+            grid.jqGrid('setGridWidth', $("#tbl_skema_calculate").width() - 1);
+            pager.jqGrid('setGridWidth', $("#tbl_skema_calculate").width() - 1);
         })
         //optional: resize on sidebar collapse/expand and container fixed/unfixed
-        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
-            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
-                grid.jqGrid( 'setGridWidth', parent_column.width() );
-                pager.jqGrid( 'setGridWidth', parent_column.width() );
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                grid.jqGrid('setGridWidth', parent_column.width());
+                pager.jqGrid('setGridWidth', parent_column.width());
             }
         })
-        var width =  $(".tab-content").width() ;
+        var width = $("#tbl_skema_calculate").width();
         grid.jqGrid({
             url: '<?php echo site_url('skema_bisnis/gridSkembis');?>',
             datatype: "json",
             mtype: "POST",
-            postData: {pgl_id: <?php echo $pgl_id;?>},
-            caption: "List Skema Bisnis",
+            postData: {
+                pgl_id: <?php echo $pgl_id;?>,
+                skema_id: <?php echo $skema_id;?>,
+                periode: '<?php echo $periode;?>'
+            },
+            caption: "Skema bisnis calculate",
             colModel: [
                 {
                     label: 'ID',
@@ -126,34 +121,39 @@
                     hidden: false
                 },
                 {
-                 label: 'Net Revenue Skema',
-                 name: 'NET_REVENUE',
-                 width: 100,
-                 align: "right",
-                 formatter: 'number',
-                 // summaryType: 'sum',
-                 //summaryTpl: "Total: {0}", // set the summary template to show the group summary
-                 //formatoptions: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 4, defaultValue: '0.0000' },
+                    label: 'Net Revenue Skema',
+                    name: 'NET_REVENUE',
+                    width: 100,
+                    align: "right",
+                    formatter: 'number',
+                    summaryType: 'sum',
+                    summaryTpl: "Total: {0}", // set the summary template to show the group summary
+                    formatoptions: {
+                        decimalSeparator: ".",
+                        thousandsSeparator: " ",
+                        decimalPlaces: 4,
+                        defaultValue: '0.0000'
+                    },
 
-                 formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
-                 sortable: true,
-                 editable: true,
-                 editoptions: {size: 45, value: {Tes: 'asdad'}},
-                 hidden: false
-                 },
-                /*{
-                 label: 'Gross Revenue',
-                 name: 'GROSS_REVENUE',
-                 width: 100,
-                 align: "right",
-                 // summaryType: 'sum',
-                 formatter: 'number',
-                 formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
-                 sortable: true,
-                 editable: true,
-                 editoptions: {size: 45, value: {Tes: 'asdad'}},
-                 hidden: false
-                 },*/
+                    formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
+                    sortable: true,
+                    editable: true,
+                    editoptions: {size: 45},
+                    hidden: false
+                },
+                {
+                    label: 'Gross Revenue',
+                    name: 'GROSS_REVENUE',
+                    width: 100,
+                    align: "right",
+                    summaryType: 'sum',
+                    formatter: 'number',
+                    formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
+                    sortable: true,
+                    editable: true,
+                    editoptions: {size: 45},
+                    hidden: false
+                },
                 {
                     label: 'Dibuat Oleh',
                     name: 'CREATED_BY',
@@ -180,9 +180,9 @@
             //AutoWidth: true,
             height: '100%',
             scrollOffset: 0,
-            rowNum: 10,
+            rowNum: 30,
             viewrecords: true,
-            rowList: [10, 25, 50],
+            //rowList: [10, 25, 50],
             sortname: 'CF_ID', // default sorting ID
             //rownumbers: true, // show row numbers
             rownumWidth: 35,
@@ -192,15 +192,15 @@
             multiboxonly: true,
             onSortCol: clearSelection,
             onPaging: clearSelection,
-            pager: '#grid_pager_pic',
+            pager: '#pager_calculate',
             jsonReader: {
                 root: 'Data',
                 id: 'id',
                 repeatitems: false
             },
             loadComplete: function () {
-                grid.jqGrid( 'setGridWidth', $(".tab-content").width() );
-                pager.jqGrid( 'setGridWidth', $(".tab-content").width() );
+                grid.jqGrid('setGridWidth', $("#tbl_skema_calculate").width());
+                pager.jqGrid('setGridWidth', $("#tbl_skema_calculate").width());
                 var table = this;
                 setTimeout(function () {
                     updatePagerIcons(table);
@@ -501,12 +501,3 @@
         }
     });
 </script>
-
-<script>
-    $("#add_skema").click(function () {
-        $("#tbl_skema").hide("slow");
-        $("#form_skembis").show("slow");
-    });
-
-</script>
-</div>

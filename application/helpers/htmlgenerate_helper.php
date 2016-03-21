@@ -36,14 +36,57 @@ if (!function_exists('generatehtml')) {
         return "<select name='$name' id='$id' class='form-control'><option value='0'>Pilih data</option></select>";
     }
 
-    function bulan()
+    function bulan($default_select, $selected)
     {
-        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
-        echo "<select name='bulan' class='input-large'>";
-        for ($i = 0; $i <= 11; $i++) {
-            echo " <option value=" . $i . ">" . strtoupper($bulan[$i]) . "</option>";
+        $arr_bulan = array('01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember');
+
+        echo "<select name='bulan' id='bulan' class='form-control'>";
+        if ($default_select != "") {
+            echo "<option value=''> " . $default_select . " </option> ";
+        }
+        foreach ($arr_bulan as $key => $value) {
+            if ($selected == $key) {
+                echo "<option value=" . $key . " selected>" . $value . "</option>";
+            } else {
+                echo "<option value=" . $key . ">" . $value . "</option>";
+            }
+
         }
         echo "</select>";
+    }
+
+    function tahun($default_select, $selected)
+    {
+        echo "<select name='tahun' id='tahun' class='form-control'>";
+
+        if ($default_select != "") {
+            echo "<option value=''> " . $default_select . " </option> ";
+        }
+
+        $year = date("Y");
+        for ($i = ($year); $i >= $year - 5; $i--) {
+
+            if ($selected == $i) {
+                echo "<option value=" . $i . " selected>" . $i . "</option>";
+            } else {
+                echo "<option value=" . $i . ">" . $i . "</option>";
+            }
+
+        }
+        echo "</select>";
+
+
     }
 
 
@@ -53,7 +96,7 @@ if (!function_exists('generatehtml')) {
         $CI->load->model('mcrud');
 
         if ($kondisi == null) {
-            $data = $CI->mcrud->getCombo($table, $field)->result();
+            $data = $CI->mcrud->getCombo($table, $field, $pk)->result();
         } else {
             $data = $CI->mcrud->getComboByID($table, $field, $pk, $kondisi)->result();
         }
@@ -81,7 +124,7 @@ if (!function_exists('generatehtml')) {
                                   WHERE ID IN
                                 (
                                 SELECT ID_CC FROM P_MAP_MIT_CC
-                                    WHERE PGL_ID = ".$pgl_id."
+                                    WHERE PGL_ID = " . $pgl_id . "
                                 )
                                 ")->result();
         } else {
