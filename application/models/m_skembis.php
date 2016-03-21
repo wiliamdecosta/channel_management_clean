@@ -132,7 +132,7 @@ class M_skembis extends CI_Model
         // Cek apakah NPK nya sudah ada, jika belum insert
         $npk = $this->cekNPK($pgl_id,$periode,$skema_id);
         if($npk->num_rows() > 0){
-           $npk_id = $npk->row_array(1)['NPK_FEE_ID'];
+           $npk_id = $npk->row(1)->NPK_FEE_ID;
             $output['success'] = true;
             $output['message'] = 'Skema ';
 
