@@ -302,6 +302,7 @@ class M_skembis extends CI_Model
 
         $pgl_id = $this->input->post("pgl_id");
         $skema_id = $this->input->post("skema_type");
+        $commitment_id = $this->input->post("commitment_id");
         $comp = $this->input->post("comp");
         $CREATED_DATE = date('d-M-Y');
         $VALID_FROM = date('d-M-Y');
@@ -320,6 +321,7 @@ class M_skembis extends CI_Model
                     'CF_ID' => $comp[$i],
                     'PGL_ID' => $pgl_id,
                     'METHOD_ID' => $skema_id,
+                    'COMMITMENT_ID' => $commitment_id,
                     'CREATED_BY' => $CREATED_BY,
                     'CREATED_DATE' => $CREATED_DATE,
                     'VALID_FROM' => $VALID_FROM

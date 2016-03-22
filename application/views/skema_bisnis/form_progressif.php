@@ -16,6 +16,13 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jqwidgets/jqxdata.js"></script>
 
 <div class="form-group">
+    <label class="col-sm-2 control-label no-padding-right">Pilih Commitment</label>
+    <div class="col-sm-6">
+        <?php echo buatcombo("form_commitment", "form_commitment", "V_COMMITMENT_MTR", "VALUE", "COMMITMENT_ID", array('COMMITMENT_METHOD' => 12), ""); ?>
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-2 control-label no-padding-right"></label>
     <div class="col-sm-6">
         <div id="tree_comp">
@@ -163,13 +170,14 @@
         }
 
         var pgl_id = $("#form_pgl_id").val();
+        var commitment_id = $("#form_commitment").val();
         var skema_type = $("#form_skembis_type").val();
 
         $.ajax({
             url: "<?php echo site_url('skema_bisnis/addCompProgressif');?>",
             cache: false,
             type: "POST",
-            data: {comp, pgl_id: pgl_id, skema_type: skema_type},
+            data: {comp, pgl_id: pgl_id, commitment_id: commitment_id, skema_type: skema_type},
             dataType: "json",
             success: function (data) {
                 if (data.success == true) {

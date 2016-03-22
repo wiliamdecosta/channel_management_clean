@@ -18,7 +18,7 @@
 <div class="form-group">
     <label class="col-sm-2 control-label no-padding-right">Pilih Commitment</label>
     <div class="col-sm-6">
-        <?php echo buatcombo("form_commitment", "form_commitment", "V_COMMITMENT", "CODE", "COMMITMENT_ID", null, ""); ?>
+        <?php echo buatcombo("form_commitment", "form_commitment", "V_COMMITMENT_MTR", "VALUE", "COMMITMENT_ID", array('COMMITMENT_METHOD' => 11), ""); ?>
     </div>
 </div>
 
