@@ -33,6 +33,15 @@
         var grid = $('#grid_table_lov');
         var pager = $('#grid_pager_lov');
 
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            grid.jqGrid('setGridWidth', '570');
+        });
+        $(window).on('resize.jqGrid', function () {
+            pager.jqGrid('setGridWidth', '570');
+        });
+
+
         grid.jqGrid({
             url: '<?php echo site_url('managementmitra/grid_lov_mitra');?>',
             datatype: "json",

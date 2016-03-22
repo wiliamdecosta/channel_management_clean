@@ -13,13 +13,18 @@
                     </button>
                 </div>
                 &nbsp;
-                <div id="tbl_pic">
-                    <table id="grid_table_lov"></table>
-                    <div id="grid_pager_lov"></div>
-                    <input id="lov_value" type="text" value="<?php echo $divID; ?>" hidden>
-                    <input id="lov_id" type="text" value="<?php echo $lov_target_id; ?>" hidden>
-                    <input id="modal_id" type="text" value="<?php echo $modal_id; ?>" hidden>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="tbl_pic">
+                            <table id="grid_table_lov"></table>
+                            <div id="grid_pager_lov"></div>
+                            <input id="lov_value" type="text" value="<?php echo $divID; ?>" hidden>
+                            <input id="lov_id" type="text" value="<?php echo $lov_target_id; ?>" hidden>
+                            <input id="modal_id" type="text" value="<?php echo $modal_id; ?>" hidden>
+                        </div>
+                    </div>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -32,6 +37,15 @@
     $(document).ready(function () {
         var grid = $('#grid_table_lov');
         var pager = $('#grid_pager_lov');
+
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            grid.jqGrid('setGridWidth', '570');
+        });
+        $(window).on('resize.jqGrid', function () {
+            pager.jqGrid('setGridWidth', '570');
+        });
+
 
         grid.jqGrid({
             url: '<?php echo site_url('managementmitra/grid_lov_segment');?>',
@@ -66,7 +80,7 @@
             rownumWidth: 35,
             sortorder: 'asc',
             altRows: true,
-            shrinkToFit: false,
+            shrinkToFit: true,
             multiboxonly: true,
             onSortCol: clearSelection,
             onPaging: clearSelection,
@@ -77,12 +91,12 @@
                 repeatitems: false
             },
             loadComplete: function () {
-                $(window).on('resize.jqGrid', function () {
+               /* $(window).on('resize.jqGrid', function () {
                     grid.jqGrid('setGridWidth', '570');
                 });
                 $(window).on('resize.jqGrid', function () {
                     pager.jqGrid('setGridWidth', '570');
-                });
+                });*/
                 var table = this;
                 setTimeout(function () {
                     updatePagerIcons(table);

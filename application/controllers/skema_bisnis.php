@@ -85,7 +85,7 @@ class Skema_bisnis extends CI_Controller
     public function calculateMF()
     {
         $data['pgl_id'] = $this->input->post('mitra');
-        $this->load->view($this->folder . '/calculate_mf',$data);
+        $this->load->view($this->folder . '/calculate_mf', $data);
     }
 
     public function createBARekon()
@@ -100,7 +100,8 @@ class Skema_bisnis extends CI_Controller
 
     public function createNPK()
     {
-        $this->load->view($this->folder . '/create_npk');
+        $data['pgl_id'] = $this->input->post('mitra');
+        $this->load->view($this->folder . '/create_npk',$data);
     }
 
     public function evaluasiMitra()
@@ -201,10 +202,10 @@ class Skema_bisnis extends CI_Controller
         $periode = $this->input->post('periode');
         $req_param['where'] = array('PGL_ID' => $pgl_id);
 
-        if($this->input->post('skema_id')){
+        if ($this->input->post('skema_id')) {
             $req_param['where'] = array('SCHM_FEE_ID' => $this->input->post('skema_id'));
         }
-        if($periode){
+        if ($periode) {
             /*$schm_id = $this->m_skembis->getListSchmNPK($pgl_id,$periode);
             $req_param['where_in']['field'] ='SCHM_FEE_ID';
             if($schm_id){
@@ -273,11 +274,11 @@ class Skema_bisnis extends CI_Controller
 
 
         //print_r($skema_id);
-       // exit;
+        // exit;
 
         $req_param['where'] = array('PGL_ID' => $pgl_id);
         $req_param['where'] = array('PERIOD' => $periode);
-        if($this->input->post('skema_id')){
+        if ($this->input->post('skema_id')) {
             $req_param['where'] = array('SCHM_FEE_ID' => $this->input->post('skema_id'));
         }
 
@@ -335,7 +336,8 @@ class Skema_bisnis extends CI_Controller
         $this->load->view($this->folder . '/form_edit_skembis', $data);
     }
 
-    public function edit_action_skembis(){
+    public function edit_action_skembis()
+    {
         $pgl_id = $this->input->post("PGL_ID");
 
         $PPN = intval($this->input->post("PPN"));
@@ -382,7 +384,8 @@ class Skema_bisnis extends CI_Controller
         }
     }
 
-    public function proses_calculate(){
+    public function proses_calculate()
+    {
         $pgl_id = $this->input->post('pgl_id');
         $skema_id = $this->input->post('skema_id');
         $bulan = $this->input->post('bulan');
@@ -391,24 +394,29 @@ class Skema_bisnis extends CI_Controller
         return $this->m_skembis->calculateMF();
     }
 
-    public function grid_skembis_calculate(){
+    public function grid_skembis_calculate()
+    {
         $data['pgl_id'] = $this->input->post('pgl_id');
         $data['skema_id'] = $this->input->post('skema_id');
-        $data['periode'] = $this->input->post('tahun')."".$this->input->post('bulan');
-        $this->load->view('skema_bisnis/grid_skembis_calculate',$data);
+        $data['periode'] = $this->input->post('tahun') . "" . $this->input->post('bulan');
+        $this->load->view('skema_bisnis/grid_skembis_calculate', $data);
     }
 
-    public function loadFlatRevenue(){
+    public function loadFlatRevenue()
+    {
         $data['pgl_id'] = $this->input->post('mitra');
-        $this->load->view('skema_bisnis/flat_revenue',$data);
+        $this->load->view('skema_bisnis/flat_revenue', $data);
     }
 
-    public function addFlatSkema(){
+    public function addFlatSkema()
+    {
         $this->m_skembis->addFlatSkema();
     }
-    public function loadMTR(){
+
+    public function loadMTR()
+    {
         $data['pgl_id'] = $this->input->post('mitra');
-        $this->load->view('skema_bisnis/form_mtr',$data);
+        $this->load->view('skema_bisnis/form_mtr', $data);
     }
 
     public function getTreeComp()
@@ -427,16 +435,16 @@ class Skema_bisnis extends CI_Controller
             );
 
 
-
         }
         echo json_encode($data);
     }
 
-    public function addCompProgressif(){
+    public function addCompProgressif()
+    {
         $comp = $this->input->post("comp");
-        if($comp){
+        if ($comp) {
             $this->m_skembis->add_comp_progressif();
-        }else{
+        } else {
             $data['success'] = false;
             $data['message'] = "Tidak ada component yang dipilih !";
             echo json_encode($data);
@@ -444,11 +452,12 @@ class Skema_bisnis extends CI_Controller
 
     }
 
-    public function addCompMTR(){
+    public function addCompMTR()
+    {
         $comp = $this->input->post("comp");
-        if($comp){
+        if ($comp) {
             $this->m_skembis->add_comp_mtr();
-        }else{
+        } else {
             $data['success'] = false;
             $data['message'] = "Tidak ada component yang dipilih !";
             echo json_encode($data);
@@ -456,10 +465,11 @@ class Skema_bisnis extends CI_Controller
 
     }
 
-    public function loadSkemaCustom(){
+    public function loadSkemaCustom()
+    {
         $data['pgl_id'] = $this->input->post('mitra');
         $data['schm_fee_id'] = gen_id('SCHM_FEE_ID', 'SCHM_FEE');
-        $this->load->view('skema_bisnis/form_skema_custom',$data);
+        $this->load->view('skema_bisnis/form_skema_custom', $data);
     }
 
     public function gridCompSkemaCustom()
@@ -525,22 +535,25 @@ class Skema_bisnis extends CI_Controller
 
     }
 
-    public function getListComponent(){
+    public function getListComponent()
+    {
         $result = $this->m_skembis->getTreeComp();
         echo "<select>";
-        foreach($result  as $value ){
-            echo "<option value=".$value->CF_ID.">".$value->CF_NAME."</option>";
+        foreach ($result as $value) {
+            echo "<option value=" . $value->CF_ID . ">" . $value->CF_NAME . "</option>";
         }
         echo "</select>";
     }
 
-    public function crud_skema_custom(){
+    public function crud_skema_custom()
+    {
         $this->m_skembis->crud_skema_custom();
     }
 
-    public function loadSkemaProgressif(){
+    public function loadSkemaProgressif()
+    {
         $data['pgl_id'] = $this->input->post('mitra');
-        $this->load->view('skema_bisnis/form_progressif',$data);
+        $this->load->view('skema_bisnis/form_progressif', $data);
     }
 
 }
