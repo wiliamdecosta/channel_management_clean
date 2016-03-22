@@ -121,6 +121,147 @@ class Parameter extends CI_Controller
         $this->jqGrid->crud($table, 'PROF_ID', $id, array('PROF_NAME', 'PROF_DESC'));
     }
 
+    public function uploadDatin()
+    {
+        $title = $_POST['title'];
+        //BreadCrumb
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        $result['result'] = $this->cm->getPglList();
+        $result['product'] = $this->M_param->getParamProducts();
+        $this->load->view('parameter/uploaddatin', $result);
+    }
+    public function datinuploaddo()
+    {
+        $ten_id = $this->input->post("ten_id");
+      //  $pu_action = $this->input->post("pu_action");
+      //  $cprod = $this->input->post("cprod");
+        //$file = $this->input->post("file");
+        if ($ten_id != "") {
+            // switch ($pu_action) {
+            //     case 1:
+            //         $this->M_tenant->NDBackupToCurrPeriod($ten_id);
+            //         break;
+            //     case 2:
+            //         $this->M_tenant->NDBackupToPrevPeriod($ten_id);
+            //         break;
+            // }
+            // Upload Process
+            $config['upload_path'] = './application/third_party/upload';
+            $config['allowed_types'] = 'xls|xlsx|csv';
+            $config['max_size'] = '100000000';
+            $config['overwrite'] = TRUE;
+            $file_id = date("YmdHis");
+            $config['file_name'] = "datin_" . $file_id;
+
+            $this->load->library('upload');
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload("filename")) {
+                $error = $this->upload->display_errors();
+                $data['status'] = "F";
+                $data['msg'] = "<div class='alert alert-danger'>" . "
+                      <button type='button' class='close' data-dismiss='alert'>
+                        <i class='ace-icon fa fa-times'></i>
+                      </button>
+                          " . $error . "
+                      <br />
+                    </div>";
+                echo json_encode($data);
+            } else {
+                // Do Upload
+                $data = $this->upload->data();
+
+                // Clear Temporary TEN_ND_TEMP by session ID
+                //$username = $this->session->userdata('d_nik');
+                //$this->M_tenant->clearTMPNDByUser($username);
+                $cprod = 'a';
+                // Parse file
+                $this->datinuploadparse($data['file_name'], $data["file_ext"], $cprod, $ten_id, 0);
+            }
+        } else {
+            $data['status'] = "F";
+            $data['msg'] = "<div class='alert alert-danger'>" . "
+                      <button type='button' class='close' data-dismiss='alert'>
+                        <i class='ace-icon fa fa-times'></i>
+                      </button>
+                          Tenant belum dipilih
+                      <br />
+                    </div>";
+            echo json_encode($data);
+        }
+
+    }
+
+    public function datinuploadparse($file_name, $file_ext, $cprod, $ten_id = "", $confirm)
+    {
+        error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+        $this->load->library('phpexcel');
+
+        if ($file_ext == ".xlsx") $readerType = 'Excel2007';
+        elseif ($file_ext == ".xls") $readerType = 'Excel5';
+        elseif ($file_ext == ".csv" || $file_ext == ".txt") $readerType = 'CSV';
+
+
+        $reader = PHPExcel_IOFactory::createReader($readerType);
+        $reader->setReadDataOnly(true);
+        $phpexcel = $reader->load(APPPATH . 'third_party/upload/' . $file_name);
+        $sh = $phpexcel->getActiveSheet();
+        $highestRow = $sh->getHighestRow();
+        $highestColumn = $sh->getHighestColumn();
+        $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+
+        if ($ten_id != "") {
+
+                $username = $this->session->userdata('d_nik');
+                $cekND = 0;
+                //$batch_id = $this->M_tenant->getBatchID();
+                $dataDatin = array();
+                // $retStat='';
+                // $retCount=0;
+                for ($row = 2; $row <= $highestRow; ++$row) {
+
+                    $dataDatin['TEN_ID'] = $ten_id;
+                    $dataDatin['CUSTOMER_REF'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
+                    $dataDatin['ACCOUNT_NUM'] = $sh->getCellByColumnAndRow(1, $row)->getValue();
+                    $dataDatin['GL_ACCOUNT'] = $sh->getCellByColumnAndRow(2, $row)->getValue();
+                    $dataDatin['PRODUCT_ID'] = $sh->getCellByColumnAndRow(3, $row)->getValue();
+                    $dataDatin['USERID'] = $username;
+
+                    $this->M_tenant->insertDatin($dataDatin);
+
+                } // End Loop
+
+                    $data['status'] = "T";
+                    $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "
+                                                <button type='button' class='close' data-dismiss='alert'>
+                                                    <i class='ace-icon fa fa-times'></i>
+                                                </button>
+                                                  All records has been inserted successfully
+                                                <br />
+                                            </div>";
+
+        }else{
+                    $data['status'] = "F";
+                    $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "
+                                                <button type='button' class='close' data-dismiss='alert'>
+                                                    <i class='ace-icon fa fa-times'></i>
+                                                </button>
+                                                  Tenant belum dipilih
+                                                <br />
+                                            </div>";
+        }
+          echo json_encode($data);
+    }
+
+    public function datindel($ten_id, $nd)
+    {
+        $this->M_tenant->delNDTen($ten_id, $nd);
+        redirect("/ten/nd/" . $ten_id);
+    }
+
+
     public function uploadND()
     {
         $title = $_POST['title'];
@@ -1506,7 +1647,7 @@ class Parameter extends CI_Controller
         $data["P_MP_LOKASI_ID"] = $this->input->post("P_MP_LOKASI_ID");
         $this->load->view('parameter/mapping_pic_form', $data);
     }
-	
+
 	public function mapping_datin()
     {
         $title = "Mapping Datin";
@@ -1517,18 +1658,18 @@ class Parameter extends CI_Controller
 		$result['result'] = $this->cm->mapDatinRequest();
         $this->load->view('parameter/map_datin',$result);
     }
-	
+
 	    public function gridCustMapDatin()
-    {	
+    {
 		$ACCOUNT_NUM = $this->input->post('account_num');
 		$ID_PGL = $this->input->post('pgl_id');
-		
+
         $page = intval($_REQUEST['page']);
         $limit = $_REQUEST['rows'];
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
 
-        $table = "SELECT DISTINCT a.PGL_ID PGID, a.ACCOUNT_NUM ANNM, a.VALID_UNTIL VU, 
+        $table = "SELECT DISTINCT a.PGL_ID PGID, a.ACCOUNT_NUM ANNM, a.VALID_UNTIL VU,
 				a.CREATED_BY CB, a.UPDATE_BY UB, a.CREATION_DATE CD, a.VALID_FROM VF,
 				a.UPDATE_DATE UD, a.P_MAP_DATIN_ACC_ID PMD
 				FROM P_MAP_DATIN_ACC a
@@ -1604,7 +1745,7 @@ class Parameter extends CI_Controller
             "limit" => null,
 			"search" => $searchPhrase
         );
-    
+
         if(!empty($user_id)) {
             $req_param['where'][] = "a.user_id = ".$user_id;
         }
@@ -1670,15 +1811,15 @@ class Parameter extends CI_Controller
         );
 
         $req_param['where'] = array();
-        
+
         if(!empty($p_user_attribute_type_id)) {
             $req_param['where'][] = "PGL_ID = ".$p_user_attribute_type_id;
         }
-        
+
         if(!empty($searchPhrase)) {
              $req_param['where'][] = "(upper(PGL_NAME) LIKE upper('%".$searchPhrase."%') OR upper(PGL_ADDR) LIKE upper('%".$searchPhrase."%'))";
         }
-        
+
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
         if( $count > 0 && !empty($limit) ) {
@@ -1708,7 +1849,7 @@ class Parameter extends CI_Controller
         $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
         echo json_encode($result);
     }
-	
+
 	public function gridMapDatin_acc() {
 
         $ACCOUNT_NUM = $this->input->post('P_ACC_NUM');
@@ -1731,15 +1872,15 @@ class Parameter extends CI_Controller
         );
 
         $req_param['where'] = array();
-        
+
         if(!empty($ACCOUNT_NUM)) {
             $req_param['where'][] = "ACCOUNT_NUM = ".$ACCOUNT_NUM;
         }
-        
+
         if(!empty($searchPhrase)) {
              $req_param['where'][] = "(upper(ACCOUNT_NUM) LIKE upper('%".$searchPhrase."%') OR upper(CUSTOMER_REF) LIKE upper('%".$searchPhrase."%'))";
         }
-        
+
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
         if( $count > 0 && !empty($limit) ) {
