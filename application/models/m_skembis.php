@@ -595,7 +595,7 @@ class M_skembis extends CI_Model
 
     private function insertSMRYWajib($SCHM_FEE_ID,$pgl_id,$skema_id,$commitment_id){
         $this->db->where('CF_TYPE', 'SMRY');
-        $this->db->where_in('CF_NAME', array('MARFEE_BEFORE_TAX', 'MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE'));
+        $this->db->where_in('CF_NAME', array('MARFEE_BEFORE_TAX', 'MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE','JML_FASTEL'));
         $array_smry =  $this->db->get('COM_FEE')->result_array();
 
         foreach ($array_smry as $smryfee) {
