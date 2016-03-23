@@ -48,11 +48,18 @@ class Skema_bisnis extends CI_Controller
         $this->load->view($this->folder . '/create_skema', $data);
     }
 
-    public function benefit_product()
+    public function benefit_produk_group()
     {
         $data['comp'] = $this->m_skembis->getComfeeByProduct();
         $this->load->view($this->folder . '/create_skema_detail_produk', $data);
     }
+    public function benefit_produk_detail()
+    {
+        $data['pgl_id'] = $this->input->post('mitra');
+        $data['schm_fee_id'] = gen_id('SCHM_FEE_ID', 'SCHM_FEE');
+        $this->load->view('skema_bisnis/form_rvs_detail', $data);
+    }
+
 
     public function createSkemaBlended()
     {
@@ -418,6 +425,7 @@ class Skema_bisnis extends CI_Controller
     public function loadMTR()
     {
         $data['pgl_id'] = $this->input->post('mitra');
+        $data['commitment_id'] = gen_id('COMMITMENT_ID', 'P_COMMITMENT');
         $this->load->view('skema_bisnis/form_mtr', $data);
     }
 
@@ -471,6 +479,7 @@ class Skema_bisnis extends CI_Controller
     {
         $data['pgl_id'] = $this->input->post('mitra');
         $data['schm_fee_id'] = gen_id('SCHM_FEE_ID', 'SCHM_FEE');
+        $data['commitment_id'] = gen_id('COMMITMENT_ID', 'P_COMMITMENT');
         $this->load->view('skema_bisnis/form_skema_custom', $data);
     }
 
@@ -537,6 +546,67 @@ class Skema_bisnis extends CI_Controller
 
     }
 
+    public function gridTierCondition(){
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 5;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : null;
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : null;
+
+        $table = "P_COMMITMENT_TIER_COND";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Filter Table *
+
+        $COMMITMENT_ID = $this->input->post('COMMITMENT_ID');
+        if ($COMMITMENT_ID) {
+            $req_param['where'] = array('COMMITMENT_ID' => $COMMITMENT_ID);
+        }
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+    }
+
     public function getListComponent()
     {
         $result = $this->m_skembis->getTreeComp();
@@ -555,6 +625,7 @@ class Skema_bisnis extends CI_Controller
     public function loadSkemaProgressif()
     {
         $data['pgl_id'] = $this->input->post('mitra');
+        $data['commitment_id'] = gen_id('COMMITMENT_ID', 'P_COMMITMENT');
         $this->load->view('skema_bisnis/form_progressif', $data);
     }
     
@@ -734,6 +805,7 @@ class Skema_bisnis extends CI_Controller
         $sql = "  BEGIN ".
                "  PCKG_CAL_NPK_FEE.SCHM_PROCESS(:params1, :params2); END;";
 
+
         $params = array(
             array('name' => ':params1', 'value' => $npk_fee_id, 'type' => SQLT_INT, 'length' => 32),
             array('name' => ':params2', 'value' => $schm_fee_id, 'type' => SQLT_INT, 'length' => 32)
@@ -755,4 +827,12 @@ class Skema_bisnis extends CI_Controller
         exit;
     }
 
+	public function crud_tier_cond(){
+        $this->m_skembis->crud_tier_cond();
+
+    }
+
+    public function addCommitment(){
+        $this->m_skembis->add_commitment();
+    }
 }

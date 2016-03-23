@@ -278,9 +278,33 @@ class M_skembis extends CI_Model
                     'CREATED_DATE' => $CREATED_DATE,
                     'VALID_FROM' => $VALID_FROM
                 );
-                $query = $this->db->insert($table, $data2);
+                $this->db->insert($table, $data2);
             }
         }
+        /*----------------------- Insert Comitment -----------------------------*/
+        $revenue = $this->input->post("revenue");
+
+        $UPDATE_DATE = date('d-M-Y');
+        $UPDATE_BY = $this->session->userdata('d_user_name');
+
+        $table = "P_COMMITMENT";
+        $pk = "COMMITMENT_ID";
+
+        $data = array(
+            'COMMITMENT_ID' => $commitment_id,
+            'COMMITMENT_METHOD' => 11,
+            'REV_MTR' => $revenue,
+            'UPDATE_DATE' => $UPDATE_DATE,
+            'UPDATE_BY' => $UPDATE_BY
+        );
+        $this->db->insert($table, $data);
+       /* ------------------------ End Insert Comitment---------------------------*/
+
+
+       /* ----------------- Insert Komponen SMRY Wajib -------------------------*/
+        $this->insertSMRYWajib($schm_id,$pgl_id,$skema_id,$commitment_id);
+        /*------------------ End Insert Komponen SMRY Wajib ---------------------*/
+
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -330,6 +354,29 @@ class M_skembis extends CI_Model
             }
         }
 
+        /*----------------------- Insert Comitment -----------------------------*/
+        $revenue = $this->input->post("revenue");
+
+        $UPDATE_DATE = date('d-M-Y');
+        $UPDATE_BY = $this->session->userdata('d_user_name');
+
+        $table = "P_COMMITMENT";
+        $pk = "COMMITMENT_ID";
+
+        $data = array(
+            'COMMITMENT_ID' => $commitment_id,
+            'COMMITMENT_METHOD' => 12,
+            'REV_MTR' => $revenue,
+            'UPDATE_DATE' => $UPDATE_DATE,
+            'UPDATE_BY' => $UPDATE_BY
+        );
+        $this->db->insert($table, $data);
+        /* ------------------------ End Insert Comitment---------------------------*/
+
+        /* ----------------- Insert Komponen SMRY Wajib -------------------------*/
+        $this->insertSMRYWajib($schm_id,$pgl_id,$skema_id,$commitment_id);
+        /*------------------ End Insert Komponen SMRY Wajib ---------------------*/
+
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $output['success'] = true;
@@ -337,7 +384,7 @@ class M_skembis extends CI_Model
             echo json_encode($output);
         } else {
             $output['success'] = true;
-            $output['message'] = 'Skema MTR berhasil ditambahkan !';
+            $output['message'] = 'Skema berhasil ditambahkan !';
             echo json_encode($output);
             $this->db->trans_commit();
         }
@@ -360,6 +407,7 @@ class M_skembis extends CI_Model
         $CREATED_DATE = date('d-M-Y');
         $VALID_FROM = date('d-M-Y');
         $CREATED_BY = $this->session->userdata('d_user_name');
+        $COMMITMENT_ID = $this->input->post("COMMITMENT_ID");
 
         $table = "SCHM_FEE";
         $pk = "SCHM_FEE_PK_ID";
@@ -374,7 +422,8 @@ class M_skembis extends CI_Model
                     'PERCENTAGE' => $PERCENTAGE,
                     'CREATED_BY' => $CREATED_BY,
                     'CREATED_DATE' => $CREATED_DATE,
-                    'VALID_FROM' => $VALID_FROM
+                    'VALID_FROM' => $VALID_FROM,
+                    'COMMITMENT_ID' => $COMMITMENT_ID
                 );
                 $this->db->insert($table, $data);
                 if ($this->db->affected_rows() > 0) {
@@ -419,6 +468,148 @@ class M_skembis extends CI_Model
         }
         echo json_encode($datas);
 
+    }
+
+    public function crud_tier_cond()
+    {
+        $this->db->_protect_identifiers = false;
+        $oper = $this->input->post('oper');
+        $id = $this->input->post('id');
+
+        $COMMITMENT_ID = $this->input->post("COMMITMENT_ID");
+        $MAXIMUM_VALUE = $this->input->post("MAXIMUM_VALUE");
+        $MINIMUM_VALUE = $this->input->post("MINIMUM_VALUE");
+        $PRC = $this->input->post("PRC");
+        $TIER = $this->input->post("TIER");
+        $UPDATE_DATE = date('d-M-Y');
+        $UPDATE_BY = $this->session->userdata('d_user_name');
+
+        $table = "P_COMMITMENT_TIER_COND";
+        $pk = "TIER_ID";
+
+        $new_id = gen_id($pk, $table);
+
+        switch ($oper) {
+            case 'add':
+                $data = array(
+                    'COMMITMENT_ID' => $COMMITMENT_ID,
+                    'TIER_ID' => $new_id,
+                    'TIER' => $TIER,
+                    'MINIMUM_VALUE' => $MINIMUM_VALUE,
+                    'MAXIMUM_VALUE' => $MAXIMUM_VALUE,
+                    'UPDATE_DATE' => $UPDATE_DATE,
+                    'UPDATE_BY' => $UPDATE_BY,
+                    'PRC' => $PRC
+                );
+                $this->db->insert($table, $data);
+                if ($this->db->affected_rows() > 0) {
+                    $datas["success"] = true;
+                    $datas["message"] = "Data berhasil ditambahakan";
+                } else {
+                    $datas["success"] = false;
+                    $datas["message"] = "Gagal menambah data";
+                }
+
+                break;
+            case 'edit':
+                $data = array(
+                    'TIER' => $TIER,
+                    'MINIMUM_VALUE' => $MINIMUM_VALUE,
+                    'MAXIMUM_VALUE' => $MAXIMUM_VALUE,
+                    'UPDATE_DATE' => $UPDATE_DATE,
+                    'UPDATE_BY' => $UPDATE_BY,
+                    'PRC' => $PRC
+                );
+
+                $this->db->where($pk, $id);
+                $this->db->update($table, $data);
+                if ($this->db->affected_rows() > 0) {
+                    $datas["success"] = true;
+                    $datas["message"] = "Edit data berhasil";
+                } else {
+                    $datas["success"] = false;
+                    $datas["message"] = "Gagal edit data";
+                }
+
+                break;
+            case 'del':
+                $this->db->where($pk, $id);
+                $this->db->delete($table);
+                if ($this->db->affected_rows() > 0) {
+                    $datas["success"] = true;
+                    $datas["message"] = "Hapus data berhasil";
+                } else {
+                    $datas["success"] = false;
+                    $datas["message"] = "Gagal hapus data";
+                }
+                break;
+        }
+        echo json_encode($datas);
+
+    }
+
+    public function add_commitment(){
+        $commitment_id = $this->input->post("commitment_id");
+        $method_id = $this->input->post("method_id");
+        $revenue = $this->input->post("revenue");
+
+        $pgl_id = $this->input->post("pgl_id");
+        $skema_id = $this->input->post("skema_id");
+        $SCHM_FEE_ID = $this->input->post("SCHM_FEE_ID");
+
+        $UPDATE_DATE = date('d-M-Y');
+        $UPDATE_BY = $this->session->userdata('d_user_name');
+
+        $table = "P_COMMITMENT";
+        $pk = "COMMITMENT_ID";
+
+        $data = array(
+            'COMMITMENT_ID' => $commitment_id,
+            'REV_MTR' => $revenue,
+            'UPDATE_DATE' => $UPDATE_DATE,
+            'UPDATE_BY' => $UPDATE_BY,
+            'COMMITMENT_METHOD' => $method_id
+        );
+
+        $this->db->trans_begin();
+
+        $this->db->insert($table, $data);
+
+        // Insert Componen SMRY (MARFEE_BEFORE_TAX,MARFEE_AFTER_TAX,MARFEE_TO_SHARE)
+        $this->insertSMRYWajib($SCHM_FEE_ID,$pgl_id,$skema_id,$commitment_id);
+
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $output['success'] = true;
+            $output['message'] = 'Gagal menambahkan data !';
+            echo json_encode($output);
+        } else {
+            $output['success'] = true;
+            $output['message'] = 'Skema berhasil ditambahkan !';
+            echo json_encode($output);
+            $this->db->trans_commit();
+        }
+
+    }
+
+    private function insertSMRYWajib($SCHM_FEE_ID,$pgl_id,$skema_id,$commitment_id){
+        $this->db->where('CF_TYPE', 'SMRY');
+        $this->db->where_in('CF_NAME', array('MARFEE_BEFORE_TAX', 'MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE'));
+        $array_smry =  $this->db->get('COM_FEE')->result_array();
+
+        foreach ($array_smry as $smryfee) {
+            $this->db->insert('SCHM_FEE', array('SCHM_FEE_ID' => $SCHM_FEE_ID,
+                    'CF_ID' => $smryfee['CF_ID'],
+                    'PGL_ID' => $pgl_id,
+                    'METHOD_ID' => $skema_id,
+                    'PERCENTAGE' => 0,
+                    'CREATED_BY' => 'SYSTEM',
+                    'CREATED_DATE' => date('d-M-Y'),
+                    'COMMITMENT_ID' => $commitment_id)
+            );
+
+        }
     }
 
 
