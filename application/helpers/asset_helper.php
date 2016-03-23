@@ -227,4 +227,34 @@ function show_alert($str) {
 	echo "alert('".$str."');";
 	echo "</script>";
 }
+
+function numberFormat($number, $decimals =  2, $dec_point = ',' , $thousands_sep = '.'){
+    return number_format($number, $decimals, $dec_point, $thousands_sep);
+}
+
+function getMonthName($month) {
+    
+    $arr_month = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+    return $arr_month[$month-1];    
+}
+
+function startExcel($filename = "laporan.xls") {
+    
+   header("Content-type: application/vnd.ms-excel");
+   header("Content-Disposition: attachment; filename=$filename");
+   header("Expires: 0");
+   header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
+   header("Pragma: public");
+    
+}
+	
+function startDoc($filename = "laporan.doc") {
+    
+   header("Content-type: application/vnd.ms-word");
+   header("Content-Disposition: attachment; filename=$filename");
+   header("Expires: 0");
+   header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
+   header("Pragma: public");
+    
+}
 ?>
