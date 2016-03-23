@@ -8,18 +8,18 @@
             <a href="javascript:void(0)">Calculate MF</a>
         </li>
 
-        <li class="tab" id="createBARekon">
+        <!--<li class="tab" id="createBARekon">
             <a href="javascript:void(0)">Create BA Rekon</a>
         </li>
         <li class="tab" id="createPerhitunganBillco">
             <a href="javascript:void(0)">Create Perhitungan Billco</a>
-        </li>
+        </li>-->
         <li class="tab" id="createNPK">
             <a href="javascript:void(0)">Create NPK</a>
         </li>
-        <li class="tab" id="evaluasiMitra">
+        <!--<li class="tab" id="evaluasiMitra">
             <a href="javascript:void(0)">Evaluasi Mitra</a>
-        </li>
+        </li>-->
     </ul>
 
     <div class="tab-content">

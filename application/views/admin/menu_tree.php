@@ -123,7 +123,7 @@
         });
         
         
-        $("#jqxTree").on('select', function (event) {
+        $("#jqxTrees").on('select', function (event) {
                 var args = event.args;                
                 var item = $('#jqxTree').jqxTree('getItem', args.element);
                 var app_menu_profile_id;
