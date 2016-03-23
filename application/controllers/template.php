@@ -32,9 +32,14 @@ class Template extends CI_Controller
 
     public function list_template()
     {
-        $result['result'] = $this->db->get('V_DOC')->result();
-
-        $this->load->view($this->folder . '/view_template', $result);
+        $rt1 = $this->db->get('V_DOC')->result();
+		 // if ($rt1->num_rows()>0){
+			foreach ($rt1 as $a)
+			{
+				$data['V_DOC'][]=$a;
+			}
+		$result['result'] = $data;
+		$this->load->view($this->folder . '/view_template', $result);
     }
 
     public function create_user()
@@ -92,6 +97,27 @@ class Template extends CI_Controller
 		$data5 = $this->input->post('title5');
 		$data6 = $this->input->post('title6');
 		$this->cm->postDocTemp($data1,$data2,$data3,$data4,$data5,$data6);
+	}
+	
+	public function POST_idDOC(){
+		$this->load->model('M_cm', 'cm');
+		$result = $this->input->post('id_doc');
+		$res = $this->cm->selectFile($result);
+		echo $res;
+	}
+	public function delete_DOC(){
+		$this->load->model('M_cm', 'cm');
+		$result = $this->input->post('id_doc');
+		$res = $this->cm->deleteDOC($result);
+	}
+	
+	public function update_Content(){
+		$this->load->model('M_cm', 'cm');
+		$result1 = $this->input->post('docx_contents');
+		$result2 = $this->input->post('idx');
+		print_r($result1);
+		print_r($result2);
+		$res = $this->cm->updateDOC($result1, $result2);
 	}
 	
 
