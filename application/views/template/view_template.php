@@ -4,11 +4,21 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-timepicker.css" />
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/daterangepicker.css" />
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datetimepicker.css" />
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/ckfinder/ckfinder.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/ckeditor/ckeditor.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/jspdf.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/from_html.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/split_text_to_size.js"> </script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/dist/jspdf.debug.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/addimage.js.js"></script>
+
 
 <div id="list_template"> <!--harusnya dokPKS -->
     <form class="form-horizontal" role="form">
         <div class="rows">
-            <div class="form-group">
+            <div class="form-group" id="all_table">
                 <div class="col-xs-11">
                         <div class="clearfix">
                         </div>
@@ -18,8 +28,9 @@
                         <div>
                             <table id="dynamic-table" class="table table-striped table-bordered table-hover">
                                 <thead>
-                                <tr>
+                                <tr>									
                                     <th class="center">NO</th>
+									<th>Ax</th>
                                     <th class="center"> Nama Dokumen</th>
                                     <th class="center"> Jenis Dokumen</th>
                                     <th class="center"> Template</th>
@@ -31,35 +42,34 @@
                                 <tbody>
 
                                 <?php $i = 1;
-                                foreach ($result as $content){
+                                foreach ($result['V_DOC'] as $content){
 
                                     ?>
-                                    <tr>
-                                        <td class="center"><?php echo $i; ?> </td>
-                                        <td>
+                                    <tr value=<?php echo '"'.$content->DOC_ID.'"'; ?> class="table_head">
+										<td class="center"><?php echo $i; ?> </td>
+										<td></td>
+                                        <td value="1XKLI">
                                             <a href="#"><?php echo $content->DOC_NAME; ?></a>
                                         </td>
-                                        <td class="center"> <?php echo $content->DOC_TYPE_NAME; ?> </td>
-                                        <td> <?php echo $content->LANG; ?> </td>
-                                        <td> <?php echo $content->UPDATE_BY; ?> </td>
-                                        <td> <?php echo $content->UPDATE_DATE; ?> </td>
+                                        <td class="center" value="1XKLI"> <?php echo $content->DOC_TYPE_NAME; ?> </td>
+                                        <td value="1XKLI"> <?php echo $content->LANG; ?> </td>
+                                        <td class="class1" id="classic" value="1XKLI"> <?php echo $content->UPDATE_BY; ?> </td>
+                                        <td value="1XKLI"> <?php echo $content->UPDATE_DATE; ?> </td>
                                         <td>
                                             <div class="hidden-sm hidden-xs action-buttons">
-                                                <a class="purple" href="<?php echo site_url('home/download');?>" data-rel="tooltip" data-original-title="Download">
+                                                <a class="purple" data-rel="tooltip" data-original-title="Download">
                                                     <i class="ace-icon fa fa-download bigger-130"></i>
                                                 </a>
-                                                <a class="orange" href="#" data-rel="tooltip" data-original-title="Print" onClick="window.print()">
-                                                    <i class="ace-icon fa fa-print bigger-130"></i>
-                                                </a>
-                                                <a class="blue" href="#" data-rel="tooltip" data-original-title="View">
-                                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+
+                                                <a class="blue" data-rel="tooltip" data-original-title="View" onClick="Back()">
+                                                    <i class= "ace-icon fa fa-search-plus bigger-130"></i>
                                                 </a>
 
-                                                <a class="green" href="#" data-rel="tooltip" data-original-title="Edit">
+                                                <a class="green" data-rel="tooltip" data-original-title="Edit" onClick="Back2()">
                                                     <i class="ace-icon fa fa-pencil bigger-130"></i>
                                                 </a>
 
-                                                <a class="red" href="#" data-rel="tooltip" data-original-title="Delete">
+                                                <a class="red" data-rel="tooltip" data-original-title="Delete">
                                                     <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                                 </a>
                                             </div>
@@ -72,21 +82,15 @@
 
                                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                                         <li>
-                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="Dwonload">
+                                                            <a  class="tooltip-download" data-rel="tooltip" title="Download">
 																				<span class="blue">
 																					<i class="ace-icon fa fa-download bigger-120">ss</i>
 																				</span>
                                                             </a>
                                                         </li>
+
                                                         <li>
-                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="Print">
-																				<span class="blue">
-																					<i class="ace-icon fa fa-search-print bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="View">
+                                                            <a class="tooltip-info" data-rel="tooltip" title="View" onClick="Back()">
 																				<span class="blue">
 																					<i class="ace-icon fa fa-search-plus bigger-120"></i>
 																				</span>
@@ -94,7 +98,7 @@
                                                         </li>
 
                                                         <li>
-                                                            <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">
+                                                            <a  class="tooltip-success" data-rel="tooltip" title="Edit" onClick="Back2()">
 																				<span class="green">
 																					<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																				</span>
@@ -102,19 +106,12 @@
                                                         </li>
 
                                                         <li>
-                                                            <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
+                                                            <a class="tooltip-error" data-rel="tooltip" title="Delete" >
 																				<span class="red">
 																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																				</span>
                                                             </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
-																				<span class="red">
-																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
+                                                        </li>                                                       
 
                                                     </ul>
                                                 </div>
@@ -134,7 +131,22 @@
         </div>
     </form>
 </div>
-
+<div id="all_view">
+	<div id="texteditorOne">
+		<textarea id="textarea1" readonly>
+		</textarea>
+	</div>
+	<div id="texteditorTwo">
+		<textarea id="textarea2">
+		</textarea>
+	</div>
+	<div id="buttonOne">
+		<a id="findFilter" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()">
+						<!-- class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info || fm-button ui-state-default ui-reset btn btn-sm btn-info center-block -->
+						Finish</a>
+	</div>
+	<div id="hiddenval" style="display: none;"><input type="text" id="test3" value="LALALALA"></div>
+</div>
 <script type="text/javascript">
     $('.date-picker').datepicker({
         autoclose: true,
@@ -144,6 +156,7 @@
         .next().on(ace.click_event, function(){
             $(this).prev().focus();
         });
+		
 </script>
 <script type="text/javascript">
 jQuery(function($) {
@@ -152,8 +165,11 @@ jQuery(function($) {
         $('#dynamic-table')
             //.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX)
             .dataTable( {
+				// "columnDefs": [
+				// { className: "hide_column", "targets": [ 0 ] }
+				// ]
+				"aoColumnDefs": [{ "bVisible": false, "aTargets": [1] }]
             } );
-
     //TableTools settings
     TableTools.classes.container = "btn-group btn-overlap";
     TableTools.classes.print = {
@@ -161,7 +177,6 @@ jQuery(function($) {
         "info": "tableTools-alert gritter-item-wrapper gritter-info gritter-center white",
         "message": "tableTools-print-navbar"
     }
-
     //initiate TableTools extension
     var tableTools_obj = new $.fn.dataTable.TableTools( oTable1, {
         "sSwfPath": "../assets/js/dataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf", //in Ace demo ../assets will be replaced by correct assets path
@@ -288,12 +303,56 @@ jQuery(function($) {
         if(!this.checked) tableTools_obj.fnSelect(row);
         else tableTools_obj.fnDeselect($(this).closest('tr').get(0));
     });
-
-
     $(document).on('click', '#dynamic-table .dropdown-toggle', function(e) {
         e.stopImmediatePropagation();
         e.stopPropagation();
         e.preventDefault();
+    });
+	
+	$(document).on('click', '#dynamic-table .tooltip-download', function(e) {
+		var id_DOC = $(this).closest('tr').attr('value');			
+		$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/POST_idDOC",
+                data:  {id_doc: id_DOC},
+				dataType:"text",
+				success: function(data){
+					if (data.length > 0){
+						var docpdf = new jsPDF('p', 'pt', 'letter');
+						margins = { top: 60, bottom: 60, left: 40, width: 500 };
+						var elmtHandler = 
+						{
+							'#CreateReport' : function (elmtHandler, renderer){
+							return true;	
+						},
+							'#PrintReport' : function (elmtHandler, renderer){
+							return true;	
+						},
+						'#ignorePDF': function (element, renderer) {
+						return true;}
+						};				
+						docpdf.fromHTML(
+						data,margins.left,margins.top,
+							{
+							'width':margins.width, 'elementHandlers' : elmtHandler 
+							}, 
+							function(dispose){docpdf.output("dataurlnewwindow");}, margins);
+					}
+                }
+		});
+    });
+	
+	$(document).on('click', '#dynamic-table .tooltip-error', function(e) {
+		var id_DOC = $(this).closest('tr').attr('value');		
+		$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/delete_DOC",
+                data:  {id_doc: id_DOC},
+				dataType:"text",
+				success: function(data){
+					swal("Sukses","Data template berhasil dihapus","success");
+                }
+		});
     });
 
 
@@ -312,9 +371,9 @@ jQuery(function($) {
 
     //select/deselect a row when the checkbox is checked/unchecked
     $('#simple-table').on('click', 'td input[type=checkbox]' , function(){
-        var $row = $(this).closest('tr');
+        var $row = $(this).closest('tr');		
         if(this.checked) $row.addClass(active_class);
-        else $row.removeClass(active_class);
+        else $row.removeClass(active_class);		
     });
 
 
@@ -340,6 +399,91 @@ jQuery(function($) {
     $(function() {
        // $( document ).tooltip();
     });
-
+	
 })
+  var editor = CKEDITOR.replace( 'textarea1', {
+        height: 350,
+        filebrowserBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html?type=Images',
+        filebrowserFlashBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html?type=Flash',
+        filebrowserUploadUrl : '<?php echo base_url();?>assets/js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl : '<?php echo base_url();?>assets/js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl : '<?php echo base_url();?>assets/js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+     });
+     CKFinder.setupCKEditor( editor, '../' );
+	   var editor2 = CKEDITOR.replace( 'textarea2', {
+        height: 350,
+        filebrowserBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html?type=Images',
+        filebrowserFlashBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html?type=Flash',
+        filebrowserUploadUrl : '<?php echo base_url();?>assets/js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl : '<?php echo base_url();?>assets/js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl : '<?php echo base_url();?>assets/js/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+     });
+     CKFinder.setupCKEditor( editor, '../' );
+$(document).ready(function () {
+	var edit = true;
+		jQuery("#texteditorOne").hide();
+		jQuery("#buttonOne").hide();		
+		jQuery("#texteditorTwo").hide();		
+    });
+	//var oTable = $('#dynamic-table').DataTable();	
+	function Back(){
+		edit = false;
+		jQuery("#all_table").hide(1000);
+		jQuery("#texteditorOne").show(1000);		
+		jQuery("#buttonOne").show(1000);
+		$("#textarea1").val("WEW");
+		$('#dynamic-table tbody').on('click', 'tr', function () {
+			var id_DOC = $(this).attr('value');			
+			$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/POST_idDOC",
+                data:  {id_doc: id_DOC},
+				dataType:"text",
+				success: function(data){
+				CKEDITOR.instances["textarea1"].setData(data);
+                }
+                });
+		});	
+	}
+	function showTable(){
+		jQuery("#texteditorOne").hide(1000);
+		jQuery("#texteditorTwo").hide(1000);		
+		jQuery("#buttonOne").hide(1000);
+		jQuery("#all_table").show(1000);		
+			var DOC_content = CKEDITOR.instances["textarea2"].getData();
+			if (edit){
+				ID = $('#findFilter').val();
+				
+				$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/update_Content",
+                data:  {docx_contents: DOC_content, idx : ID},
+				dataType:"text",
+				success: function(data){
+					swal("Sukses","Data template berhasil diupdate","success");
+                }					
+                });
+			}			
+	}
+	function Back2(){
+		edit = true;
+		jQuery("#all_table").hide(1000);
+		jQuery("#texteditorTwo").show(1000);		
+		jQuery("#buttonOne").show(1000);
+		$('#dynamic-table tbody').on('click', 'tr', function () {
+			var id_DOC = $(this).attr('value');			
+			$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/POST_idDOC",
+                data:  {id_doc: id_DOC},
+				dataType:"text",
+				success: function(data){
+				CKEDITOR.instances["textarea2"].setData(data);
+				$('#findFilter').val(id_DOC);				
+                }
+                });
+		});	
+	}	
 </script>
