@@ -689,11 +689,11 @@ class Skema_bisnis extends CI_Controller
     
     public function getNPKReport() {
                 
-        //$period = empty($this->input->post('period')) ? $this->input->get('period') : $this->input->post('period');
-        $tahun = empty($this->input->post('tahun')) ? $this->input->get('tahun') : $this->input->post('tahun');   
-        $bulan = empty($this->input->post('bulan')) ? $this->input->get('bulan') : $this->input->post('bulan');   
-        $schm_fee_name = empty($this->input->post('schm_fee_name')) ? $this->input->get('schm_fee_name') : $this->input->post('schm_fee_name');   
-        $npk_fee_id = empty($this->input->post('npk_fee_id')) ? $this->input->get('npk_fee_id') : $this->input->post('npk_fee_id');  
+        $period = !($this->input->post('period')) ? $this->input->get('period') : $this->input->post('period');
+        $tahun = !($this->input->post('tahun')) ? $this->input->get('tahun') : $this->input->post('tahun');
+        $bulan = !($this->input->post('bulan')) ? $this->input->get('bulan') : $this->input->post('bulan');
+        $schm_fee_name = !($this->input->post('schm_fee_name')) ? $this->input->get('schm_fee_name') : $this->input->post('schm_fee_name');
+        $npk_fee_id = !($this->input->post('npk_fee_id')) ? $this->input->get('npk_fee_id') : $this->input->post('npk_fee_id');
         
         $schm_fee_arr = explode("-",$schm_fee_name);
         
