@@ -47,7 +47,7 @@
 											<div class="">
 											<button type="button" id="find_document" class="btn btn-primary btn-sm"  style="float:right;">Cari Dokumen</button>
 										</div>
-                                        </div>										
+                                        </div>
                                     </div>
                                 </form>
                             </div><!-- PAGE CONTENT ENDS -->
@@ -63,13 +63,13 @@
                     <a href="javascript:void(0)">Data</a>
                 </li>
 
-                <li class="tab" id="create_template">
+                <li class="tab" id="create_template_new">
                     <a href="javascript:void(0)">Create New Template</a>
                 </li>
 
-                <li class="tab" id="create_user">
+                <!-- <li class="tab" id="create_user">
                     <a href="javascript:void(0)">Create User</a>
-                </li>
+                </li> -->
 
             </ul>
 
@@ -118,5 +118,5 @@
 			   alert(data[2]);
             }
         });
-		})	
+		})
 </script>
