@@ -1,4 +1,4 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php 
 
 class Skema_bisnis extends CI_Controller
 {
@@ -13,9 +13,11 @@ class Skema_bisnis extends CI_Controller
 
         checkAuth();
 
-        if (!$this->input->is_ajax_request()) {
+        /*
+            modified by wiliam : untuk kepentingan download excel maka statement berikut dicomment
+            if (!$this->input->is_ajax_request()) {
             exit('No direct script access allowed');
-        }
+        }*/
 
         $this->load->model('m_skembis');
         $this->load->model('M_jqGrid', 'jqGrid');
@@ -554,6 +556,203 @@ class Skema_bisnis extends CI_Controller
     {
         $data['pgl_id'] = $this->input->post('mitra');
         $this->load->view('skema_bisnis/form_progressif', $data);
+    }
+    
+    
+    public function getSkemaSelectOption() {
+        
+        $period = $this->input->post('period'); 
+        $pgl_id = $this->input->post('pgl_id'); 
+              
+        $sql  = "SELECT SCHM_FEE_ID, NPK_FEE_ID, NAME
+                FROM V_CREAT_NPK_FEE 
+                WHERE PERIODE = '".$period."'
+                AND PGL_ID = ".$pgl_id;        
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        
+        $option = '<option value=""> -- Pilih Skema -- </option>';
+        foreach($result as $content){
+            $option  .= "<option value=".$content['NPK_FEE_ID'].">".$content['NAME']."</option>";
+        }
+        echo $option;
+        exit;
+    }
+    
+    public function isSkemaLock() {
+        
+        $npk_fee_id = $this->input->post('npk_fee_id'); 
+        
+        $sql  = "SELECT STATUS FROM NPK_FEE
+                    WHERE NPK_FEE_ID = ".$npk_fee_id;        
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        
+        echo $result[0]['STATUS'];
+        exit;
+    }
+    
+    
+    public function htmlNPKReport() {
+        $output = $this->getNPKReport();
+        echo $output;
+        exit;
+    }
+    
+        
+    public function excelNPKReport() {
+        $period = $this->input->get('period');
+        $schm_fee_name = $this->input->get('schm_fee_name');   
+        $schm_fee_arr = explode("-",$schm_fee_name);
+        $output = $this->getNPKReport();
+        
+        startExcel($period."_".str_replace(" ","_",$schm_fee_arr[0]).".xls");
+        echo '<html>';
+        echo '<head><title>NPK Report</title></head>';
+        echo '<body>';
+        echo $output;
+        echo '</body>';
+        echo '</html>';
+        exit;
+    }
+    
+    public function getNPKReport() {
+                
+        $period = empty($this->input->post('period')) ? $this->input->get('period') : $this->input->post('period');   
+        $tahun = empty($this->input->post('tahun')) ? $this->input->get('tahun') : $this->input->post('tahun');   
+        $bulan = empty($this->input->post('bulan')) ? $this->input->get('bulan') : $this->input->post('bulan');   
+        $schm_fee_name = empty($this->input->post('schm_fee_name')) ? $this->input->get('schm_fee_name') : $this->input->post('schm_fee_name');   
+        $npk_fee_id = empty($this->input->post('npk_fee_id')) ? $this->input->get('npk_fee_id') : $this->input->post('npk_fee_id');  
+        
+        $schm_fee_arr = explode("-",$schm_fee_name);
+        
+        $sql  = "SELECT SCHM_FEE_ID FROM V_CREAT_NPK_FEE 
+                    WHERE NPK_FEE_ID = ".$npk_fee_id;        
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        $schm_fee_id = $result[0]['SCHM_FEE_ID'];
+        
+        /*header*/
+        $output = '<style>td { 
+                        padding:1px;
+                    }</style>';
+        $output .= '<table width="100%">';
+        $output .= '<tr>
+                       <td colspan="4" style="text-align:center;"> <span style="font-size:16px;"><b>NOTA PERHITUNGAN KEUANGAN (NPK) MARKETING FEE</b></span></td>
+                   </tr>';
+        $output .= '<tr>
+                       <td colspan="4" style="text-align:center;"><span style="font-size:16px;"><b>'.$schm_fee_arr[0].'</b></span></td>
+                   </tr>';
+        $output .= '<tr>
+                       <td colspan="4" style="text-align:center;"><span style="font-size:14px;"><b>PERIODE TAGIHAN : '.$bulan.' '.$tahun.'</b></span></td>
+                   </tr>';
+        $output .= '<tr><td colspan="4">&nbsp;</td></tr>';
+        $output .= '<table>';
+        
+        
+        /*content*/
+        $sql  = "SELECT * FROM V_SKEMBIS WHERE SCHM_FEE_ID = ?";        
+        $query = $this->db->query($sql, array($schm_fee_id));
+        $items = $query->result_array();
+        
+        
+        $output .= '<table width="100%" border="1">';
+        $output .= '<tr>
+                        <th style="text-align:center;">Komponen Fee</th>
+                        <th style="text-align:center;">Gross Revenue</th>
+                        <th style="text-align:center;">% Hak Telkom</th>
+                        <th style="text-align:center;">Net Revenue Telkom</th>
+                    </tr>';
+        
+        foreach($items as $item) {
+            
+            if(strtoupper($item['CF_NAME']) == 'JML_FASTEL' || strtoupper($item['CF_NAME']) == 'GROSS_ARPU'
+                || strtoupper($item['CF_NAME']) == 'NET_ARPU') {
+                
+                $output .= '<tr>';
+                $output .= '<td>'.$item['CF_NAME'].'</td>';
+                $output .= '<td style="text-align:right">-</td>';
+                $output .= '<td style="text-align:right">-</td>';
+                $output .= '<td style="text-align:right">'.numberFormat((float)$item['GROSS_REVENUE'],0).'</td>';
+                $output .= '</tr>';
+                
+            }else {
+            
+                $output .= '<tr>';
+                $output .= '<td>'.$item['CF_NAME'].'</td>';
+                $output .= '<td style="text-align:right">Rp. '.numberFormat((float)$item['GROSS_REVENUE'],0).'</td>';
+                $output .= '<td style="text-align:right">'.numberFormat((float)$item['PERCENTAGE'],0).' %</td>';
+                $output .= '<td style="text-align:right">Rp. '.numberFormat((float)$item['NET_REVENUE'],0).'</td>';
+                $output .= '</tr>';
+            }
+        }
+        
+        $output .= '</table>';
+        
+        $output .= '<br><br>';
+        
+        /* tanggal dan tanda tangan */
+        $output .= '<table width="100%">';
+        $output .= '<tr><td colspan="2">&nbsp;</td><td colspan="2" style="text-align:center;"><b>Jakarta,&nbsp;&nbsp;&nbsp;'.getMonthName(date("m")).' '.date("Y").'</b></td></tr>';
+        $output .= '<tr><td colspan="4">&nbsp;</td></tr>';
+        $output .= '<tr>
+                        <td colspan="2" style="text-align:center;"> <b>PT TELEKOMUNIKASI INDONESIA, Tbk </b></td>
+                        <td colspan="2" style="text-align:center;"> <b>'.strtoupper($schm_fee_arr[0]).'</b></td>
+                    </tr>';
+        $output .= '<tr><td colspan="4">&nbsp;</td></tr>';
+        $output .= '<tr><td colspan="4">&nbsp;</td></tr>';
+        $output .= '<tr><td colspan="4">&nbsp;</td></tr>';
+        $output .= '<tr><td colspan="4">&nbsp;</td></tr>';
+        $output .= '<tr>
+                        <td style="text-align:center;"><u><b>NAMA SM MKT DES</b></u></td>
+                        <td style="text-align:center;"><u><b>NAMA GENERAL MANAGER</b></u></td>
+                        
+                        <td colspan="2" style="text-align:center;"><u><b>NAMA DIREKTUR</b></u></td>
+                    </tr>';
+        $output .= '<tr>
+                        <td style="text-align:center;"><b>SM MKT DES</b></td>
+                        <td style="text-align:center;"><b>GENERAL MANAGER</b></td>
+                        
+                        <td colspan="2" style="text-align:center;"><b>DIREKTUR</b></td>
+                    </tr>';
+        $output .= '</table>';
+        
+        return $output;
+    }
+    
+    function lockSkemaNPK() {
+        
+        $data = array('success' => false, 'message' => 'Gagal mengunci skema');
+        $npk_fee_id = $this->input->post('npk_fee_id'); 
+        
+        $sql  = "SELECT SCHM_FEE_ID FROM V_CREAT_NPK_FEE 
+                    WHERE NPK_FEE_ID = ".$npk_fee_id;        
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        $schm_fee_id = $result[0]['SCHM_FEE_ID'];
+            
+        $sql = "  BEGIN ".
+               "  PCKG_CAL_NPK_FEE.SCHM_PROCESS(:params1, :params2); END;";
+
+        $params = array(
+            array('name' => ':params1', 'value' => $npk_fee_id, 'type' => SQLT_INT, 'length' => 32),
+            array('name' => ':params2', 'value' => $schm_fee_id, 'type' => SQLT_INT, 'length' => 32)
+        );
+        // Bind the output parameter
+
+        $stmt = oci_parse($this->db->conn_id,$sql);
+
+        foreach($params as $p){
+            // Bind Input
+            oci_bind_by_name($stmt,$p['name'], $p['value'], $p['length']);
+        }
+
+        ociexecute($stmt);
+        
+        $data['success'] = true;
+        $data['message'] = 'Skema Berhasil Dikunci';
+        echo json_encode($data);
+        exit;
     }
 
 }
