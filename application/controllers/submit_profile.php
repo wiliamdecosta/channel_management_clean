@@ -308,7 +308,7 @@ class Submit_profile extends CI_Controller {
     public function sendMail($subject, $content, $email_to) {
         
         $sql = "  BEGIN ".
-               "  marfee.p_send_mail_html(:params1, :params2, :params3, :params4, :params5, :params6, :params7, :params8); END;";
+               "  p_send_mail_html(:params1, :params2, :params3, :params4, :params5, :params6, :params7, :params8); END;";
 
         $params = array(
             array('name' => ':params1', 'value' => 'tos_admin@telkom.co.id', 'type' => SQLT_CHR, 'length' => 100),
