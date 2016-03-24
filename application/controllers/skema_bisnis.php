@@ -123,7 +123,9 @@ class Skema_bisnis extends CI_Controller
         $pgl_id = $this->input->post("form_pgl_id");
 
         $PPN = intval($this->input->post("PPN"));
-        $BPH_JASTEL = intval($this->input->post("BPH_JASTEL"));
+        $BPH_JASTEL = floatval($this->input->post("BPH_JASTEL"));
+        //print_r($BPH_JASTEL);
+        //exit;
         $MARFEE_BEFORE_TAX = intval($this->input->post("MARFEE_BEFORE_TAX"));
 
         $comp = $this->m_skembis->getComfeeByProduct();

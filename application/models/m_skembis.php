@@ -29,7 +29,6 @@ class M_skembis extends CI_Model
         $q = $this->db->query("SELECT nvl(MAX(SCHM_FEE_ID),0)+1 id FROM SCHM_FEE");
         $schm_id = $q->row(0)->ID;
 
-
         for ($i = 0; $i < count($arrComp); $i++) {
             $data = array('CF_ID' => $arrComp[$i]['CF_ID'],
                 'SCHM_FEE_ID' => $schm_id,

@@ -46,6 +46,8 @@
     $("#save_skema").click(function(){
 
             var data = $("#form_create_skemas").serializeArray();
+        //console.log(data);
+        //return false;
             $.ajax({
                 url: "<?php echo site_url('skema_bisnis/form_skema_bisnis');?>",
                 cache: false,
