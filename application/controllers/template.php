@@ -81,9 +81,10 @@ class Template extends CI_Controller
 		$this->load->model('M_template');
 		$data = array();
 		$this->db->set('order by doc_id desc');
-        $result['result1'] = $this->db->get('V_DOC2')->result();
+		$result['result1'] = $this->M_template->table_location();
 		$result['result2'] = $this->M_template->get_doc_type();
 		$result['result3'] = $this->M_template->get_bahasa();
+		$result['result4'] = $this->M_template->convert_lokasi();
 		
         $this->load->view($this->folder . '/view_template',$result);
     }
@@ -156,7 +157,24 @@ class Template extends CI_Controller
 		$data['doc_type'] = $this->input->post('doc_type');
 		$this->M_template->add_Template($data);
 	}
-
-
-
+	public function POST_idDOC(){
+		$this->load->model('M_cm', 'cm');
+		$result = $this->input->post('id_doc');
+		$res = $this->cm->selectFile($result);
+		echo $res;
+	}
+	public function delete_DOC(){
+		$this->load->model('M_cm', 'cm');
+		$result = $this->input->post('id_doc');
+		$res = $this->cm->deleteDOC($result);
+	}
+	
+	public function update_Content(){
+		$this->load->model('M_cm', 'cm');
+		$result1 = $this->input->post('docx_contents');
+		$result2 = $this->input->post('idx');
+		print_r($result1);
+		print_r($result2);
+		$res = $this->cm->updateDOC($result1, $result2);
+	}
 }
