@@ -109,7 +109,7 @@
             colModel: [
                 {
                     label: 'ID',
-                    name: 'PGID',
+                    name: 'PGL_ID',
                     // key: true,
                     width: 35,
                     sorttype: 'number',
@@ -123,7 +123,7 @@
                 },
 				{
                     label: 'ACNM',
-                    name: 'ANNM',
+                    name: 'ACCOUNT_NUM',
                     // key: true,
                     width: 35,
                     sorttype: 'number',
@@ -136,7 +136,7 @@
 				
 				{
                     label: 'PMD',
-                    name: 'PMD',
+                    name: 'P_MAP_DATIN_ACC_ID',
                     key: true,
                     width: 35,
                     sorttype: 'number',
@@ -146,21 +146,21 @@
                 },
                 {
                     label: 'Created By',
-                    name: 'CB',
+                    name: 'CREATED_BY',
                     width: 250,
                     align: "left",
                     editable: false,                                      
                 },
 				{
                     label: 'Updated By',
-                    name: 'UB',
+                    name: 'UPDATE_BY',
                     width: 250,
                     align: "left",
                     editable: false,                                     
                 },
 				{
                     label: 'Valid From',
-                    name: 'VF',
+                    name: 'VALID_FROM',
                     width: 250,
                     align: "left",
                     editable: true,                    
@@ -177,7 +177,7 @@
                 },
                 {
                     label: 'Valid Until',
-                    name: 'VU',
+                    name: 'VALID_UNTIL',
                     width: 250,
                     align: "left",
                     editable: true,                    
@@ -194,7 +194,7 @@
                 },
 				{
                     label: 'Creation Date',
-                    name: 'CD',
+                    name: 'CREATION_DATE',
                     width: 250,
                     align: "left",
                     sortable: true,
@@ -212,7 +212,7 @@
                 },
                 {   
                     label :'Update Date',
-                    name : 'UD',
+                    name : 'UPDATE_DATE',
                     width:200,
                     sortable:true,
                     align:'left',
