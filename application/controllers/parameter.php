@@ -223,10 +223,10 @@ class Parameter extends CI_Controller
                 for ($row = 2; $row <= $highestRow; ++$row) {
 
                     $dataDatin['TEN_ID'] = $ten_id;
-                    $dataDatin['CUSTOMER_REF'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
-                    $dataDatin['ACCOUNT_NUM'] = $sh->getCellByColumnAndRow(1, $row)->getValue();
-                    $dataDatin['GL_ACCOUNT'] = $sh->getCellByColumnAndRow(2, $row)->getValue();
-                    $dataDatin['PRODUCT_ID'] = $sh->getCellByColumnAndRow(3, $row)->getValue();
+                    //$dataDatin['CUSTOMER_REF'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
+                    $dataDatin['ACCOUNT_NUM'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
+                    //$dataDatin['GL_ACCOUNT'] = $sh->getCellByColumnAndRow(2, $row)->getValue();
+                    $dataDatin['PRODUCT_ID'] = $sh->getCellByColumnAndRow(1, $row)->getValue();
                     $dataDatin['USERID'] = $username;
 
                     $this->M_tenant->insertDatin($dataDatin);
