@@ -11,6 +11,7 @@
                         <div class="col-sm-2 col-xs-6">
                             <?php echo tahun('', date('Y')); ?>
                         </div>
+                        <input type="hidden" id="input_pgl_id" value="<?php echo $pgl_id; ?>">
                     </div>
                 </div>
 
@@ -41,6 +42,11 @@
     <div class="row" style="margin:5px;">
         <div class="col-xs-12" id="report_npk" style="display:none;padding:5px;border:1px solid #C0C0C0;">
             <div>
+                <a class="btn btn-sm btn-success" id="btn_export_excel_rinta">
+                <i class="ace-icon ace-icon fa fa-print align-top bigger-125"></i>
+                Excel RINTA
+                </a>
+                
                 <a class="btn btn-sm btn-success" id="btn_export_excel_npk">
                 <i class="ace-icon ace-icon fa fa-print align-top bigger-125"></i>
                 Export to Excel
@@ -81,6 +87,11 @@
         $('#btn_export_excel_npk').on('click', function (e) {
             exportExcelNPKReport();        
         });
+        
+        $('#btn_export_excel_rinta').on('click', function (e) {
+            exportExcelRINTAReport();           
+        });
+        
         
         $('#btn_lock_skema').on('click', function (e) {
             lockSkema();     
@@ -144,6 +155,24 @@
         url += "&schm_fee_name=" + $("#opt_npk_fee_id option:selected").text();
         url += "&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>";
         window.location = url;
+    }
+    
+    function exportExcelRINTAReport() {
+        $.ajax({
+            url: "<?php echo site_url(); ?>skema_bisnis/rintasheet/"+$("#input_pgl_id").val()+"/"+getPeriod(),
+            data: {},
+            type: 'POST',
+            success: function (response) {
+                var output = $.parseJSON(response);
+                if (output.redirect !== undefined && output.redirect) {
+                    window.location.href = output.redirect_url;
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                swal("Perhatian", response.message, errorThrown);
+            }
+        });
+        
     }
     
     function fillSelectOptionSkema(period) {
