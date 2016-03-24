@@ -269,11 +269,9 @@ class M_tenant extends CI_Model {
 
   public function insertDatin($data) {
       $db2 = $this->load->database('default', TRUE);
-      $sql = "INSERT INTO TEN_ND_NP (TEN_ID, CUSTOMER_REF, ACCOUNT_NUM, GL_ACCOUNT, PRODUCT_ID, CREATED_BY, CREATED_DATE) VALUES
-                                        (".$data['TEN_ID'].",
-                                          '".$data['CUSTOMER_REF']."',
+      $sql = "INSERT INTO TEN_ND_NP (TEN_ID, ACCOUNT_NUM, PRODUCT_ID, CREATED_BY, CREATED_DATE) VALUES
+                                         ( ".$data['TEN_ID'].",
                                           '".$data['ACCOUNT_NUM']."',
-                                          '".$data['GL_ACCOUNT']."',
                                           '".$data['PRODUCT_ID']."',
                                           '".$data['USERID']."',
                                           sysdate)";
