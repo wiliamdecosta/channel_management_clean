@@ -63,7 +63,7 @@
 											<select class="form-control" id="tipe_doc">
 												<option value="">Pilih Tipe Dokumen</option>
 												<?php foreach ($result2 as $content) {
-													echo "<option value='" . $content->P_REFERENCE_LIST_ID . "'>" . $content->CODE . "</option>";
+													echo "<option value='" . $content->LISTING_NO . "'>" . $content->CODE . "</option>";
 												}
 												?>
 											</select>
@@ -89,7 +89,7 @@
 											<select class="form-control" id="Bhs">
 												<option>Pilih Bahasa</option>
 												<?php foreach ($result3 as $content) {
-													echo "<option value='" . $content->P_REFERENCE_LIST_ID . "'>" . $content->CODE . "</option>";
+													echo "<option value='" . $content->LISTING_NO . "'>" . $content->CODE . "</option>";
 												}
 												?>
 						
@@ -122,12 +122,11 @@
                                 <thead>
                                 <tr>									
                                     <th class="center">NO</th>
-									<th>Ax</th>
                                     <th class="center"> Nama Dokumen</th>
                                     <th class="center"> Jenis Dokumen</th>
-                                    <th class="center"> Template</th>
-                                    <th class="center"> Update By</th>
-                                    <th class="center"> Update Date</th>
+                                    <th class="center"> Deskripsi</th>
+                                    <th class="center"> Jenis Bahasa</th>
+                                    <th class="center"> Lokasi</th>
                                     <th class="center"> Action </th>
                                 </tr>
                                 </thead>
@@ -138,16 +137,17 @@
                                 foreach ($result1 as $content){
 
                                     ?>
-                                    <tr value="<?php echo $content->DOC_ID; ?>" class="table_head">
+                                    <tr value="<?php echo $content->DOC_ID; ?>" data-id="<?php echo $content->DOC_NAME;?>" class="table_head">
 										<td class="center"><?php echo $i; ?> </td>
-										<td></td>
-                                        <td value="1XKLI">
-                                            <a href="#"><?php echo $content->DOC_NAME; ?></a>
-                                        </td>
+                                        <td><?php echo $content->DOC_NAME; ?></td>
                                         <td class="center" value="1XKLI"> <?php echo $content->DOC_TYPE_NAME; ?> </td>
-                                        <td value="1XKLI"> <?php echo $content->LANG; ?> </td>
-                                        <td class="class1" id="classic" value="1XKLI"> <?php echo $content->UPDATE_BY; ?> </td>
-                                        <td value="1XKLI"> <?php echo $content->UPDATE_DATE; ?> </td>
+                                        <td> <?php echo $content->DESCRIPTION; ?> </td>
+                                        <td class="class1" id="classic" value="1XKLI"> <?php echo $content->LANG; ?> </td>
+                                        <td> <?php foreach ($result4 as $content2){
+											if($content->LOKASI_ID == $content2->P_MP_LOKASI_ID){
+												echo $content2->LOKASI;
+											}
+										}  ?> </td>
                                         <td>
                                             <div class="hidden-sm hidden-xs action-buttons">
                                                 <a class="purple" data-rel="tooltip" data-original-title="Download">
@@ -175,7 +175,7 @@
 
                                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                                         <li>
-                                                            <a  class="tooltip-download" data-rel="tooltip" title="Download">
+                                                            <a  class="tooltip-download" data-rel="tooltip" value="" title="Download">
 																				<span class="blue">
 																					<i class="ace-icon fa fa-download bigger-120">ss</i>
 																				</span>
@@ -232,11 +232,11 @@
 	<div id="texteditorTwo">
 		<textarea id="textarea2">
 		</textarea>
-	</div>
+	</div></br>
 	<div id="buttonOne">
 		<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()">
 						<!-- class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info || fm-button ui-state-default ui-reset btn btn-sm btn-info center-block -->
-						Finish</a>
+						Back</a>
 	</div>
 	<div id="hiddenval" style="display: none;"><input type="text" id="test3" value="LALALALA"></div>
 </div>
@@ -261,7 +261,7 @@ jQuery(function($) {
 				// "columnDefs": [
 				// { className: "hide_column", "targets": [ 0 ] }
 				// ]
-				"aoColumnDefs": [{ "bVisible": false, "aTargets": [1] }]
+				// "aoColumnDefs": [{ "bVisible": false, "aTargets": [1] }]
             } );
     //TableTools settings
     TableTools.classes.container = "btn-group btn-overlap";
@@ -401,7 +401,13 @@ jQuery(function($) {
     });
 	
 	$(document).on('click', '#dynamic-table .tooltip-download', function(e) {
-		var id_DOC = $(this).closest('tr').attr('value');			
+		
+		var id_DOC = $(this).closest('tr').attr('value');
+		var name = $(this).closest('tr').attr('data-id');
+		// test1 = $(this).closest('a').attr('value');
+		// var rowData = this.cells;
+		// var ccf = rowData[0].firstChild.value;
+		
 		$.ajax({
                 type: "POST",
 				url: "<?php echo base_url(); ?>"+"template/POST_idDOC",
@@ -427,21 +433,24 @@ jQuery(function($) {
 							{
 							'width':margins.width, 'elementHandlers' : elmtHandler 
 							}, 
-							function(dispose){docpdf.output("dataurlnewwindow");}, margins);
+							function(dispose){docpdf.save(name);}, margins);
 					}
                 }
 		});
+		
     });
 	
 	$(document).on('click', '#dynamic-table .tooltip-error', function(e) {
-		var id_DOC = $(this).closest('tr').attr('value');		
+		var id_DOC = $(this).closest('tr').attr('value');
+		var aPos = oTable1.fnGetPosition( $(this).closest('tr').get(0) );
+		oTable1.fnDeleteRow(aPos);		
 		$.ajax({
                 type: "POST",
 				url: "<?php echo base_url(); ?>"+"template/delete_DOC",
                 data:  {id_doc: id_DOC},
 				dataType:"text",
 				success: function(data){
-					swal("Sukses","Data template berhasil dihapus","success");
+					swal("Sukses","Data template berhasil dihapus","success");					
                 }
 		});
     });
@@ -494,6 +503,8 @@ jQuery(function($) {
 })
   var editor = CKEDITOR.replace( 'textarea1', {
         height: 350,
+		toolbar : 'Custom',
+		toolbar_Custom: [],
         filebrowserBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html',
         filebrowserImageBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html?type=Images',
         filebrowserFlashBrowseUrl : '<?php echo base_url();?>assets/js/ckfinder/ckfinder.html?type=Flash',
@@ -545,8 +556,7 @@ $(document).ready(function () {
 		jQuery("#all_table").show(1000);		
 			var DOC_content = CKEDITOR.instances["textarea2"].getData();
 			if (edit){
-				ID = $('#findFilter').val();
-				
+				ID = $('#submitform').val();				
 				$.ajax({
                 type: "POST",
 				url: "<?php echo base_url(); ?>"+"template/update_Content",
@@ -572,7 +582,7 @@ $(document).ready(function () {
 				dataType:"text",
 				success: function(data){
 				CKEDITOR.instances["textarea2"].setData(data);
-				$('#findFilter').val(id_DOC);				
+				$('#submitform').val(id_DOC);				
                 }
                 });
 		});	
@@ -670,7 +680,9 @@ $(document).ready(function () {
             }else{
 				checkFilter();
 			}
-			
+			// reload page
+			$('#list_template').click();
+			//-----------------------------//
 			
 		});
 		
