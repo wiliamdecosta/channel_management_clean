@@ -744,16 +744,16 @@ class Skema_bisnis extends CI_Controller
                 $output .= '<td>'.$item['CF_NAME'].'</td>';
                 $output .= '<td style="text-align:right">-</td>';
                 $output .= '<td style="text-align:right">-</td>';
-                $output .= '<td style="text-align:right">'.numberFormat((float)$item['GROSS_REVENUE'],0).'</td>';
+                $output .= '<td style="text-align:right">'.numberFormat((float)$item['GROSS_REVENUE'],2).'</td>';
                 $output .= '</tr>';
                 
             }else {
             
                 $output .= '<tr>';
                 $output .= '<td>'.$item['CF_NAME'].'</td>';
-                $output .= '<td style="text-align:right">Rp. '.numberFormat((float)$item['GROSS_REVENUE'],0).'</td>';
-                $output .= '<td style="text-align:right">'.numberFormat((float)$item['PERCENTAGE'],0).' %</td>';
-                $output .= '<td style="text-align:right">Rp. '.numberFormat((float)$item['NET_REVENUE'],0).'</td>';
+                $output .= '<td style="text-align:right">Rp. '.numberFormat((float)$item['GROSS_REVENUE'],2).'</td>';
+                $output .= '<td style="text-align:right">'.numberFormat((float)$item['PERCENTAGE'],2).' %</td>';
+                $output .= '<td style="text-align:right">Rp. '.numberFormat((float)$item['NET_REVENUE'],2).'</td>';
                 $output .= '</tr>';
             }
         }
