@@ -84,6 +84,27 @@ class M_template extends CI_Model {
 		$this->db->query($sql);
         
     }
+	public function table_location(){
+		$result = array();
+        $q = "SELECT DOC_ID, DOC_TYPE_ID, DOC_NAME, FILE_PATH, DESCRIPTION, DOC_LANG_ID, DOC_TYPE_NAME, LANG, LOKASI_ID
+                FROM V_DOC2				
+				";
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;
+		
+	}public function convert_lokasi(){
+		$result = array();
+        $q = "SELECT P_MP_LOKASI_ID, LOKASI
+                FROM P_MP_LOKASI				
+				";
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;
+		
+	}
 
 
   }
