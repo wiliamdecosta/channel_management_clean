@@ -234,9 +234,8 @@
 		</textarea>
 	</div></br>
 	<div id="buttonOne">
-		<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()">
-						<!-- class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info || fm-button ui-state-default ui-reset btn btn-sm btn-info center-block -->
-						Back</a>
+		<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()"><span>
+		Back</span></a>
 	</div>
 	<div id="hiddenval" style="display: none;"><input type="text" id="test3" value="LALALALA"></div>
 </div>
@@ -529,13 +528,14 @@ $(document).ready(function () {
 		jQuery("#buttonOne").hide();		
 		jQuery("#texteditorTwo").hide();		
     });
-	//var oTable = $('#dynamic-table').DataTable();	
+
+	
 	function Back(){
 		edit = false;
+		$('#submitform span').text('Back to table');
 		jQuery("#all_table").hide(1000);
 		jQuery("#texteditorOne").show(1000);		
 		jQuery("#buttonOne").show(1000);
-		$("#textarea1").val("WEW");
 		$('#dynamic-table tbody').on('click', 'tr', function () {
 			var id_DOC = $(this).attr('value');			
 			$.ajax({
@@ -549,12 +549,15 @@ $(document).ready(function () {
                 });
 		});	
 	}
+	
+	
 	function showTable(){
 		jQuery("#texteditorOne").hide(1000);
 		jQuery("#texteditorTwo").hide(1000);		
 		jQuery("#buttonOne").hide(1000);
 		jQuery("#all_table").show(1000);		
 			var DOC_content = CKEDITOR.instances["textarea2"].getData();
+			// var res = str.replace("&zenzenzenzenzen", "'");
 			if (edit){
 				ID = $('#submitform').val();				
 				$.ajax({
@@ -570,6 +573,7 @@ $(document).ready(function () {
 	}
 	function Back2(){
 		edit = true;
+		$('#submitform span').text('Finish Edit');
 		jQuery("#all_table").hide(1000);
 		jQuery("#texteditorTwo").show(1000);		
 		jQuery("#buttonOne").show(1000);
