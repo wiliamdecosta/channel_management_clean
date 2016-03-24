@@ -1,3 +1,19 @@
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.custom.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/chosen.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/datepicker.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-timepicker.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/daterangepicker.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datetimepicker.css" />
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/ckfinder/ckfinder.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/ckeditor/ckeditor.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/jspdf.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/from_html.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/split_text_to_size.js"> </script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/dist/jspdf.debug.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/addimage.js.js"></script>
+
 <div id="content">
     <div class="breadcrumbs" id="breadcrumbs">
         <?=$this->breadcrumb;?>
@@ -63,10 +79,12 @@
                     <a href="javascript:void(0)">Data</a>
                 </li>
 
-                <li class="tab" id="create_template_new">
-                    <a href="javascript:void(0)">Create New Template</a>
+                <li class="tab" id="create_template" disabled>
+                    <a href="javascript:void(0)">Body</a>
                 </li>
-
+				<li class="tab" id="variable_template" disabled>
+                    <a href="javascript:void(0)">Variable</a>
+                </li>
                 <!-- <li class="tab" id="create_user">
                     <a href="javascript:void(0)">Create User</a>
                 </li> -->

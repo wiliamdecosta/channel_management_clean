@@ -44,20 +44,48 @@ class Template extends CI_Controller
 
     public function variable_template()
     {
-
-        $this->load->view($this->folder . '/variable_template');
+        $this->load->model('M_template');
+        $result['result'] = $this->M_template->get_table_name();
+        $this->load->view($this->folder . '/variable_template',$result);
+    }
+    public function get_column_name($tablename){
+      $this->load->model('M_template');
+      $result = $this->M_template->get_column_name($tablename);
+      $table = "";
+      foreach($result as $content){
+          $table  .=
+          "<tr id='tr".$content->COLUMN_NAME.$tablename."'>".
+            "<td>".
+              $content->COLUMN_NAME.
+            "</td>".
+            "<td>".
+              $content->DATA_TYPE.
+            "</td>".
+            "<td>".
+                "<a class='btn btn-xs btn-success addcol' onClick='javascript:move_to_variable(this);' data='".$content->COLUMN_NAME.'|'.$tablename."' id='add".$content->COLUMN_NAME."'>".
+                  "<i class='ace-icon fa fa-plus smaller-100'></i>".
+                "</a>".
+                "<a class='btn btn-xs btn-danger delcol' onClick='javascript:move_to_variable(this);' style='display:none' data='".$content->COLUMN_NAME.'|'.$tablename."' id='del".$content->COLUMN_NAME."'>".
+                  "<i class='ace-icon fa fa-minus smaller-100'></i>".
+                "</a>".
+            "</td>".
+         "</tr>";
+      }
+	  
+      echo $table;
+	  
     }
 
     public function list_template()
     {
-        $rt1 = $this->db->get('V_DOC')->result();
-		 // if ($rt1->num_rows()>0){
-			foreach ($rt1 as $a)
-			{
-				$data['V_DOC'][]=$a;
-			}
-		$result['result'] = $data;
-		$this->load->view($this->folder . '/view_template', $result);
+		$this->load->model('M_template');
+		$data = array();
+		$this->db->set('order by doc_id desc');
+        $result['result1'] = $this->db->get('V_DOC2')->result();
+		$result['result2'] = $this->M_template->get_doc_type();
+		$result['result3'] = $this->M_template->get_bahasa();
+		
+        $this->load->view($this->folder . '/view_template',$result);
     }
 
     public function create_user()
@@ -116,27 +144,18 @@ class Template extends CI_Controller
 		$data6 = $this->input->post('title6');
 		$this->cm->postDocTemp($data1,$data2,$data3,$data4,$data5,$data6);
 	}
-	public function POST_idDOC(){
-		$this->load->model('M_cm', 'cm');
-		$result = $this->input->post('id_doc');
-		$res = $this->cm->selectFile($result);
-		echo $res;
-	}
-	public function delete_DOC(){
-		$this->load->model('M_cm', 'cm');
-		$result = $this->input->post('id_doc');
-		$res = $this->cm->deleteDOC($result);
-	}
 	
-	public function update_Content(){
-		$this->load->model('M_cm', 'cm');
-		$result1 = $this->input->post('docx_contents');
-		$result2 = $this->input->post('idx');
-		print_r($result1);
-		print_r($result2);
-		$res = $this->cm->updateDOC($result1, $result2);
+	public function addTemplate(){
+		$this->load->model('M_template');
+		$data = array();
+		$data['nama'] = $this->input->post('nama');
+		$data['desc'] = $this->input->post('desc');
+		$data['userid'] = $this->input->post('userid');
+		$data['bahasa'] = $this->input->post('bahasa');
+		$data['lokasi_pks'] = $this->input->post('lokasi_pks');
+		$data['doc_type'] = $this->input->post('doc_type');
+		$this->M_template->add_Template($data);
 	}
-	
 
 
 

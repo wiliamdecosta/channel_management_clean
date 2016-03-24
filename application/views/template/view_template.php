@@ -1,25 +1,117 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.custom.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/chosen.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/datepicker.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-timepicker.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/daterangepicker.css" />
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datetimepicker.css" />
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/ckfinder/ckfinder.js"></script>
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/ckeditor/ckeditor.js"></script>
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/jspdf.js"></script>
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/from_html.js"></script>
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/split_text_to_size.js"> </script>
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/dist/jspdf.debug.js"></script>
-<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/addimage.js.js"></script>
+
 
 
 <div id="list_template"> <!--harusnya dokPKS -->
     <form class="form-horizontal" role="form">
         <div class="rows">
             <div class="form-group" id="all_table">
-                <div class="col-xs-11">
+				
+				<div class="col-xs-12">
+							<div class="row">
+								<form class="form-horizontal" role="form" id="myform">
+								<div class="col-xs-6">
+									<div id="notif">
+						
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Nama Segmen </label>
+						
+										<div class="col-sm-6">
+											 <?php echo combo_segmen(); ?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama CC </label>
+						
+										<div class="col-sm-6">
+											<select class="form-control" id="list_cc">
+												<option>Pilih CC</option>
+						
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Mitra </label>
+						
+										<div class="col-sm-6">
+											<select class="form-control" id="mitra">
+												<option value="">Pilih Mitra</option>
+											</select>
+										</div>
+									</div>
+						
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Lokasi PKS </label>
+						
+										<div class="col-sm-6">
+											  <select class="form-control" id="lokasisewa">
+													<option value="">Pilih Lokasi PKS</option>
+												</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div id="notif">
+						
+									</div>
+						
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Tipe Dokumen </label>
+						
+										<div class="col-sm-6">
+											<select class="form-control" id="tipe_doc">
+												<option value="">Pilih Tipe Dokumen</option>
+												<?php foreach ($result2 as $content) {
+													echo "<option value='" . $content->P_REFERENCE_LIST_ID . "'>" . $content->CODE . "</option>";
+												}
+												?>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Dokumen </label>
+						
+										<div class="col-sm-6">
+											<input type="text" class="col-xs-10 col-sm-5 required form-control" id="docx_name" name="docx_nama" placeholder="Tulis nama file disini">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Deskripsi </label>
+										<div class="col-sm-6">
+											<input type="text"  class="col-xs-10 col-sm-5 required form-control" id="docx_descript" name="docx_deskrip" placeholder="Tulis deskripsi disini">
+										</div>
+									</div> 
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Bahasa </label>
+						
+										<div class="col-sm-6">
+											<select class="form-control" id="Bhs">
+												<option>Pilih Bahasa</option>
+												<?php foreach ($result3 as $content) {
+													echo "<option value='" . $content->P_REFERENCE_LIST_ID . "'>" . $content->CODE . "</option>";
+												}
+												?>
+						
+											</select>
+										</div>
+									</div>
+								<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> </label>
+										<div class="col-sm-6">
+											<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
+												Simpan
+												</a>
+											</div>
+									</div> 
+								</div>
+								</form>
+							</div>
+						
+						
+				</div>
+				
+                <div class="col-xs-12">
                         <div class="clearfix">
                         </div>
                         <div class="table-header">
@@ -42,10 +134,11 @@
                                 <tbody>
 
                                 <?php $i = 1;
-                                foreach ($result['V_DOC'] as $content){
+								
+                                foreach ($result1 as $content){
 
                                     ?>
-                                    <tr value=<?php echo '"'.$content->DOC_ID.'"'; ?> class="table_head">
+                                    <tr value="<?php echo $content->DOC_ID; ?>" class="table_head">
 										<td class="center"><?php echo $i; ?> </td>
 										<td></td>
                                         <td value="1XKLI">
@@ -141,7 +234,7 @@
 		</textarea>
 	</div>
 	<div id="buttonOne">
-		<a id="findFilter" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()">
+		<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()">
 						<!-- class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info || fm-button ui-state-default ui-reset btn btn-sm btn-info center-block -->
 						Finish</a>
 	</div>
@@ -228,9 +321,7 @@ jQuery(function($) {
                 "sToolTip": "Print view",
                 "sButtonClass": "btn btn-white btn-primary  btn-bold",
                 "sButtonText": "<i class='fa fa-print bigger-110 grey'></i>",
-
                 "sMessage": "<div class='navbar navbar-default'><div class='navbar-header pull-left'><a class='navbar-brand' href='#'><small>Optional Navbar &amp; Text</small></a></div></div>",
-
                 "sInfo": "<h3 class='no-margin-top'>Print view</h3>\
 									  <p>Please use your browser's print function to\
 									  print this table.\
@@ -485,5 +576,207 @@ $(document).ready(function () {
                 }
                 });
 		});	
-	}	
+	}
+	
+
+	  $("#mitra").change(function () {
+        var mitra = $("#mitra").val();
+
+        // Animasi loading
+
+        if (mitra) {
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                url: "<?php echo site_url('cm/listTenant');?>",
+                data: {id_mitra: mitra},
+                success: function (msg) {
+                    // jika tidak ada data
+                    if (msg == '') {
+                        alert('Tidak ada tenant');
+                    }
+                    else {
+                        $("#list_cc").html(msg);
+                    }
+                }
+            });
+        } else {
+            $("#list_cc").html('<option> Pilih CC </option>');
+        }
+    });
+	
+</script>
+
+<script>
+    function checkFilter() {
+        v_str = "";
+        if ($("#segment").val() == "") {
+            v_str += "* Segmen belum dipilih\n";
+        }
+        if ($("#list_cc").val() == "") {
+            v_str += "* CC belum dipilih\n";
+        }
+        if ($("#mitra").val() == "") {
+            v_str += "* Mitra belum dipilih\n";
+        }
+        if ($("#lokasisewa").val() == "") {
+            v_str += "* Lokasi PKS belum dipilih\n";
+        }
+
+        if (v_str != "") {
+            swal("", v_str, "warning");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>
+<script>
+    $(document).ready(function () {
+		$('#submitform').click(function(){
+			var cek = checkFilter();
+			if (cek) {
+                var doc_nama = $("#docx_name").val();
+				var doc_dscrpt = $("#docx_descript").val();
+				var username_session = "<?php echo $this->session->userdata('d_user_name') ?>";
+				var lang_option = $('#Bhs').val();
+				var	update_dt = "<?php echo date("d/m/Y"); ?>";
+				var lokasi_pks = $('#lokasisewa').val();
+				var doc_type = $('#tipe_doc').val();
+				
+				if ( doc_nama.length == 0  || doc_dscrpt.length == 0  || lang_option.length == 0 ){
+						swal("Perhatian","Harap cek kelengkapan data","warning");
+					}else{						
+					$.ajax({				
+						type: "POST",
+					   dataType: "html",
+						url: "<?php echo site_url('template/addTemplate');?>",
+						data: {
+								nama:doc_nama, desc:doc_dscrpt,
+								userid: username_session, bahasa: lang_option, update_date: update_dt,
+								lokasi_pks:lokasi_pks, doc_type:doc_type
+							},
+							success: function (data) {
+								swal("Sukses","Data berhasil tersimpan","success");
+							
+							}						, 
+							error: function(data, xhr, ajaxOptions, thrownError){						
+							swal("Error",xhr.status+"  "+ thrownError,"error");
+							}
+					});
+					}
+				
+            }else{
+				checkFilter();
+			}
+			
+			
+		});
+		
+		
+		
+        function empty_cc() {
+            $('#list_cc').html('<option value=""> Pilih CC </option>');
+        }
+
+        function empty_mitra() {
+            $('#mitra').html('<option value=""> Pilih Mitra </option>');
+        }
+
+        function empty_lokasi() {
+            $('#lokasisewa').html('<option value=""> Pilih Lokasi Sewa </option>');
+        }
+
+//        ----------------------------------------------------------------------------
+        $("#segment").change(function () {
+            empty_cc();
+            empty_mitra();
+            empty_lokasi();
+            var segmen = $('#segment').val();
+            if (segmen) {
+                loadcc();
+            } else {
+                empty_cc();
+                empty_mitra();
+                empty_lokasi();
+            }
+        });
+//     -----------------------------------------------------------------------------
+
+        $("#list_cc").change(function () {
+            empty_mitra();
+            empty_lokasi();
+            var list_cc = $('#list_cc').val();
+            if (list_cc) {
+                loadmitra();
+            } else {
+                empty_mitra();
+                empty_lokasi();
+            }
+
+        });
+
+//        ------------------------------------------------------------------
+        $("#mitra").change(function () {
+            empty_lokasi();
+            var mitra = $('#mitra').val();
+            if (mitra) {
+                loadlokasi();
+            } else {
+                empty_lokasi();
+            }
+
+        });
+
+    });
+</script>
+<script type="text/javascript">
+    function loadcc() {
+        var segmen = $("#segment").val();
+        $.ajax({
+            // async: false,
+            cache: false,
+            url: "<?php echo base_url();?>managementmitra/listCC",
+            type: "POST",
+            data: {segmen: segmen},
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#list_cc').html(data);
+
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function loadmitra() {
+        var ccid = $("#list_cc").val();
+        $.ajax({
+            //async: false,
+            url: "<?php echo base_url();?>managementmitra/listMitra",
+            type: "POST",
+            data: {ccid: ccid},
+            success: function (data) {
+                $('#mitra').html(data);
+
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function loadlokasi() {
+        var mitra = $("#mitra").val();
+        $.ajax({
+            //async: false,
+            url: "<?php echo base_url();?>managementmitra/listLokasiSewa",
+            type: "POST",
+            data: {mitra: mitra},
+            success: function (data) {
+                $('#lokasisewa').html(data);
+
+            }
+        });
+    }
 </script>

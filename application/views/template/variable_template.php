@@ -1,3 +1,4 @@
+
 <form class="form-horizontal" role="form">
     <div class="row">
 
@@ -17,7 +18,7 @@
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Table </label>
 
                 <div class="col-sm-6">
-                    <select class="form-control" id="mitra">
+                    <select class="form-control" id="tablename">
                         <option value="">Pilih Table</option>
                         <?php foreach ($result as $content){
                             echo "<option value='".$content->TABLE_NAME."'>".$content->TABLE_NAME."</option>";
@@ -34,31 +35,16 @@
                 <tr>
                   <th>Nama Kolom</th>
                   <th>Tipe Data</th>
-                  <th>  <button class="btn btn-xs btn-success">
+                  <th>  <button class="btn btn-xs btn-success" id="addall" onclick="AddOrDel_all('add',$('#tablename').val())">
                       <i class="ace-icon fa fa-plus smaller-120"></i>&nbsp;&nbsp;ALL
-                    </button> <button class="btn btn-xs btn-danger">
+                    </button> <button class="btn btn-xs btn-danger" style="display:none;" id="delall" onclick="AddOrDel_all('del',$('#tablename').val())">
                         <i class="ace-icon fa fa-minus smaller-120"></i>&nbsp;&nbsp;ALL
                       </button> </th>
                 </tr>
               </thead>
 
-              <tbody>
-                <tr>
-                  <td>
-                    <a href="#">Kolom 1</a>
-                  </td>
-                  <td>
-                    <a href="#">Kolom 1</a>
-                  </td>
-                  <td>
-                      <button class="btn btn-xs btn-success">
-                        <i class="ace-icon fa fa-plus smaller-100"></i>
-                      </button>
-                      <button class="btn btn-xs btn-danger">
-                        <i class="ace-icon fa fa-minus smaller-100"></i>
-                      </button>
-                  </td>
-                </tr>
+              <tbody id="namatable_body">
+              
               </tbody>
             </table>
         </div>
@@ -70,106 +56,83 @@
             <thead>
               <tr>
                 <th>Nama Kolom</th>
-                <th>Tipe Data</th>
-                <th>  <button class="btn btn-xs btn-success">
-                    <i class="ace-icon fa fa-plus smaller-120"></i>&nbsp;&nbsp;ALL
-                  </button> <button class="btn btn-xs btn-danger">
+                <th>Nama Table</th>
+                <th> <button class="btn btn-xs btn-danger">
                       <i class="ace-icon fa fa-minus smaller-120"></i>&nbsp;&nbsp;ALL
                     </button> </th>
               </tr>
             </thead>
 
-            <tbody>
-              <tr>
-                <td>
-                  <a href="#">Kolom 1</a>
-                </td>
-                <td>
-                  <a href="#">Kolom 1</a>
-                </td>
-                <td>
-                    <button class="btn btn-xs btn-success">
-                      <i class="ace-icon fa fa-plus smaller-100"></i>
-                    </button>
-                    <button class="btn btn-xs btn-danger">
-                      <i class="ace-icon fa fa-minus smaller-100"></i>
-                    </button>
-                </td>
-              </tr>
+            <tbody id="tablevariable_body">
+              
             </tbody>
           </table>
         </div>
     </div>
-    <hr>
-    <span style="float: left" id="group2">
-            <a id="save" class="btn btn-white btn-info btn-bold">
-                <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
-                Save User
-            </a>
-            <a id="view_user" class="btn btn-white btn-success btn-bold">
-                <i class="ace-icon fa fa-user bigger-120 green"></i>
-                View All Active User
-            </a>
-        </span>
 </form>
 
 
 <script type="text/javascript">
-	//$(Document).ready(function(){
-
-		//alert("Test 123");
-
-	//});
-    $("#mitra").change(function () {
-        var mitra = $("#mitra").val();
+    
+  
+    function move_to_variable(elem) {
+        //swal($(elem).attr("data"));
+        data = $(elem).attr("data").split('|');
+        column_name = data[0];
+        tablename = data[1];
+        var elemtable =  "<tr>"+
+            "<td>"+
+              column_name+
+            "</td>"+
+            "<td>"+
+              tablename+
+            "</td>"+
+            "<td>"+
+                "<a class='btn btn-xs btn-danger' onClick='javascript:move_to_variable(this);' id='del"+tablename+column_name+"'>"+
+                  "<i class='ace-icon fa fa-minus smaller-100'></i>"+
+                "</a>"+
+            "</td>"+
+         "</tr>";
+         $('#tablevariable_body').html( $('#tablevariable_body').html()+elemtable);
+        $(elem).css('display','none');
+        $('#tr'+column_name+tablename).hide();
+       // $('#del'+column_name+tablename).css('display','block');
+    }
+    
+    function AddOrDel_all(act,tablename) {
+        if (tablename) {
+            swal(tablename);
+        }else{
+            swal('aaaaa');
+        }
+        
+    }
+    
+    $("#tablename").change(function () {
+        var tablename = $("#tablename").val();
 
         // Animasi loading
 
-        if (mitra) {
+        if (tablename) {
             $.ajax({
                 type: "POST",
                 dataType: "html",
-                url: "<?php echo site_url('cm/listTenant');?>",
-                data: {id_mitra: mitra},
+                url: "<?php echo site_url('template/get_column_name');?>"+'/'+tablename,
+                //data: {id_mitra: mitra},
                 success: function (msg) {
                     // jika tidak ada data
                     if (msg == '') {
-                        alert('Tidak ada tenant');
+                        swal('Tidak ada data');
                     }
                     else {
-                        $("#list_cc").html(msg);
+                        $("#namatable_body").html(msg);
                     }
                 }
             });
         } else {
-            $("#list_cc").html('<option> Pilih CC </option>');
+            $("#namatable_body").html('');
         }
     });
 
-    $('#save').click(function () {
-        $('#notif').html("<div class='alert alert-success'> "
-            + "<button type='button' class='close' data-dismiss='alert'> "
-            + "       <i class='ace-icon fa fa-times'></i> "
-            + "   </button>"
-            + "      <strong>"
-            + "  <i class='ace-icon fa fa-times'></i>"
-            + "     Sukses"
-            + " </strong>"
-            + "  1 User berhasil ditambahkan."
-            + "    <br>"
-            + " </div>");
-			alert("test 123456");
-    })
-    $('#view_user').click(function () {
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            url: "<?php echo site_url('admin/user');?>",
-            data: {title:'User'},
-            success: function (data) {
-                $("#main_content").html(data);
-            }
-        });
-    })
 
 </script>
