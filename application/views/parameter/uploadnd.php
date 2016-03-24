@@ -64,7 +64,7 @@
                                 </select> </div>
                         </div>
                         &nbsp;
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;">
                             <div id="label" class="col-xs-3">
                                 <label>Pre-upload Action</label>
                             </div>
