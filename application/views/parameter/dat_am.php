@@ -16,20 +16,8 @@
         <div class="col-xs-12" style="width: 100%;">
             <!-- PAGE CONTENT BEGINS -->
             <table id="grid-table"></table>
-
-
             <div id="grid-pager"></div>
-
-            <script type="text/javascript">
-                var $path_base = "..";//in Ace demo this will be used for editurl parameter
-            </script>
-
             <br>
-
-            <div id="detailsPlaceholder" style="display:none">
-                <table id="jqGridDetails"></table>
-                <div id="jqGridDetailsPager"></div>
-            </div>
             <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
     </div><!-- /.row -->
