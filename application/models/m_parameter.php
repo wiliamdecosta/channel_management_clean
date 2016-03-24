@@ -960,15 +960,15 @@ class M_parameter extends CI_Model
 		}
 		
         $table = "P_MAP_DATIN_ACC";
-        $PGL_ID = $this->input->post('PGID');
-        $ACCOUNT_NUM = $this->input->post('ANNM');
-        $VALID_FROM = $this->input->post('VF');
+        $PGL_ID = $this->input->post('PGL_ID');
+        $ACCOUNT_NUM = $this->input->post('ACCOUNT_NUM');
+        $VALID_FROM = $this->input->post('VALID_FROM');
         $CREATED_BY = $this->session->userdata('d_user_name');
 		$UPDATE_BY = $this->session->userdata('d_user_name');
-        $VALID_UNTIL = $this->input->post('VU');
-        $CREATION_DATE = $this->input->post('CD');
-		$UPDATE_DATE = $this->input->post('UD');
-		$P_MAP_DATIN_ACC_ID = $this->input->post('PMD');
+        $VALID_UNTIL = $this->input->post('VALID_UNTIL');
+        $CREATION_DATE = $this->input->post('CREATION_DATE');
+		$UPDATE_DATE = $this->input->post('UPDATE_DATE');
+		$P_MAP_DATIN_ACC_ID = $this->input->post('P_MAP_DATIN_ACC_ID');
 		$timefr = strtotime($VALID_FROM);
 		$timeutl = strtotime($VALID_UNTIL);
 		$time_create = strtotime($CREATION_DATE);
