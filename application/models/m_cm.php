@@ -267,6 +267,25 @@ class M_cm extends CI_Model {
         }
 	 return $result;
 	}
+	public function selectFile($data1){
+		$result = array();
+        $sql = "SELECT CONTENT FROM DOC
+				WHERE DOC_ID = ".$data1;
+		$q = $this->db->query($sql);
+        $result = $q->result();
+		return $result[0]->CONTENT->load();
+	}
+	public function deleteDOC($data1){
+		$sql1 = "DELETE FROM V_DOC WHERE DOC_ID = ".$data1;
+		$sql2 = "DELETE FROM DOC WHERE DOC_ID = ".$data1;
+		$this->db->query($sql1);
+		$this->db->query($sql2);
+	}
+	public function updateDOC($data1,$data2){
+		$sql2 = "UPDATE DOC SET CONTENT ='".$data1."' WHERE DOC_ID = ".$data2;
+		$this->db->query($sql2);
+		print_r($sql2); exit;
+	}
 	//End By Zen
     
     public function excelRintaFromNPK($period, $pgl_id){
