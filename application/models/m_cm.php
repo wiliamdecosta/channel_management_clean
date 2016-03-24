@@ -268,12 +268,15 @@ class M_cm extends CI_Model {
 	 return $result;
 	}
 	public function selectFile($data1){
-		$result = array();
-        $sql = "SELECT CONTENT FROM DOC
-				WHERE DOC_ID = ".$data1;
-		$q = $this->db->query($sql);
-        $result = $q->result();
-		return $result[0]->CONTENT->load();
+        $sql = "SELECT CONTENT FROM DOC  
+				WHERE DOC_ID = :data1";	
+		$parse = OCIParse($this->db->conn_id, $sql);
+		OCIBindByName($parse, ':data1', $data1 );
+		OCIExecute($parse);
+		while (OCIFetchInto($parse,$arr,OCI_ASSOC)) {
+			$ret = $arr["CONTENT"]->load();
+		}
+        return $ret;
 	}
 	public function deleteDOC($data1){
 		$sql1 = "DELETE FROM V_DOC WHERE DOC_ID = ".$data1;
@@ -282,9 +285,13 @@ class M_cm extends CI_Model {
 		$this->db->query($sql2);
 	}
 	public function updateDOC($data1,$data2){
-		$sql2 = "UPDATE DOC SET CONTENT ='".$data1."' WHERE DOC_ID = ".$data2;
-		$this->db->query($sql2);
-		print_r($sql2); exit;
+		$sql2 = "UPDATE DOC SET CONTENT = :data1 WHERE DOC_ID = :data2";
+		// $this->db->query($sql2);
+		
+		$parse = OCIParse($this->db->conn_id, $sql2);
+		OCIBindByName($parse, ':data1', $data1 );
+		OCIBindByName($parse, ':data2', $data2 );
+		OCIExecute($parse);
 	}
 	//End By Zen
     
