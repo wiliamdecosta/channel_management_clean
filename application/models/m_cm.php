@@ -268,6 +268,17 @@ class M_cm extends CI_Model {
 	 return $result;
 	}
 	//End By Zen
+    
+    public function excelRintaFromNPK($period, $pgl_id){
+        $db2 = $this->load->database('default2', TRUE);
+        $result = array();
+        $sql = "SELECT b.nd nd1,A.*
+                FROM CUST_RINTA PARTITION(PERIOD_".$period.") A, TEN_ND B, PGL_TEN C, CC_DATAREF@NONPOTS_OP D
+                WHERE C.TEN_ID(+)=B.TEN_ID AND B.ND(+)=A.ND AND A.ND = D.P_NOTEL(+) AND C.PGL_ID=".$pgl_id;
 
+        $qs = $db2->query($sql);
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+    }
 	
 }
