@@ -89,15 +89,15 @@
                 },
                 {
                     label: 'Alamat',
-                    name: '',
-                    width: 175,
+                    name: 'ADDRESS',
+                    width: 375,
                     frozen: true,
                     align: "left",
                     editable: true,
                     editrules: {required: true}
                 },
-                {label: 'Created Date', name: 'CREATED_DATE', width: 100, align: "right", editable: true},
-                {label: 'Valid From', name: 'VALID_FROM', width: 100, align: "right", editable: true},
+                {label: 'Created Date', name: 'CREATED_DATE', width: 100, align: "left", editable: true},
+                {label: 'Valid From', name: 'VALID_FROM', width: 100, align: "left", editable: true},
                 {
                     label: 'Status',
                     name: 'AKTIF',

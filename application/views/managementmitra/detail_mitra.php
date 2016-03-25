@@ -40,7 +40,7 @@
             <div class="clearfix">
             </div>
             <div class="table-header">
-                Evaluasi Mitra
+               List PIC
             </div>
             <div>
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover">

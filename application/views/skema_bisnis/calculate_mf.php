@@ -59,14 +59,20 @@
                 success: function (data) {
                     if (data.success == true) {
                         swal('', data.message, 'success');
-                        $("#gridCalculate").load("<?php echo base_url('skema_bisnis/grid_skembis_calculate'); ?>", {
+//                        $("#gridCalculate").load("<?php //echo base_url('skema_bisnis/grid_skembis_calculate'); ?>//", {
+                        $("#gridCalculate").load("<?php echo base_url('skema_bisnis/logCalculate'); ?>", {
                             skema_id: skema_id,
                             pgl_id: pgl_id
                         }, function () {
                         });
 
                     } else {
-                        swal('', 'Error ', 'error')
+                        swal('', data.message, 'warning')
+                        $("#gridCalculate").load("<?php echo base_url('skema_bisnis/logCalculate'); ?>", {
+                            skema_id: skema_id,
+                            pgl_id: pgl_id
+                        }, function () {
+                        });
                     }
 
                 }

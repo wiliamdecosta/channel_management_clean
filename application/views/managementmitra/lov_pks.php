@@ -13,13 +13,18 @@
                     </button>
                 </div>
                 &nbsp;
-                <div id="tbl_pic">
-                    <table id="grid_table_lov"></table>
-                    <div id="grid_pager_lov"></div>
-                    <input id="lov_value" type="text" value="<?php echo $divID; ?>" hidden>
-                    <input id="lov_id" type="text" value="<?php echo $lov_target_id; ?>" hidden>
-                    <input id="modal_id" type="text" value="<?php echo $modal_id; ?>" hidden>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="tbl_pic">
+                            <table id="grid_table_lov"></table>
+                            <div id="grid_pager_lov"></div>
+                            <input id="lov_value" type="text" value="<?php echo $divID; ?>" hidden>
+                            <input id="lov_id" type="text" value="<?php echo $lov_target_id; ?>" hidden>
+                            <input id="modal_id" type="text" value="<?php echo $modal_id; ?>" hidden>
+                        </div>
+                    </div>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -32,6 +37,20 @@
     $(document).ready(function () {
         var grid = $('#grid_table_lov');
         var pager = $('#grid_pager_lov');
+
+        var parent_column = grid.closest('[class*="col-"]');
+        $(window).on('resize.jqGrid', function () {
+            grid.jqGrid( 'setGridWidth', $("#tbl_pic").width()-1 );
+            grid2.jqGrid( 'setGridWidth', $("#tbl_pic").width()-1 );
+        })
+        //optional: resize on sidebar collapse/expand and container fixed/unfixed
+        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
+            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
+                grid.jqGrid( 'setGridWidth', parent_column.width() );
+                pager.jqGrid( 'setGridWidth', parent_column.width() );
+            }
+        })
+        var width =  $("#tbl_pic").width();
 
         grid.jqGrid({
             url: '<?php echo site_url('managementmitra/grid_lov_pks');?>',
@@ -65,8 +84,8 @@
                     sopt: ['cn']
                 }
             ],
-            width: null,
-            AutoWidth: true,
+            //width: width,
+            AutoWidth : true,
             height: '100%',
             scrollOffset: 0,
             rowNum: 5,
@@ -77,7 +96,7 @@
             rownumWidth: 35,
             sortorder: 'asc',
             altRows: true,
-            shrinkToFit: false,
+            shrinkToFit: true,
             multiboxonly: true,
             onSortCol: clearSelection,
             onPaging: clearSelection,

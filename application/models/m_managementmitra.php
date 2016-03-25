@@ -81,7 +81,7 @@ class M_managementmitra extends CI_Model
         //$db2->where('b.nd',1);
         $db2->where('C.PGL_ID', $param['pgl_id']);
 
-        $sql = "b.nd nd1, b.AKTIF, " .
+        $sql = "b.nd nd1, b.AKTIF, b.ADDRESS,b.CREATED_DATE,b.VALID_FROM," .
             " decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag, " .
             " A.* " .
             " FROM CUST_RINTA PARTITION(PERIOD_" . $param['period'] . ") A" .

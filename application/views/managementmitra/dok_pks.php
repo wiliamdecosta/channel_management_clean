@@ -41,11 +41,14 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">&nbsp;</label>
                 <div class="col-sm-11">
-                    <div id="jqgrid">
-                        <table id="grid-table"></table>
-                        <div id="grid-pager"></div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="jqgrid">
+                                <table id="grid-table"></table>
+                                <div id="grid-pager"></div>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -286,6 +289,21 @@
     $(document).ready(function () {
         var grid = $("#grid-table");
         var pager = $("#grid-pager");
+
+        var parent_column = grid.closest('[class*="col-"]');
+        $(window).on('resize.jqGrid', function () {
+            grid.jqGrid( 'setGridWidth', $("#jqgrid").width()-1 );
+            grid2.jqGrid( 'setGridWidth', $("#jqgrid").width()-1 );
+        })
+        //optional: resize on sidebar collapse/expand and container fixed/unfixed
+        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
+            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
+                grid.jqGrid( 'setGridWidth', parent_column.width() );
+                pager.jqGrid( 'setGridWidth', parent_column.width() );
+            }
+        })
+        var width =  $("#jqgrid").width();
+
         grid.jqGrid({
             url: '<?php echo site_url('managementmitra/gridPKS');?>',
             datatype: "json",
@@ -376,7 +394,7 @@
                     }
                 }
             ],
-            width: '980',
+            width: width,
             height: '100%',
             scrollOffset: 0,
             rowNum: 5,
@@ -402,9 +420,6 @@
                 repeatitems: false
             },
             loadComplete: function () {
-                grid.jqGrid('setGridWidth', 980);
-                pager.jqGrid('setGridWidth', 980);
-
                 var table = this;
                 setTimeout(function () {
                     //  styleCheckbox(table);

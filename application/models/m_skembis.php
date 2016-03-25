@@ -151,13 +151,17 @@ class M_skembis extends CI_Model
         }
 
         // Calculate MF
-        $sql = "  BEGIN " .
-            "  PCKG_CAL_NPK_FEE.MAIN_CAL_NPK(:params1,:params2, :params3); END;";
+        $sql = " DECLARE ".
+            "  o_result_code NUMBER(10); ".
+            "  o_result_msg VARCHAR2(90); ".
+            "  BEGIN ".
+            "  p_run_job_calculate_mfee(:params1,:params2,:params3,:params4, :o_result_code,:o_result_msg); END;";
 
         $params = array(
             array('name' => ':params1', 'value' => $periode, 'type' => SQLT_CHR, 'length' => 6),
             array('name' => ':params2', 'value' => $pgl_id, 'type' => SQLT_INT, 'length' => 11),
-            array('name' => ':params3', 'value' => $npk_id, 'type' => SQLT_INT, 'length' => 11)
+            array('name' => ':params3', 'value' => $npk_id, 'type' => SQLT_INT, 'length' => 11),
+            array('name' => ':params4', 'value' => $this->session->userdata('d_user_name'), 'type' => SQLT_CHR, 'length' => 32)
         );
         // Bind the output parameter
 
@@ -167,13 +171,28 @@ class M_skembis extends CI_Model
             oci_bind_by_name($stmt, $p['name'], $p['value'], $p['length']);
         }
 
+        $message = '';
+        $code = null;
+        oci_bind_by_name($stmt,':o_result_msg',$message,500);
+        oci_bind_by_name($stmt,':o_result_code',$code,32);
         ociexecute($stmt);
+
+
+
+       // print_r($output);
+       // exit;
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
         } else {
-            $output['success'] = true;
-            $output['message'] = 'Proses Calculate berhasil !';
+
+            if($code == 0){
+                $output['success'] = true;
+                $output['message'] = $message;
+            }else{
+                $output['success'] = false;
+                $output['message'] = $message;
+            }
             echo json_encode($output);
             $this->db->trans_commit();
         }
