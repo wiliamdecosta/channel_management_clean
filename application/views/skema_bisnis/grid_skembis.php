@@ -22,17 +22,17 @@
 
         var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid( 'setGridWidth', $(".tab-content").width()-1);
-            pager.jqGrid( 'setGridWidth', $(".tab-content").width()-1);
+            grid.jqGrid('setGridWidth', $(".tab-content").width() - 1);
+            pager.jqGrid('setGridWidth', $(".tab-content").width() - 1);
         })
         //optional: resize on sidebar collapse/expand and container fixed/unfixed
-        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
-            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
-                grid.jqGrid( 'setGridWidth', parent_column.width() );
-                pager.jqGrid( 'setGridWidth', parent_column.width() );
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                grid.jqGrid('setGridWidth', parent_column.width());
+                pager.jqGrid('setGridWidth', parent_column.width());
             }
         })
-        var width =  $(".tab-content").width() ;
+        var width = $(".tab-content").width();
         grid.jqGrid({
             url: '<?php echo site_url('skema_bisnis/gridSkembis');?>',
             datatype: "json",
@@ -115,7 +115,7 @@
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}}
                 },
-                {
+                /*{
                     label: 'Jenis Skema',
                     name: 'REFERENCE_NAME',
                     width: 100,
@@ -124,23 +124,28 @@
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
                     hidden: false
-                },
+                },*/
                 {
-                 label: 'Net Revenue Skema',
-                 name: 'NET_REVENUE',
-                 width: 100,
-                 align: "right",
-                 formatter: 'number',
-                 // summaryType: 'sum',
-                 //summaryTpl: "Total: {0}", // set the summary template to show the group summary
-                 //formatoptions: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 4, defaultValue: '0.0000' },
+                    label: 'Net Revenue Skema',
+                    name: 'NET_REVENUE',
+                    width: 100,
+                    align: "right",
+                    formatter: function (cellvalue, options, rowObject) {
+                        var CF_NAME = rowObject.CF_NAME;
 
-                 formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
-                 sortable: true,
-                 editable: true,
-                 editoptions: {size: 45, value: {Tes: 'asdad'}},
-                 hidden: false
-                 },
+                        if (CF_NAME == 'JML_FASTEL' || CF_NAME == 'NET_ARPU') {
+                            return accounting.formatNumber(cellvalue, 0, "");
+                        }
+                        else {
+                            //return  accounting.formatColumn(cellvalue,"Rp. ");
+                            return accounting.formatMoney(cellvalue, "Rp. ", 2, ".", ",");
+                        }
+                    },
+                    sortable: true,
+                    editable: true,
+                    editoptions: {size: 45, value: {Tes: 'asdad'}},
+                    hidden: false
+                },
                 /*{
                  label: 'Gross Revenue',
                  name: 'GROSS_REVENUE',
@@ -199,8 +204,8 @@
                 repeatitems: false
             },
             loadComplete: function () {
-                grid.jqGrid( 'setGridWidth', $(".tab-content").width() );
-                pager.jqGrid( 'setGridWidth', $(".tab-content").width() );
+                grid.jqGrid('setGridWidth', $(".tab-content").width());
+                pager.jqGrid('setGridWidth', $(".tab-content").width());
                 var table = this;
                 setTimeout(function () {
                     updatePagerIcons(table);
@@ -312,15 +317,16 @@
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 }
-            })/*.navButtonAdd('#grid_pager_pic', {
-            caption: "",
-            buttonicon: "ace-icon fa fa-pencil blue",
-            onClickButton: edit,
-            position: "first",
-            title: "Edit Record",
-            cursor: "pointer",
-            id: "edit"
-        });*/
+            })
+        /*.navButtonAdd('#grid_pager_pic', {
+         caption: "",
+         buttonicon: "ace-icon fa fa-pencil blue",
+         onClickButton: edit,
+         position: "first",
+         title: "Edit Record",
+         cursor: "pointer",
+         id: "edit"
+         });*/
 
         function edit() {
             var rowKey = grid.jqGrid('getGridParam', 'selrow');

@@ -105,12 +105,21 @@
                     name: 'PERCENTAGE',
                     width: 50,
                     align: "center",
-                    formatter: 'integer',
-                    formatoptions: {suffix: ' %'},
-                    editable: true,
-                    editoptions: {size: 45, value: {Tes: 'asdad'}}
+                   // formatter: 'integer',
+                    formatter: function (cellvalue, options, rowObject) {
+                        var CF_NAME = rowObject.CF_NAME;
+                        var PERCENTAGE = rowObject.PERCENTAGE;
+                        if (CF_NAME == 'JML_FASTEL' || CF_NAME == 'NET_ARPU') {
+                            return " - ";
+                        }
+                        else {
+                            return PERCENTAGE + " %";
+                        }
+                    },
+                    //formatoptions: {suffix: ' %'},
+                    editoptions: {size: 45}
                 },
-                {
+               /* {
                     label: 'Jenis Skema',
                     name: 'REFERENCE_NAME',
                     width: 100,
@@ -119,23 +128,27 @@
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
                     hidden: false
-                },
+                },*/
                 {
                     label: 'Net Revenue Skema',
                     name: 'NET_REVENUE',
                     width: 100,
                     align: "right",
-                    formatter: 'number',
-                    summaryType: 'sum',
-                    summaryTpl: "Total: {0}", // set the summary template to show the group summary
-                    formatoptions: {
-                        decimalSeparator: ".",
-                        thousandsSeparator: " ",
-                        decimalPlaces: 4,
-                        defaultValue: '0.0000'
+                    //formatter: 'number',
+                    formatter: function (cellvalue, options, rowObject) {
+                        var CF_NAME = rowObject.CF_NAME;
+
+                        if (CF_NAME == 'JML_FASTEL' || CF_NAME == 'NET_ARPU') {
+                            return accounting.formatNumber(cellvalue, 0, "");
+                        }
+                        else {
+                            //return  accounting.formatColumn(cellvalue,"Rp. ");
+                            return  accounting.formatMoney(cellvalue,"Rp. ",2,".",",");
+                        }
                     },
 
-                    formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
+                   // formatter: 'currency',
+                   // formatoptions: {prefix: 'Rp. ', thousandsSeparator:'.',decimalSeparator:',', decimalPlaces: 2},
                     sortable: true,
                     editable: true,
                     editoptions: {size: 45},
@@ -147,8 +160,25 @@
                     width: 100,
                     align: "right",
                     summaryType: 'sum',
-                    formatter: 'number',
-                    formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
+                    formatter: function (cellvalue, options, rowObject) {
+                        Number.prototype.format = function(n, x, s, c) {
+                            var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+                                num = this.toFixed(Math.max(0, ~~n));
+
+                            return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+                        };
+
+                        var CF_NAME = rowObject.CF_NAME;
+                        if (CF_NAME == 'JML_FASTEL' || CF_NAME == 'NET_ARPU') {
+                            return cellvalue;
+                        }
+                        else {
+                            //return  accounting.formatColumn(cellvalue,"Rp. ");
+                            return  accounting.formatMoney(cellvalue,"Rp. ",2,".",",");
+                        }
+                    },
+                   // formatter: 'currency',
+                    //formatoptions: {prefix: 'Rp. ', thousandsSeparator:'.',decimalSeparator:',', decimalPlaces: 2},
                     sortable: true,
                     editable: true,
                     editoptions: {size: 45},

@@ -218,5 +218,8 @@
 
 <script src="<?php echo base_url(); ?>assets/js/lov.js"></script>
 
+<script src="<?php echo base_url(); ?>assets/js/accounting/accounting.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/accounting/accounting.min.js"></script>
+
 </body>
 </html>
