@@ -23,7 +23,7 @@
                 pager.jqGrid('setGridWidth', parent_column.width());
             }
         })
-        var width = $("#tbl_skema_calculate").width();
+        var width = $("#tbl_skema_calculate").width()-1;
         grid.jqGrid({
             url: '<?php echo site_url('skema_bisnis/gridSkembis');?>',
             datatype: "json",
