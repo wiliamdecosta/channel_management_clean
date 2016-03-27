@@ -398,19 +398,27 @@ class Skema_bisnis extends CI_Controller
 
     public function proses_calculate()
     {
-        $pgl_id = $this->input->post('pgl_id');
-        $skema_id = $this->input->post('skema_id');
-        $bulan = $this->input->post('bulan');
-        $tahun = $this->input->post('tahun');
-
         return $this->m_skembis->calculateMF();
     }
 
     public function grid_skembis_calculate()
     {
+        $skema_id = $this->input->post('skema_id');
         $data['pgl_id'] = $this->input->post('pgl_id');
-        $data['skema_id'] = $this->input->post('skema_id');
+        $data['skema_id'] = $skema_id;
         $data['periode'] = $this->input->post('tahun') . "" . $this->input->post('bulan');
+
+        $this->db->distinct('COMMITMENT_ID');
+        $this->db->distinct('METHOD_ID');
+        $this->db->where('SCHM_FEE_ID', $skema_id);
+
+        $get = $this->db->get('SCHM_FEE')->row_array(0);
+        $method_id = $get['METHOD_ID'];
+
+        $commitment_id = $get['COMMITMENT_ID'];
+        $data['method_id'] = $method_id;
+        $data['commitment_id'] = $commitment_id;
+
         $this->load->view('skema_bisnis/grid_skembis_calculate', $data);
     }
 
@@ -1329,6 +1337,60 @@ class Skema_bisnis extends CI_Controller
         $result['records'] = $count;
 
         $result['Data'] = $this->jqGrid->get_dataQuery($req_param);
+        echo json_encode($result);
+    }
+
+    public function gridTierCond(){
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $table = "V_TIER_COND";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        if ($this->input->post('commitment_id')) {
+            $req_param['where'] = array('COMMITMENT_ID' => $this->input->post('commitment_id'));
+        }
+
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
         echo json_encode($result);
     }
 }

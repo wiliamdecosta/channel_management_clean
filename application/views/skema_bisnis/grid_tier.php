@@ -1,203 +1,97 @@
-<div id="tbl_skema">
-    <button class="btn btn-white btn-sm btn-round" id="add_skema" style="margin-bottom:10px">
-        <i class="ace-icon fa fa-plus green"></i>
-        Tambah Skema
-    </button>
-    &nbsp;
-    <div class="row">
-        <div class="col-xs-12">
-            <table id="grid_table_pic"></table>
-            <div id="grid_pager_pic"></div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="grid_log">
+            <table id="grid_table"></table>
+            <div id="grid_pager"></div>
         </div>
     </div>
-</div>
-<div id="form_skembis" style="display: none;">
-    <?php $this->load->view('skema_bisnis/create_skema'); ?>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var grid = $("#grid_table_pic");
-        var pager = $("#grid_pager_pic");
+        var grid = $("#grid_table");
+        var pager = $("#grid_pager");
 
         var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid('setGridWidth', $(".tab-content").width() - 1);
-            pager.jqGrid('setGridWidth', $(".tab-content").width() - 1);
-        })
+            grid.jqGrid('setGridWidth', $("#grid_log").width() - 1);
+            pager.jqGrid('setGridWidth', $("#grid_log").width() - 1);
+        });
         //optional: resize on sidebar collapse/expand and container fixed/unfixed
         $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
             if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
                 grid.jqGrid('setGridWidth', parent_column.width());
                 pager.jqGrid('setGridWidth', parent_column.width());
             }
-        })
-        var width = $(".tab-content").width();
+        });
+        var width = $("#grid_log").width() - 1;
+
         grid.jqGrid({
-            url: '<?php echo site_url('skema_bisnis/gridSkembis');?>',
+            url: '<?php echo site_url('skema_bisnis/gridTierCond');?>',
             datatype: "json",
             mtype: "POST",
-            postData: {pgl_id: <?php echo $pgl_id;?>},
-            caption: "List Skema Bisnis",
+            postData: {
+                commitment_id:<?php echo $commitment_id;?>
+            },
             colModel: [
                 {
-                    label: 'ID',
-                    name: '',
-                    key: true,
+                    label: 'Revenue Value',
+                    name: 'REV_MTR',
                     width: 5,
-                    sorttype: 'number',
                     editable: false,
-                    hidden: true
-                },
-                {
-                    label: 'SCHM_FEE_ID',
-                    name: 'SCHM_FEE_ID',
-                    width: 5,
-                    sorttype: 'number',
-                    editable: false,
-                    hidden: true
-                },
-                {
-                    label: 'PGL_ID',
-                    name: 'PGL_ID',
-                    width: 5,
-                    sorttype: 'number',
-                    editable: false,
-                    hidden: true
-                },
-                {
-                    label: 'CF_ID',
-                    name: 'CF_ID',
-                    width: 5,
-                    sorttype: 'number',
-                    editable: false,
-                    hidden: true
-                },
-                {
-                    label: 'FLAG_CAL',
-                    name: 'FLAG_CAL',
-                    width: 5,
-                    sorttype: 'number',
-                    editable: false,
-                    hidden: true
-                },
-                {
-                    label: 'METHOD_ID',
-                    name: 'METHOD_ID',
-                    width: 5,
-                    sorttype: 'number',
-                    editable: false,
-                    hidden: true
-                },
-                {
-                    label: 'Nama Skema',
-                    name: 'NAME',
-                    width: 200,
-                    align: "left",
-                    editable: true
-                },
-                {
-                    label: 'Nama Komponen',
-                    name: 'CF_NAME',
-                    width: 100,
-                    align: "left",
-                    editable: true,
-                    editrules: {required: true},
-                    editoptions: {size: 45}
-                },
-                {
-                    label: 'Persentasi %',
-                    name: 'PERCENTAGE',
-                    width: 50,
-                    align: "center",
+                    align: 'right',
                     formatter: function (cellvalue, options, rowObject) {
-                        var CF_NAME = rowObject.CF_NAME;
-                        var PERCENTAGE = rowObject.PERCENTAGE;
-                        if (CF_NAME == 'JML_FASTEL' || CF_NAME == 'NET_ARPU') {
-                            return " - ";
-                        }
-                        else {
-                            return Number(PERCENTAGE) + " %";
-                        }
-                    },
-                    editable: true,
-                    editoptions: {size: 45, value: {Tes: 'asdad'}}
+                        return accounting.formatMoney(cellvalue, "Rp. ", 2, ".", ",");
+                    }
                 },
-                /*{
-                    label: 'Jenis Skema',
-                    name: 'REFERENCE_NAME',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    editable: true,
-                    editoptions: {size: 45, value: {Tes: 'asdad'}},
-                    hidden: false
-                },*/
                 {
-                    label: 'Net Revenue Skema',
-                    name: 'NET_REVENUE',
-                    width: 100,
-                    align: "right",
+                    label: 'Tier',
+                    name: 'TIER',
+                    width: 5,
+                    editable: false,
+                    align: 'center'
+                },
+                {
+                    label: 'MINIMUM_VALUE',
+                    name: 'MINIMUM_VALUE',
+                    width: 5,
+                    editable: false,
+                    align: 'right',
                     formatter: function (cellvalue, options, rowObject) {
-                        var CF_NAME = rowObject.CF_NAME;
+                        return accounting.formatMoney(cellvalue, "Rp. ", 2, ".", ",");
+                    }
+                },
+                {
+                    label: 'MAXIMUM_VALUE',
+                    name: 'MAXIMUM_VALUE',
+                    width: 5,
+                    editable: false,
+                    align: 'right',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return accounting.formatMoney(cellvalue, "Rp. ", 2, ".", ",");
+                    }
+                },
 
-                        if (CF_NAME == 'JML_FASTEL' || CF_NAME == 'NET_ARPU') {
-                            return accounting.formatNumber(cellvalue, 0, "");
-                        }
-                        else {
-                            //return  accounting.formatColumn(cellvalue,"Rp. ");
-                            return accounting.formatMoney(cellvalue, "Rp. ", 2, ".", ",");
-                        }
-                    },
-                    sortable: true,
-                    editable: true,
-                    editoptions: {size: 45, value: {Tes: 'asdad'}},
-                    hidden: false
-                },
-                /*{
-                 label: 'Gross Revenue',
-                 name: 'GROSS_REVENUE',
-                 width: 100,
-                 align: "right",
-                 // summaryType: 'sum',
-                 formatter: 'number',
-                 formatoptions: {prefix: 'Rp. ', decimalPlaces: 2},
-                 sortable: true,
-                 editable: true,
-                 editoptions: {size: 45, value: {Tes: 'asdad'}},
-                 hidden: false
-                 },*/
                 {
-                    label: 'Dibuat Oleh',
-                    name: 'CREATED_BY',
-                    width: 70,
-                    align: "center",
-                    sortable: true,
-                    editable: true,
-                    editrules: {number: true},
-                    hidden: false
-                },
-                {
-                    label: 'Tgl Buat',
-                    name: 'CREATED_DATE',
-                    width: 70,
-                    align: "center",
-                    sortable: true,
-                    editable: true,
-                    editrules: {number: true},
-                    hidden: false
+                    label: 'PRC',
+                    name: 'PRC',
+                    width: 5,
+                    editable: false,
+                    align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return Number(cellvalue) + " %";
+
+                    }
                 }
             ],
-
             width: width,
-            //AutoWidth: true,
             height: '100%',
             scrollOffset: 0,
-            rowNum: 10,
+            rowNum: 5,
             viewrecords: true,
-            rowList: [10, 25, 50],
-            sortname: 'SCHM_FEE_ID', // default sorting ID
-            //rownumbers: true, // show row numbers
+            rowList: [5, 10, 20],
+            sortname: 'TIER_ID', // default sorting ID
+            rownumbers: true, // show row numbers
             rownumWidth: 35,
             sortorder: 'asc',
             altRows: true,
@@ -205,38 +99,36 @@
             multiboxonly: true,
             onSortCol: clearSelection,
             onPaging: clearSelection,
-            pager: '#grid_pager_pic',
+            pager: '#grid_pager',
             jsonReader: {
                 root: 'Data',
                 id: 'id',
                 repeatitems: false
-            },
+            }
+            ,
             loadComplete: function () {
-                grid.jqGrid('setGridWidth', $(".tab-content").width());
-                pager.jqGrid('setGridWidth', $(".tab-content").width());
                 var table = this;
                 setTimeout(function () {
                     updatePagerIcons(table);
                     enableTooltips(table);
                 }, 0);
             },
-            grouping: true,
+            grouping: false,
             groupingView: {
-                groupField: ["NAME"],
+                groupField: ["REV_MTR"],
                 groupColumnShow: [false],
-                groupText: ["<b>{0}</b>"],
+                groupText: ["Revenue MTR = <b>{0}</b>"],
                 groupOrder: ["asc"],
                 groupSummary: [false],
                 groupCollapse: false
 
-            }
-
+            },
+            caption: "Tier"
 
         });
 
-
         //navButtons grid master
-        grid.jqGrid('navGrid', '#grid_pager_pic',
+        grid.jqGrid('navGrid', '#grid_pager',
             { 	//navbar options
                 edit: false,
                 excel: false,
@@ -245,7 +137,7 @@
                 addicon: 'ace-icon fa fa-plus-circle purple',
                 del: false,
                 delicon: 'ace-icon fa fa-trash-o red',
-                search: true,
+                search: false,
                 searchicon: 'ace-icon fa fa-search orange',
                 refresh: true,
                 refreshicon: 'ace-icon fa fa-refresh green',
@@ -325,72 +217,7 @@
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 }
-            })
-        /*.navButtonAdd('#grid_pager_pic', {
-         caption: "",
-         buttonicon: "ace-icon fa fa-pencil blue",
-         onClickButton: edit,
-         position: "first",
-         title: "Edit Record",
-         cursor: "pointer",
-         id: "edit"
-         });*/
-
-        function edit() {
-            var rowKey = grid.jqGrid('getGridParam', 'selrow');
-            var PGL_ID = grid.jqGrid('getCell', rowKey, 'PGL_ID');
-            var SCHM_FEE_ID = grid.jqGrid('getCell', rowKey, 'SCHM_FEE_ID');
-            var CF_ID = grid.jqGrid('getCell', rowKey, 'CF_ID');
-            var METHOD_ID = grid.jqGrid('getCell', rowKey, 'METHOD_ID');
-            var FLAG_CAL = grid.jqGrid('getCell', rowKey, 'FLAG_CAL');
-            /*alert(FLAG_CAL);
-             return false;*/
-            if (rowKey) {
-                if (FLAG_CAL == 'Y') {
-                    swal('', 'Data ini tidak bisa diedit karena sudah diproses !', 'warning')
-                } else {
-                    $.ajax({
-                        // async: false,
-                        url: "<?php echo base_url();?>skema_bisnis/edit_skemabisnis",
-                        type: "POST",
-                        data: {PGL_ID: PGL_ID, SCHM_FEE_ID: SCHM_FEE_ID, CF_ID: CF_ID, METHOD_ID: METHOD_ID},
-                        success: function (data) {
-                            $("#main_content").html(data);
-                            /*$.post("<?php echo site_url('parameter/gridMapPIC');?>",
-                             {
-                             P_MP_PIC_ID: P_MP_PIC_ID
-                             },
-                             function (response) {
-                             var response = JSON.parse(response);
-                             var obj = response.Data[0];
-                             $("#pic_name").val(obj.PIC_NAME);
-                             $("#pic_id").val(obj.P_PIC_ID);
-                             $("#contact").val(obj.P_REFERENCE_LIST_ID);
-                             $("#p_mp_lokasi_id").val(obj.P_MP_LOKASI_ID);
-                             $("#p_mp_pic_id").val(obj.P_MP_PIC_ID);
-
-                             $("#form_created_by").val(obj.CREATED_BY);
-                             $("#form_creation_date").val(obj.CREATE_DATE);
-                             $("#form_updated_by").val(obj.UPDATE_BY);
-                             $("#form_updated_date").val(obj.UPDATE_DATE);
-                             }
-                             );*/
-
-                            $("#tbl_pic").hide("slow");
-                            $("#form_pic").show("slow");
-
-
-                        }
-                    });
-                }
-
-            }
-
-            else {
-                // alert("Please Select Row !!!");
-                $.jgrid.viewModal("#alertmod_" + this.id, {toTop: true, jqm: true});
-            }
-        }
+            });
 
         function clearSelection() {
 
@@ -460,36 +287,13 @@
         //it may be possible to have some custom formatter to do this as the grid is being created to prevent this
         //or go back to default browser checkbox styles for the grid
         function styleCheckbox(table) {
-            /**
-             $(table).find('input:checkbox').addClass('ace')
-             .wrap('<label />')
-             .after('<span class="lbl align-top" />')
-
-
-             $('.ui-jqgrid-labels th[id*="_cb"]:first-child')
-             .find('input.cbox[type=checkbox]').addClass('ace')
-             .wrap('<label />').after('<span class="lbl align-top" />');
-             */
         }
 
 
         //unlike navButtons icons, action icons in rows seem to be hard-coded
         //you can change them like this in here if you want
         function updateActionIcons(table) {
-            /**
-             var replacement =
-             {
-                 'ui-ace-icon fa fa-pencil' : 'ace-icon fa fa-pencil blue',
-                 'ui-ace-icon fa fa-trash-o' : 'ace-icon fa fa-trash-o red',
-                 'ui-icon-disk' : 'ace-icon fa fa-check green',
-                 'ui-icon-cancel' : 'ace-icon fa fa-times red'
-             };
-             $(table).find('.ui-pg-div span.ui-icon').each(function(){
-						var icon = $(this);
-						var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
-						if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
-					})
-             */
+
         }
 
         //replace icons with FontAwesome icons like above
@@ -513,14 +317,6 @@
             $('.navtable .ui-pg-button').tooltip({container: 'body'});
             $(table).find('.ui-pg-div').tooltip({container: 'body'});
         }
-    });
+    })
+    ;
 </script>
-
-<script>
-    $("#add_skema").click(function () {
-        $("#tbl_skema").hide("slow");
-        $("#form_skembis").show("slow");
-    });
-
-</script>
-</div>

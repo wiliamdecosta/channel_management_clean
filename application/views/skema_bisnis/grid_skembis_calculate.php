@@ -4,17 +4,28 @@
             <table id="grid_calculate"></table>
             <div id="pager_calculate"></div>
         </div>
+
     </div>
+    <br>
+    <?php
+    if ($method_id == 7 || $method_id == 9 || $method_id == 13) {
+        $this->load->view('skema_bisnis/grid_tier', array("method_id" => $method_id, "commitment_id" => $commitment_id));
+    }
+    ?>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        /*var method_id = '<?php echo $method_id;?>';
+         if(method_id == 7 || method_id == 9 || method_id == 13){
+         alert('ada tier');
+         }*/
         var grid = $("#grid_calculate");
         var pager = $("#pager_calculate");
 
         var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid('setGridWidth', $("#tbl_skema_calculate").width() - 1);
-            pager.jqGrid('setGridWidth', $("#tbl_skema_calculate").width() - 1);
+            grid.jqGrid('setGridWidth', $("#tbl_skema_calculate").width() - 5);
+            pager.jqGrid('setGridWidth', $("#tbl_skema_calculate").width() - 5);
         })
         //optional: resize on sidebar collapse/expand and container fixed/unfixed
         $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
@@ -23,7 +34,7 @@
                 pager.jqGrid('setGridWidth', parent_column.width());
             }
         })
-        var width = $("#tbl_skema_calculate").width()-1;
+        var width = $("#tbl_skema_calculate").width() - 5;
         grid.jqGrid({
             url: '<?php echo site_url('skema_bisnis/gridSkembis');?>',
             datatype: "json",
@@ -105,7 +116,7 @@
                     name: 'PERCENTAGE',
                     width: 50,
                     align: "center",
-                   // formatter: 'integer',
+                    // formatter: 'integer',
                     formatter: function (cellvalue, options, rowObject) {
                         var CF_NAME = rowObject.CF_NAME;
                         var PERCENTAGE = rowObject.PERCENTAGE;
@@ -113,22 +124,22 @@
                             return " - ";
                         }
                         else {
-                            return PERCENTAGE + " %";
+                            return Number(PERCENTAGE) + " %";
                         }
                     },
                     //formatoptions: {suffix: ' %'},
                     editoptions: {size: 45}
                 },
-               /* {
-                    label: 'Jenis Skema',
-                    name: 'REFERENCE_NAME',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    editable: true,
-                    editoptions: {size: 45, value: {Tes: 'asdad'}},
-                    hidden: false
-                },*/
+                /* {
+                 label: 'Jenis Skema',
+                 name: 'REFERENCE_NAME',
+                 width: 100,
+                 align: "left",
+                 sortable: true,
+                 editable: true,
+                 editoptions: {size: 45, value: {Tes: 'asdad'}},
+                 hidden: false
+                 },*/
                 {
                     label: 'Net Revenue Skema',
                     name: 'NET_REVENUE',
@@ -143,12 +154,12 @@
                         }
                         else {
                             //return  accounting.formatColumn(cellvalue,"Rp. ");
-                            return  accounting.formatMoney(cellvalue,"Rp. ",2,".",",");
+                            return accounting.formatMoney(cellvalue, "Rp. ", 2, ".", ",");
                         }
                     },
 
-                   // formatter: 'currency',
-                   // formatoptions: {prefix: 'Rp. ', thousandsSeparator:'.',decimalSeparator:',', decimalPlaces: 2},
+                    // formatter: 'currency',
+                    // formatoptions: {prefix: 'Rp. ', thousandsSeparator:'.',decimalSeparator:',', decimalPlaces: 2},
                     sortable: true,
                     editable: true,
                     editoptions: {size: 45},
@@ -161,7 +172,7 @@
                     align: "right",
                     summaryType: 'sum',
                     formatter: function (cellvalue, options, rowObject) {
-                        Number.prototype.format = function(n, x, s, c) {
+                        Number.prototype.format = function (n, x, s, c) {
                             var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
                                 num = this.toFixed(Math.max(0, ~~n));
 
@@ -174,10 +185,10 @@
                         }
                         else {
                             //return  accounting.formatColumn(cellvalue,"Rp. ");
-                            return  accounting.formatMoney(cellvalue,"Rp. ",2,".",",");
+                            return accounting.formatMoney(cellvalue, "Rp. ", 2, ".", ",");
                         }
                     },
-                   // formatter: 'currency',
+                    // formatter: 'currency',
                     //formatoptions: {prefix: 'Rp. ', thousandsSeparator:'.',decimalSeparator:',', decimalPlaces: 2},
                     sortable: true,
                     editable: true,
@@ -188,7 +199,7 @@
                     label: 'Dibuat Oleh',
                     name: 'CREATED_BY',
                     width: 70,
-                    align: "left",
+                    align: "center",
                     sortable: true,
                     editable: true,
                     editrules: {number: true},
@@ -198,7 +209,7 @@
                     label: 'Tgl Buat',
                     name: 'CREATED_DATE',
                     width: 70,
-                    align: "left",
+                    align: "center",
                     sortable: true,
                     editable: true,
                     editrules: {number: true},
@@ -207,7 +218,6 @@
             ],
 
             width: width,
-            //AutoWidth: true,
             height: '100%',
             scrollOffset: 0,
             rowNum: 30,
@@ -253,16 +263,16 @@
 
 
         //navButtons grid master
-        grid.jqGrid('navGrid', '#grid_pager_pic',
+        grid.jqGrid('navGrid', '#pager_calculate',
             { 	//navbar options
                 edit: false,
                 excel: false,
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: false,
                 addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
+                del: false,
                 delicon: 'ace-icon fa fa-trash-o red',
-                search: true,
+                search: false,
                 searchicon: 'ace-icon fa fa-search orange',
                 refresh: true,
                 refreshicon: 'ace-icon fa fa-refresh green',
