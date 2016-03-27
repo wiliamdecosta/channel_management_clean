@@ -273,9 +273,13 @@ class M_cm extends CI_Model {
 		$parse = OCIParse($this->db->conn_id, $sql);
 		OCIBindByName($parse, ':data1', $data1 );
 		OCIExecute($parse);
-		while (OCIFetchInto($parse,$arr,OCI_ASSOC)) {
-			$ret = $arr["CONTENT"]->load();
-		}
+		
+			while (OCIFetchInto($parse,$arr,OCI_ASSOC)) {
+				if($arr["CONTENT"]){
+					$ret = $arr["CONTENT"]->load();
+				}
+			}
+		
         return $ret;
 	}
 	public function deleteDOC($data1){

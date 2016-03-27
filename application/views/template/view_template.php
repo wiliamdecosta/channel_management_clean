@@ -1,244 +1,298 @@
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.custom.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/chosen.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/datepicker.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-timepicker.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/daterangepicker.css" />
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datetimepicker.css" />
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/ckfinder/ckfinder.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/ckeditor/ckeditor.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/jspdf.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/from_html.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/split_text_to_size.js"> </script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/standard_fonts_metrics.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/dist/jspdf.debug.js"></script>
+<script rel="javascript" type="text/javascript" src="<?php echo base_url();?>assets/js/jsPDF-master/plugins/addimage.js.js"></script>
 
+<div id="content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <?=$this->breadcrumb;?>
+    </div>
 
+    <div class="page-content">
 
-<div id="list_template"> <!--harusnya dokPKS -->
-    <form class="form-horizontal" role="form">
-        <div class="rows">
-            <div class="form-group" id="all_table">
-				
-				<div class="col-xs-12">
-							<div class="row">
-								<form class="form-horizontal" role="form" id="myform">
-								<div class="col-xs-6">
-									<div id="notif">
-						
-									</div>
+        <div class="row">
+            <div class="col-xs-12">
+
+                <div class="row">
+                    <div class="vspace-12-sm"></div>
+                    <div class="col-sm-12">
+                        <div class="widget-box transparent">
+                            <div class="widget-header red widget-header-flat">
+                                <h4 class="widget-title lighter">
+                                    <!--                    <i class="ace-icon fa fa-money orange"></i>-->
+                                    Template
+                                </h4>
+
+                                <div class="widget-toolbar">
+                                    <a href="#" data-action="collapse">
+                                        <i class="ace-icon fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <br>
 									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Nama Segmen </label>
-						
-										<div class="col-sm-6">
-											 <?php echo combo_segmen(); ?>
+						<div id="list_template"> <!--harusnya dokPKS -->
+							<form class="form-horizontal" role="form">
+								<div class="rows">
+									<div class="form-group" id="all_table">
+										
+										<div class="col-xs-12">
+													<div class="row">
+														<form class="form-horizontal" role="form" id="myform">
+														<div class="col-xs-6">
+															<div id="notif">
+												
+															</div>
+															
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Nama Segmen </label>
+												
+																<div class="col-sm-6">
+																	 <?php echo combo_segmen(); ?>
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama CC </label>
+												
+																<div class="col-sm-6">
+																	<select class="form-control" id="list_cc">
+																		<option>Pilih CC</option>
+												
+																	</select>
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Mitra </label>
+												
+																<div class="col-sm-6">
+																	<select class="form-control" id="mitra">
+																		<option value="">Pilih Mitra</option>
+																	</select>
+																</div>
+															</div>
+												
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Lokasi PKS </label>
+												
+																<div class="col-sm-6">
+																	  <select class="form-control" id="lokasisewa">
+																			<option value="">Pilih Lokasi PKS</option>
+																		</select>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-6">
+															<div id="notif">
+												
+															</div>
+												
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Tipe Dokumen </label>
+												
+																<div class="col-sm-6">
+																	<select class="form-control" id="tipe_doc">
+																		<option value="">Pilih Tipe Dokumen</option>
+																		<?php foreach ($result2 as $content) {
+																			echo "<option value='" . $content->LISTING_NO . "'>" . $content->CODE . "</option>";
+																		}
+																		?>
+																	</select>
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Dokumen </label>
+												
+																<div class="col-sm-6">
+																	<input type="text" class="col-xs-10 col-sm-5 required form-control" id="docx_name" name="docx_nama" placeholder="Tulis nama file disini">
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Deskripsi </label>
+																<div class="col-sm-6">
+																	<input type="text"  class="col-xs-10 col-sm-5 required form-control" id="docx_descript" name="docx_deskrip" placeholder="Tulis deskripsi disini">
+																</div>
+															</div> 
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Bahasa </label>
+												
+																<div class="col-sm-6">
+																	<select class="form-control" id="Bhs">
+																		<option>Pilih Bahasa</option>
+																		<?php foreach ($result3 as $content) {
+																			echo "<option value='" . $content->LISTING_NO . "'>" . $content->CODE . "</option>";
+																		}
+																		?>
+												
+																	</select>
+																</div>
+															</div>
+														<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> </label>
+																<div class="col-sm-6">
+																	<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
+																		Simpan
+																		</a>
+																	</div>
+															</div> 
+														</div>
+														</form>
+													</div>
+												
+												
 										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama CC </label>
+										
+										<div class="col-xs-12">
+												<div class="clearfix">
+												</div>
+												<div class="table-header">
+													Daftar Template
+												</div>
+												<div>
+													<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+														<thead>
+														<tr>									
+															<th class="center">NO</th>
+															<th class="center"> Nama Dokumen</th>
+															<th class="center"> Jenis Dokumen</th>
+															<th class="center"> Deskripsi</th>
+															<th class="center"> Jenis Bahasa</th>
+															<th class="center"> Lokasi</th>
+															<th class="center"> Periode</th>
+															<th class="center"> Action </th>
+														</tr>
+														</thead>
+														<tbody>
 						
-										<div class="col-sm-6">
-											<select class="form-control" id="list_cc">
-												<option>Pilih CC</option>
+														<?php $i = 1;
+														
+														foreach ($result1 as $content){
 						
-											</select>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Mitra </label>
+															?>
+															<tr value="<?php echo $content->DOC_ID; ?>" data-id="<?php echo $content->DOC_NAME;?>" class="table_head">
+																<td class="center"><?php echo $i; ?> </td>
+																<td><?php echo $content->DOC_NAME; ?></td>
+																<td class="center" value="1XKLI"> <?php echo $content->DOC_TYPE_NAME; ?> </td>
+																<td> <?php echo $content->DESCRIPTION; ?> </td>
+																<td class="class1" id="classic" value="1XKLI"> <?php echo $content->LANG; ?> </td>
+																<td> <?php foreach ($result4 as $content2){
+																	if($content->LOKASI_ID == $content2->P_MP_LOKASI_ID){
+																		echo $content2->LOKASI;
+																	}
+																}  ?> </td>
+																<td class="class1" id="classic" value="1XKLI"> <?php echo $content->PERIODE; ?> </td>
+																<td>
+																	<div class="hidden-sm hidden-xs action-buttons">
+																		<a class="purple" data-rel="tooltip" data-original-title="Download">
+																			<i class="ace-icon fa fa-download bigger-130"></i>
+																		</a>
 						
-										<div class="col-sm-6">
-											<select class="form-control" id="mitra">
-												<option value="">Pilih Mitra</option>
-											</select>
-										</div>
-									</div>
+																		<a class="blue" data-rel="tooltip" data-original-title="View" onClick="Back()">
+																			<i class= "ace-icon fa fa-search-plus bigger-130"></i>
+																		</a>
 						
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Lokasi PKS </label>
+																		<a class="green" data-rel="tooltip" data-original-title="Edit" onClick="Back2()">
+																			<i class="ace-icon fa fa-pencil bigger-130"></i>
+																		</a>
 						
-										<div class="col-sm-6">
-											  <select class="form-control" id="lokasisewa">
-													<option value="">Pilih Lokasi PKS</option>
-												</select>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-6">
-									<div id="notif">
+																		<a class="red " data-rel="tooltip" data-original-title="Delete" >
+																			<i class="ace-icon fa fa-trash-o bigger-130"></i>
+																		</a>
+																	</div>
 						
-									</div>
+																	<div class="hidden-md hidden-lg">
+																		<div class="inline pos-rel">
+																			<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+																				<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+																			</button>
 						
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Tipe Dokumen </label>
+																			<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																				<li>
+																					<a  class="tooltip-download" data-rel="tooltip" value="" title="Download">
+																										<span class="blue">
+																											<i class="ace-icon fa fa-download bigger-120">ss</i>
+																										</span>
+																					</a>
+																				</li>
 						
-										<div class="col-sm-6">
-											<select class="form-control" id="tipe_doc">
-												<option value="">Pilih Tipe Dokumen</option>
-												<?php foreach ($result2 as $content) {
-													echo "<option value='" . $content->LISTING_NO . "'>" . $content->CODE . "</option>";
-												}
-												?>
-											</select>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Nama Dokumen </label>
+																				<li>
+																					<a class="tooltip-info" data-rel="tooltip" title="View" onClick="Back()">
+																										<span class="blue">
+																											<i class="ace-icon fa fa-search-plus bigger-120"></i>
+																										</span>
+																					</a>
+																				</li>
 						
-										<div class="col-sm-6">
-											<input type="text" class="col-xs-10 col-sm-5 required form-control" id="docx_name" name="docx_nama" placeholder="Tulis nama file disini">
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Deskripsi </label>
-										<div class="col-sm-6">
-											<input type="text"  class="col-xs-10 col-sm-5 required form-control" id="docx_descript" name="docx_deskrip" placeholder="Tulis deskripsi disini">
-										</div>
-									</div> 
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Bahasa </label>
+																				<li>
+																					<a  class="tooltip-success" data-rel="tooltip" title="Edit" onClick="Back2()">
+																										<span class="green">
+																											<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+																										</span>
+																					</a>
+																				</li>
 						
-										<div class="col-sm-6">
-											<select class="form-control" id="Bhs">
-												<option>Pilih Bahasa</option>
-												<?php foreach ($result3 as $content) {
-													echo "<option value='" . $content->LISTING_NO . "'>" . $content->CODE . "</option>";
-												}
-												?>
+																				<li>
+																					<a class="tooltip-error" data-rel="tooltip" title="Delete" >
+																										<span class="red">
+																											<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																										</span>
+																					</a>
+																				</li>                                                       
 						
-											</select>
-										</div>
-									</div>
-								<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> </label>
-										<div class="col-sm-6">
-											<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
-												Simpan
-												</a>
+																			</ul>
+																		</div>
+																	</div>
+																</td>
+															</tr>
+															<?php
+															$i++;
+														}
+						
+														?>
+														</tbody>
+													</table>
+												</div>
 											</div>
-									</div> 
+									</div>
 								</div>
-								</form>
+							</form>
+						</div>
+						<div id="all_view">
+							<div id="texteditorOne">
+								<textarea id="textarea1" readonly>
+								</textarea>
 							</div>
-						
-						
-				</div>
-				
-                <div class="col-xs-12">
-                        <div class="clearfix">
-                        </div>
-                        <div class="table-header">
-                            Daftar Template
-                        </div>
-                        <div>
-                            <table id="dynamic-table" class="table table-striped table-bordered table-hover">
-                                <thead>
-                                <tr>									
-                                    <th class="center">NO</th>
-                                    <th class="center"> Nama Dokumen</th>
-                                    <th class="center"> Jenis Dokumen</th>
-                                    <th class="center"> Deskripsi</th>
-                                    <th class="center"> Jenis Bahasa</th>
-                                    <th class="center"> Lokasi</th>
-                                    <th class="center"> Action </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                <?php $i = 1;
-								
-                                foreach ($result1 as $content){
-
-                                    ?>
-                                    <tr value="<?php echo $content->DOC_ID; ?>" data-id="<?php echo $content->DOC_NAME;?>" class="table_head">
-										<td class="center"><?php echo $i; ?> </td>
-                                        <td><?php echo $content->DOC_NAME; ?></td>
-                                        <td class="center" value="1XKLI"> <?php echo $content->DOC_TYPE_NAME; ?> </td>
-                                        <td> <?php echo $content->DESCRIPTION; ?> </td>
-                                        <td class="class1" id="classic" value="1XKLI"> <?php echo $content->LANG; ?> </td>
-                                        <td> <?php foreach ($result4 as $content2){
-											if($content->LOKASI_ID == $content2->P_MP_LOKASI_ID){
-												echo $content2->LOKASI;
-											}
-										}  ?> </td>
-                                        <td>
-                                            <div class="hidden-sm hidden-xs action-buttons">
-                                                <a class="purple" data-rel="tooltip" data-original-title="Download">
-                                                    <i class="ace-icon fa fa-download bigger-130"></i>
-                                                </a>
-
-                                                <a class="blue" data-rel="tooltip" data-original-title="View" onClick="Back()">
-                                                    <i class= "ace-icon fa fa-search-plus bigger-130"></i>
-                                                </a>
-
-                                                <a class="green" data-rel="tooltip" data-original-title="Edit" onClick="Back2()">
-                                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
-                                                </a>
-
-                                                <a class="red" data-rel="tooltip" data-original-title="Delete">
-                                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
-                                                </a>
-                                            </div>
-
-                                            <div class="hidden-md hidden-lg">
-                                                <div class="inline pos-rel">
-                                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
-                                                        <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-                                                    </button>
-
-                                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                                                        <li>
-                                                            <a  class="tooltip-download" data-rel="tooltip" value="" title="Download">
-																				<span class="blue">
-																					<i class="ace-icon fa fa-download bigger-120">ss</i>
-																				</span>
-                                                            </a>
-                                                        </li>
-
-                                                        <li>
-                                                            <a class="tooltip-info" data-rel="tooltip" title="View" onClick="Back()">
-																				<span class="blue">
-																					<i class="ace-icon fa fa-search-plus bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
-
-                                                        <li>
-                                                            <a  class="tooltip-success" data-rel="tooltip" title="Edit" onClick="Back2()">
-																				<span class="green">
-																					<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>
-
-                                                        <li>
-                                                            <a class="tooltip-error" data-rel="tooltip" title="Delete" >
-																				<span class="red">
-																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																				</span>
-                                                            </a>
-                                                        </li>                                                       
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                    $i++;
-                                }
-
-                                ?>
-                                </tbody>
-                            </table>
+							<div id="texteditorTwo">
+								<textarea id="textarea2">
+								</textarea>
+							</div></br>
+							<div id="buttonOne">
+								<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()"><span>
+								Back</span></a>
+							</div>
+							<div id="hiddenval" style="display: none;"><input type="text" id="test3" value="LALALALA"></div>
+						</div>
+                               
+                            </div><!-- PAGE CONTENT ENDS -->
                         </div>
                     </div>
-            </div>
-        </div>
-    </form>
+                </div><!-- /.widget-box -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div>
 </div>
-<div id="all_view">
-	<div id="texteditorOne">
-		<textarea id="textarea1" readonly>
-		</textarea>
-	</div>
-	<div id="texteditorTwo">
-		<textarea id="textarea2">
-		</textarea>
-	</div></br>
-	<div id="buttonOne">
-		<a id="submitform" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()"><span>
-		Back</span></a>
-	</div>
-	<div id="hiddenval" style="display: none;"><input type="text" id="test3" value="LALALALA"></div>
-</div>
+
 <script type="text/javascript">
     $('.date-picker').datepicker({
         autoclose: true,
@@ -415,7 +469,7 @@ jQuery(function($) {
 				success: function(data){
 					if (data.length > 0){
 						var docpdf = new jsPDF('p', 'pt', 'letter');
-						margins = { top: 60, bottom: 60, left: 40, width: 500 };
+						margins = { top: 20, bottom: 20, left: 20, width: 595 };
 						var elmtHandler = 
 						{
 							'#CreateReport' : function (elmtHandler, renderer){
@@ -530,6 +584,21 @@ $(document).ready(function () {
     });
 
 	
+	function deltemplate(){
+		$('#dynamic-table tbody').on('click', 'tr', function () {
+			var id_DOC = $(this).attr('value');			
+			$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/deltemplate",
+                data:  {id_doc: id_DOC},
+				dataType:"text",
+				success: function(data){
+				CKEDITOR.instances["textarea1"].setData(data);
+                }
+                });
+		});	
+	}
+	
 	function Back(){
 		edit = false;
 		$('#submitform span').text('Back to table');
@@ -555,8 +624,10 @@ $(document).ready(function () {
 		jQuery("#texteditorOne").hide(1000);
 		jQuery("#texteditorTwo").hide(1000);		
 		jQuery("#buttonOne").hide(1000);
-		jQuery("#all_table").show(1000);		
-			var DOC_content = CKEDITOR.instances["textarea2"].getData();
+		jQuery("#all_table").show(1000);
+			    DOC_content = CKEDITOR.instances["textarea2"].getData();
+				// encode to base 64 // mar 28032016 
+				DOC_content = btoa(DOC_content);
 			// var res = str.replace("&zenzenzenzenzen", "'");
 			if (edit){
 				ID = $('#submitform').val();				

@@ -53,7 +53,8 @@ class M_template extends CI_Model {
     public function get_data_template() {
         $result = array();
         $q = "SELECT DOC_ID, DOC_TYPE_ID, DOC_NAME, FILE_PATH, DESCRIPTION, UPDATE_DATE, UPDATE_BY, DOC_LANG_ID, DOC_TYPE_NAME, LANG
-                FROM V_DOC ";
+                FROM V_DOC
+				";
         $sql = $this->db->query($q);
         if($sql->num_rows() > 0)
             $result = $sql->result();
@@ -84,10 +85,12 @@ class M_template extends CI_Model {
 		$this->db->query($sql);
         
     }
-	public function table_location(){
+	public function table_location($lokasi_id='', $periode=''){
 		$result = array();
-        $q = "SELECT DOC_ID, DOC_TYPE_ID, DOC_NAME, FILE_PATH, DESCRIPTION, DOC_LANG_ID, DOC_TYPE_NAME, LANG, LOKASI_ID
-                FROM V_DOC2				
+        $q = "SELECT DOC_ID, DOC_TYPE_ID, DOC_NAME, FILE_PATH, DESCRIPTION, DOC_LANG_ID, DOC_TYPE_NAME, LANG, LOKASI_ID, PERIODE
+                FROM V_DOC2
+				where lokasi_id = nvl('".$lokasi_id."',lokasi_id)
+				--and periode = nvl('".$periode."')
 				";
         $sql = $this->db->query($q);
         if($sql->num_rows() > 0)
@@ -105,6 +108,41 @@ class M_template extends CI_Model {
         return $result;
 		
 	}
+	
+	public function get_data_var_template($doc_name,$doc_id, $clob){
+		$bulan=array("","Januari","Pebruari",
+					"Maret","April","Mei","Juni","Juli",
+					"Agustus","September","Oktober",
+					"November","Desember");
+		$sql = array("PERHITUNGAN_BILL_COLL"=>"
+								select b.cc_name, c.periode, periode_minus(c.periode) periode_min, b.AM_NAME, SEGMENT, SEGMENT_NAME
+                                from p_mp_lokasi a
+                                 join v_map_mit_cc b
+                                 on a.p_map_mit_cc_id = b.p_map_mit_cc_id 
+                                 join v_doc2 c 
+                                 on a.p_mp_lokasi_id = c.lokasi_id
+                                where c.doc_id = $doc_id
+                                and rownum = 1 "
+								);
+		
+		 $q = $sql[$doc_name];
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+			
+		 foreach ($result as $content){
+			$clob = str_replace('(NAMA_CC)',$content->CC_NAME,$clob);
+			$clob = str_replace('(BULAN)',$bulan[substr($content->PERIODE,-2)*1],$clob);
+			$clob = str_replace('(TAHUN)',substr($content->PERIODE,0,4),$clob);
+			$clob = str_replace('(BULAN-1)',$bulan[substr($content->PERIODE_MIN,-2)*1],$clob);
+			$clob = str_replace('(NAMA_AM)',$content->AM_NAME,$clob);
+			$clob = str_replace('(JABATAN_EAM_SAM)',' ',$clob);
+			$clob = str_replace('(NAMA_SEGMENT)',$content->SEGMENT_NAME,$clob);
 
+		 }
+		$result = $clob;
+        return $result;
+		
+	}
 
   }

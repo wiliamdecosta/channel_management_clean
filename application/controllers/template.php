@@ -26,13 +26,21 @@ class Template extends CI_Controller
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
-
-        $this->load->view('template/filter_template');
+		
+		$this->load->model('M_template');
+		$data = array();
+		$this->db->set('order by doc_id desc');
+		$result['result1'] = $this->M_template->table_location();
+		$result['result2'] = $this->M_template->get_doc_type();
+		$result['result3'] = $this->M_template->get_bahasa();
+		$result['result4'] = $this->M_template->convert_lokasi();
+        //$this->load->view('template/filter_template');
+		$this->load->view('template/view_template',$result);
     }
 
     public function create_template_new()
     {
-
+		
         $this->load->view($this->folder . '/main_template');
     }
 
@@ -159,8 +167,10 @@ class Template extends CI_Controller
 	}
 	public function POST_idDOC(){
 		$this->load->model('M_cm', 'cm');
+		$this->load->model('M_template');
 		$result = $this->input->post('id_doc');
 		$res = $this->cm->selectFile($result);
+		$res = $this->M_template->get_data_var_template('PERHITUNGAN_BILL_COLL',$result,$res);
 		echo $res;
 	}
 	public function delete_DOC(){
@@ -171,10 +181,12 @@ class Template extends CI_Controller
 	
 	public function update_Content(){
 		$this->load->model('M_cm', 'cm');
-		$result1 = $this->input->post('docx_contents');
+		// decode base 64  // mar 28032016 
+		$result1 = base64_decode($this->input->post('docx_contents'));
 		$result2 = $this->input->post('idx');
-		print_r($result1);
-		print_r($result2);
+		//print_r($result1);
+		//print_r($result2);
+		echo $result1;
 		$res = $this->cm->updateDOC($result1, $result2);
 	}
 }

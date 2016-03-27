@@ -43,29 +43,7 @@
                             <div class="widget-body">
                                 <br>
 
-                                <form class="form-horizontal" role="form">
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Jenis Dokumen </label>
-
-                                                <div class="col-sm-6" id="JenisDok">
-                                                    <?php echo buatcombo('doc_type','doc_type','DOC_TYPE','DOC_TYPE_NAME','DOC_TYPE_ID',null,'Pilih Dok');?>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Pilih Template </label>
-
-                                                <div class="col-sm-6" id="PilihanTemp">
-                                                    <?php echo buatcombo('doc_lang','doc_lang','DOC_LANG','DESCRIPTION','DOC_LANG_ID',null,'Pilih Template');?>
-                                                </div>
-                                            </div>
-											<div class="">
-											<button type="button" id="find_document" class="btn btn-primary btn-sm"  style="float:right;">Cari Dokumen</button>
-										</div>
-                                        </div>
-                                    </div>
-                                </form>
+                               
                             </div><!-- PAGE CONTENT ENDS -->
                         </div>
                     </div>
@@ -101,7 +79,7 @@
 </div>
 <!-- #section:basics/content.breadcrumbs -->
 <script type="text/javascript">
-    $(document).ready(function(){
+ /*   $(document).ready(function(){
         $('.tab').click(function(e){
             e.preventDefault();
             var ctrl = $(this).attr('id');
@@ -136,5 +114,5 @@
 			   alert(data[2]);
             }
         });
-		})
+		})*/
 </script>
