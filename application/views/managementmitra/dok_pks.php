@@ -64,8 +64,8 @@
                     <label class="col-sm-3 control-label no-padding-right">Nomor PKS</label>
                     <div class="col-sm-8">
                         <input type="text" id="form_pks_name" name="form_pks_name" placeholder="Pilih PKS"
-                               class="col-xs-10 col-sm-5 required" required>
-                        <input type="hidden" id="form_p_mp_pks_id" name="form_p_mp_pks_id" required>
+                               class="col-xs-10 col-sm-5 required" readonly="readonly" required>
+                        <input type="hidden" id="form_p_mp_pks_id" name="form_p_mp_pks_id" readonly="readonly" required>
 
                         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                                value="<?php echo $this->security->get_csrf_hash(); ?>">

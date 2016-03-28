@@ -241,7 +241,7 @@ class M_managementmitra extends CI_Model
             case 'add':
 
                 $config['upload_path'] = './application/third_party/upload/pks';
-                $config['allowed_types'] = 'docx|pdf|doc';
+                $config['allowed_types'] = 'docx|pdf|doc|zip|rar';
                 $config['max_size'] = '0';
                 $config['overwrite'] = TRUE;
                 $file_id = time();
