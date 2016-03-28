@@ -259,7 +259,7 @@ class M_managementmitra extends CI_Model
                     // Do Upload
                     $data = $this->upload->data();
 
-                    $datas = array(
+                    $data = array(
                         "DOC_NAME" => $form_doc_name,
                         "DESCRIPTION" => $form_description,
                         "P_MP_PKS_ID" => $form_p_mp_pks_id,
@@ -276,7 +276,7 @@ class M_managementmitra extends CI_Model
                     $this->db->set($pk, $new_id);
 
                     // DO Insert
-                    $this->db->insert($table, $datas);
+                    $this->db->insert($table, $data);
                     if ($this->db->affected_rows() > 0) {
                         $datas["success"] = true;
                         $datas["message"] = "Data berhasil ditambahakan";
@@ -288,7 +288,7 @@ class M_managementmitra extends CI_Model
 
                 break;
             case 'edit':
-                $datas = array(
+                $data = array(
                     "DOC_NAME" => $form_doc_name,
                     "DESCRIPTION" => $form_description,
                     "P_MP_PKS_ID" => $form_p_mp_pks_id,
@@ -298,7 +298,7 @@ class M_managementmitra extends CI_Model
                 );
 
                 $this->db->where($pk, $form_p_pks_id);
-                $this->db->update($table, $datas);
+                $this->db->update($table, $data);
                 if ($this->db->affected_rows() > 0) {
                     $datas["success"] = true;
                     $datas["message"] = "Edit data berhasil";

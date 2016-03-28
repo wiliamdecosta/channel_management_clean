@@ -32,13 +32,20 @@
     $(document).ready(function () {
         var grid = $('#grid_table_lov');
         var pager = $('#grid_pager_lov');
-        //resize to fit page size
+
+        var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid('setGridWidth', '570');
-        });
-        $(window).on('resize.jqGrid', function () {
-            pager.jqGrid('setGridWidth', '570');
-        });
+            grid.jqGrid('setGridWidth', 570);
+            pager.jqGrid('setGridWidth', 570);
+        })
+        //optional: resize on sidebar collapse/expand and container fixed/unfixed
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                grid.jqGrid('setGridWidth', parent_column.width());
+                pager.jqGrid('setGridWidth', parent_column.width());
+            }
+        })
+        var width = 570;
 
         grid.jqGrid({
             url: '<?php echo site_url('managementmitra/grid_lov_cc');?>',
@@ -56,7 +63,7 @@
                     sopt: ['bw']
                 }
             ],
-            width: null,
+            width: width,
             //  AutoWidth: true,
             height: '100%',
             scrollOffset: 0,
