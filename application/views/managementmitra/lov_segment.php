@@ -12,10 +12,9 @@
                         <span aria-hidden="true" class="fa fa-pencil-square-o"></span> BLANK
                     </button>
                 </div>
-                &nbsp;
                 <div class="row">
                     <div class="col-xs-12">
-                        <div id="tbl_pic">
+                        <div id="grid_lov_segment">
                             <table id="grid_table_lov"></table>
                             <div id="grid_pager_lov"></div>
                             <input id="lov_value" type="text" value="<?php echo $divID; ?>" hidden>
@@ -24,7 +23,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -35,17 +33,22 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var grid = $('#grid_table_lov');
-        var pager = $('#grid_pager_lov');
+        var grid = $("#grid_table_lov");
+        var pager = $("#grid_pager_lov");
 
-        //resize to fit page size
+        var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid('setGridWidth', '570');
-        });
-        $(window).on('resize.jqGrid', function () {
-            pager.jqGrid('setGridWidth', '570');
-        });
-
+            grid.jqGrid('setGridWidth', 570);
+            pager.jqGrid('setGridWidth', 570);
+        })
+        //optional: resize on sidebar collapse/expand and container fixed/unfixed
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                grid.jqGrid('setGridWidth', parent_column.width());
+                pager.jqGrid('setGridWidth', parent_column.width());
+            }
+        })
+        var width = 570;
 
         grid.jqGrid({
             url: '<?php echo site_url('managementmitra/grid_lov_segment');?>',
@@ -68,8 +71,7 @@
                     sopt: ['bw']
                 }
             ],
-            width: null,
-            //  AutoWidth: true,
+            width: width,
             height: '100%',
             scrollOffset: 0,
             rowNum: 5,
@@ -91,12 +93,6 @@
                 repeatitems: false
             },
             loadComplete: function () {
-               /* $(window).on('resize.jqGrid', function () {
-                    grid.jqGrid('setGridWidth', '570');
-                });
-                $(window).on('resize.jqGrid', function () {
-                    pager.jqGrid('setGridWidth', '570');
-                });*/
                 var table = this;
                 setTimeout(function () {
                     updatePagerIcons(table);
@@ -115,7 +111,7 @@
             stringResult: true,
             autosearch: true,
             searchOnEnter: false,
-            defaultSearch : 'cn'
+            defaultSearch: 'cn'
         });
         //navButtons grid master
         grid.jqGrid('navGrid', '#grid_pager_lov',
