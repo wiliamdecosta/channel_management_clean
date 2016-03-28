@@ -25,6 +25,12 @@ class M_user extends CI_Model {
         return $qs;
     }
 
+	public function getUserPwdLDAP($username) {
+		$sql = "SELECT * FROM APP_USERS WHERE USER_NAME = ? ";
+		$qs = $this->db->query($sql, array($username));
+		return $qs;
+	}
+
     public function getUserItem($user_id) {
         $sql = "SELECT * FROM APP_USERS WHERE USER_ID = ?";
         $qs = $this->db->query($sql, array($user_id))->row_array();

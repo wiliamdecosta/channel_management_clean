@@ -116,7 +116,7 @@ class Auth extends CI_Controller
                                         
                     if ($auth == 1) { /* authentifikasi LDAP Telkom berhasil */
                    	  
-                   	  $rc = $this->M_user->getUserPwd($this->security->xss_clean($username), $pwd_md5)->result_array();
+                   	  $rc = $this->M_user->getUserPwdLDAP($this->security->xss_clean($username))->result_array();
                    	  $this->setUserSession($rc[0]);
                    	  $this->checkUserProfile($rc[0]['USER_ID']);
                    	  
