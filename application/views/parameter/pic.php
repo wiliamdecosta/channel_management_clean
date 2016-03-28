@@ -101,7 +101,8 @@
                     align: "left",
                     sortable: true,
                     editable: true,
-					editrules :{number:true},
+					editrules :{number:true,required: true},
+                    editoptions: {maxlength: 5},
                     hidden: false
                 },
 				{
@@ -111,7 +112,9 @@
                     align: "left",
                     sortable: true,
                     editable: true,
-                    editoptions: {size: 45, value: {Tes: 'asdad'}},
+                    formatter:'email',
+                    editrules :{required: true},
+                    editoptions: {size: 45},
                     hidden: false
                 },
 				{

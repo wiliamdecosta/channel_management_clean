@@ -874,11 +874,11 @@
         var tahun = $("#tahun").val();
         var periode = tahun + "" + bulan;
         if (bulan && tahun) {
-            var postdata = grid.jqGrid('getGridParam', 'postData');
+            var postdata = grid_pot.jqGrid('getGridParam', 'postData');
             $.extend(postdata, {periode: periode});
             grid_pot.trigger("reloadGrid", [{page: 1}]);
 
-            var postdata2 = grid2.jqGrid('getGridParam', 'postData');
+            var postdata2 = grid_nonpot.jqGrid('getGridParam', 'postData');
             $.extend(postdata2, {periode: periode});
             grid_nonpot.trigger("reloadGrid", [{page: 1}]);
         } else {
