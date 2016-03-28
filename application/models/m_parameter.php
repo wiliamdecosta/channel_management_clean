@@ -712,8 +712,8 @@ class M_parameter extends CI_Model
 
         $LOKASI = $this->input->post('LOKASI');
         $P_MAP_MIT_CC_ID = $this->input->post('P_MAP_MIT_CC_ID');
-        $CREATION_DATE = date('d/M/Y');
-        $UPDATE_DATE = date('d/M/Y');
+        $CREATION_DATE = date('d-m-Y');
+        $UPDATE_DATE = date('d/m/Y');
         $CREATE_BY = $this->session->userdata('d_user_name');
         $UPDATE_BY = $this->session->userdata('d_user_name');
         $VALID_FROM = $this->input->post('VALID_FROM');
@@ -724,14 +724,14 @@ class M_parameter extends CI_Model
             case 'add':
                 $data = array('P_MAP_MIT_CC_ID' => $P_MAP_MIT_CC_ID,
                     'LOKASI' => $LOKASI,
-                    'CREATE_BY' => $CREATE_BY,
-                    'CREATION_DATE' => $CREATION_DATE
+                    'CREATE_BY' => $CREATE_BY
                 );
 
                 $new_id = gen_id($pk, $table);
                 $this->db->set($pk, $new_id);
-                $this->db->set('VALID_FROM',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                $this->db->set('VALID_FROM',"to_date('$VALID_FROM','dd/mm/yyyy')",FALSE);
                 $this->db->set('VALID_UNTIL',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                $this->db->set('CREATION_DATE',"SYSDATE",FALSE);
                 $this->db->insert($table, $data);
                 if ($this->db->affected_rows() > 0) {
                     $data["success"] = true;
@@ -744,11 +744,11 @@ class M_parameter extends CI_Model
             case 'edit':
                 $data = array(
                     'LOKASI' => $LOKASI,
-                    'UPDATE_BY' => $UPDATE_BY,
-                    'UPDATE_DATE' => $UPDATE_DATE
+                    'UPDATE_BY' => $UPDATE_BY
                 );
-                $this->db->set('VALID_FROM',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                $this->db->set('VALID_FROM',"to_date('$VALID_FROM','dd/mm/yyyy')",FALSE);
                 $this->db->set('VALID_UNTIL',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                $this->db->set('UPDATE_DATE',"to_date('$UPDATE_DATE','dd/mm/yyyy')",FALSE);
                 $this->db->where($pk, $id_);
                 $this->db->update($table, $data);
                 if ($this->db->affected_rows() > 0) {

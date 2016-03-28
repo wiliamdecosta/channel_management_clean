@@ -25,10 +25,15 @@
 
         <div class="tab-content">
             <div id="home" class="tab-pane fade active in">
-                <div id="tbl_pic">
-                    <table id="grid_table_lokasi"></table>
-                    <div id="grid_pager_lokasi"></div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="tbl_pic">
+                            <table id="grid_table_lokasi"></table>
+                            <div id="grid_pager_lokasi"></div>
+                        </div>
+                    </div>
                 </div>
+
                 <br>
                 <div class="row">
                     <div class="col-xs-12">
@@ -62,7 +67,7 @@
                     $.ajax({
                         type: 'POST',
                         url: "<?php echo site_url();?>parameter/mapping_pic",
-                        data: {P_MP_LOKASI_ID: lokasi_id,P_MAP_MIT_CC_ID: <?php echo $p_map_mit_cc_id;?>},
+                        data: {P_MP_LOKASI_ID: lokasi_id, P_MAP_MIT_CC_ID: <?php echo $p_map_mit_cc_id;?>},
                         timeout: 10000,
                         success: function (data) {
                             $("#mappingmitra").html(data);
@@ -79,6 +84,23 @@
         $(document).ready(function () {
             var grid = $("#grid_table_lokasi");
             var pager = $("#grid_pager_lokasi");
+
+            var parent_column = grid.closest('[class*="col-"]');
+            $(window).on('resize.jqGrid', function () {
+                grid.jqGrid('setGridWidth', $("#tbl_pic").width() - 1);
+                pager.jqGrid('setGridWidth', $("#tbl_pic").width() - 1);
+            })
+            //optional: resize on sidebar collapse/expand and container fixed/unfixed
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    grid.jqGrid('setGridWidth', parent_column.width());
+                    pager.jqGrid('setGridWidth', parent_column.width());
+                }
+            })
+            var width = $("#tbl_pic").width();
+
+
+
             var grid_pks = $("#grid_table_pks");
             var pager_pks = $("#grid_pager_pks");
             grid.jqGrid({
@@ -123,7 +145,7 @@
                             dataInit: function (element) {
                                 $(element).datepicker({
                                     autoclose: true,
-                                    format: 'dd-M-yyyy',
+                                    format: 'dd-mm-yyyy',
                                     orientation: 'bottom'
                                 });
                             }
@@ -140,7 +162,7 @@
                             dataInit: function (element) {
                                 $(element).datepicker({
                                     autoclose: true,
-                                    format: 'dd-M-yyyy',
+                                    format: 'dd-mm-yyyy',
                                     orientation: 'bottom'
                                 });
                             }
@@ -148,7 +170,7 @@
                     }
                 ],
                 postData: {P_MAP_MIT_CC_ID: <?php echo $p_map_mit_cc_id;?>},
-                width: '1090',
+                width: width,
                 AutoWidth: true,
                 height: '100%',
                 scrollOffset: 0,
@@ -438,7 +460,7 @@
                         }
                     }
                 ],
-                width: 1090,
+                width: width,
                 height: '100%',
                 rowNum: 5,
                 page: 1,
