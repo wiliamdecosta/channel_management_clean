@@ -280,9 +280,11 @@ class M_managementmitra extends CI_Model
                     if ($this->db->affected_rows() > 0) {
                         $datas["success"] = true;
                         $datas["message"] = "Data berhasil ditambahakan";
+                        echo json_encode($datas);
                     } else {
                         $datas["success"] = false;
                         $datas["message"] = "Gagal menambah data";
+                        echo json_encode($datas);
                     }
                 }
 
@@ -302,9 +304,11 @@ class M_managementmitra extends CI_Model
                 if ($this->db->affected_rows() > 0) {
                     $datas["success"] = true;
                     $datas["message"] = "Edit data berhasil";
+                    echo json_encode($datas);
                 } else {
                     $datas["success"] = false;
                     $datas["message"] = "Gagal edit data";
+                    echo json_encode($datas);
                 }
 
                 break;
@@ -313,7 +317,7 @@ class M_managementmitra extends CI_Model
                 $this->db->delete($table);
                 break;
         }
-        echo json_encode($datas);
+
 
     }
 
