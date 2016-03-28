@@ -446,8 +446,8 @@ class Admin extends CI_Controller
     public function resetPWD()
     {
         $uid = $this->input->post('user_id');
-        $nik = md5(strtolower($this->input->post('nik')));
-        $this->M_admin->resetPwd($uid, $nik);
+        $user_name = md5(strtolower($this->input->post('user_name')));
+        $this->M_admin->resetPwd($uid, $user_name);
         if ($this->db->affected_rows() > 0) {
             echo "Password berhasil direset";
         } else {
