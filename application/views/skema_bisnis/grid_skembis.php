@@ -124,15 +124,15 @@
                     editoptions: {size: 45, value: {Tes: 'asdad'}}
                 },
                 /*{
-                    label: 'Jenis Skema',
-                    name: 'REFERENCE_NAME',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    editable: true,
-                    editoptions: {size: 45, value: {Tes: 'asdad'}},
-                    hidden: false
-                },*/
+                 label: 'Jenis Skema',
+                 name: 'REFERENCE_NAME',
+                 width: 100,
+                 align: "left",
+                 sortable: true,
+                 editable: true,
+                 editoptions: {size: 45, value: {Tes: 'asdad'}},
+                 hidden: false
+                 },*/
                 {
                     label: 'Net Revenue Skema',
                     name: 'NET_REVENUE',

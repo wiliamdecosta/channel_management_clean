@@ -1,7 +1,7 @@
 <div id="dok_pks">
     <form class="form-horizontal" role="form">
         <div class="rows">
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">Tanggal PKS </label>
                 <div class="col-sm-6">
                     <input class="date-picker col-sm-3" id="valid_from" type="text" data-date-format="dd-mm-yyyy"
@@ -10,7 +10,7 @@
                     <input class="date-picker col-sm-3" id="valid_until" type="text" data-date-format="dd-mm-yyyy"
                            placeholder="Tgl berakhir PKS"/>
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
                 <label class="col-sm-1 control-label no-padding-right">No PKS </label>
                 <div class="col-sm-4">

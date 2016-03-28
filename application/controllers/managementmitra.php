@@ -67,9 +67,8 @@ class Managementmitra extends CI_Controller
     public function dokNPK()
     {
 
-        $result['result'] = $this->db->get_where('DOC', array('DOC_TYPE_ID' => '2'))->result();
-
-        $this->load->view($this->folder . '/dok_npk', $result);
+        $data['pgl_id'] = $this->input->post('mitra');
+        $this->load->view($this->folder . '/dok_npk', $data);
     }
 
     public function fastels()
@@ -142,7 +141,7 @@ class Managementmitra extends CI_Controller
 
     }
 
-    public function gridDatin()
+    public function gridDatin2()
     {
         $pgl_id = $this->input->post('pgl_id'); //261
         $periode = $this->input->post('periode');
@@ -188,6 +187,73 @@ class Managementmitra extends CI_Controller
         $result['records'] = $count;
 
         $result['Data'] = $this->m_mitra->getDatin($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+
+    public function gridDatin()
+    {
+        $pgl_id = $this->input->post('pgl_id'); //261
+        $periode = $this->input->post('periode');
+
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "CUST_RINTA_NP";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        if ($pgl_id) {
+            $req_param['where'] = array('PGL_ID' => $pgl_id);
+        }
+        if($periode){
+            $req_param['where'] = array('BILL_PRD' => $periode);
+        }
+
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
         echo json_encode($result);
 
     }
@@ -855,6 +921,72 @@ class Managementmitra extends CI_Controller
 
     }
 
+    public function gridNPK(){
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 5;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : null;
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : null;
+
+        $table = "P_NPK";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+
+        $pgl_id = $this->input->post('pgl_id');
+        $periode = $this->input->post('tahun') . "" . $this->input->post('bulan');
+        if ($pgl_id) {
+            $req_param['where'] = array('PGL_ID' => $pgl_id);
+        }
+        if ($periode) {
+            $req_param['where'] = array('PERIODE' => $periode);
+        }
+
+
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+    }
+
     public function modalUploadPKS()
     {
         $this->load->view($this->folder . '/modal_upload_pks');
@@ -864,6 +996,12 @@ class Managementmitra extends CI_Controller
     {
         $data['pgl_id'] = $this->input->post("pgl_id");
         $this->load->view($this->folder . '/modal_upload_kontrak', $data);
+    }
+
+    public function modalUploadNPK()
+    {
+        $data['pgl_id'] = $this->input->post("pgl_id");
+        $this->load->view($this->folder . '/modal_upload_npk', $data);
     }
 
     public function modalUploadEvaluasi()
