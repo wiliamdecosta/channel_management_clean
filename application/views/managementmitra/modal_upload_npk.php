@@ -26,15 +26,17 @@
                                 <div id="label" class="col-xs-3">
                                     <label>Periode</label>
                                 </div>
-                                <div class="col-sm-4">
-                                    <?php echo bulan('', date('m')); ?>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <?php echo bulan('', date('m')); ?>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <?php echo tahun('', date('Y')); ?>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <?php echo tahun('', date('Y')); ?>
-                                </div>
+
                             </div>
 
-                            &nbsp;
                             <div class="form-group">
                                 <div class="col-xs-3">
                                     <label>File</label>
@@ -83,12 +85,12 @@
         thumbnail: false
     });
 
-    $("#uploadform_dokkontrak").on('submit', (function (e) {
+    $("#uploadform_doknpk").on('submit', (function (e) {
         e.preventDefault();
         var data = new FormData(this);
        // data.append('ten_id', ten_id);
         $.ajax({
-            url: "<?php echo site_url('managementmitra/kontrak_uploaddo');?>", // Url to which the request is send
+            url: "<?php echo site_url('managementmitra/npk_uploaddo');?>", // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
             data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
             contentType: false,       // The content type used when sending data to the server.

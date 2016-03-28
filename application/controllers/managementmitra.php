@@ -1070,6 +1070,57 @@ class Managementmitra extends CI_Controller
 
     }
 
+    public function npk_uploaddo(){
+        $doc_name = trim(ucfirst($this->input->post("doc_name")));
+        $pgl_id = $this->input->post("pgl_id");
+        $bulan = $this->input->post("bulan");
+        $tahun = $this->input->post("tahun");
+        $periode = $this->input->post('tahun') . "" . $this->input->post('bulan');
+        // Upload Process
+        $config['upload_path'] = './application/third_party/upload/kontrak';
+        $config['allowed_types'] = 'docx|pdf|doc';
+        $config['max_size'] = '0';
+        $config['overwrite'] = TRUE;
+        $file_id = time();
+        $config['file_name'] = str_replace(" ", "_", $doc_name) . "_" . $file_id;
+
+        $this->load->library('upload');
+        $this->upload->initialize($config);
+
+        //cek duplicate
+        $ck = $this->Mfee->checkDuplicated('P_NPK', array('DOC_NAME' => $doc_name, 'PGL_ID' => $pgl_id));
+
+        if ($ck == 1) {
+
+            $data['status'] = false;
+            $data['msg'] = "Nama dokumen sudah ada !";
+            echo json_encode($data);
+        } else {
+            if (!$this->upload->do_upload("filename")) {
+                $error = $this->upload->display_errors();
+                $data['status'] = "F";
+                $data['msg'] = $error;
+                echo json_encode($data);
+            } else {
+                // Do Upload
+                $data = $this->upload->data();
+                $datas = array(
+                    "DOC_NAME" => $doc_name,
+                    "FILE_PATH" => $data['file_name'],
+                    "UPDATE_DATE" => date('d/M/Y'),
+                    "UPDATE_BY" => $this->session->userdata('d_user_name'),
+                    "PGL_ID" => $pgl_id
+                );
+
+                $this->m_mitra->insertDokKontrak($datas);
+                $data['success'] = true;
+                $data['msg'] = "Upload Berhasil";
+                echo json_encode($data);
+
+            }
+        }
+    }
+
     public function kontrak_uploaddo()
     {
         $doc_name = trim(ucfirst($this->input->post("doc_name")));
