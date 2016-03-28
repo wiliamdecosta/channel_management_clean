@@ -221,11 +221,13 @@ class Managementmitra extends CI_Controller
             "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
         );
 
-        if ($pgl_id) {
-            $req_param['where'] = array('PGL_ID' => $pgl_id);
-        }
+
         if($periode){
             $req_param['where'] = array('BILL_PRD' => $periode);
+        }
+
+        if ($pgl_id) {
+            $req_param['where'] = array('PGL_ID' => $pgl_id);
         }
 
 

@@ -145,7 +145,7 @@
                             dataInit: function (element) {
                                 $(element).datepicker({
                                     autoclose: true,
-                                    format: 'dd-mm-yyyy',
+                                    format: 'dd-M-yyyy',
                                     orientation: 'bottom'
                                 });
                             }
@@ -162,7 +162,7 @@
                             dataInit: function (element) {
                                 $(element).datepicker({
                                     autoclose: true,
-                                    format: 'dd-mm-yyyy',
+                                    format: 'dd-M-yyyy',
                                     orientation: 'bottom'
                                 });
                             }
