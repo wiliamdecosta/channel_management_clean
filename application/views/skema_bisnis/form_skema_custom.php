@@ -92,7 +92,7 @@
                     align: "left",
                     editable: true,
                     edittype: 'select',
-                    editoptions: {dataUrl: '<?php echo site_url('skema_bisnis/getListComponent');?>'},
+                    editoptions: {dataUrl: '<?php echo site_url('skema_bisnis/getListComponentCustom');?>'},
                     editrules: {required: true}
                 },
                 {

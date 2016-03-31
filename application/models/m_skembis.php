@@ -258,6 +258,16 @@ class M_skembis extends CI_Model
     public function getTreeComp()
     {
         $result = array();
+        $sql = "SELECT * FROM V_COMPONENT_CUSTOM WHERE CF_NAME <> 'MARFEE_BEFORE_TAX' ORDER BY CF_NAME  ";
+        $qs = $this->db->query($sql);
+
+        if ($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+    }
+
+    public function getTreeCompCustom()
+    {
+        $result = array();
         $sql = "SELECT * FROM V_COMPONENT_CUSTOM ORDER BY CF_NAME ";
         $qs = $this->db->query($sql);
 
@@ -320,7 +330,7 @@ class M_skembis extends CI_Model
 
 
        /* ----------------- Insert Komponen SMRY Wajib -------------------------*/
-        $this->insertSMRYWajib($schm_id,$pgl_id,$skema_id,$commitment_id);
+        $this->insertSMRYWajibCustom($schm_id,$pgl_id,$skema_id,$commitment_id);
         /*------------------ End Insert Komponen SMRY Wajib ---------------------*/
 
 
@@ -392,7 +402,7 @@ class M_skembis extends CI_Model
         /* ------------------------ End Insert Comitment---------------------------*/
 
         /* ----------------- Insert Komponen SMRY Wajib -------------------------*/
-        $this->insertSMRYWajib($schm_id,$pgl_id,$skema_id,$commitment_id);
+        $this->insertSMRYWajibCustom($schm_id,$pgl_id,$skema_id,$commitment_id);
         /*------------------ End Insert Komponen SMRY Wajib ---------------------*/
 
         if ($this->db->trans_status() === FALSE) {
@@ -614,6 +624,25 @@ class M_skembis extends CI_Model
     private function insertSMRYWajib($SCHM_FEE_ID,$pgl_id,$skema_id,$commitment_id){
         $this->db->where('CF_TYPE', 'SMRY');
         $this->db->where_in('CF_NAME', array('MARFEE_BEFORE_TAX', 'MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE','JML_FASTEL'));
+        $array_smry =  $this->db->get('COM_FEE')->result_array();
+
+        foreach ($array_smry as $smryfee) {
+            $this->db->insert('SCHM_FEE', array('SCHM_FEE_ID' => $SCHM_FEE_ID,
+                    'CF_ID' => $smryfee['CF_ID'],
+                    'PGL_ID' => $pgl_id,
+                    'METHOD_ID' => $skema_id,
+                    'PERCENTAGE' => 0,
+                    'CREATED_BY' => 'SYSTEM',
+                    'CREATED_DATE' => date('d-M-Y'),
+                    'COMMITMENT_ID' => $commitment_id)
+            );
+
+        }
+    }
+
+    private function insertSMRYWajibCustom($SCHM_FEE_ID,$pgl_id,$skema_id,$commitment_id){
+        $this->db->where('CF_TYPE', 'SMRY');
+        $this->db->where_in('CF_NAME', array('MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE','JML_FASTEL'));
         $array_smry =  $this->db->get('COM_FEE')->result_array();
 
         foreach ($array_smry as $smryfee) {

@@ -629,6 +629,16 @@ class Skema_bisnis extends CI_Controller
         echo "</select>";
     }
 
+    public function getListComponentCustom()
+    {
+        $result = $this->m_skembis->getTreeCompCustom();
+        echo "<select>";
+        foreach ($result as $value) {
+            echo "<option value=" . $value->CF_ID . ">" . $value->CF_NAME . "</option>";
+        }
+        echo "</select>";
+    }
+
     public function crud_skema_custom()
     {
         $this->m_skembis->crud_skema_custom();
