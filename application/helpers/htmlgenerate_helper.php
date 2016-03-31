@@ -125,11 +125,11 @@ if (!function_exists('generatehtml')) {
                                 (
                                 SELECT ID_CC FROM P_MAP_MIT_CC
                                     WHERE PGL_ID = " . $pgl_id . "
-                                )
+                                ) ORDER BY SEGMENS
                                 ")->result();
         } else {
             $q = $CI->db->query("SELECT DISTINCT(CODE_SGM) SEGMENS,CODE_SGM||' - '||SEGMENT_NAME SEGMEN_NAME
-                                  FROM MV_PARAM_SEGMENT_CC")->result();
+                                  FROM MV_PARAM_SEGMENT_CC ORDER BY SEGMENS")->result();
         }
 
         echo "<select name='segment' id='segment'  class='form-control'>";

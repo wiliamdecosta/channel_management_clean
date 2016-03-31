@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/datepicker.css" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/datepicker.css"/>
 <div id="content">
     <div class="breadcrumbs" id="breadcrumbs">
         <?= $this->breadcrumb; ?>
@@ -34,26 +34,15 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label no-padding-right"
                                                        for="form-field-1"> Nama Segmen </label>
-
-                                                <div class="col-sm-6">
-                                                    <select class="form-control" id="nama_segment">
-                                                        <option value="">Pilih Segmen</option>
-
-                                                    </select>
+                                                <div class="col-sm-8">
+                                                    <?php echo combo_segmen(); ?>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label no-padding-right"
                                                        for="form-field-1-1"> Skema Bisnis </label>
-
                                                 <div class="col-sm-6">
-                                                    <select class="form-control" id="nama_segment">
-                                                        <option value="">Pilih Skema</option>
-                                                        <option value="2">Rev Sharing</option>
-                                                        <option value="3">Wholesale</option>
-                                                        <option value="3">On Time Charging</option>
-                                                        <option value="3">Skema Custom</option>
-                                                    </select>
+                                                    <?php echo buatcombo("form_skembis_type", "form_skembis_type", "P_REFERENCE_LIST", "REFERENCE_NAME", "P_REFERENCE_LIST_ID", array('P_REFERENCE_TYPE_ID' => 3), "Pilih Skema Bisnis"); ?>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -112,13 +101,13 @@
 <!-- #section:basics/content.breadcrumbs -->
 <script type="text/javascript">
     $('.date-picker').datepicker({
-        autoclose: true,
-        todayHighlight: true
-    })
+            autoclose: true,
+            todayHighlight: true
+        })
         //show datepicker when clicking on the icon
-        .next().on(ace.click_event, function(){
-            $(this).prev().focus();
-        });
+        .next().on(ace.click_event, function () {
+        $(this).prev().focus();
+    });
 </script>
 <script type="text/javascript">
     $(document).ready(function () {

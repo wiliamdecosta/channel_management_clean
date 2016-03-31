@@ -18,6 +18,9 @@ class Summary extends CI_Controller
         if (!$this->input->is_ajax_request()) {
             exit('No direct script access allowed');
         }
+
+        $this->load->model('M_summary', 'db_summary');
+
     }
 
     public function index()
@@ -37,7 +40,8 @@ class Summary extends CI_Controller
 
     public function mitra()
     {
-        $this->load->view($this->folder . '/mitra');
+        $data['array_mitra'] = $this->db_summary->getSummaryMitra();
+        $this->load->view($this->folder . '/mitra',$data);
     }
 
     public function inventory()
