@@ -347,19 +347,46 @@
 <script type="text/javascript">
     $("#save_skema_custom").click(function () {
 
-        $('#form_create_skemas').trigger("reset");
-        $("#form_skembis").hide("slow");
-        $("#tbl_skema").show("slow");
-        $("#div_benefit").hide();
-        var grid = $("#grid_table_pic");
-        var pager = $("#grid_pager_pic");
-        grid.trigger("reloadGrid", [{page: 1}]);
-        $(window).on('resize.jqGrid', function () {
-            grid.jqGrid('setGridWidth', $('#tbl_skema').width());
+        var SCHM_FEE_ID = '<?php echo $schm_fee_id;?>';
+        var pgl_id = $('#form_pgl_id').val();
+        var skema_id = $('#form_skembis_type').val();
+        $.ajax({
+            url: "<?php echo site_url('skema_bisnis/addSMRYrvsDetail');?>",
+            cache: false,
+            type: "POST",
+            data: {
+                SCHM_FEE_ID:SCHM_FEE_ID,
+                pgl_id:pgl_id,
+                skema_id:skema_id
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.success == true) {
+                    swal("", data.message, "success");
+                    $('#form_create_skemas').trigger("reset");
+                    $("#form_skembis").hide("slow");
+                    $("#tbl_skema").show("slow");
+                    $("#div_benefit").hide();
+                    var grid = $("#grid_table_pic");
+                    var pager = $("#grid_pager_pic");
+                    grid.trigger("reloadGrid", [{page: 1}]);
+                    $(window).on('resize.jqGrid', function () {
+                        grid.jqGrid('setGridWidth', $('#tbl_skema').width());
+                    });
+                    $(window).on('resize.jqGrid', function () {
+                        pager.jqGrid('setGridWidth', $('#tbl_skema').width());
+                    });
+                } else {
+                    swal("", data.message, "error");
+
+                }
+
+            }
+
         });
-        $(window).on('resize.jqGrid', function () {
-            pager.jqGrid('setGridWidth', $('#tbl_skema').width());
-        });
+        return false;
+
+
     })
 
 

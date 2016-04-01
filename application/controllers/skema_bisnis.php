@@ -1403,4 +1403,8 @@ class Skema_bisnis extends CI_Controller
         $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
         echo json_encode($result);
     }
+
+    public function addSMRYrvsDetail(){
+        $this->m_skembis->add_summary_rvs_detail();
+    }
 }

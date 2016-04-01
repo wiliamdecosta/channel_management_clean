@@ -151,10 +151,10 @@ class M_skembis extends CI_Model
         }
 
         // Calculate MF
-        $sql = " DECLARE ".
-            "  o_result_code NUMBER(10); ".
-            "  o_result_msg VARCHAR2(90); ".
-            "  BEGIN ".
+        $sql = " DECLARE " .
+            "  o_result_code NUMBER(10); " .
+            "  o_result_msg VARCHAR2(90); " .
+            "  BEGIN " .
             "  p_run_job_calculate_mfee(:params1,:params2,:params3,:params4, :o_result_code,:o_result_msg); END;";
 
         $params = array(
@@ -173,23 +173,22 @@ class M_skembis extends CI_Model
 
         $message = '';
         $code = null;
-        oci_bind_by_name($stmt,':o_result_msg',$message,500);
-        oci_bind_by_name($stmt,':o_result_code',$code,32);
+        oci_bind_by_name($stmt, ':o_result_msg', $message, 500);
+        oci_bind_by_name($stmt, ':o_result_code', $code, 32);
         ociexecute($stmt);
 
 
-
-       // print_r($output);
-       // exit;
+        // print_r($output);
+        // exit;
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
         } else {
 
-            if($code == 0){
+            if ($code == 0) {
                 $output['success'] = true;
                 $output['message'] = $message;
-            }else{
+            } else {
                 $output['success'] = false;
                 $output['message'] = $message;
             }
@@ -326,11 +325,11 @@ class M_skembis extends CI_Model
             'UPDATE_BY' => $UPDATE_BY
         );
         $this->db->insert($table, $data);
-       /* ------------------------ End Insert Comitment---------------------------*/
+        /* ------------------------ End Insert Comitment---------------------------*/
 
 
-       /* ----------------- Insert Komponen SMRY Wajib -------------------------*/
-        $this->insertSMRYWajibCustom($schm_id,$pgl_id,$skema_id,$commitment_id);
+        /* ----------------- Insert Komponen SMRY Wajib -------------------------*/
+        $this->insertSMRYWajibCustom($schm_id, $pgl_id, $skema_id, $commitment_id);
         /*------------------ End Insert Komponen SMRY Wajib ---------------------*/
 
 
@@ -344,6 +343,26 @@ class M_skembis extends CI_Model
             $output['message'] = 'Skema MTR berhasil ditambahkan !';
             echo json_encode($output);
             $this->db->trans_commit();
+        }
+    }
+
+    private function insertSMRYWajibCustom($SCHM_FEE_ID, $pgl_id, $skema_id, $commitment_id)
+    {
+        $this->db->where('CF_TYPE', 'SMRY');
+        $this->db->where_in('CF_NAME', array('MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE', 'JML_FASTEL'));
+        $array_smry = $this->db->get('COM_FEE')->result_array();
+
+        foreach ($array_smry as $smryfee) {
+            $this->db->insert('SCHM_FEE', array('SCHM_FEE_ID' => $SCHM_FEE_ID,
+                    'CF_ID' => $smryfee['CF_ID'],
+                    'PGL_ID' => $pgl_id,
+                    'METHOD_ID' => $skema_id,
+                    'PERCENTAGE' => 0,
+                    'CREATED_BY' => 'SYSTEM',
+                    'CREATED_DATE' => date('d-M-Y'),
+                    'COMMITMENT_ID' => $commitment_id)
+            );
+
         }
     }
 
@@ -378,7 +397,7 @@ class M_skembis extends CI_Model
                     'CREATED_DATE' => $CREATED_DATE,
                     'VALID_FROM' => $VALID_FROM
                 );
-                 $this->db->insert($table, $data2);
+                $this->db->insert($table, $data2);
             }
         }
 
@@ -402,7 +421,7 @@ class M_skembis extends CI_Model
         /* ------------------------ End Insert Comitment---------------------------*/
 
         /* ----------------- Insert Komponen SMRY Wajib -------------------------*/
-        $this->insertSMRYWajibCustom($schm_id,$pgl_id,$skema_id,$commitment_id);
+        $this->insertSMRYWajibCustom($schm_id, $pgl_id, $skema_id, $commitment_id);
         /*------------------ End Insert Komponen SMRY Wajib ---------------------*/
 
         if ($this->db->trans_status() === FALSE) {
@@ -417,9 +436,6 @@ class M_skembis extends CI_Model
             $this->db->trans_commit();
         }
     }
-
-
-
 
     public function crud_skema_custom()
     {
@@ -576,7 +592,8 @@ class M_skembis extends CI_Model
 
     }
 
-    public function add_commitment(){
+    public function add_commitment()
+    {
         $commitment_id = $this->input->post("commitment_id");
         $method_id = $this->input->post("method_id");
         $revenue = $this->input->post("revenue");
@@ -604,7 +621,7 @@ class M_skembis extends CI_Model
         $this->db->insert($table, $data);
 
         // Insert Componen SMRY (MARFEE_BEFORE_TAX,MARFEE_AFTER_TAX,MARFEE_TO_SHARE)
-        $this->insertSMRYWajib($SCHM_FEE_ID,$pgl_id,$skema_id,$commitment_id);
+        $this->insertSMRYWajib($SCHM_FEE_ID, $pgl_id, $skema_id, $commitment_id);
 
 
         if ($this->db->trans_status() === FALSE) {
@@ -621,10 +638,11 @@ class M_skembis extends CI_Model
 
     }
 
-    private function insertSMRYWajib($SCHM_FEE_ID,$pgl_id,$skema_id,$commitment_id){
+    private function insertSMRYWajib($SCHM_FEE_ID, $pgl_id, $skema_id, $commitment_id)
+    {
         $this->db->where('CF_TYPE', 'SMRY');
-        $this->db->where_in('CF_NAME', array('MARFEE_BEFORE_TAX', 'MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE','JML_FASTEL'));
-        $array_smry =  $this->db->get('COM_FEE')->result_array();
+        $this->db->where_in('CF_NAME', array('MARFEE_BEFORE_TAX', 'MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE', 'JML_FASTEL'));
+        $array_smry = $this->db->get('COM_FEE')->result_array();
 
         foreach ($array_smry as $smryfee) {
             $this->db->insert('SCHM_FEE', array('SCHM_FEE_ID' => $SCHM_FEE_ID,
@@ -640,23 +658,35 @@ class M_skembis extends CI_Model
         }
     }
 
-    private function insertSMRYWajibCustom($SCHM_FEE_ID,$pgl_id,$skema_id,$commitment_id){
+    public function add_summary_rvs_detail()
+    {
         $this->db->where('CF_TYPE', 'SMRY');
-        $this->db->where_in('CF_NAME', array('MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE','JML_FASTEL'));
-        $array_smry =  $this->db->get('COM_FEE')->result_array();
+        $this->db->where_in('CF_NAME', array('MARFEE_AFTER_TAX', 'MARFEE_TO_SHARE', 'JML_FASTEL', 'NET_ARPU', 'GROSS_ARPU'));
+        $array_smry = $this->db->get('COM_FEE')->result_array();
+
+        $pgl_id = $this->input->post("pgl_id");
+        $skema_id = $this->input->post("skema_id");
+        $SCHM_FEE_ID = $this->input->post("SCHM_FEE_ID");
 
         foreach ($array_smry as $smryfee) {
             $this->db->insert('SCHM_FEE', array('SCHM_FEE_ID' => $SCHM_FEE_ID,
-                    'CF_ID' => $smryfee['CF_ID'],
-                    'PGL_ID' => $pgl_id,
-                    'METHOD_ID' => $skema_id,
-                    'PERCENTAGE' => 0,
-                    'CREATED_BY' => 'SYSTEM',
-                    'CREATED_DATE' => date('d-M-Y'),
-                    'COMMITMENT_ID' => $commitment_id)
-            );
+                'CF_ID' => $smryfee['CF_ID'],
+                'PGL_ID' => $pgl_id,
+                'METHOD_ID' => $skema_id,
+                'PERCENTAGE' => 0,
+                'CREATED_BY' => 'SYSTEM',
+                'CREATED_DATE' => date('d-M-Y')
+            ));
 
         }
+        if ($this->db->affected_rows() > 0) {
+            $datas["success"] = true;
+            $datas["message"] = "Skema berhasil disimpan ";
+        } else {
+            $datas["success"] = false;
+            $datas["message"] = "Skema gagal disimpan !";
+        }
+        echo json_encode($datas);
     }
 
 
