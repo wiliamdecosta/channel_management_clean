@@ -5,7 +5,7 @@
                 <div class="form-group">
                     <label class="col-sm-1 control-label no-padding-right"> Pilih Skema </label>
                     <div class="col-sm-4">
-                        <?php buatcombo('form_skema', 'form_skema', 'V_SKEMBIS', 'NAME', 'SCHM_FEE_ID', array('PGL_ID' => $pgl_id), 'Pilih Skema'); ?>
+                        <?php buatcombo_new('form_skema', 'form_skema', 'V_SKEMBIS', 'NAME', 'SCHM_FEE_ID', array('PGL_ID' => $pgl_id), 'Pilih Skema','SCHM_FEE_ID','DESC'); ?>
                     </div>
                     <a class="btn btn-sm btn-success" id="view_calculate">
                         <i class="ace-icon fa fa-eye align-top bigger-125"></i>

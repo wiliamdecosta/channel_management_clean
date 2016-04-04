@@ -112,6 +112,28 @@ if (!function_exists('generatehtml')) {
         echo "</select>";
     }
 
+    function buatcombo_new($nama, $id, $table, $field, $pk, $kondisi, $default_select,$order_by,$order_type)
+    {
+        $CI =& get_instance();
+        $CI->load->model('mcrud');
+
+        if ($kondisi == null) {
+            $data = $CI->mcrud->getComboNew($table, $field, $pk,$order_by,$order_type)->result();
+        } else {
+            $data = $CI->mcrud->getComboByIDNew($table, $field, $pk, $kondisi,$order_by,$order_type)->result();
+        }
+        echo "<select name='" . $nama . "' id='" . $id . "'  class='form-control'>";
+
+        if ($default_select != "") {
+            echo "<option value=''> " . $default_select . " </option> ";
+        }
+
+        foreach ($data as $r) {
+            echo " <option value=" . $r->$pk . ">" . strtoupper($r->$field) . "</option>";
+        }
+        echo "</select>";
+    }
+
     function combo_segmen()
     {
         $CI =& get_instance();

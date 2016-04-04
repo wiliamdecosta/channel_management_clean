@@ -20,13 +20,39 @@ class mcrud extends CI_Model
         return $this->db->get($tables);
     }
 
-    public function getCombo($table, $field,$pk)
+    public function getComboNew($table, $field,$pk,$order_by,$order_type)
     {
         $this->db->select($field);
         $this->db->distinct();
         $this->db->select($pk);
 
-        $this->db->order_by($field, 'asc');
+        if($order_by != null && $order_type != null){
+            $this->db->order_by($order_by, $order_type);
+        }
+
+        return $this->db->get($table);
+    }
+
+    public function getComboByIDNew($table, $field, $pk, $where,$order_by,$order_type)
+    {
+        $this->db->select($field);
+        $this->db->distinct();
+        $this->db->select($pk);
+        $this->db->where($where);
+        if($order_by != null && $order_type != null){
+            $this->db->order_by($order_by, $order_type);
+        }
+
+        return $this->db->get($table);
+    }
+
+
+
+    public function getCombo($table, $field,$pk)
+    {
+        $this->db->select($field);
+        $this->db->distinct();
+        $this->db->select($pk);
 
 
         return $this->db->get($table);

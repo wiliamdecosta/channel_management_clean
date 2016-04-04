@@ -46,20 +46,23 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right"
-                                                       for="form-field-1-1"> Periode </label>
-
-                                                <div class="col-sm-9">
-                                                    <div class="input-group">
-                                                        <input class="date-picker col-sm-3" id="start_date" type="text"
-                                                               data-date-format="dd-mm-yyyy" placeholder="Input Date"/>
-                                                        <label class="col-sm-1" style="margin-right:10px;"> s/d </label>
-                                                        <input class="date-picker col-sm-3" id="end_date" type="text"
-                                                               data-date-format="dd-mm-yyyy" placeholder="Input Date"/>
-                                                    </div>
+                                                <label class="col-sm-3 control-label no-padding-right"> Periode </label>
+                                                <div class="col-sm-3">
+                                                    <?php echo bulan('', date('m')); ?>
                                                 </div>
-
+                                                <div class="col-sm-3">
+                                                    <?php echo tahun('', date('Y')); ?>
+                                                </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right"></label>
+                                                <div class="col-sm-4">
+                                                    <a class="btn btn-sm btn-primary" id="btn_calculate">
+                                                        Filter
+                                                    </a>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </form>
