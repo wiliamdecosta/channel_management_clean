@@ -17382,6 +17382,17 @@ th[aria-selected=true] .ui-jqgrid-sortable {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   font-size: 13px;
 }
+
+.ui-state-success {
+  background-color: #ddf2de;
+  border: 1px solid #ccecce;
+  color: #40ac43;
+  margin: 4px 0px 8px;
+  padding: 6px 10px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+}
+
 .ui-jqdialog .ui-widget-header {
   background-image: -webkit-linear-gradient(top, #ffffff 0%, #eeeeee 100%);
   background-image: -o-linear-gradient(top, #ffffff 0%, #eeeeee 100%);
