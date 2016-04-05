@@ -104,6 +104,8 @@
             });
 
         });
+        
+        
     })
 
 </script>
@@ -213,7 +215,18 @@
             message: bootmessage
         });
     }
-
+    
+    jQuery.fn.center = function () {
+                
+        if(this.width() > $(window).width()) {
+            this.css("width", $(window).width()-40);        
+        }
+        this.css("top",($(window).height() - this.height() ) / 2+$(window).scrollTop() + "px");
+        this.css("left",( $(window).width() - this.width() ) / 2+$(window).scrollLeft() + "px");
+        
+        return this;
+    }
+    
 </script>
 
 <script src="<?php echo base_url(); ?>assets/js/lov.js"></script>
