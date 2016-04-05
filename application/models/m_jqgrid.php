@@ -430,13 +430,14 @@ class M_jqGrid extends CI_Model {
             }
         }
         
-        if($whereCondition != "") {
-            if(!empty($wh)) {
+        if(!empty($wh)) {
+            if($whereCondition != "" )
                 $whereCondition .= " AND ".$wh;
-            }
+            else
+                $whereCondition = " WHERE ".$wh;
         }
                 
-		$sql = "SELECT COUNT(1) totalcount FROM (".$param['table'].$whereCondition.")";
+		$sql = "SELECT COUNT(1) totalcount FROM (".$param['table']." ".$whereCondition.")";
 
 		$query = $this->db->query($sql);
 		$row = $query->row_array();
@@ -515,12 +516,17 @@ class M_jqGrid extends CI_Model {
             }
         }
                         
-        if($whereCondition != "") {
-            if(!empty($wh)) {
+        
+        if(!empty($wh)) {
+            if($whereCondition != "" )
                 $whereCondition .= " AND ".$wh;
-            }
-		    $this->db->where($whereCondition, null, false);
+            else
+                $whereCondition = $wh;
         }
+        
+        if($whereCondition != "")
+            $this->db->where($whereCondition, null, false);
+        
                 
         if(!empty($param['sort_by']))
 		    $this->db->order_by($param['sort_by'], $param['sord']);
