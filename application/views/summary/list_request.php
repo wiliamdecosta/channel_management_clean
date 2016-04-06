@@ -1,19 +1,3 @@
-<div class="btn-group">
-    <button class="btn btn-sm btn-round btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        Request
-        <i class="ace-icon fa fa-angle-down icon-on-right"></i>
-    </button>
-
-    <ul class="dropdown-menu">
-        <li>
-            <a href="#" class="request_item" id="req_item">Request Item</a>
-        </li>
-       <!-- <li>
-            <a href="#" class="request_item" id="req_new_item">Request New Item </a>
-        </li>-->
-    </ul>
-</div>
-
 <div class="row">
     <div class="col-xs-12">
         &nbsp;
@@ -23,24 +7,6 @@
         </div>
     </div>
 </div>
-
-<div id="div_modal_req">
-</div>
-
-<script type="text/javascript">
-    $('.request_item').click(function(){
-        var id = $(this).attr('id');
-        $.ajax({
-            url: "<?php echo base_url();?>summary/"+id,
-            type: "POST",
-            data: {},
-            success: function (data) {
-                $("#div_modal_req").html(data);
-                $("#modal_add_item").modal('show');
-            }
-        });
-    })
-</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -62,7 +28,7 @@
         var width = $("#list_item").width();
 
         grid.jqGrid({
-            url: '<?php echo site_url('summary/gridListItem');?>',
+            url: '<?php echo site_url('summary/gridListRequest');?>',
             datatype: "json",
             mtype: "POST",
             postData: {
@@ -71,7 +37,7 @@
             colModel: [
                 {
                     label: 'ID',
-                    name: 'P_INVENTORY_ID',
+                    name: 'PURCHASE_ORDER_ID',
                     key: true,
                     width: 200,
                     sortable: true,
@@ -89,8 +55,44 @@
                     editrules: {required: true}
                 },
                 {
-                    label: 'Jumlah Item',
-                    name: 'QTY',
+                    label: 'Jumlah Req',
+                    name: 'ORDER_QTY',
+                    width: 100,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Status',
+                    name: 'STATUS_CODE',
+                    width: 100,
+                    align: "center",
+                    sortable: true,
+                    editable: false,
+                    editrules: {required: true},
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == "Waiting") {
+                            return '<button class="btn btn-round btn-mini btn-grey" data-toggle="dropdown" aria-expanded="false"> ' +
+                                cellvalue +
+                                ' </button> ';
+                        }
+                        if (cellvalue == "Approve") {
+                            return '<button class="btn btn-round btn-mini btn-success" data-toggle="dropdown" aria-expanded="false"> ' +
+                                cellvalue +
+                                ' </button> ';
+                        }
+                        if (cellvalue == "Reject") {
+                            return '<button class="btn btn-round btn-mini btn-danger" data-toggle="dropdown" aria-expanded="false"> ' +
+                                cellvalue +
+                                ' </button> ';
+                        }
+
+                    }
+                },
+                {
+                    label: 'Note',
+                    name: 'NOTE',
                     width: 200,
                     align: "left",
                     sortable: true,
@@ -98,23 +100,13 @@
                     editrules: {required: true}
                 },
                 {
-                    label: 'Created By',
+                    label: 'Request By',
                     width: 100,
                     align: "left",
                     sortable: true,
                     editable: true,
                     formatter: function(cellvalue, options, rowObject){
                         return rowObject.CREATED_BY + " - " + rowObject.CREATED_DATE ;
-                    }
-                },
-                {
-                    label: 'Update By',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    editable: true,
-                    formatter: function(cellvalue, options, rowObject){
-                        return rowObject.UPDATE_BY + " - " + rowObject.UPDATE_DATE ;
                     }
                 }
 

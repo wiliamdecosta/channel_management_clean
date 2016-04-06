@@ -91,6 +91,10 @@
                     <a href="javascript:void(0)">Inventory</a>
                 </li>
 
+                <li class="tab" id="list_request">
+                    <a href="javascript:void(0)">List Request</a>
+                </li>
+
             </ul>
 
             <div class="tab-content">
@@ -101,17 +105,6 @@
     </div>
 </div>
 </div>
-<!-- #section:basics/content.breadcrumbs -->
-<script type="text/javascript">
-    $('.date-picker').datepicker({
-            autoclose: true,
-            todayHighlight: true
-        })
-        //show datepicker when clicking on the icon
-        .next().on(ace.click_event, function () {
-        $(this).prev().focus();
-    });
-</script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.tab').click(function (e) {

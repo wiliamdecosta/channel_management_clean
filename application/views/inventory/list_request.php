@@ -1,46 +1,12 @@
-<div class="btn-group">
-    <button class="btn btn-sm btn-round btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        Request
-        <i class="ace-icon fa fa-angle-down icon-on-right"></i>
-    </button>
-
-    <ul class="dropdown-menu">
-        <li>
-            <a href="#" class="request_item" id="req_item">Request Item</a>
-        </li>
-       <!-- <li>
-            <a href="#" class="request_item" id="req_new_item">Request New Item </a>
-        </li>-->
-    </ul>
-</div>
-
 <div class="row">
     <div class="col-xs-12">
         &nbsp;
-        <div id="list_item">
+        <div id="list_requests">
             <table id="grid-table"></table>
             <div id="grid-pager"></div>
         </div>
     </div>
 </div>
-
-<div id="div_modal_req">
-</div>
-
-<script type="text/javascript">
-    $('.request_item').click(function(){
-        var id = $(this).attr('id');
-        $.ajax({
-            url: "<?php echo base_url();?>summary/"+id,
-            type: "POST",
-            data: {},
-            success: function (data) {
-                $("#div_modal_req").html(data);
-                $("#modal_add_item").modal('show');
-            }
-        });
-    })
-</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -49,8 +15,8 @@
 
         var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid('setGridWidth', $("#list_item").width() - 1);
-            pager.jqGrid('setGridWidth', $("#list_item").width() - 1);
+            grid.jqGrid('setGridWidth', $("#list_requests").width() - 1);
+            pager.jqGrid('setGridWidth', $("#list_requests").width() - 1);
         });
 
         $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
@@ -59,24 +25,29 @@
                 pager.jqGrid('setGridWidth', parent_column.width());
             }
         });
-        var width = $("#list_item").width();
-
+        var width = $("#list_requests").width();
         grid.jqGrid({
-            url: '<?php echo site_url('summary/gridListItem');?>',
+            url: '<?php echo site_url('inventory/gridListRequest');?>',
             datatype: "json",
             mtype: "POST",
-            postData: {
-            },
+            postData: {},
             caption: "List Item",
             colModel: [
                 {
                     label: 'ID',
-                    name: 'P_INVENTORY_ID',
+                    name: 'PURCHASE_ORDER_ID',
                     key: true,
                     width: 200,
                     sortable: true,
+                    editable: false,
+                    editrules: {required: false},
+                    hidden: true
+                },
+                {
+                    label: 'P_INVENTORY_ID',
+                    name: 'P_INVENTORY_ID',
                     editable: true,
-                    editrules: {required: true},
+                    editrules: {required: false},
                     hidden: true
                 },
                 {
@@ -85,36 +56,91 @@
                     width: 200,
                     align: "left",
                     sortable: true,
-                    editable: true,
-                    editrules: {required: true}
+                    editable: false,
+                    editrules: {required: false}
                 },
                 {
-                    label: 'Jumlah Item',
-                    name: 'QTY',
+                    label: 'Status',
+                    name: 'STATUS',
+                    width: 100,
+                    align: "left",
+                    sortable: true,
+                    hidden: true,
+                    editable: true,
+                    edittype: 'select',
+                    editrules: {required: true, edithidden: true},
+                    editoptions: {dataUrl: '<?php echo site_url('inventory/listStatusReq');?>'}
+                },
+                {
+                    label: 'Jumlah Req',
+                    name: 'ORDER_QTY',
+                    width: 100,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    hidden: false,
+                    editrules: {required: false}
+                    // editoptions : {readonly: 'readonly'}
+                },
+                {
+                    label: 'Status',
+                    name: 'STATUS_CODE',
+                    width: 100,
+                    align: "center",
+                    sortable: true,
+                    editable: false,
+                    editrules: {required: true},
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == "Waiting") {
+                            return '<button class="btn btn-round btn-mini btn-grey" data-toggle="dropdown" aria-expanded="false"> ' +
+                                cellvalue +
+                                ' </button> ';
+                        }
+                        if (cellvalue == "Approve") {
+                            return '<button class="btn btn-round btn-mini btn-success" data-toggle="dropdown" aria-expanded="false"> ' +
+                                cellvalue +
+                                ' </button> ';
+                        }
+                        if (cellvalue == "Reject") {
+                            return '<button class="btn btn-round btn-mini btn-danger" data-toggle="dropdown" aria-expanded="false"> ' +
+                                cellvalue +
+                                ' </button> ';
+                        }
+
+                    }
+                },
+                {
+                    label: 'Note',
+                    name: 'NOTE',
                     width: 200,
                     align: "left",
                     sortable: true,
                     editable: true,
-                    editrules: {required: true}
-                },
-                {
-                    label: 'Created By',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    editable: true,
-                    formatter: function(cellvalue, options, rowObject){
-                        return rowObject.CREATED_BY + " - " + rowObject.CREATED_DATE ;
+                    edittype: 'textarea',
+                    editrules: {required: true},
+                    editoptions: {
+                        rows: "2",
+                        cols: "30"
                     }
                 },
                 {
-                    label: 'Update By',
+                    label: 'Approve/Reject By',
                     width: 100,
                     align: "left",
                     sortable: true,
-                    editable: true,
-                    formatter: function(cellvalue, options, rowObject){
-                        return rowObject.UPDATE_BY + " - " + rowObject.UPDATE_DATE ;
+                    editable: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return rowObject.UPDATED_BY + " - " + rowObject.UPDATED_DATE;
+                    }
+                },
+                {
+                    label: 'Request By',
+                    width: 100,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return rowObject.CREATED_BY + " - " + rowObject.CREATED_DATE;
                     }
                 }
 
@@ -134,10 +160,9 @@
             multiboxonly: true,
             onSelectRow: function (rowid) {
 
-            }, // use the onSelectRow that is triggered on row click to show a details grid
+            },
             onSortCol: clearSelection,
             onPaging: clearSelection,
-            //#pager merupakan div id pager
             pager: '#grid-pager',
             jsonReader: {
                 root: 'Data',
@@ -147,22 +172,18 @@
             loadComplete: function () {
                 var table = this;
                 setTimeout(function () {
-                    //  styleCheckbox(table);
-
-                    //  updateActionIcons(table);
                     updatePagerIcons(table);
                     enableTooltips(table);
                 }, 0);
-            }
+            },
+            editurl: '<?php echo site_url('inventory/updateListReq');?>',
 
 
         });
 
-
-        //navButtons grid master
         grid.jqGrid('navGrid', '#grid-pager',
             { 	//navbar options
-                edit: false,
+                edit: true,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: false,
@@ -188,7 +209,22 @@
                     return 'Error: ' + data.responseText
                 },
                 recreateForm: true,
+                beforeInitData: function (formid) {
+                    selRowId = grid.jqGrid('getGridParam', 'selrow');
+                    status = grid.jqGrid('getCell', selRowId, 'STATUS');
+
+                    if(status != 18){
+                        swal('','Tidak bisa merubah data karena status bukan Waiting','error');
+                        return false;
+                    }else{
+                        return true;
+                    }
+
+
+                },
                 beforeShowForm: function (e) {
+                    //var status =  $('#tr_STATUS', e).val();
+                    $('#tr_ORDER_QTY', e).hide();
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
@@ -219,8 +255,6 @@
             {
                 //delete record form
                 recreateForm: true,
-                // msg : "tes",
-                // width : 700,
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
                     if (form.data('styled')) return false;
@@ -246,12 +280,6 @@
                     style_search_filters($(this));
                 }
 
-//            multipleSearch: true,
-                //           showQuery: true
-                /**
-                 multipleGroup:true,
-                 showQuery: true
-                 */
             }
             ,
             {
@@ -262,7 +290,7 @@
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 }
             }
-        )
+        );
 
 
         function clearSelection() {

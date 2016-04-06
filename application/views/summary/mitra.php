@@ -43,7 +43,6 @@
 <script type="text/javascript">
     $('.list_mitra').click(function(){
         var segment = $(this).attr('id');
-
         $.ajax({
             url: "<?php echo base_url();?>summary/lovListMitra",
             type: "POST",

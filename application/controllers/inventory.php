@@ -1,10 +1,10 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Summary extends CI_Controller
+class Inventory extends CI_Controller
 {
 
     private $head = "Marketing Fee";
-    private $folder = "summary";
+    private $folder = "inventory";
 
     function __construct()
     {
@@ -19,8 +19,9 @@ class Summary extends CI_Controller
             exit('No direct script access allowed');
         }
 
-        $this->load->model('M_summary', 'db_summary');
         $this->load->model('M_jqGrid', 'jqGrid');
+        $this->load->model('M_inventory', 'db_inventory');
+        $this->load->model('Mfee');
 
     }
 
@@ -31,31 +32,15 @@ class Summary extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $this->load->view('summary/filter_summary');
+        $this->load->view('inventory/filter_inventory');
     }
 
-    public function trend_mf()
+
+    public function list_item()
     {
-        $this->load->view($this->folder . '/trend_mf');
+        $this->load->view('inventory/list_inventory');
     }
 
-    public function mitra()
-    {
-        $data['array_mitra'] = $this->db_summary->getSummaryMitra();
-        $this->load->view($this->folder . '/mitra', $data);
-    }
-
-    public function inventory()
-    {
-        $this->load->view($this->folder . '/inventory');
-    }
-
-    public function lovListMitra()
-    {
-        $data['segment'] = $this->input->post('segment');
-        $data['array_mitra'] = $this->db_summary->getListMitraBySegment();
-        $this->load->view($this->folder . '/lov_mitra', $data);
-    }
 
     public function gridListItem()
     {
@@ -113,9 +98,74 @@ class Summary extends CI_Controller
         echo json_encode($result);
     }
 
-    public function req_item()
+    public function tambah_stok()
     {
-        $this->load->view('summary/modal_add_list_item');
+        $data['title'] = "Tambah stok";
+        $data['code'] = "tambah";
+
+        $this->load->view('inventory/modal_edit_stok',$data);
+    }
+
+    public function kurang_stok()
+    {
+        $data['title'] = "Kurangi stok";
+        $data['code'] = "kurang";
+
+        $this->load->view('inventory/modal_edit_stok',$data);
+    }
+
+    public function logEditStok() {
+        $page = intval($_REQUEST['page']) ;
+        $limit = $_REQUEST['rows'] ;
+        $sidx = $_REQUEST['sidx'] ;
+        $sord = $_REQUEST['sord'] ;
+
+        $table = "INVENTORY_LOG";
+
+        $req_param = array (
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
+            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
+            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+        );
+
+        $req_param['where'] = array('P_INVENTORY_ID' => $this->input->post('log_id'));
+
+        $row = $this->jqGrid->get_data($req_param)->result_array();
+        $count = count($row);
+
+        if( $count >0 ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+    }
+
+    public function editStokActon(){
+        $this->db_inventory->editStok();
     }
 
     public function add_list_item()
@@ -133,7 +183,7 @@ class Summary extends CI_Controller
 
     public function list_request()
     {
-        $this->load->view('summary/list_request');
+        $this->load->view('inventory/list_request');
     }
 
     public function gridListRequest()
@@ -163,8 +213,6 @@ class Summary extends CI_Controller
             "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
         );
 
-        $req_param['where'] = array('P_DAT_AM' => intval($this->session->userdata('d_user_id')));
-
         // Get limit paging
         $count = $this->jqGrid->countAll($req_param);
         if ($count > 0) {
@@ -191,6 +239,23 @@ class Summary extends CI_Controller
 
         $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
         echo json_encode($result);
+    }
+
+    public function crudItem(){
+        $this->db_inventory->crud_item();
+    }
+
+    public function listStatusReq(){
+        $result = $this->db_inventory->getListStatusReq();
+        echo "<select>";
+        foreach($result  as $value ){
+            echo "<option value=".$value['P_REFERENCE_LIST_ID'].">".$value['REFERENCE_NAME']."</option>";
+        }
+        echo "</select>";
+    }
+
+    public function updateListReq(){
+        $this->db_inventory->updateStatusReq();
     }
 
 

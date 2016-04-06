@@ -234,5 +234,7 @@
 <script src="<?php echo base_url(); ?>assets/js/accounting/accounting.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/accounting/accounting.min.js"></script>
 
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>
+
 </body>
 </html>

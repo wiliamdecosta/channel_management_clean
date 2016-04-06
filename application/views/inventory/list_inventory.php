@@ -1,42 +1,41 @@
 <div class="btn-group">
     <button class="btn btn-sm btn-round btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        Request
+        Edit Stok
         <i class="ace-icon fa fa-angle-down icon-on-right"></i>
     </button>
 
     <ul class="dropdown-menu">
         <li>
-            <a href="#" class="request_item" id="req_item">Request Item</a>
+            <a href="#" class="edit_stok" id="tambah_stok">Tambah Stok</a>
         </li>
-       <!-- <li>
-            <a href="#" class="request_item" id="req_new_item">Request New Item </a>
-        </li>-->
+        <li>
+            <a href="#" class="edit_stok" id="kurang_stok">Kurangin Stok</a>
+        </li>
     </ul>
 </div>
-
 <div class="row">
     <div class="col-xs-12">
         &nbsp;
-        <div id="list_item">
+        <div id="list_items">
             <table id="grid-table"></table>
             <div id="grid-pager"></div>
         </div>
     </div>
 </div>
 
-<div id="div_modal_req">
+<div id="div_edit_stok">
 </div>
 
 <script type="text/javascript">
-    $('.request_item').click(function(){
+    $('.edit_stok').click(function () {
         var id = $(this).attr('id');
         $.ajax({
-            url: "<?php echo base_url();?>summary/"+id,
+            url: "<?php echo base_url();?>inventory/" + id,
             type: "POST",
             data: {},
             success: function (data) {
-                $("#div_modal_req").html(data);
-                $("#modal_add_item").modal('show');
+                $("#div_edit_stok").html(data);
+                $("#modal_edit_stok").modal('show');
             }
         });
     })
@@ -49,34 +48,32 @@
 
         var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid('setGridWidth', $("#list_item").width() - 1);
-            pager.jqGrid('setGridWidth', $("#list_item").width() - 1);
+            grid.jqGrid('setGridWidth', $("#list_items").width() - 1);
+            pager.jqGrid('setGridWidth', $("#list_items").width() - 1);
         });
 
-        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+        $(document).on('settings.ace.jqGrid', function (ev, event_name) {
             if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
                 grid.jqGrid('setGridWidth', parent_column.width());
                 pager.jqGrid('setGridWidth', parent_column.width());
             }
         });
-        var width = $("#list_item").width();
+        var width = $("#list_items").width();
 
         grid.jqGrid({
-            url: '<?php echo site_url('summary/gridListItem');?>',
+            url: '<?php echo site_url('inventory/gridListItem');?>',
             datatype: "json",
             mtype: "POST",
-            postData: {
-            },
+            postData: {},
             caption: "List Item",
             colModel: [
                 {
                     label: 'ID',
                     name: 'P_INVENTORY_ID',
                     key: true,
-                    width: 200,
+                    width: 100,
                     sortable: true,
                     editable: true,
-                    editrules: {required: true},
                     hidden: true
                 },
                 {
@@ -86,7 +83,9 @@
                     align: "left",
                     sortable: true,
                     editable: true,
-                    editrules: {required: true}
+                    editrules: {required: true},
+                    editoptions: {size: 35}
+
                 },
                 {
                     label: 'Jumlah Item',
@@ -95,16 +94,17 @@
                     align: "left",
                     sortable: true,
                     editable: true,
-                    editrules: {required: true}
+                    editrules: {number: true,required: true},
+                    editoptions: {size: 20}
                 },
                 {
                     label: 'Created By',
                     width: 100,
                     align: "left",
                     sortable: true,
-                    editable: true,
-                    formatter: function(cellvalue, options, rowObject){
-                        return rowObject.CREATED_BY + " - " + rowObject.CREATED_DATE ;
+                    editable: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return rowObject.CREATED_BY + " - " + rowObject.CREATED_DATE;
                     }
                 },
                 {
@@ -112,9 +112,9 @@
                     width: 100,
                     align: "left",
                     sortable: true,
-                    editable: true,
-                    formatter: function(cellvalue, options, rowObject){
-                        return rowObject.UPDATE_BY + " - " + rowObject.UPDATE_DATE ;
+                    editable: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return rowObject.UPDATE_BY + " - " + rowObject.UPDATE_DATE;
                     }
                 }
 
@@ -137,7 +137,14 @@
             }, // use the onSelectRow that is triggered on row click to show a details grid
             onSortCol: clearSelection,
             onPaging: clearSelection,
-            //#pager merupakan div id pager
+            subGrid: true, // set the subGrid property to true to show expand buttons for each row
+            subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
+            subGridOptions: {
+                reloadOnExpand: false,
+                selectOnExpand: false,
+                plusicon: "ace-icon fa fa-plus center bigger-110 blue",
+                minusicon: "ace-icon fa fa-minus center bigger-110 blue"
+            },
             pager: '#grid-pager',
             jsonReader: {
                 root: 'Data',
@@ -153,11 +160,57 @@
                     updatePagerIcons(table);
                     enableTooltips(table);
                 }, 0);
-            }
-
-
+            },
+            editurl: '<?php echo site_url('inventory/crudItem');?>'
         });
 
+        function showChildGrid(parentRowID, parentRowKey) {
+            var childGridID = parentRowID + "_table";
+            var childGridPagerID = parentRowID + "_pager";
+
+            // send the parent row primary key to the server so that we know which grid to show
+            var childGridURL = "<?php echo site_url('inventory/logEditStok');?>";
+
+            // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+            $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+            $("#" + childGridID).jqGrid({
+                url: childGridURL,
+                mtype: "POST",
+                datatype: "json",
+                page: 1,
+                rownumbers: true, // show row numbers
+                rownumWidth: 35,
+                sortname: 'UPDATED_DATE',
+                sortorder: 'desc',
+                shrinkToFit: false,
+                postData: {log_id: encodeURIComponent(parentRowKey)},
+                colModel: [
+                    {
+                        label: 'ID',
+                        name: 'INVENTORY_LOG_ID',
+                        key: true,
+                        width: 10,
+                        sorttype: 'number',
+                        editable: false,
+                        hidden: true
+                    },
+                    {label: 'Jumlah', name: 'QTY', width: 125, align: "left", editable: false},
+                    {label: 'Keterangan', name: 'DESCRIPTION', width: 205, align: "left", editable: false},
+                    {label: 'Update Date', name: 'UPDATED_DATE', width: 105, align: "left", editable: false},
+                    {label: 'Update By', name: 'UPDATED_BY', width: 105, align: "left", editable: false}
+                ],
+//            loadonce: true,
+                width: 600,
+                height: '100%',
+                jsonReader: {
+                    root: 'Data',
+                    id: 'id',
+                    repeatitems: false
+                }
+            });
+
+        }
 
         //navButtons grid master
         grid.jqGrid('navGrid', '#grid-pager',
@@ -165,7 +218,7 @@
                 edit: false,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
-                add: false,
+                add: true,
                 addicon: 'ace-icon fa fa-plus-circle purple',
                 del: false,
                 delicon: 'ace-icon fa fa-trash-o red',
@@ -173,12 +226,10 @@
                 searchicon: 'ace-icon fa fa-search orange',
                 refresh: true,
                 afterRefresh: function () {
-                    // some code here
-                    jQuery("#detailsPlaceholder").hide();
                 },
                 refreshicon: 'ace-icon fa fa-refresh green',
                 view: false,
-                viewicon: 'ace-icon fa fa-search-plus grey',
+                viewicon: 'ace-icon fa fa-search-plus grey'
             },
             {
                 // options for the Edit Dialog
@@ -190,14 +241,14 @@
                 recreateForm: true,
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
-                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />');
                     style_edit_form(form);
                 }
             },
             {
                 //new record form
                 width: 500,
-                postData: {tes: "aa"},
+                // postData: {tes: "aa"},
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
                 },
@@ -207,25 +258,67 @@
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
-                        .wrapInner('<div class="widget-header" />')
+                        .wrapInner('<div class="widget-header" />');
                     style_edit_form(form);
                 },
-                beforeSubmit: function () {
+                /*beforeSubmit: function () {
+                    $("#FrmGrid_grid-table").validate({
+                        errorElement: 'div',
+                        errorClass: 'red',
+                        focusInvalid: true,
+                        ignore: "",
+                        rules: {
+                            QTY: {
+                                required: true,
+                                digits: true
+                            },
+                            ITEM_NAME: {
+                                required: true
+                            }
+                        },
 
-                },
-                onclickSubmit: function () {
-                }
+                        highlight: function (e) {
+                            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                        },
+
+                        success: function (e) {
+                            $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                            $(e).remove();
+                        },
+
+                        errorPlacement: function (error, element) {
+                            if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                                var controls = element.closest('div[class*="col-"]');
+                                if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                                else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                            }
+                            else if (element.is('.select2')) {
+                                error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                            }
+                            else if (element.is('.chosen-select')) {
+                                error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                            }
+                            else error.insertAfter(element.parent());
+                        },
+
+                        submitHandler: function (form) {
+                        },
+                        invalidHandler: function (form) {
+                        }
+                    });
+                    var form = $('#FrmGrid_grid-table');
+                    console.log(form.valid());
+
+                }*/
             },
             {
                 //delete record form
                 recreateForm: true,
-                // msg : "tes",
-                // width : 700,
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
                     if (form.data('styled')) return false;
 
-                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />');
                     style_delete_form(form);
 
                     form.data('styled', true);
@@ -237,7 +330,7 @@
                 recreateForm: true,
                 afterShowSearch: function (e) {
                     var form = $(e[0]);
-                    form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />');
                     style_search_form(form);
                 }
 
@@ -262,7 +355,7 @@
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 }
             }
-        )
+        );
 
 
         function clearSelection() {
@@ -282,7 +375,7 @@
             var buttons = form.next().find('.EditButton .fm-button');
             buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide();//ui-icon, s-icon
             buttons.eq(0).addClass('btn-primary').prepend('<i class="ace-icon fa fa-check"></i>');
-            buttons.eq(1).prepend('<i class="ace-icon fa fa-times"></i>')
+            buttons.eq(1).prepend('<i class="ace-icon fa fa-times"></i>');
 
             buttons = form.next().find('.navButton a');
             buttons.find('.ui-icon').hide();
@@ -306,7 +399,7 @@
 
         function style_search_form(form) {
             var dialog = form.closest('.ui-jqdialog');
-            var buttons = dialog.find('.EditTable')
+            var buttons = dialog.find('.EditTable');
             buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'ace-icon fa fa-retweet');
             buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'ace-icon fa fa-comment-o');
             buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'ace-icon fa fa-search');
@@ -316,7 +409,7 @@
             var form = $(e[0]);
             if (form.data('styled')) return false;
 
-            form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+            form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />');
             style_delete_form(form);
 
             form.data('styled', true);
@@ -403,5 +496,7 @@
             if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
             return 'left';
         }
+
+
     });
 </script>
