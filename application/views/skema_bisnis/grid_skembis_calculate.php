@@ -8,7 +8,7 @@
     </div>
     <br>
     <?php
-    if ($method_id == 7 || $method_id == 9 || $method_id == 13) {
+    if ($method_id == 7 || $method_id == 9 || $method_id == 13 || $method_id == 27) {
         $this->load->view('skema_bisnis/grid_tier', array("method_id" => $method_id, "commitment_id" => $commitment_id));
     }
     ?>
