@@ -73,10 +73,6 @@ class Managementmitra extends CI_Controller
 
     public function fastels()
     {
-        // Default periode current yyyymm
-        $tahun = date("Y");
-        $bulan = date("m");
-        $data['periode'] = $tahun . "" . $bulan;
 
         $data['pgl_id'] = $this->input->post('mitra');
         $this->load->view($this->folder . '/fastel', $data);
@@ -85,7 +81,7 @@ class Managementmitra extends CI_Controller
     public function gridFastel()
     {
         $pgl_id = $this->input->post('pgl_id'); //261
-        $periode = $this->input->post('periode');
+        $periode = $this->input->post('tahun') . "" . $this->input->post('bulan');
 
         $page = intval($_REQUEST['page']); // Page
         $limit = intval($_REQUEST['rows']); // Number of record/page
@@ -98,9 +94,6 @@ class Managementmitra extends CI_Controller
             $s_field = $this->input->post('searchField');
         }
 
-        if ($this->input->post('periode')) {
-            $periode = $this->input->post('periode');
-        }
 
         //JqGrid Parameters
         $req_param = array(
@@ -144,7 +137,7 @@ class Managementmitra extends CI_Controller
     public function gridDatin2()
     {
         $pgl_id = $this->input->post('pgl_id'); //261
-        $periode = $this->input->post('periode');
+        $periode = $this->input->post('tahun') . "" . $this->input->post('bulan');
 
         $page = intval($_REQUEST['page']); // Page
         $limit = intval($_REQUEST['rows']); // Number of record/page
@@ -194,7 +187,7 @@ class Managementmitra extends CI_Controller
     public function gridDatin()
     {
         $pgl_id = $this->input->post('pgl_id'); //261
-        $periode = $this->input->post('periode');
+        $periode = $this->input->post('tahun') . "" . $this->input->post('bulan');
 
         $page = intval($_REQUEST['page']); // Page
         $limit = intval($_REQUEST['rows']); // Number of record/page
@@ -221,14 +214,9 @@ class Managementmitra extends CI_Controller
             "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
         );
 
-
-        if($periode){
-            $req_param['where'] = array('BILL_PRD' => $periode);
-        }
-
-        if ($pgl_id) {
-            $req_param['where'] = array('PGL_ID' => $pgl_id);
-        }
+        //$req_param['where'] = array('BILL_PRD' => $periode);
+        $req_param['where'] = array('BILL_PRD' => $periode,
+                                    'PGL_ID' => $pgl_id);
 
 
         // Get limit paging
@@ -278,9 +266,9 @@ class Managementmitra extends CI_Controller
         $segmen = $this->input->post('segmen');
 
         $pgl_id = $this->session->userdata('d_pgl_id');
-        if($pgl_id){
+        if ($pgl_id) {
             $result = $this->mfee->getCCbySEGMENPGL_ID($segmen);
-        }else{
+        } else {
             $result = $this->mfee->getCCbySEGMEN($segmen);
         }
 
@@ -306,9 +294,9 @@ class Managementmitra extends CI_Controller
 
 
         $pgl_id = $this->session->userdata('d_pgl_id');
-        if($pgl_id){
+        if ($pgl_id) {
             $result = $this->mfee->getMitraByCCPGL_ID($ccid);
-        }else{
+        } else {
             $result = $this->mfee->getMitraByCC($ccid);
         }
 
@@ -923,7 +911,8 @@ class Managementmitra extends CI_Controller
 
     }
 
-    public function gridNPK(){
+    public function gridNPK()
+    {
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 5;
         $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : null;
@@ -958,7 +947,6 @@ class Managementmitra extends CI_Controller
         if ($periode) {
             $req_param['where'] = array('PERIODE' => $periode);
         }
-
 
 
         // Get limit paging
@@ -1072,7 +1060,8 @@ class Managementmitra extends CI_Controller
 
     }
 
-    public function npk_uploaddo(){
+    public function npk_uploaddo()
+    {
         $doc_name = trim(ucfirst($this->input->post("doc_name")));
         $pgl_id = $this->input->post("pgl_id");
         $bulan = $this->input->post("bulan");

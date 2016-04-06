@@ -3,30 +3,12 @@
         <div class="row form-group">
             <div class="col-sm-12">
                 <div class="col-sm-2">
-                    <select name="bulan" class="form-control" id="bulan">
-                        <option selected="selected" value="">Bulan</option>
-                        <?php
-                        $bln = array(1 => "Januari", "Februari", "Maret", "April", "Mei", "Juni", "July", "Agustus", "September", "Oktober", "November", "Desember");
-                        for ($bulan = 1; $bulan <= 12; $bulan++) {
-                            if ($bulan <= 9) {
-                                echo "<option value='0$bulan'>$bln[$bulan]</option>";
-                            } else {
-                                echo "<option value='$bulan'>$bln[$bulan]</option>";
-                            }
-                        }
-                        ?>
-                    </select>
+
+                        <?php echo bulan('', date('m')); ?>
+
                 </div>
                 <div class="col-sm-1">
-                    <select class="form-inline" name="tahun" id="tahun">
-                        <option value=""> Tahun</option>
-                        <?php
-                        $year = date("Y");
-                        for ($i = ($year); $i >= $year - 5; $i--) {
-                            echo "<option value=$i>$i</option>";
-                        }
-                        ?>
-                    </select>
+                    <?php echo tahun('', date('Y')); ?>
                 </div>
                 <div class="col-sm-1">
                     <a class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info"
@@ -82,11 +64,13 @@
             }
         });
         var width = $("#pot").width();
+        var bulan = $('#bulan').val();
+        var tahun = $('#tahun').val();
 
         grid.jqGrid({
             url: "<?php echo site_url(); ?>managementmitra/gridFastel",
             datatype: "json",
-            postData: {pgl_id: <?php echo $pgl_id;?>, periode:<?php echo $periode;?>},
+            postData: {pgl_id: <?php echo $pgl_id;?>,  bulan: bulan, tahun: tahun},
             mtype: "POST",
             colModel: [
                 //{ label: 'ID', name: 'USER_ID', key: true, width:5, sorttype:'number', editable: true,hidden:true },
@@ -286,7 +270,7 @@
             scrollOffset: 0,
             rowNum: 5,
             viewrecords: true,
-            rowList: [10, 20, 50],
+            rowList: [5, 20, 50],
             sortname: 'ND1', // default sorting ID
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
@@ -556,10 +540,12 @@
             }
         })
         var width2 = $("#nonpot").width();
+        var bulan = $('#bulan').val();
+        var tahun = $('#tahun').val();
 
         grid2.jqGrid({
             url: "<?php echo site_url(); ?>managementmitra/gridDatin",
-            postData: {pgl_id: <?php echo $pgl_id;?>, periode:<?php echo $periode;?>},
+            postData: {pgl_id: <?php echo $pgl_id;?>, bulan: bulan, tahun: tahun},
             datatype: "json",
             mtype: "POST",
             colModel: [
@@ -630,7 +616,7 @@
             scrollOffset: 0,
             rowNum: 5,
             viewrecords: true,
-            rowList: [5, 10, 20],
+            rowList: [5, 20, 50],
             // sortname: 'nofastel',
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
@@ -872,14 +858,13 @@
         var grid_nonpot = jQuery("#grid-table2");
         var bulan = $("#bulan").val();
         var tahun = $("#tahun").val();
-        var periode = tahun + "" + bulan;
         if (bulan && tahun) {
             var postdata = grid_pot.jqGrid('getGridParam', 'postData');
-            $.extend(postdata, {periode: periode});
+            $.extend(postdata, {bulan: bulan,tahun:tahun});
             grid_pot.trigger("reloadGrid", [{page: 1}]);
 
             var postdata2 = grid_nonpot.jqGrid('getGridParam', 'postData');
-            $.extend(postdata2, {periode: periode});
+            $.extend(postdata2, {bulan: bulan,tahun:tahun});
             grid_nonpot.trigger("reloadGrid", [{page: 1}]);
         } else {
             swal('Warning', 'Bulan dan tahun harus dipilih !', 'warning');

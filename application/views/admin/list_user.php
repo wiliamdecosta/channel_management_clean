@@ -195,7 +195,30 @@
         });
 
 
-        //  console.log(a.status)
+        $("#USER_NAME").on("keypress", function (event) {
+
+            // Disallow anything not matching the regex pattern (A to Z uppercase, a to z lowercase and white space)
+            // For more on JavaScript Regular Expressions, look here: https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions
+            var englishAlphabetAndWhiteSpace = /[A-Za-z0-9]/g;
+
+            // Retrieving the key from the char code passed in event.which
+            // For more info on even.which, look here: http://stackoverflow.com/q/3050984/114029
+            var key = String.fromCharCode(event.which);
+
+            //alert(event.keyCode);
+
+            // For the keyCodes, look here: http://stackoverflow.com/a/3781360/114029
+            // keyCode == 8  is backspace
+            // keyCode == 37 is left arrow
+            // keyCode == 39 is right arrow
+            // englishAlphabetAndWhiteSpace.test(key) does the matching, that is, test the key just typed against the regex pattern
+            if (event.keyCode == 9 || event.keyCode == 8 || event.keyCode == 37 || event.keyCode == 39 || englishAlphabetAndWhiteSpace.test(key)) {
+                return true;
+            }
+
+            // If we got this far, just return false because a disallowed key was typed.
+            return false;
+        });
 
         jQuery("#grid-table").jqGrid({
             url: '<?php echo site_url('admin/gridUser');?>',
@@ -211,15 +234,46 @@
                     align: "left",
                     editable: true,
                     editoptions: {
-                        size: 30
+                        size: 30,
+                        dataEvents: [
+                            {
+                                type: 'keypress',
+                                fn: function (event) {
+                                    var englishAlphabetAndWhiteSpace = /[A-Za-z0-9]/g;
+
+                                    // Retrieving the key from the char code passed in event.which
+                                    // For more info on even.which, look here: http://stackoverflow.com/q/3050984/114029
+                                    var key = String.fromCharCode(event.which);
+
+                                    //alert(event.keyCode);
+
+                                    // For the keyCodes, look here: http://stackoverflow.com/a/3781360/114029
+                                    // keyCode == 8  is backspace
+                                    // keyCode == 37 is left arrow
+                                    // keyCode == 39 is right arrow
+                                    // englishAlphabetAndWhiteSpace.test(key) does the matching, that is, test the key just typed against the regex pattern
+                                    if (event.keyCode == 9 || event.keyCode == 8 || event.keyCode == 37 || event.keyCode == 39 || englishAlphabetAndWhiteSpace.test(key)) {
+                                        return true;
+                                    }
+
+                                    // If we got this far, just return false because a disallowed key was typed.
+                                    return false;
+                                }
+                            }
+                        ],
+                        style: "text-transform: uppercase"
                     },
-                    editrules: {required: true}
+                    editrules: {
+                        required: true
+                        //custom: true,
+                        // custom_func: username_rules
+                    }
 
                 },
                 {
                     label: 'Full Name',
                     name: 'FULL_NAME',
-                    width: 150,
+                    width: 200,
                     align: "left",
                     editable: true,
                     editoptions: {
@@ -230,22 +284,23 @@
                 {
                     label: 'Email',
                     name: 'EMAIL',
-                    width: 150,
+                    width: 200,
                     align: "left",
                     editable: true,
                     editoptions: {
                         size: 30
-                    }
+                    },
+                    editrules: {required: true, email: true}
                 },
                 {
-                    label: 'Loker', name: 'LOKER', width: 100, align: "left", editable: true, editoptions: {
+                    label: 'Loker', name: 'LOKER', width: 150, align: "left", editable: true, editoptions: {
                     size: 30
                 }
                 },
                 {
                     label: 'Address Street',
                     name: 'ADDR_STREET',
-                    width: 150,
+                    width: 250,
                     align: "left",
                     editable: true,
                     edittype: 'textarea',
@@ -260,7 +315,7 @@
                 }
                 },
                 {
-                    label: 'Phone', name: 'CONTACT_NO', width: 90, align: "left", editable: true, editoptions: {
+                    label: 'Phone', name: 'CONTACT_NO', width: 150, align: "left", editable: true, editoptions: {
                     size: 30
                 }
                 },
@@ -272,9 +327,11 @@
                     editable: true,
                     edittype: 'password',
                     hidden: true,
-                    editoption: {},
                     editoptions: {
                         size: 30
+                    },
+                    editrules: {
+                        required: true
                     }
                 },
                 {
@@ -282,7 +339,7 @@
                     name: 'PROF_NAME',
                     width: 100,
                     sortable: true,
-                    align: 'center',
+                    align: 'left',
                     editable: true,
                     edittype: 'select',
                     //  formatter: 'select'
@@ -297,7 +354,7 @@
                     editable: true,
                     edittype: 'select',
                     formatter: 'select',
-                    editoptions: {value: {'Y': 'YES', 'N': 'NO'}}
+                    editoptions: {value: {'N': 'NO', 'Y': 'YES'}}
                 }
             ],
             width: 1120,
@@ -312,7 +369,7 @@
             rownumWidth: 35, // the width of the row numbers columns
             sortorder: 'asc',
             altRows: true,
-            shrinkToFit: true,
+            shrinkToFit: false,
             //multiselect: true,
             //multikey: "ctrlKey",
             multiboxonly: true,

@@ -7,7 +7,7 @@ var token = jQuery('#token'),
     token_name = token.attr('name');
 
 
-$("#nik").on("keypress", function(event) {
+$("#username").on("keypress", function(event) {
 
     // Disallow anything not matching the regex pattern (A to Z uppercase, a to z lowercase and white space)
     // For more on JavaScript Regular Expressions, look here: https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions
