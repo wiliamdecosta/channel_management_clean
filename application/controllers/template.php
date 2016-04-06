@@ -35,7 +35,7 @@ class Template extends CI_Controller
 		$result['result3'] = $this->M_template->get_bahasa();
 		$result['result4'] = $this->M_template->convert_lokasi();
         //$this->load->view('template/filter_template');
-		$this->load->view('template/view_template',$result);
+		$this->load->view('template/tab_template',$result);
     }
 
     public function create_template_new()
@@ -139,7 +139,11 @@ class Template extends CI_Controller
 
 		 $this->ckfinder->SetupCKeditor($this->ckeditor,base_url().'/assets/ckfinder/');
 		 $this->load->model('M_cm', 'cm');
-		$result['result'] = $this->cm->parsingTemplate();
+		 $this->load->model('M_template');
+        $result['result2'] = $this->M_template->get_table_name();
+		$result['result1'] = $this->cm->parsingTemplate();		
+		$result['result3'] = $this->M_template->load_temp();		
+		
         $this->load->view($this->folder . '/create_new_template', $result);
 
 	}
@@ -154,6 +158,22 @@ class Template extends CI_Controller
 		$this->cm->postDocTemp($data1,$data2,$data3,$data4,$data5,$data6);
 	}
 	
+	public function saveNewTemplate(){
+		$this->load->model('M_template', 'tm');
+		$data1 = $this->input->post('t_name');
+		$data2 = $this->input->post('t_content');
+		$this->tm->insertNewTemplate($data1,$data2);
+	}
+	
+	public function setUpdateTemplate(){
+		$this->load->model('M_template', 'tm');
+		$data1 = $this->input->post('t_name');
+		$data2 = $this->input->post('t_content');
+		$data3 = $this->input->post('var_c');
+		$this->tm->setNewTemplate($data1,$data2,$data3);
+	}
+	
+	
 	public function addTemplate(){
 		$this->load->model('M_template');
 		$data = array();
@@ -163,6 +183,7 @@ class Template extends CI_Controller
 		$data['bahasa'] = $this->input->post('bahasa');
 		$data['lokasi_pks'] = $this->input->post('lokasi_pks');
 		$data['doc_type'] = $this->input->post('doc_type');
+		$data['doc_period'] = $this->input->post('doc_perd');
 		$this->M_template->add_Template($data);
 	}
 	public function POST_idDOC(){
@@ -189,4 +210,85 @@ class Template extends CI_Controller
 		echo $result1;
 		$res = $this->cm->updateDOC($result1, $result2);
 	}
+	
+	// public function getDataTemplate(){
+		// $this->load->model('M_cm', 'cm');
+		// $result1 =$this->input->post('ID');		
+		// $res = $this->cm->get_contents($result1);
+		// echo $res;
+	// }
+	
+	public function list_temp()
+    {
+		$this->load->model('M_template');
+		$data = array();
+		$this->db->set('order by doc_id desc');
+		$result['result1'] = $this->M_template->table_location();
+		$result['result2'] = $this->M_template->get_doc_type();
+		$result['result3'] = $this->M_template->get_bahasa();
+		$result['result4'] = $this->M_template->convert_lokasi();		
+        // $data['pgl_id'] = $this->input->post('mitra');
+        $this->load->view($this->folder . '/edit_document', $result);
+    }
+	public function get_data()
+	{
+		$this->load->model('m_template','mt');
+		$result = $this->mt->load_temp();
+		echo json_encode($result);
+	}
+	
+	public function get_content_template(){
+		$this->load->model('M_template');
+		$data = $this->input->post('id');
+		$result= $this->M_template->get_contents($data);
+		echo $result;
+	}
+	public function delete_Temp(){
+		$this->load->model('M_template');
+		$data = $this->input->post('id_doc');
+		$result= $this->M_template->deleteTempfromTable($data);
+		echo $result;
+	}
+	
+	public function get_variable_content(){
+		$this->load->model('M_template');
+		$data1 = $this->input->post('val_table');
+		$result= $this->M_template->get_var_content($data1);
+		echo json_encode($result);
+	}
+	public function get_content_variable(){
+		$this->load->model('M_template');
+		$data1 = $this->input->post('id');
+		$result1 = $this->M_template->get_var_templates($data1);
+		// print_r($result1);
+		$result2 = $result1[0]->VARIABLE_TEMPLATE;
+		// print_r($result2);
+		$result = explode(' ',$result2);
+		echo json_encode($result);
+	}
+	public function get_table_name_var(){
+		$this->load->model('M_template');
+		$result= $this->M_template->get_var_tbl_name();
+		echo json_encode($result);
+	}
+	
+	public function get_table_template(){
+		$this->load->model('M_template');
+		$this->load->model('M_template', 'tm');
+		$data1 = $this->input->post('t_name');
+		$data2 = "";
+		$this->tm->insertNewTemplate($data1,$data2);
+		$result['result3'] = $this->M_template->load_temp();
+		$this->load->view($this->folder . '/table_create_new_template', $result);
+		// echo $result;
+	}
+	public function get_table_temp(){
+		$this->load->model('M_template');
+		$this->load->model('M_template', 'tm');
+		$result['result3'] = $this->M_template->load_temp();
+		$this->load->view($this->folder . '/table_create_new_template', $result);
+		// echo $result;
+	}
+	
+	
 }
