@@ -100,7 +100,22 @@
                     return false;
                     break;
 
-                case '13' : // Progressif
+                case '13' : // Rasio base
+                    $('#div_benefit').hide();
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo site_url();?>skema_bisnis/loadSkemaProgressif",
+                        data: {},
+                        timeout: 10000,
+                        success: function (data) {
+                            $("#benefit_mitra_detail").html(data);
+                        }
+
+                    })
+                    return false;
+                    break;
+
+                case '27' : // Progressif
                     $('#div_benefit').hide();
                     $.ajax({
                         type: 'POST',
