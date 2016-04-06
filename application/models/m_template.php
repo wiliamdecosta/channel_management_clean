@@ -27,7 +27,7 @@ class M_template extends CI_Model {
               order by COLUMN_NAME asc ";
         $sql = $this->db->query($q);
         if($sql->num_rows() > 0)
-            $result = $sql->result();
+            $result = $sql->resultresult();
         return $result;
     }
 
@@ -72,7 +72,8 @@ class M_template extends CI_Model {
                                  description,
                                  --content,
                                  doc_lang_id,
-                                 lokasi_id) 
+                                 lokasi_id,
+								 periode) 
                           values(doc_inc_id.nextval,
                                  '".$data['doc_type']."',
                                  '/default_path',
@@ -81,9 +82,41 @@ class M_template extends CI_Model {
                                  '".$data['nama']."',
                                  '".$data['desc']."',
                                  '".$data['bahasa']."',
-                                 ".$data['lokasi_pks'].")";
+                                 '".$data['lokasi_pks']."','
+                                 ".$data['doc_period']."')";
 		$this->db->query($sql);
         
+    }
+	
+	public function insertNewTemplate($data1, $data2){
+
+		$sql = "insert into TEMPLATE_MASTER (TEMPLATE_ID,
+                                 CONTENT_TEMPLATE,
+                                 TEMPLATE_NAME
+								 ) 
+                          values(TEMP_MSTR_INC_ID.nextval,
+                                 :data2,
+                                 :data1
+                                 )";
+		$parse = OCIParse($this->db->conn_id, $sql);
+		OCIBindByName($parse, ':data1', $data1 );
+        OCIBindByName($parse, ':data2', $data2 );
+		OCIExecute($parse);       
+    }
+	public function setNewTemplate($data1, $data2, $data3){
+
+		$sql = "UPDATE TEMPLATE_MASTER
+					SET CONTENT_TEMPLATE = :data2, VARIABLE_TEMPLATE = :data3 
+						WHERE TEMPLATE_ID = :data1";
+		$parse = OCIParse($this->db->conn_id, $sql);
+		$data3arr = implode(" ",$data3);
+        OCIBindByName($parse, ':data1', $data1 );
+        OCIBindByName($parse, ':data2', $data2 );
+        OCIBindByName($parse, ':data3', $data3arr );
+		OCIExecute($parse);
+		print_r($data1);	
+		print_r($data3arr);	
+		print_r($data2);exit;		
     }
 	public function table_location($lokasi_id='', $periode=''){
 		$result = array();
@@ -97,7 +130,9 @@ class M_template extends CI_Model {
             $result = $sql->result();
         return $result;
 		
-	}public function convert_lokasi(){
+	}
+	
+	public function convert_lokasi(){
 		$result = array();
         $q = "SELECT P_MP_LOKASI_ID, LOKASI
                 FROM P_MP_LOKASI				
@@ -144,5 +179,74 @@ class M_template extends CI_Model {
         return $result;
 		
 	}
+	
+	public function load_temp(){
+		$result = array();
+        $q = "SELECT *
+                FROM TEMPLATE_MASTER			
+				";
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;		
+	}
+	
+	public function get_var_content($data){
+		$result = array();
+        $q = "SELECT DISTINCT VARIABLE_NAME 
+					FROM TEMPLATE_VARIABLE WHERE TABLE_NAME = ".$data;
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $ret = $sql->result();
+
+        return $ret;		
+	}
+	
+	public function get_var_templates($data){
+		$result = array();
+        $q = "SELECT DISTINCT VARIABLE_TEMPLATE
+                    FROM TEMPLATE_MASTER WHERE TEMPLATE_ID = '".$data."' ";
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $ret = $sql->result();
+
+        return $ret;		
+	}
+	
+	public function get_var_tbl_name(){
+		$result = array();
+        $q = "SELECT DISTINCT TABLE_NAME 
+					FROM TEMPLATE_VARIABLE			
+				";
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;		
+	}
+	
+	public function get_contents($data){
+        $sql = "SELECT CONTENT_TEMPLATE
+                FROM TEMPLATE_MASTER			
+					WHERE TEMPLATE_ID = :data";
+		$parse = OCIParse($this->db->conn_id, $sql);
+		OCIBindByName($parse, ':data', $data );
+		OCIExecute($parse);
+		
+		while (OCIFetchInto($parse,$arr,OCI_ASSOC)) {
+				if(isset($arr["CONTENT_TEMPLATE"])){
+				if($arr["CONTENT_TEMPLATE"]){
+					$ret = $arr["CONTENT_TEMPLATE"]->load();
+				} 
+				} else $ret = "";
+			}
+		
+        return $ret;	
+	}
+	
+	public function deleteTempfromTable($data1){
+		$sql1 = "DELETE FROM TEMPLATE_MASTER WHERE TEMPLATE_ID = ".$data1;
+		$this->db->query($sql1);
+	}
+	
 
   }
