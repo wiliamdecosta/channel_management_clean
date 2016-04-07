@@ -120,7 +120,14 @@ class Parameter extends CI_Controller
         $id = $this->input->post('id');
         $this->jqGrid->crud($table, 'PROF_ID', $id, array('PROF_NAME', 'PROF_DESC'));
     }
-
+    public function datin_main_page()
+    {
+        $title = $_POST['title'];
+        //BreadCrumb
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+        $this->load->view('parameter/uploaddatinmainpage', $result);
+    }
     public function uploadDatin()
     {
         $title = $_POST['title'];

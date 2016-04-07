@@ -278,11 +278,31 @@ class M_tenant extends CI_Model {
                                           '".$data['PRODUCT_ID']."',
                                           '".$data['USERID']."', sysdate)";
 
-		$q = $this->db->query(" SELECT count(*) CEK 
-								FROM ten_nd_np 
-								where ten_id = ".$data['TEN_ID']." 
-								AND account_num = '".$data['ACCOUNT_NUM']."'
-								AND product_id = '".$data['PRODUCT_ID']."' ");
+        // if( !isset($data['ACCOUNT_NUM']) || $data['ACCOUNT_NUM'] == '' || $data['ACCOUNT_NUM'] == null){
+        // 	$query = " SELECT count(*) CEK 
+								// FROM ten_nd_np 
+								// where ten_id = ".$data['TEN_ID']." 
+								// AND account_num is null
+								// AND product_id = '".$data['PRODUCT_ID']."' ";
+        // } else {
+        // 	$query = " SELECT count(*) CEK 
+								// FROM ten_nd_np 
+								// where ten_id = ".$data['TEN_ID']." 
+								// AND account_num = '".$data['ACCOUNT_NUM']."'
+								// AND product_id = '".$data['PRODUCT_ID']."' ";
+        // }
+
+        $query = " SELECT count(*) CEK 
+								 FROM ten_nd_np 
+								 where ten_id = ".$data['TEN_ID']." 
+								 AND product_id = '".$data['PRODUCT_ID']."' ";
+
+		$q = $this->db->query($query);
+
+		/*$q = $this->db2->query(" SELECT insert_datin(".$data['TEN_ID'].",
+                                          '".$data['ACCOUNT_NUM']."',
+                                          '".$data['PRODUCT_ID']."',
+                                          '".$data['USERID']."') as CEK from dual ");*/
 		 $ce = 0;
 		 foreach($q->result() as $r) {
                    $ce = $r->CEK;
