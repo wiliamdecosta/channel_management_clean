@@ -118,6 +118,19 @@ class M_template extends CI_Model {
 		print_r($data3arr);	
 		print_r($data2);exit;		
     }
+	
+	public function save_name_var_field($data1, $data2){
+
+		$sql = "UPDATE TEMPLATE_MASTER
+					SET TEMPLATE_NAME = :data2
+						WHERE TEMPLATE_ID = :data1";
+		$parse = OCIParse($this->db->conn_id, $sql);
+        OCIBindByName($parse, ':data1', $data1 );
+        OCIBindByName($parse, ':data2', $data2 );
+		OCIExecute($parse);
+		print_r($data1);	
+		print_r($data2);exit;		
+    }
 	public function table_location($lokasi_id='', $periode=''){
 		$result = array();
         $q = "SELECT DOC_ID, DOC_TYPE_ID, DOC_NAME, FILE_PATH, DESCRIPTION, DOC_LANG_ID, DOC_TYPE_NAME, LANG, LOKASI_ID, PERIODE
@@ -191,10 +204,32 @@ class M_template extends CI_Model {
         return $result;		
 	}
 	
+	public function load_temp_nm_id(){
+		$result = array();
+        $q = "SELECT TEMPLATE_NAME, TEMPLATE_ID
+                FROM TEMPLATE_MASTER			
+				";
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;		
+	}
+	
+	public function load_temp_name($data){
+		$result = array();
+        $q = "SELECT TEMPLATE_NAME
+                FROM TEMPLATE_MASTER
+					WHERE TEMPLATE_ID = ".$data;
+        $sql = $this->db->query($q);
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;		
+	}
+	
 	public function get_var_content($data){
 		$result = array();
         $q = "SELECT DISTINCT VARIABLE_NAME 
-					FROM TEMPLATE_VARIABLE WHERE TABLE_NAME = ".$data;
+					FROM TEMPLATE_VARIABLE WHERE TABLE_NAME = '".$data."'";
         $sql = $this->db->query($q);
         if($sql->num_rows() > 0)
             $ret = $sql->result();
