@@ -191,7 +191,7 @@ class Template extends CI_Controller
 		$this->load->model('M_template');
 		$result = $this->input->post('id_doc');
 		$res = $this->cm->selectFile($result);
-		$res = $this->M_template->get_data_var_template('PERHITUNGAN_BILL_COLL',$result,$res);
+		// $res = $this->M_template->get_data_var_template('PERHITUNGAN_BILL_COLL',$result,$res);
 		echo $res;
 	}
 	public function delete_DOC(){
@@ -237,6 +237,13 @@ class Template extends CI_Controller
 		echo json_encode($result);
 	}
 	
+	public function get_data_nm_id()
+	{
+		$this->load->model('m_template','mt');
+		$result = $this->mt->load_temp_nm_id();
+		echo json_encode($result);
+	}
+	
 	public function get_content_template(){
 		$this->load->model('M_template');
 		$data = $this->input->post('id');
@@ -270,6 +277,20 @@ class Template extends CI_Controller
 		$this->load->model('M_template');
 		$result= $this->M_template->get_var_tbl_name();
 		echo json_encode($result);
+	}
+	
+	public function Name_Temp(){
+		$this->load->model('M_template');
+		$data1 = $this->input->post('id_doc');
+		$result= $this->M_template->load_temp_name($data1);
+		echo json_encode($result);
+	}
+	
+	public function save_name(){
+		$this->load->model('M_template');
+		$data1 = $this->input->post('id_doc');
+		$data2 = $this->input->post('nm_field');
+		$result= $this->M_template->save_name_var_field($data1, $data2);
 	}
 	
 	public function get_table_template(){
