@@ -196,13 +196,13 @@ class Parameter extends CI_Controller
 
     public function datinuploadparse($file_name, $file_ext, $cprod, $ten_id = "", $confirm)
     {
-        error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+        //error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+        error_reporting(0); 
         $this->load->library('phpexcel');
 
         if ($file_ext == ".xlsx") $readerType = 'Excel2007';
         elseif ($file_ext == ".xls") $readerType = 'Excel5';
         elseif ($file_ext == ".csv" || $file_ext == ".txt") $readerType = 'CSV';
-
 
         $reader = PHPExcel_IOFactory::createReader($readerType);
         $reader->setReadDataOnly(true);
@@ -220,7 +220,8 @@ class Parameter extends CI_Controller
                 $dataDatin = array();
                 // $retStat='';
                 // $retCount=0;
-                for ($row = 2; $row <= $highestRow; ++$row) {
+                $msgret = 'Duplicate Data on row';
+                for ($row = 1; $row <= $highestRow; ++$row) {
 
                     $dataDatin['TEN_ID'] = $ten_id;
                     //$dataDatin['CUSTOMER_REF'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
@@ -229,19 +230,35 @@ class Parameter extends CI_Controller
                     $dataDatin['PRODUCT_ID'] = $sh->getCellByColumnAndRow(1, $row)->getValue();
                     $dataDatin['USERID'] = $username;
 
-                    $this->M_tenant->insertDatin($dataDatin);
+                    $check = $this->M_tenant->insertDatin($dataDatin);
+                   
+                    if ($check > 0){
+                        $msgret.= ' '.$row;
+                        $cekND = 1;
+                    }
 
                 } // End Loop
 
-                    $data['status'] = "T";
-                    $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "
+                    if ($cekND > 0){
+                        $data['status'] = "F";
+                        $data['msg'] = $data['msg'] = "<div class='alert alert-danger'>" . "
+                                                <button type='button' class='close' data-dismiss='alert'>
+                                                    <i class='ace-icon fa fa-times'></i>
+                                                </button>
+                                                  ".$msgret."
+                                                <br />
+                                            </div>";
+                    }else{
+                        $data['status'] = "T";
+                        $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "
                                                 <button type='button' class='close' data-dismiss='alert'>
                                                     <i class='ace-icon fa fa-times'></i>
                                                 </button>
                                                   All records has been inserted successfully
                                                 <br />
                                             </div>";
-
+                    }
+        
         }else{
                     $data['status'] = "F";
                     $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "

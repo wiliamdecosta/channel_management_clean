@@ -268,17 +268,35 @@ class M_tenant extends CI_Model {
 	}
 
   public function insertDatin($data) {
-      $db2 = $this->load->database('default', TRUE);
-      $sql = "INSERT INTO TEN_ND_NP (TEN_ID, ACCOUNT_NUM, PRODUCT_ID, CREATED_BY, CREATED_DATE) VALUES
+  		$ret = 0;
+  		$db2 = $this->load->database('default', TRUE);
+  	   if(is_array($data)){
+
+		$sql = "INSERT INTO TEN_ND_NP (TEN_ID, ACCOUNT_NUM, PRODUCT_ID, CREATED_BY, CREATED_DATE) VALUES
                                          ( ".$data['TEN_ID'].",
                                           '".$data['ACCOUNT_NUM']."',
                                           '".$data['PRODUCT_ID']."',
-                                          '".$data['USERID']."',
-                                          sysdate)";
-      if(is_array($data)){
-        $db2->query($sql);
-      }
+                                          '".$data['USERID']."', sysdate)";
 
+		$q = $this->db->query(" SELECT count(*) CEK 
+								FROM ten_nd_np 
+								where ten_id = ".$data['TEN_ID']." 
+								AND account_num = '".$data['ACCOUNT_NUM']."'
+								AND product_id = '".$data['PRODUCT_ID']."' ");
+		 $ce = 0;
+		 foreach($q->result() as $r) {
+                   $ce = $r->CEK;
+                   }
+        // return $ce;
+        if($ce < 1){
+        	 $db2->query($sql);
+        	 $ret =  0;
+        }else{
+        	$ret = 1;
+        }
+       
+      }
+      return $ret;
   }
 
   public function insertTenND($ten_id, $nd, $validfrom, $validto, $cprod) {
