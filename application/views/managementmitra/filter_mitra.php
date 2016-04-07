@@ -86,14 +86,17 @@
     $(document).ready(function () {
         function empty_cc() {
             $('#list_cc').html('<option value=""> Pilih CC </option>');
+            $("#main_content").html("");
         }
 
         function empty_mitra() {
             $('#mitra').html('<option value=""> Pilih Mitra </option>');
+            $("#main_content").html("");
         }
 
         function empty_lokasi() {
             $('#lokasisewa').html('<option value=""> Pilih Lokasi Sewa </option>');
+            $("#main_content").html("");
         }
 
 //        ----------------------------------------------------------------------------

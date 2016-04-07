@@ -101,4 +101,35 @@ class M_summary extends CI_Model
         $query = $this->db->get('PURCHASE_ORDER');
         return $query->num_rows();
     }
+
+    public function getTrendMFData()
+    {
+        $periode = $this->input->post('periode');
+        $segments = $this->input->post('segment');
+        $skema_id = $this->input->post('skema_id');
+
+
+        $this->db->select('CODE_SGM');
+        $this->db->select('PERIOD');
+        $this->db->select_sum('FEE_TO_SHARE');
+
+        if ($periode) {
+            $period = explode(' - ', $periode);
+
+            $where = "TO_DATE (PERIOD, 'YYYYMM') BETWEEN TO_DATE ($period[0], 'YYYYMM') AND TO_DATE ($period[1], 'YYYYMM')";
+            $this->db->where($where);
+        }
+        if ($segments) {
+            $this->db->where('CODE_SGM', $segments);
+        }
+        if ($skema_id) {
+            $this->db->where('METHOD_ID', (int)$skema_id);
+        }
+
+        $this->db->group_by(array("CODE_SGM", "PERIOD"));
+        $this->db->order_by("PERIOD");
+        $q = $this->db->get('V_SUMMARY_MARFEE_NPK');
+
+        return $q->result_array();
+    }
 }

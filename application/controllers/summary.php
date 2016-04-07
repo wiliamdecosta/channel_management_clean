@@ -193,5 +193,42 @@ class Summary extends CI_Controller
         echo json_encode($result);
     }
 
+    public function filterTrendMF()
+    {
+        $periode = $this->input->post('periode');
+        $skema_id = $this->input->post('skema_id');
+        $startdate = $this->input->post('startdate');
+        $enddate = $this->input->post('enddate');
+
+        $array_period = array();
+        if ($periode) {
+            $interval = new DateInterval('P1M');
+            $daterange = new DatePeriod(new DateTime($startdate), $interval ,new DateTime($enddate));
+            foreach($daterange as $date){
+                $array_period[] = (string)$date->format('Ym');
+            }
+
+        }
+        $string_periode = implode(',',$array_period);
+
+        if(!$skema_id){
+            $skema_list = $this->db->select('REFERENCE_NAME')->where('P_REFERENCE_TYPE_ID',3)->get('P_REFERENCE_LIST')->result_array();
+
+        }else{
+            $skema_list = $this->db->select('REFERENCE_NAME')->where('P_REFERENCE_LIST_ID',$skema_id)->get('P_REFERENCE_LIST')->result_array();
+        }
+
+        $mf = $this->db_summary->getTrendMFData();
+
+        foreach($skema_list as $skema){
+            $skema['REFERENCE_NAME'];
+
+        }
+
+        $data['periode'] = $string_periode;
+        $this->load->view('summary/mf_chart',$data);
+
+
+    }
 
 }
