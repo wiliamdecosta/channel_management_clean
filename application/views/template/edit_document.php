@@ -183,8 +183,8 @@
 																<td class="class1" id="classic" value="1XKLI"> <?php echo $content->PERIODE; ?> </td>
 																<td>
 																	<div class="hidden-sm hidden-xs action-buttons">
-																		<a class="purple" data-rel="tooltip" data-original-title="Download">
-																			<i class="ace-icon fa fa-download bigger-130"></i>
+																		<a class="tooltip-download" data-rel="tooltip" data-original-title="Download">
+																			<i class="ace-icon fa fa-download bigger-130 purple"></i>
 																		</a>
 						
 																		<a class="blue" data-rel="tooltip" data-original-title="View" onClick="Back()">
@@ -266,12 +266,50 @@
 								<textarea id="textarea2">
 								</textarea>
 							</div></br>
-							<div id="buttonOne">
+							<div class = "row">
+							<div id="buttonOne" class="col-lg-1">
 								<a id="submitform2" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()"><span>
 								Back</span></a>
 							</div>
+							<div id="buttonTwo" class="col-lg-2">
+							<a id="submitform3" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" data-target="#myModal3" data-toggle="modal"><span>
+								Load From Master Template</span></a>
+							</div>
+							<div id="buttonThree" class="col-lg-1">
+							<a id="submitform4" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value=""><span>
+								Exit</span></a>
+							</div>
+							</div>
 							<div id="hiddenval" style="display: none;"><input type="text" id="test3" value="LALALALA"></div>
 						</div>
+						<div class="modal fade" id="myModal3" role="dialog">
+							<div class="modal-dialog">							
+							  <!-- Modal content-->
+							  <div class="modal-content">
+								<div class="modal-header">
+								  <button type="button" class="close" data-dismiss="modal">&times;</button>
+								  <h4 class="modal-title">Change Document Title</h4>
+								</div>
+								<div class="modal-body">
+								<div class="row">
+									<div class="col-lg-3"></div>
+										<div class="col-lg-6">
+											<select id="option_template_name">																					
+											</select>
+										</div>
+									<div class="col-lg-1" id="id_name_temp">
+									</div>
+								</div>
+								<div class="row"></br></div></div>
+									<div class="modal-footer">									  
+									  <button type="button" class="btn btn-default" data-dismiss="modal"id="change_name">Add Template</button>
+									  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									</div>
+							  </div>
+							  
+							</div>
+					</div>
+			</div>
                                
                             </div><!-- PAGE CONTENT ENDS -->
                         </div>
@@ -496,6 +534,63 @@ jQuery(function($) {
                 }
 		});
     });
+		
+	$('#submitform3').click(function(){	
+        $('#option_template_name').children().remove();
+		$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/get_data_nm_id",
+                data:  {},
+				dataType:"json",
+				success: function(data){			
+					for (var i = 0; i < data.length; i++) {
+						$('#option_template_name').prepend($('<option value='+ data[i].TEMPLATE_ID +'>'+ data[i].TEMPLATE_NAME +'</option>'
+									));	
+					}
+					$('#option_template_name').prepend($('<option>Pilih Template</option>'));
+                }, error: function(data, xhr, ajaxOptions, thrownError){						
+							swal("Error",xhr.status+"  "+ thrownError,"error");
+							}
+		});
+    });
+	$('#submitform4').click(function(){	
+       jQuery("#texteditorOne").hide(1000);
+		jQuery("#texteditorTwo").hide(1000);		
+		jQuery("#buttonOne").hide(1000);
+		jQuery("#submitform3").hide(1000);		
+		jQuery("#submitform4").hide(1000);		
+		jQuery("#all_table").show(1000);
+		CKEDITOR.instances["textarea2"].setData("");
+    });
+	
+	$(document).on('click','#change_name', function(e) {
+		swal({
+		title: "Apakah Anda yakin untuk menggunakan template ini?",
+		text: "File yang anda buat di Editor ini akan terhapus",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonClass: "btn-danger",
+		confirmButtonText: "Ya, ganti dengan template baru",
+		closeOnConfirm: true
+			},
+			function(){
+			value_table	= $("#option_template_name option:selected").val();
+			$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/get_content_template",
+                data:  {id : value_table},
+				dataType:"text",
+				success: function(data){
+					if(data.length>0){
+					CKEDITOR.instances['textarea2'].setData(data);	
+					} else {
+						swal("Perhatian","Template belum terisi content apapun","info");
+					}
+                }
+			});
+			});
+		});
+		
 
 
     //And for the first simple table, which doesn't have TableTools or dataTables
@@ -569,7 +664,9 @@ $(document).ready(function () {
 	var edit = true;
 		jQuery("#texteditorOne").hide();
 		jQuery("#buttonOne").hide();		
-		jQuery("#texteditorTwo").hide();		
+		jQuery("#texteditorTwo").hide();
+		jQuery("#submitform3").hide();		
+		jQuery("#submitform4").hide();		
     });
 
 	
@@ -592,6 +689,7 @@ $(document).ready(function () {
 		edit = false;
 		$('#submitform2 span').text('Back to table');
 		jQuery("#all_table").hide(1000);
+		jQuery("#submitform3").hide(1000);		
 		jQuery("#texteditorOne").show(1000);		
 		jQuery("#buttonOne").show(1000);
 		$('#dynamic-table tbody').on('click', 'tr', function () {
@@ -613,7 +711,9 @@ $(document).ready(function () {
 		jQuery("#texteditorOne").hide(1000);
 		jQuery("#texteditorTwo").hide(1000);		
 		jQuery("#buttonOne").hide(1000);
+		jQuery("#submitform3").hide(1000);		
 		jQuery("#all_table").show(1000);
+		CKEDITOR.instances["textarea2"].setData("");
 			    DOC_content = CKEDITOR.instances["textarea2"].getData();
 				// encode to base 64 // mar 28032016 
 				DOC_content = btoa(DOC_content);
@@ -636,6 +736,8 @@ $(document).ready(function () {
 		jQuery("#all_table").hide(1000);
 		jQuery("#texteditorTwo").show(1000);		
 		jQuery("#buttonOne").show(1000);
+		jQuery("#submitform3").show(1000);
+		jQuery("#submitform4").show(1000);
 		$('#dynamic-table tbody').on('click', 'tr', function () {
 			var id_DOC = $(this).attr('value');			
 			$.ajax({

@@ -25,9 +25,9 @@
 														{
 						
 															?>
-															<tr class="table_head" value="<?php echo $content->TEMPLATE_ID ?>" >
+															<tr class="table_head" value="<?php echo $content->TEMPLATE_ID ?>" id="<?php echo $content->TEMPLATE_ID ?>">
 																<td class="center"><?php echo $i ?></td>
-																<td class="center" value="1XKLI"><?php echo $content->TEMPLATE_NAME ?></td>
+																<td class="center" id="nm_nm<?php echo $content->TEMPLATE_ID ?>" data-id="<?php echo $content->TEMPLATE_ID ?>"><?php echo $content->TEMPLATE_NAME ?></td>
 																<td class="class1" id="classic" value="1XKLI"><?php echo $content->VARIABLE_TEMPLATE ?></td>
 																
 																<td>
@@ -136,7 +136,7 @@
 							  </div>
 							  
 							</div>
-			</div>
+					</div>
 			</div>
 	</div>
 	<div id="view_content_temp">	
@@ -316,9 +316,10 @@ jQuery(function($) {
     });
 	
 	$(document).on('click', '#dynamic-table #tooltip_edit_name', function(e) {
+		// $('#tooltip_edit_name').click(function(){
 		var id_DOC = $(this).closest('tr').attr('value');
-		// var aPos = oTable1.fnGetPosition( $(this).closest('tr').get(0) );
-		// oTable1.fnDeleteRow(aPos);		
+		var id_n = $(this).closest('tr').attr('id');
+		$('#change_name').val(id_n);
 		$.ajax({
                 type: "POST",
 				url: "<?php echo base_url(); ?>"+"template/Name_Temp",
@@ -332,8 +333,9 @@ jQuery(function($) {
     })
 	$(document).on('click', '#change_name', function(e) {
 	// $('#change_name').click(function(){
-		var id_DOC = $('#id_name_temp').val();
+		var id_DOC = $('#id_name_temp').val();			
 		var name_field = $('#temp_name_field').val();
+		alert("nama = "+name_field);
 		// var aPos = oTable1.fnGetPosition( $(this).closest('tr').get(0) );
 		// oTable1.fnDeleteRow(aPos);		
 		$.ajax({
@@ -349,7 +351,7 @@ jQuery(function($) {
 				}
 		});
 		$('#temp_name_field').val("");
-		oTable1.fnReloadAjax();
+		$('#nm_nm'+$('#change_name').val()).html(name_field);
     })
 	
 	$(document).on('click', '#dynamic-table #tooltip_delete', function(e) {
@@ -374,6 +376,7 @@ jQuery(function($) {
 		$('#table_id').hide(1000);
 		$('#var_main').empty();
 		$('#var_main').val(0);
+		CKEDITOR.instances['editor2'].setData("");
 		var_reccur = $('#var_main').val();
 		$.ajax({
                 type: "POST",
@@ -385,7 +388,7 @@ jQuery(function($) {
 						CKEDITOR.instances['editor2'].setData(data);
 					} else
 					{
-						swal("Perhatian","Template error","info");
+						swal("Perhatian","Template belum memiliki isi content","info");
 					}
 				}
 		});

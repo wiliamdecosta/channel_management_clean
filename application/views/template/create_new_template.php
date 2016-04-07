@@ -314,7 +314,6 @@
 									));								
 							}
 							$('#num_of_var').val(data.length);
-							alert($('#num_of_var').val());
 							$('#select_table').prepend($('<option>Pilih tabel</option>'));
 						}, 
 						error: function(data, xhr, ajaxOptions, thrownError){						
@@ -434,7 +433,6 @@
                  var_collection.push($(this).attr('value'));
 			});
 			inputxxxx_value = var_collection.toString();
-			alert(inputxxxx_value);
 			$('div','#var_main').each(function(){
                  $(this).remove();
 			});
