@@ -279,13 +279,25 @@
 			dataAdded = String(dataAddedA);
 			dataAddedB = $('#tablet_val'+ i).text();
 			dataAdded2 = String(dataAddedB);
+			var_reccur = $('#var_main').val();
 			if(dataAdded.length >0 ){
-				$('#var_main').prepend($('<div onclick="insert_ckeditor(\''+i+'\')" id="insert'+i+'" value="'+dataAdded+'||'+dataAdded2+'"><a btn btn-sm btn-default>Add</a><div id="numdat'+i+'">'+dataAdded+'||'+dataAdded2+'</div></div>'));
+				$('#var_main').prepend($('<div id="var_total'+ i + var_reccur +'"><div class="row">'
+				+	'<div onclick="insert_ckeditor(\''+ i + var_reccur +'\')" id="insert'+ i + var_reccur +'" value="'+dataAdded+'||'+dataAdded2+'" class="col-lg-2">'
+				+	'<a class="btn btn-white btn-sm btn-round">Add</a></div>'
+				+	'<div onclick="delete_var_all(\''+i + var_reccur +'\')" id="del_var_existing" class="col-lg-2">'
+				+	'<a class="btn btn-white btn-sm btn-round">Delete</a>'
+				+	'</div>'
+				+'</div>'
+				+'<div class="row">'
+				+	'<div class="col-lg-12" id="numdat'+i+'">'+dataAdded+'||'+dataAdded2+'</div>'
+				+'</div></div>'));
 				}
 			}
 		});
 		function insert_ckeditor(val){
 			CKEDITOR.instances['editor2'].insertText($("#numdat"+val).text());
+		}function delete_var_all(val){
+			$('#var_total'+val).remove();
 		}
 		$('#add_variable').click(function(){
 			$('#select_table').children().remove();
