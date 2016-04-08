@@ -195,7 +195,7 @@
 
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo site_url('workflow_parameter/crud_procedure_role');?>',
-            caption: "Daftar Role Pekerjaan Workflow"
+            caption: "Daftar Role Pekerjaan Workflow :: " + $("#tab_procedure_code").val()
         });
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
