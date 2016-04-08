@@ -107,7 +107,17 @@
         
         
     })
-
+    
+    function loadContentWithParams(id, params) {
+        $.post( "<?php echo base_url('dynamic_content/load_content');?>/" + id,
+            params,
+            function( data ) {
+                $( "#ajaxContent" ).html( data );
+            }
+        );
+        
+	}
+			
 </script>
 
 <!-- basic scripts -->

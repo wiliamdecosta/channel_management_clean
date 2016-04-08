@@ -11,6 +11,9 @@ class Workflow_parameter extends CI_Controller
         checkAuth();
         $this->load->model('M_jqGrid', 'jqGrid');
         $this->load->model('P_document_type');
+        $this->load->model('P_procedure');
+        $this->load->model('P_procedure_files');
+        $this->load->model('P_procedure_role');
     }
 
 
@@ -111,5 +114,233 @@ class Workflow_parameter extends CI_Controller
             echo $e->getMessage();
             exit;
         }
+    }
+    
+    
+    /* P_procedure */
+    
+    public function procedure() {
+
+        $this->load->view('workflow_parameter/procedure');
+    }
+
+    public function grid_procedure() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $table = "SELECT * FROM P_PROCEDURE";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array();
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        //print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
+
+    public function crud_procedure() {
+        $result = $this->P_procedure->crud_procedure();
+        
+        echo json_encode($result);
+        exit;
+    }
+    
+    
+    public function grid_procedure_files() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+        
+        $p_procedure_id = $this->input->post('procedure_id');
+        $table = "SELECT * FROM P_PROCEDURE_FILES";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array('p_procedure_id = '.$p_procedure_id);
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        //print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
+
+    public function crud_procedure_files() {
+        $result = $this->P_procedure_files->crud_procedure_files();
+        
+        echo json_encode($result);
+        exit;
+    }
+    
+    
+    public function grid_procedure_role() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+        
+        $p_procedure_id = $this->input->post('procedure_id');
+        $table = "SELECT a.P_PROCEDURE_ROLE_ID,
+                        a.P_PROCEDURE_ID,
+                        a.P_APP_ROLE_ID,
+                        a.F_ROLE,
+                        to_char(a.VALID_FROM,'yyyy-mm-dd') VALID_FROM,
+                        to_char(a.VALID_TO, 'yyyy-mm-dd') VALID_TO,
+                        a.UPDATED_DATE,
+                        a.UPDATED_BY,
+                        a.CREATED_BY,
+                        a.CREATION_DATE,                        
+                        b.PROF_NAME 
+                    FROM P_PROCEDURE_ROLE a
+                    LEFT JOIN APP_PROFILE b ON a.P_APP_ROLE_ID = b.PROF_ID";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array('a.p_procedure_id = '.$p_procedure_id);
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        //print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
+
+    public function crud_procedure_role() {
+        $result = $this->P_procedure_role->crud_procedure_role();
+        
+        echo json_encode($result);
+        exit;
     }
 }
