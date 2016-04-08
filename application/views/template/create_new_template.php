@@ -233,35 +233,7 @@
 				}
 				
 			})		
-		$('#dwnld_pdf').click (function(){
-			var source = CKEDITOR.instances.editor2.getData();
-			if (source.length > 0)
-			{
-					var docpdf = new jsPDF('p', 'pt', 'letter');
-					margins = { top: 60, bottom: 60, left: 40, width: 500 };
-					var elmtHandler = 
-					{
-						'#CreateReport' : function (elmtHandler, renderer){
-						return true;	
-					},
-						'#PrintReport' : function (elmtHandler, renderer){
-						return true;	
-					},
-					'#ignorePDF': function (element, renderer) {
-					return true;}
-					};				
-					docpdf.fromHTML(
-					source,margins.left,margins.top,
-						{
-						'width':margins.width, 'elementHandlers' : elmtHandler 
-						}, 
-						function(dispose){docpdf.output("dataurlnewwindow");}, margins);
-					//docpdf.output("dataurlnewwindow");
-			}							
-				else {
-				swal("Perhatian","Isi terlebih dahulu sebelum diconvert ke PDF","info");
-				}
-		})
+		
 		$('#add_template').click (function(){
 			$('#edit_menu').show(1000);
 			$('#button_temp').hide(1000);
@@ -379,7 +351,7 @@
 								$('#variable_adder').prepend($('<div class="row margin-top-20"><div class="col-lg-4">'
 									+'<button class="btn btn-sm btn-default btn-block disabled" id="btn_val'+j+'">'+ data[i].VARIABLE_NAME +'</button></div>'
 									+'<div class="col-lg-4"><button class="btn btn-sm btn-default btn-block disabled" id="tablet_val'+j+'">'+ $("#select_table option:selected").text() +'</button></div>'
-									+'<div class="col-lg-4"><a id="hidwing'+j+'" onclick="hide1(\''+j+'\')" val="1" class="btn btn-primary btn-sm">Delete</a>'
+									+'<div class="col-lg-4"><a id="hidwing'+j+'" onclick="hide1(\''+j+'\')" val="1" class="btn btn-white btn-sm btn-round">Delete</a>'
 									+'</div></div>'
 									));
 							j++;	

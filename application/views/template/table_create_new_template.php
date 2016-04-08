@@ -32,7 +32,7 @@
 																
 																<td>
 																	<div class="hidden-sm hidden-xs action-buttons">
-																		<a class="purple" data-rel="tooltip" data-original-title="Download">
+																		<a class="purple" id="tooltip_download" data-rel="tooltip" data-original-title="Download">
 																			<i class="ace-icon fa fa-download bigger-130"></i>
 																		</a>
 						
@@ -59,7 +59,7 @@
 						
 																			<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
 																				<li>
-																					<a  class="tooltip-download" data-rel="tooltip" value="" title="Download">
+																					<a id="tooltip_download" class="tooltip-download" data-rel="tooltip" value="" title="Download">
 																										<span class="blue">
 																											<i class="ace-icon fa fa-download bigger-120"></i>
 																										</span>
@@ -333,6 +333,48 @@ jQuery(function($) {
                 }
 		});
     })
+	
+	$('#tooltip_download').click (function(){
+			var id_DOC = $(this).closest('tr').attr('value');
+			var source ="";
+			$.ajax({
+                type: "POST",
+				url: "<?php echo base_url(); ?>"+"template/get_content_template",
+                data:  {id: id_DOC},
+				dataType:"text",
+				success: function(data){
+					if (data != ""){						
+							var docpdf = new jsPDF('p', 'pt', 'letter');
+							margins = { top: 60, bottom: 60, left: 40, width: 500 };
+							var elmtHandler = 
+							{
+								'#CreateReport' : function (elmtHandler, renderer){
+								return true;	
+							},
+								'#PrintReport' : function (elmtHandler, renderer){
+								return true;	
+							},
+							'#ignorePDF': function (element, renderer) {
+							return true;}
+							};				
+							docpdf.fromHTML(
+							source,margins.left,margins.top,
+								{
+								'width':margins.width, 'elementHandlers' : elmtHandler 
+								}, 
+								function(dispose){docpdf.output("dataurlnewwindow");}, margins);
+								// alert("download");
+							//docpdf.output("dataurlnewwindow");
+							
+					} else
+					{
+						swal("Perhatian","Template belum memiliki isi contents","info");
+					}
+				}
+			});			
+			
+		})
+	
 	$(document).on('click', '#change_name', function(e) {
 	// $('#change_name').click(function(){
 		var id_DOC = $('#id_name_temp').val();			
