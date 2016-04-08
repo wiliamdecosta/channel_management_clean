@@ -1969,7 +1969,7 @@ class Parameter extends CI_Controller
         $req_param['where'] = array();
         
         if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(pgl_name) LIKE upper('%".$searchPhrase."%'))";
+             $req_param['where'][] = "(upper(prof_name) LIKE upper('%".$searchPhrase."%'))";
         }
         
 
