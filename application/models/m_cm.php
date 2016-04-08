@@ -273,12 +273,15 @@ class M_cm extends CI_Model {
 		$parse = OCIParse($this->db->conn_id, $sql);
 		OCIBindByName($parse, ':data1', $data1 );
 		OCIExecute($parse);
-		
-			while (OCIFetchInto($parse,$arr,OCI_ASSOC)) {
+			// print_r($parse);
+			
+			while (OCIFetchInto($parse,$arr,OCI_ASSOC)){
+				if(isset($arr["CONTENT"])){
 				if($arr["CONTENT"]){
 					$ret = $arr["CONTENT"]->load();
-				}
-			}
+				} 
+				} else $ret = ""; 
+			} 
 		
         return $ret;
 	}
@@ -296,6 +299,10 @@ class M_cm extends CI_Model {
 		OCIBindByName($parse, ':data1', $data1 );
 		OCIBindByName($parse, ':data2', $data2 );
 		OCIExecute($parse);
+		// print_r($parse);
+		print_r($data1);
+		print_r("|");
+		print_r($data2);
 	}
 	//End By Zen
     

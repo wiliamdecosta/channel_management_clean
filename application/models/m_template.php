@@ -283,5 +283,18 @@ class M_template extends CI_Model {
 		$this->db->query($sql1);
 	}
 	
+	public function replace_contents($data){
+		$sql1 = "select variable_name||'||'||table_name as STRINGS, column_content  AS VALUE from template_variable";
+		$sql = $this->db->query($sql1);
+		if($sql->num_rows() > 0)
+            $results = $sql->result();
+		
+		foreach($results as $content){
+			// print_r($content->STRINGS." - ". $content->VALUE."</br>");
+			$data = str_replace($content->STRINGS,$content->VALUE,$data);
+		}
+		return $data;
+	}
+	
 
   }
