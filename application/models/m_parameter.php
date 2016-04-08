@@ -877,8 +877,6 @@ class M_parameter extends CI_Model
             case 'add':
                 $data = array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID,
                     'NO_PKS' => $NO_PKS,
-                  //  'VALID_FROM' => $VALID_FROM,
-                  //  'VALID_UNTIL' => $VALID_UNTIL,
                     'CREATED_BY' => $CREATED_BY,
                     'CREATED_DATE' => $CREATED_DATE,
                     'UPDATED_DATE' => $UPDATED_DATE,
@@ -910,12 +908,10 @@ class M_parameter extends CI_Model
             case 'edit':
                 $data = array(
                     'NO_PKS' => $NO_PKS,
-                   // 'VALID_FROM' => $VALID_FROM,
-                   // 'VALID_UNTIL' => $VALID_UNTIL,
                     'UPDATED_DATE' => $UPDATED_DATE,
                     'UPDATED_BY' => $UPDATED_BY
                 );
-                $ck = $this->Mfee->checkDuplicate($table, 'NO_PKS', $NO_PKS);
+                $ck = $this->Mfee->checkDuplicated($table,array('NO_PKS' => $NO_PKS,'P_MP_PKS_ID !=' =>  $id_));
                 if ($ck > 0) {
                     $datas["success"] = false;
                     $datas["message"] = "No PKS sudah ada !";

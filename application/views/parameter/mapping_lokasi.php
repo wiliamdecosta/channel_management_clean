@@ -100,7 +100,6 @@
             var width = $("#tbl_pic").width();
 
 
-
             var grid_pks = $("#grid_table_pks");
             var pager_pks = $("#grid_pager_pks");
             grid.jqGrid({
@@ -142,10 +141,11 @@
                         editable: true,
                         editrules: {required: true},
                         editoptions: {
+
                             dataInit: function (element) {
                                 $(element).datepicker({
                                     autoclose: true,
-                                    format: 'dd-M-yyyy',
+                                    format: 'dd-M-yy',
                                     orientation: 'bottom'
                                 });
                             }
@@ -162,11 +162,11 @@
                             dataInit: function (element) {
                                 $(element).datepicker({
                                     autoclose: true,
-                                    format: 'dd-M-yyyy',
+                                    format: 'dd-M-yy',
                                     orientation: 'bottom'
                                 });
                             }
-                        }
+                        },
                     }
                 ],
                 postData: {P_MAP_MIT_CC_ID: <?php echo $p_map_mit_cc_id;?>},
@@ -433,10 +433,12 @@
                         editable: true,
                         editrules: {required: true},
                         editoptions: {
+                            // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                            // use it to place a third party control to customize the toolbar
                             dataInit: function (element) {
                                 $(element).datepicker({
                                     autoclose: true,
-                                    format: 'dd-mm-yyyy',
+                                    format: 'dd-M-yy',
                                     orientation: 'bottom'
                                 });
                             }
@@ -450,10 +452,12 @@
                         editable: true,
                         editrules: {required: true},
                         editoptions: {
+                            // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                            // use it to place a third party control to customize the toolbar
                             dataInit: function (element) {
                                 $(element).datepicker({
                                     autoclose: true,
-                                    format: 'dd-mm-yyyy',
+                                    format: 'dd-M-yy',
                                     orientation: 'bottom'
                                 });
                             }
