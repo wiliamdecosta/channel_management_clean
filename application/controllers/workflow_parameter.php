@@ -135,23 +135,7 @@ class Workflow_parameter extends CI_Controller
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
 
-        $table = "SELECT P_WORKFLOW_ID, 
-                     A.DOC_NAME, 
-                     A.DISPLAY_NAME, 
-                     A.P_DOCUMENT_TYPE_ID, 
-                     P_PROCEDURE_ID_START,
-                     A.IS_ACTIVE, 
-                     A.DESCRIPTION, 
-                     A.UPDATED_DATE, 
-                     A.UPDATED_BY, 
-                     A.CREATED_BY,
-                     A.CREATION_DATE, 
-                     B.DOC_NAME AS DOCUMENT_TYPE_CODE, 
-                     C.PROC_NAME AS PROCEDURE_CODE
-                FROM P_WORKFLOW A 
-                LEFT JOIN P_DOCUMENT_TYPE B ON A.P_DOCUMENT_TYPE_ID = B.P_DOCUMENT_TYPE_ID 
-                LEFT JOIN P_PROCEDURE C ON A.P_PROCEDURE_ID_START = C.P_PROCEDURE_ID 
-                ORDER BY A.P_WORKFLOW_ID";
+        $table = "SELECT * FROM V_WORKFLOW";
 
         $req_param = array(
             "table" => $table,
@@ -172,7 +156,7 @@ class Workflow_parameter extends CI_Controller
         $req_param['where'] = array();
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
-        //print_r($row);exit;
+        // print_r($row);exit;
         //$count = count($row);
 
         if ($count > 0) {
