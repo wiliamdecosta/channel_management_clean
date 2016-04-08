@@ -248,7 +248,8 @@ class Template extends CI_Controller
 		$this->load->model('M_template');
 		$data = $this->input->post('id');
 		$result= $this->M_template->get_contents($data);
-		echo $result;
+		$result2 = $this->M_template->replace_contents($result);
+		echo $result2;
 	}
 	public function delete_Temp(){
 		$this->load->model('M_template');
