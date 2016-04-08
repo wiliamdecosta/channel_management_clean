@@ -203,30 +203,86 @@ class Summary extends CI_Controller
         $array_period = array();
         if ($periode) {
             $interval = new DateInterval('P1M');
-            $daterange = new DatePeriod(new DateTime($startdate), $interval ,new DateTime($enddate));
-            foreach($daterange as $date){
+            $daterange = new DatePeriod(new DateTime($startdate), $interval, new DateTime($enddate));
+            foreach ($daterange as $date) {
                 $array_period[] = (string)$date->format('Ym');
             }
 
         }
-        $string_periode = implode(',',$array_period);
+        $string_periode = implode(',', $array_period);
 
-        if(!$skema_id){
-            $skema_list = $this->db->select('REFERENCE_NAME')->where('P_REFERENCE_TYPE_ID',3)->get('P_REFERENCE_LIST')->result_array();
+        if (!$skema_id) {
+            $skema_list = $this->db->select('REFERENCE_NAME')->where('P_REFERENCE_TYPE_ID', 3)->get('P_REFERENCE_LIST')->result_array();
 
-        }else{
-            $skema_list = $this->db->select('REFERENCE_NAME')->where('P_REFERENCE_LIST_ID',$skema_id)->get('P_REFERENCE_LIST')->result_array();
+        } else {
+            $skema_list = $this->db->select('REFERENCE_NAME')->where('P_REFERENCE_LIST_ID', $skema_id)->get('P_REFERENCE_LIST')->result_array();
         }
 
         $mf = $this->db_summary->getTrendMFData();
+        // echo "<pre>";
+        //  print_r($mf);
+        //      exit;
 
-        foreach($skema_list as $skema){
-            $skema['REFERENCE_NAME'];
+        foreach ($skema_list as $skema) {
+            $skemas[] = $skema['REFERENCE_NAME'];
+        }
+
+        /*for ($i = 0; $i < count($array_period); $i++) {
+            foreach ($mf as $isi) {
+                for ($a = 0; $a < count($skemas); $a++) {
+                    if ($skemas[$a] == $isi['REFERENCE_NAME']) {
+                        $sss[$skemas[$a]] = array($isi['PERIOD'] => $isi['FEE_TO_SHARE']);
+                    }
+
+                    if ($array_period[$i] != $isi['PERIOD']) {
+                        $sss[$skemas[$a]] = array($isi['PERIOD'] => $isi['FEE_TO_SHARE']);
+                    }
+                }
+
+            }
+
+        }*/
+        $jml = array();
+        foreach ($mf as $isi) {
+
+            for ($p = 0; $p < count($skemas); $p++) {
+                if ($skemas[$p] == $isi['REFERENCE_NAME']) {
+                    for ($i = 0; $i < count($array_period); $i++) {
+
+                        if(in_array($isi['PERIOD'],$array_period)){
+                            $sc[$skemas[$p]][$isi['PERIOD']] = $isi['FEE_TO_SHARE'];
+                        }
+
+
+
+                        if ($array_period[$i] == $isi['PERIOD']) {
+                          //  $sc[$skemas[$p]][$array_period[$i]] = $isi['FEE_TO_SHARE'];
+                        } /*else {
+                            $sc[$skemas[$p]][$array_period[$i]] = null;
+                        }*/
+                    }
+                } else {
+                    for ($i = 0; $i < count($array_period); $i++) {
+                        if ($array_period[$i] == $isi['PERIOD']) {
+                           // $sc[$skemas[$p]][$array_period[$i]] = null;
+                        }
+                    }
+                }
+
+
+
+            }
+
 
         }
 
+
+
+        echo "<pre>";
+        print_r($sc);
+        exit;
         $data['periode'] = $string_periode;
-        $this->load->view('summary/mf_chart',$data);
+        $this->load->view('summary/mf_chart', $data);
 
 
     }

@@ -111,6 +111,7 @@ class M_summary extends CI_Model
 
         $this->db->select('CODE_SGM');
         $this->db->select('PERIOD');
+        $this->db->select('REFERENCE_NAME');
         $this->db->select_sum('FEE_TO_SHARE');
 
         if ($periode) {
@@ -126,7 +127,7 @@ class M_summary extends CI_Model
             $this->db->where('METHOD_ID', (int)$skema_id);
         }
 
-        $this->db->group_by(array("CODE_SGM", "PERIOD"));
+        $this->db->group_by(array("CODE_SGM", "PERIOD","REFERENCE_NAME"));
         $this->db->order_by("PERIOD");
         $q = $this->db->get('V_SUMMARY_MARFEE_NPK');
 

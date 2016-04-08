@@ -59,7 +59,7 @@
                     editrules: {required: true},
                     editoptions: {size: 45, value: {Tes: 'asdad'}}
                 },
-				{
+                {
                     label: 'NIK',
                     name: 'NIK',
                     width: 150,
@@ -97,17 +97,17 @@
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
                     hidden: false
                 },
-				{
+                {
                     label: 'Kode Pos',
                     name: 'ZIP_CODE',
                     width: 70,
                     align: "left",
                     sortable: true,
                     editable: true,
-                    editrules :{number:true},
+                    editrules: {number: true},
                     hidden: false
                 },
-				{
+                {
                     label: 'Email',
                     name: 'EMAIL',
                     width: 150,
@@ -117,7 +117,7 @@
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
                     hidden: false
                 },
-				{
+                {
                     label: 'No. HP',
                     name: 'NO_HP',
                     width: 100,
@@ -127,7 +127,7 @@
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
                     hidden: false
                 },
-				{
+                {
                     label: 'No. Telpon',
                     name: 'NO_TELP',
                     width: 100,
@@ -137,7 +137,7 @@
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
                     hidden: false
                 },
-				{
+                {
                     label: 'Fax',
                     name: 'FAX',
                     width: 100,
@@ -147,7 +147,7 @@
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
                     hidden: false
                 },
-				{
+                {
                     label: 'Keterangan',
                     name: 'DESCRIPTION',
                     width: 100,
@@ -175,7 +175,7 @@
                     editable: false,
                     hidden: false
                 },
-				{
+                {
                     label: 'Mulai Berlaku',
                     name: 'VALID_FROM',
                     width: 100,
@@ -186,16 +186,16 @@
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
                         dataInit: function (element) {
-                           $(element).datepicker({
-				    			autoclose: true,
-				    			format: 'dd-mm-yyyy',
-				    			orientation : 'bottom'
+                            $(element).datepicker({
+                                autoclose: true,
+                                format: 'dd-M-yy',
+                                orientation: 'bottom'
                             });
                         }
                     },
                     hidden: false
                 },
-				{
+                {
                     label: 'Akhir Berlaku',
                     name: 'VALID_UNTIL',
                     width: 100,
@@ -206,10 +206,10 @@
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
                         dataInit: function (element) {
-                           $(element).datepicker({
-				    			autoclose: true,
-				    			format: 'dd-mm-yyyy',
-				    			orientation : 'bottom'
+                            $(element).datepicker({
+                                autoclose: true,
+                                format: 'dd-M-yy',
+                                orientation: 'bottom'
                             });
                         }
                     },
@@ -234,7 +234,7 @@
             multiboxonly: true,
 
             onSelectRow: function (rowid) {
-                
+
             }, // use the onSelectRow that is triggered on row click to show a details grid
             onSortCol: clearSelection,
             onPaging: clearSelection,
