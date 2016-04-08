@@ -143,6 +143,7 @@
 								<i class="ace-icon fa fa-floppy-o blue"></i>
 								Save Template</a>
 				<div id="num_of_var"></div>
+				<div id="id_list_tab" value=""></div>
 				</div>
 			</div>
 			<div class="row">
@@ -160,8 +161,9 @@
 		<div class="row">
 			<div id="view_contents2">
 				<div id="view_contents3">
-				</div>				
-				<div>
+				</div>
+				<div class="col-lg-10"></div>				
+				<div class="col-lg-2">
 						<a id="cancel_temp2" class="btn btn-white btn-sm btn-round">
 									<i class="ace-icon fa fa-times red2"></i>
 									Close</a>
@@ -273,25 +275,26 @@
 		});
 		$('#tambah_var').click (function(){
 			j = $('#num_of_var').val();
-			alert(j);
 			for (var i = 0; i < j+1; i++){
-			dataAddedA = $('#btn_val'+ i).text();
-			dataAdded = String(dataAddedA);
-			dataAddedB = $('#tablet_val'+ i).text();
-			dataAdded2 = String(dataAddedB);
-			var_reccur = $('#var_main').val();
-			if(dataAdded.length >0 ){
-				$('#var_main').prepend($('<div id="var_total'+ i + var_reccur +'"><div class="row">'
-				+	'<div onclick="insert_ckeditor(\''+ i + var_reccur +'\')" id="insert'+ i + var_reccur +'" value="'+dataAdded+'||'+dataAdded2+'" class="col-lg-2">'
-				+	'<a class="btn btn-white btn-sm btn-round">Add</a></div>'
-				+	'<div onclick="delete_var_all(\''+i + var_reccur +'\')" id="del_var_existing" class="col-lg-2">'
-				+	'<a class="btn btn-white btn-sm btn-round">Delete</a>'
-				+	'</div>'
-				+'</div>'
-				+'<div class="row">'
-				+	'<div class="col-lg-12" id="numdat'+i+'">'+dataAdded+'||'+dataAdded2+'</div>'
-				+'</div></div>'));
-				}
+				dataAddedA = $('#btn_val'+ i).text();
+				dataAdded = String(dataAddedA);
+				dataAddedB = $('#tablet_val'+ i).text();
+				dataAdded2 = String(dataAddedB);
+				var_reccur = $('#var_main').val();
+				if(dataAdded.length >0 ){
+					var_reccur = parseInt(var_reccur, 2);
+					totalx = i + var_reccur;						
+					$('#var_main').prepend($('<div id="var_total'+ totalx +'"><div class="row">'
+					+	'<div onclick="insert_ckeditor(\''+ totalx +'\')" id="insert'+ totalx +'" value="'+dataAdded+'||'+dataAdded2+'" class="col-lg-2">'
+					+	'<a class="btn btn-white btn-sm btn-round">Add</a></div>'
+					+	'<div onclick="delete_var_all(\''+totalx +'\')" id="del_var_existing" class="col-lg-2">'
+					+	'<a class="btn btn-white btn-sm btn-round">Delete</a>'
+					+	'</div>'
+					+'</div>'
+					+'<div class="row">'
+					+	'<div class="col-lg-12" id="numdat'+totalx+'">'+dataAdded+'||'+dataAdded2+'</div>'
+					+'</div></div>'));
+					}
 			}
 		});
 		function insert_ckeditor(val){
@@ -406,7 +409,6 @@
 				});	
 		});
 		function getval(sel) {
-			// alert(sel.value);
 			$.ajax({				
 					type: "POST",
 				   dataType: "html",
@@ -424,11 +426,9 @@
 		var edit_or_add = true;
 		$('#save_temp').click (function(){		
 		var template_id = $('#save_temp').val();
-		alert(template_id);
 		var template_content = CKEDITOR.instances['editor2'].getData();
 		var var_collection = new Array();
 		j = $('#num_of_var').val();
-		alert(j);
 			 $('div','#var_main').each(function(){
                  var_collection.push($(this).attr('value'));
 			});
@@ -448,6 +448,9 @@
 					 		swal("Sukses","Template Berhasil Tersimpan","success");
 							$('#edit_menu').hide(1000);
 							$('#table_id').show(1000);
+							enter_var = $('#id_list_tab').val();
+							$('#classic'+enter_var).html(var_collection);							
+							
 						}, 
 						error: function(data, xhr, ajaxOptions, thrownError){						
 						swal("Error",xhr.status+"  "+ thrownError,"error");

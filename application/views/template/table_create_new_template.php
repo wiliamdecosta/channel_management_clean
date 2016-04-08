@@ -28,7 +28,7 @@
 															<tr class="table_head" value="<?php echo $content->TEMPLATE_ID ?>" id="<?php echo $content->TEMPLATE_ID ?>">
 																<td class="center"><?php echo $i ?></td>
 																<td class="center" id="nm_nm<?php echo $content->TEMPLATE_ID ?>" data-id="<?php echo $content->TEMPLATE_ID ?>"><?php echo $content->TEMPLATE_NAME ?></td>
-																<td class="class1" id="classic" value="1XKLI"><?php echo $content->VARIABLE_TEMPLATE ?></td>
+																<td class="class1" id="classic<?php echo $content->TEMPLATE_ID ?>" value=""><?php echo $content->VARIABLE_TEMPLATE ?></td>
 																
 																<td>
 																	<div class="hidden-sm hidden-xs action-buttons">
@@ -295,7 +295,9 @@ jQuery(function($) {
     });
 	
 	$(document).on('click', '#dynamic-table #tooltip_view', function(e) {		
-		var id_DOC = $(this).closest('tr').attr('value');		
+		var id_DOC = $(this).closest('tr').attr('value');
+		var id_n = $(this).closest('tr').attr('id');
+
 		$.ajax({
                 type: "POST",
 				url: "<?php echo base_url(); ?>"+"template/get_content_template",
@@ -335,7 +337,6 @@ jQuery(function($) {
 	// $('#change_name').click(function(){
 		var id_DOC = $('#id_name_temp').val();			
 		var name_field = $('#temp_name_field').val();
-		alert("nama = "+name_field);
 		// var aPos = oTable1.fnGetPosition( $(this).closest('tr').get(0) );
 		// oTable1.fnDeleteRow(aPos);		
 		$.ajax({
@@ -350,7 +351,7 @@ jQuery(function($) {
 					// swal("Gagal","Database error","error");
 				}
 		});
-		$('#temp_name_field').val("");
+		// $('#temp_name_field').val("");
 		$('#nm_nm'+$('#change_name').val()).html(name_field);
     })
 	
@@ -376,6 +377,9 @@ jQuery(function($) {
 		$('#table_id').hide(1000);
 		$('#var_main').empty();
 		$('#var_main').val(0);
+		$('#id_list_tab').val();
+		var id_n = $(this).closest('tr').attr('id');
+		$('#id_list_tab').val(id_n);
 		CKEDITOR.instances['editor2'].setData("");
 		var_reccur = $('#var_main').val();
 		$.ajax({
@@ -400,15 +404,17 @@ jQuery(function($) {
 				success: function(data){
 					for (var i = 0; i < data.length; i++) {
 								if(data[i].length >0 ){
-									$('#var_main').prepend($('<div id="var_total'+ i + var_reccur +'"><div class="row">'
-									+	'<div onclick="insert_ckeditor(\''+i + var_reccur +'\')" id="insert'+ i + var_reccur +'" value="'+data[i]+'" class="col-lg-2">'
+									var_reccur = parseInt(var_reccur, 2);
+									totalx = i + var_reccur;							
+									$('#var_main').prepend($('<div id="var_total'+ i +'"><div class="row">'
+									+	'<div onclick="insert_ckeditor(\''+i+'\')" id="insert'+i+'" value="'+data[i]+'" class="col-lg-2">'
 									+	'<a class="btn btn-white btn-sm btn-round">Add</a></div>'
-									+	'<div onclick="delete_var_all(\''+i + var_reccur +'\')" id="del_var_existing" class="col-lg-2">'
+									+	'<div onclick="delete_var_all(\''+i+'\')" id="del_var_existing" class="col-lg-2">'
 									+	'<a class="btn btn-white btn-sm btn-round">Delete</a>'
 									+	'</div>'
 									+'</div>'
 									+'<div class="row">'
-									+	'<div class="col-lg-12" id="numdat'+ i + var_reccur+'">'+data[i]+'</div>'
+									+	'<div class="col-lg-12" id="numdat'+i+'">'+data[i]+'</div>'
 									+'</div></div>'));
 									}
 					}
@@ -454,10 +460,8 @@ jQuery(function($) {
     }
 	
 	function view_contents1(){
-		 // alert("test 1234");
 		$('#dynamic-table tbody').on('click', 'tr', function () {
 			var id_DOC = $(this).attr('value');
-		// alert(id_DOC);
 		});
 	}
 });

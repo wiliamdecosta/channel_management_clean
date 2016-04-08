@@ -712,9 +712,10 @@ $(document).ready(function () {
 		jQuery("#texteditorTwo").hide(1000);		
 		jQuery("#buttonOne").hide(1000);
 		jQuery("#submitform3").hide(1000);		
-		jQuery("#all_table").show(1000);
-		CKEDITOR.instances["textarea2"].setData("");
+		jQuery("#submitform4").hide(1000);		
+		jQuery("#all_table").show(1000);		
 			    DOC_content = CKEDITOR.instances["textarea2"].getData();
+				CKEDITOR.instances["textarea2"].setData("");
 				// encode to base 64 // mar 28032016 
 				DOC_content = btoa(DOC_content);
 			if (edit){
