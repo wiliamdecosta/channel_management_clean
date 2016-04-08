@@ -187,7 +187,7 @@
 											</div>		
 										</div>
 										<div class="col-lg-4">
-												<a class="btn btn-white btn-sm btn-round" id="variable_btn"><i class="ace-icon fa fa-plus blue"></i>Refresh</a>
+												<a class="btn btn-white btn-sm btn-round" id="variable_btn"><i class="ace-icon fa fa-plus blue"></i>Add Variable</a>
 										</div>		
 									</div>
 									<div id="variable_adder" class="row">
