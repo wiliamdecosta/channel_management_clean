@@ -11,6 +11,7 @@ class Workflow_parameter extends CI_Controller
         checkAuth();
         $this->load->model('M_jqGrid', 'jqGrid');
         $this->load->model('P_document_type');
+        $this->load->model('P_workflow_list');
         $this->load->model('P_procedure');
         $this->load->model('P_procedure_files');
         $this->load->model('P_procedure_role');
@@ -115,6 +116,134 @@ class Workflow_parameter extends CI_Controller
             exit;
         }
     }
+
+    /* Daftar Workflow */
+    public function workflow_list() {
+
+        $title = "Daftar Workflow";
+        //BreadCrumb
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        $this->load->view('workflow_parameter/workflow_list');
+    }
+
+    public function grid_workflow() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $table = "SELECT P_WORKFLOW_ID, 
+                     A.DOC_NAME, 
+                     A.DISPLAY_NAME, 
+                     A.P_DOCUMENT_TYPE_ID, 
+                     P_PROCEDURE_ID_START,
+                     A.IS_ACTIVE, 
+                     A.DESCRIPTION, 
+                     A.UPDATED_DATE, 
+                     A.UPDATED_BY, 
+                     A.CREATED_BY,
+                     A.CREATION_DATE, 
+                     B.DOC_NAME AS DOCUMENT_TYPE_CODE, 
+                     C.PROC_NAME AS PROCEDURE_CODE
+                FROM P_WORKFLOW A 
+                LEFT JOIN P_DOCUMENT_TYPE B ON A.P_DOCUMENT_TYPE_ID = B.P_DOCUMENT_TYPE_ID 
+                LEFT JOIN P_PROCEDURE C ON A.P_PROCEDURE_ID_START = C.P_PROCEDURE_ID 
+                ORDER BY A.P_WORKFLOW_ID";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array();
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        //print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
+
+    public function crud_workflow_list() {
+        $result = $this->P_workflow_list->crud_workflow_list();
+        
+        echo json_encode($result);
+        exit;
+    }
+
+    function html_select_options_doc_type() {
+        try {
+            
+            $items = $this->P_workflow_list->getDocumentType();
+            echo '<select>';
+            foreach($items  as $item ){
+                echo '<option value="'.$item['P_DOCUMENT_TYPE_ID'].'">'.$item['DOCUMENT_TYPE_CODE'].'</option>';
+            }
+            echo '</select>';
+            exit;
+        }catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+    }
+
+    function html_select_options_procedure() {
+        try {
+            
+            $items = $this->P_workflow_list->getProcedure();
+            echo '<select>';
+            foreach($items  as $item ){
+                echo '<option value="'.$item['P_PROCEDURE_ID'].'">'.$item['PROCEDURE_CODE'].'</option>';
+            }
+            echo '</select>';
+            exit;
+        }catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+    }
+    /* End Daftar Workflow*/
     
     
     /* P_procedure */
@@ -343,4 +472,5 @@ class Workflow_parameter extends CI_Controller
         echo json_encode($result);
         exit;
     }
+
 }
