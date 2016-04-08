@@ -32,7 +32,7 @@ class P_procedure_role extends CI_Model
                 try {
                     $P_PROCEDURE_ROLE_ID = gen_id('P_PROCEDURE_ROLE_ID', 'P_PROCEDURE_ROLE');
                     $sql = "INSERT INTO P_PROCEDURE_ROLE(P_PROCEDURE_ROLE_ID, P_PROCEDURE_ID, P_APP_ROLE_ID, F_ROLE, VALID_FROM, VALID_TO, CREATION_DATE, CREATED_BY, UPDATED_DATE, UPDATED_BY)
-                                VALUES(".$P_PROCEDURE_ROLE_ID.",".$P_PROCEDURE_ID.",".$P_APP_ROLE_ID.",'".$F_ROLE."','".$VALID_FROM."','".$VALID_TO."', SYSDATE, '".$CREATED_BY."', SYSDATE, '".$UPDATED_BY."')";
+                                VALUES(".$P_PROCEDURE_ROLE_ID.",".$P_PROCEDURE_ID.",".$P_APP_ROLE_ID.",'".$F_ROLE."',to_date('".$VALID_FROM."','yyyy-mm-dd'), to_date('".$VALID_TO."','yyyy-mm-dd'), SYSDATE, '".$CREATED_BY."', SYSDATE, '".$UPDATED_BY."')";
                     
                     $this->db->query($sql);
                     

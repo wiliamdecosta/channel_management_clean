@@ -54,6 +54,9 @@
         });
     });
     
+    function showLovRole(id, code) {
+        modal_lov_app_profile_show(id,code);
+    }
     
     jQuery(function($) {
         
@@ -76,14 +79,47 @@
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID',name: 'P_PROCEDURE_FILES_ID', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
+                {label: 'ID',name: 'P_PROCEDURE_ROLE_ID', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
                 {label: 'ID PROCEDURE',name: 'P_PROCEDURE_ID', width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
                 {label: 'Role Aplikasi', name: 'PROF_NAME', width: 120, align: "left",  editable: false},
                 {label: 'Role Aplikasi',name: 'P_APP_ROLE_ID', width: 100, sortable: true,  hidden:true, editable: true,
                     editrules: {edithidden: true, number:true, required:true},
                     edittype: 'custom',
                     editoptions: {
-                        
+                        "custom_element":function( value  , options) {
+                            var elm = $('<div id="lov_role"></div>');
+                            
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_p_app_role_id" type="text"  style="display:none;">'+
+                                        '<input id="form_p_app_role_name" type="text" class="col-xs-5 jqgrid-required" placeholder="Pilih Role">'+
+                                        '<span class="input-group-btn">'+
+                    					'	<button class="btn btn-warning btn-sm" type="button" id="btn_lov_app_role" onclick="showLovRole(\'form_p_app_role_id\',\'form_p_app_role_name\')">'+
+                    					'		<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                    					'	</button>'+
+                    					'</span>');
+                                $("#form_p_app_role_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+                            
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+                            
+                            if(oper === 'get') {
+                                return $("#form_p_app_role_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_p_app_role_id").val(gridval);
+                                
+                                selectedRowId = $("#"+this.id).jqGrid ('getGridParam', 'selrow');
+                                if(selectedRowId != null) {
+                                    var code_display = $("#"+this.id).jqGrid('getCell', selectedRowId, 'PROF_NAME');
+                                    setTimeout( function() {
+                                        $("#form_p_app_role_name").val( code_display );
+                                    },100);
+                                }
+                            }
+                        }
                     }
                 },
                 {label: 'Fungsi Role Flow',name: 'F_ROLE', width: 150, sortable: true, editable: true,
@@ -185,6 +221,7 @@
 
             {
                 // options for the Edit Dialog
+                viewPagerButtons: false,
                 closeAfterEdit: true,
                 closeOnEscape:true,
                 recreateForm: true,
@@ -231,6 +268,10 @@
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                         .wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
+                    
+                    setTimeout( function() {
+                        $("#form_p_app_role_name").val("");
+                    },100);
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
@@ -244,7 +285,10 @@
                     $(".topinfo").html('<div class="ui-state-success">' + response.message + '</div>'); 
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
-                          
+                    
+                    $("#form_p_app_role_id").val("");
+                    $("#form_p_app_role_name").val("");
+                    
                     return [true,"",response.responseText];
                 }
             },
