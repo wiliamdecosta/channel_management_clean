@@ -87,7 +87,6 @@
                     edittype: 'custom',
                     editoptions: {
                         "custom_element":function( value  , options) {                            
-                            // give the editor time to initialize
                             var elm = $('<span></span>');
                             
                             // give the editor time to initialize
@@ -110,6 +109,7 @@
                             } else if( oper === 'set') {
                                 $("#form_p_app_role_id").val(gridval);
                                 var gridId = this.id;
+                                // give the editor time to set display
                                 setTimeout(function(){
                                     var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
                                     if(selectedRowId != null) {
