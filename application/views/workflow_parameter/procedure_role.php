@@ -86,18 +86,17 @@
                     editrules: {edithidden: true, number:true, required:true},
                     edittype: 'custom',
                     editoptions: {
-                        "custom_element":function( value  , options) {
-                            var elm = $('<div id="lov_role"></div>');
+                        "custom_element":function( value  , options) {                            
+                            // give the editor time to initialize
+                            var elm = $('<span></span>');
                             
                             // give the editor time to initialize
                             setTimeout( function() {
                                 elm.append('<input id="form_p_app_role_id" type="text"  style="display:none;">'+
                                         '<input id="form_p_app_role_name" type="text" class="col-xs-5 jqgrid-required" placeholder="Pilih Role">'+
-                                        '<span class="input-group-btn">'+
-                    					'	<button class="btn btn-warning btn-sm" type="button" id="btn_lov_app_role" onclick="showLovRole(\'form_p_app_role_id\',\'form_p_app_role_name\')">'+
-                    					'		<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
-                    					'	</button>'+
-                    					'</span>');
+                    					'<button class="btn btn-warning btn-sm" type="button" onclick="showLovRole(\'form_p_app_role_id\',\'form_p_app_role_name\')">'+
+                    					'	<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                    					'</button>');
                                 $("#form_p_app_role_id").val(value);
                                 elm.parent().removeClass('jqgrid-required');
                             }, 100);
@@ -110,14 +109,14 @@
                                 return $("#form_p_app_role_id").val();
                             } else if( oper === 'set') {
                                 $("#form_p_app_role_id").val(gridval);
-                                
-                                selectedRowId = $("#"+this.id).jqGrid ('getGridParam', 'selrow');
-                                if(selectedRowId != null) {
-                                    var code_display = $("#"+this.id).jqGrid('getCell', selectedRowId, 'PROF_NAME');
-                                    setTimeout( function() {
+                                var gridId = this.id;
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PROF_NAME');
                                         $("#form_p_app_role_name").val( code_display );
-                                    },100);
-                                }
+                                    }
+                                },100);
                             }
                         }
                     }
@@ -221,7 +220,7 @@
 
             {
                 // options for the Edit Dialog
-                viewPagerButtons: false,
+                viewPagerButtons: true,
                 closeAfterEdit: true,
                 closeOnEscape:true,
                 recreateForm: true,
@@ -262,7 +261,6 @@
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
                 },
-                viewPagerButtons: false,
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
@@ -271,7 +269,7 @@
                     
                     setTimeout( function() {
                         $("#form_p_app_role_name").val("");
-                    },100);
+                    },100); 
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
