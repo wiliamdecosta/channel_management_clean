@@ -2001,4 +2001,114 @@ class Parameter extends CI_Controller
         $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
         echo json_encode($result);
     }
+
+    public function gridLovDocumentType() {
+
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT P_DOCUMENT_TYPE_ID, DOC_NAME AS DOCUMENT_TYPE_CODE, DISPLAY_NAME FROM P_DOCUMENT_TYPE";
+
+        $req_param = array (
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+        
+        if(!empty($searchPhrase)) {
+             $req_param['where'][] = "(upper(DOC_NAME) LIKE upper('%".$searchPhrase."%'))";
+        }
+        
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if( $count > 0 && !empty($limit) ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+    public function gridLovProcedure() {
+
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT P_PROCEDURE_ID, PROC_NAME AS PROCEDURE_CODE, DESCRIPTION, decode(IS_ACTIVE,'Y','YA','TIDAK') AS IS_ACTIVE FROM P_PROCEDURE";
+
+        $req_param = array (
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+        
+        if(!empty($searchPhrase)) {
+             $req_param['where'][] = "(upper(PROC_NAME) LIKE upper('%".$searchPhrase."%'))";
+        }
+        
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if( $count > 0 && !empty($limit) ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
 }

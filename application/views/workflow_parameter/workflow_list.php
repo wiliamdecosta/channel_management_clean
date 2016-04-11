@@ -19,7 +19,20 @@
     </div><!-- /.row -->
 </div><!-- /.page-content -->
 
+<?php 
+    $this->load->view('parameter/lov_document_type.php');
+    $this->load->view('parameter/lov_procedure.php');
+?>
+
 <script>
+    function showLovDocType(id, code) {
+        modal_lov_document_type_show(id,code);
+    }
+
+    function showLovProc(id, code) {
+        modal_lov_procedure_show(id,code);
+    }
+
     jQuery(function($) {
         
         var grid_selector = "#grid-table";
@@ -33,7 +46,7 @@
             if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
                responsive_jqgrid(grid_selector, pager_selector);
             }
-        });
+        });       
         
         
         jQuery("#grid-table").jqGrid({
@@ -65,31 +78,109 @@
                         maxlength:96
                     },
                     editrules: {edithidden: true, required:true}
-                },  
+                }, 
+                {
+                    label: 'Jenis Dokumen', 
+                    name: 'DOCUMENT_TYPE_CODE', 
+                    width: 120, 
+                    align: "left",  
+                    editable: false
+                }, 
                 {
                     label: 'Jenis Dokumen',
-                    name: 'DOCUMENT_TYPE_CODE', 
+                    name: 'P_DOCUMENT_TYPE_ID', 
                     width: 200, 
                     sortable: true, 
                     editable: true,
-                    editrules: {required: true},
-                    edittype: 'select',
+                    hidden: true,
+                    editrules: {edithidden: true, number:true, required:true},
+                    edittype: 'custom',
                     editoptions: {
-                        style: "width: 370px", 
-                        dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_doc_type"); ?>'
+                        "custom_element":function( value  , options) {                            
+                            var elm = $('<span></span>');
+                            
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_p_document_type_id" type="text"  style="display:none;">'+
+                                        '<input id="form_p_document_type_code" disabled type="text" class="col-xs-7 jqgrid-required" placeholder="Pilih Jenis Dokumen">'+
+                                        '<button class="btn btn-warning btn-sm" type="button" onclick="showLovDocType(\'form_p_document_type_id\',\'form_p_document_type_code\')">'+
+                                        '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_p_document_type_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+                            
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+                            
+                            if(oper === 'get') {
+                                return $("#form_p_document_type_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_p_document_type_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'DOCUMENT_TYPE_CODE');
+                                        $("#form_p_document_type_code").val( code_display );
+                                    }
+                                },100);
+                            }
+                        }
                     }
+                },
+                {
+                    label: 'Pekerjaan Awal', 
+                    name: 'PROCEDURE_CODE', 
+                    width: 120, 
+                    align: "left",  
+                    editable: false
                 },   
                 {
                     label: 'Pekerjaan Awal',
-                    name: 'PROCEDURE_CODE', 
+                    name: 'P_PROCEDURE_ID_START', 
                     width: 200, 
                     sortable: true, 
                     editable: true,
-                    editrules: {required: true},
-                    edittype: 'select',
+                    hidden: true,
+                    editrules: {edithidden: true, number:true, required:true},
+                    edittype: 'custom',
                     editoptions: {
-                        style: "width: 370px", 
-                        dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_procedure"); ?>'
+                        "custom_element":function( value  , options) {                            
+                            var elm = $('<span></span>');
+                            
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_p_procedure_id" type="text"  style="display:none;">'+
+                                        '<input id="form_p_procedure_code" disabled type="text" class="col-xs-7 jqgrid-required" placeholder="Pilih Jenis Dokumen">'+
+                                        '<button class="btn btn-warning btn-sm" type="button" onclick="showLovProc(\'form_p_procedure_id\',\'form_p_procedure_code\')">'+
+                                        '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_p_procedure_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+                            
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+                            
+                            if(oper === 'get') {
+                                return $("#form_p_procedure_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_p_procedure_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PROCEDURE_CODE');
+                                        $("#form_p_procedure_code").val( code_display );
+                                    }
+                                },100);
+                            }
+                        }
                     }
                 }, 
                 {
@@ -191,7 +282,7 @@
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    form.css({"height": 0.315*screen.height+"px"});
+                    form.css({"height": 0.335*screen.height+"px"});
                     form.css({"width": 0.45*screen.width+"px"});
                     /*$("#USER_NAME").prop("readonly", true);*/
                 },
@@ -223,7 +314,7 @@
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                         .wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    form.css({"height": 0.315*screen.height+"px"});
+                    form.css({"height": 0.335*screen.height+"px"});
                     form.css({"width": 0.45*screen.width+"px"});
                     
                 },
@@ -240,7 +331,13 @@
                     $(".topinfo").html('<div class="ui-state-success">' + response.message + '</div>'); 
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
-                          
+                    
+                    $("#form_p_document_type_id").val("");
+                    $("#form_p_document_type_code").val("");
+
+                    $("#form_p_procedure_id").val("");
+                    $("#form_p_procedure_code").val("");
+
                     return [true,"",response.responseText];
                 }
             },
