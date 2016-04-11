@@ -15,18 +15,12 @@
 
     <div class="row">
         <div class="col-xs-12" style="width: 100%;">
-            <!-- PAGE CONTENT BEGINS -->
             <table id="grid-table"></table>
 
 
             <div id="grid-pager"></div>
 
-            <script type="text/javascript">
-                var $path_base = "..";//in Ace demo this will be used for editurl parameter
-            </script>
-
             <br>
-
             <div id="detailsPlaceholder" style="display:none">
                 <table id="jqGridDetails"></table>
                 <div id="jqGridDetailsPager"></div>
@@ -41,7 +35,7 @@
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
 
-        //resize to fit page size
+
         $(window).on('resize.jqGrid', function () {
             $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
         })
@@ -83,7 +77,7 @@
                 {
                     label: 'No Telp/HP',
                     name: 'PGL_CONTACT_NO',
-                    width: 250,
+                    width: 150,
                     align: "left",
                     sortable: true,
                     editable: true,
@@ -92,7 +86,7 @@
                 {   
                     label :'Fee ?',
                     name : 'ENABLE_FEE',
-                    width:200,
+                    width: 100,
                     sortable:true,
                     align:'center',
                     editable:true,

@@ -52,12 +52,12 @@
                 {
                     label: 'Nama',
                     name: 'AM_NAME',
-                    width: 150,
+                    width: 200,
                     align: "left",
                     sortable: true,
                     editable: true,
                     editrules: {required: true},
-                    editoptions: {size: 45, value: {Tes: 'asdad'}}
+                    editoptions: {size: 45}
                 },
                 {
                     label: 'NIK',
@@ -90,7 +90,7 @@
                 {
                     label: 'Kota',
                     name: 'KOTA',
-                    width: 100,
+                    width: 150,
                     align: "left",
                     sortable: true,
                     editable: true,
@@ -100,7 +100,7 @@
                 {
                     label: 'Kode Pos',
                     name: 'ZIP_CODE',
-                    width: 70,
+                    width: 100,
                     align: "left",
                     sortable: true,
                     editable: true,
@@ -110,7 +110,7 @@
                 {
                     label: 'Email',
                     name: 'EMAIL',
-                    width: 150,
+                    width: 200,
                     align: "left",
                     sortable: true,
                     editable: true,
@@ -120,7 +120,7 @@
                 {
                     label: 'No. HP',
                     name: 'NO_HP',
-                    width: 100,
+                    width: 150,
                     align: "left",
                     sortable: true,
                     editable: true,
@@ -130,7 +130,7 @@
                 {
                     label: 'No. Telpon',
                     name: 'NO_TELP',
-                    width: 100,
+                    width: 150,
                     align: "left",
                     sortable: true,
                     editable: true,
@@ -140,39 +140,11 @@
                 {
                     label: 'Fax',
                     name: 'FAX',
-                    width: 100,
+                    width: 150,
                     align: "left",
                     sortable: true,
                     editable: true,
                     editoptions: {size: 45, value: {Tes: 'asdad'}},
-                    hidden: false
-                },
-                {
-                    label: 'Keterangan',
-                    name: 'DESCRIPTION',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    editable: true,
-                    editoptions: {size: 45, value: {Tes: 'asdad'}},
-                    hidden: false
-                },
-                {
-                    label: 'Tanggal Diubah',
-                    name: 'UPDATED_DATE',
-                    width: 105,
-                    align: "left",
-                    sortable: true,
-                    editable: false,
-                    hidden: false
-                },
-                {
-                    label: 'Diubah Oleh',
-                    name: 'UPDATED_BY',
-                    width: 110,
-                    align: "left",
-                    sortable: true,
-                    editable: false,
                     hidden: false
                 },
                 {
@@ -213,6 +185,34 @@
                             });
                         }
                     },
+                    hidden: false
+                },
+                {
+                    label: 'Keterangan',
+                    name: 'DESCRIPTION',
+                    width: 200,
+                    align: "left",
+                    sortable: true,
+                    editable: true,
+                    editoptions: {size: 45, value: {Tes: 'asdad'}},
+                    hidden: false
+                },
+                {
+                    label: 'Tanggal Diubah',
+                    name: 'UPDATED_DATE',
+                    width: 105,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+                {
+                    label: 'Diubah Oleh',
+                    name: 'UPDATED_BY',
+                    width: 110,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
                     hidden: false
                 }
             ],

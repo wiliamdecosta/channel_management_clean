@@ -890,7 +890,7 @@ class M_parameter extends CI_Model
                     $new_id = gen_id($pk, $table);
                     $this->db->set($pk, $new_id);
 
-                    $this->db->set('VALID_FROM',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                    $this->db->set('VALID_FROM',"to_date('$VALID_FROM','dd/mm/yyyy')",FALSE);
                     $this->db->set('VALID_UNTIL',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
 
                     $this->db->insert($table, $data);
@@ -916,7 +916,7 @@ class M_parameter extends CI_Model
                     $datas["success"] = false;
                     $datas["message"] = "No PKS sudah ada !";
                 }else{
-                    $this->db->set('VALID_FROM',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
+                    $this->db->set('VALID_FROM',"to_date('$VALID_FROM','dd/mm/yyyy')",FALSE);
                     $this->db->set('VALID_UNTIL',"to_date('$VALID_UNTIL','dd/mm/yyyy')",FALSE);
                     $this->db->where($pk, $P_MP_PKS_ID);
                     $this->db->update($table, $data);

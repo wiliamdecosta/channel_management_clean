@@ -22,18 +22,22 @@
         </ul>
         <div class="tab-content">
             <div id="home" class="tab-pane fade active in">
-                <div id="tbl_pic">
-                    <button class="btn btn-white btn-sm btn-round" id="add_pic" style="margin-bottom:10px">
-                        <i class="ace-icon fa fa-plus green"></i>
-                        Tambah PIC
-                    </button>
-                    &nbsp;
-                    <table id="grid_table_pic"></table>
-                    <div id="grid_pager_pic"></div>
-                </div>
-                <div id="form_pic" style="display: none;">
-                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button class="btn btn-white btn-sm btn-round" id="add_pic" style="margin-bottom:10px">
+                            <i class="ace-icon fa fa-plus green"></i>
+                            Tambah PIC
+                        </button>
+                        &nbsp;
+                        <div id="tbl_pic">
+                            <table id="grid_table_pic"></table>
+                            <div id="grid_pager_pic"></div>
+                        </div>
 
+                    </div>
+                    <div id="form_pic" style="display: none;">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -74,6 +78,21 @@
         $(document).ready(function () {
             var grid = $("#grid_table_pic");
             var pager = $("#grid_pager_pic");
+
+            var parent_column = grid.closest('[class*="col-"]');
+            $(window).on('resize.jqGrid', function () {
+                grid.jqGrid('setGridWidth', $("#tbl_pic").width() - 1);
+                pager.jqGrid('setGridWidth', $("#tbl_pic").width() - 1);
+            });
+            //optional: resize on sidebar collapse/expand and container fixed/unfixed
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    grid.jqGrid('setGridWidth', parent_column.width());
+                    pager.jqGrid('setGridWidth', parent_column.width());
+                }
+            });
+            var width = $("#tbl_pic").width();
+
             grid.jqGrid({
                 url: '<?php echo site_url('parameter/gridMapPIC');?>',
                 datatype: "json",
@@ -190,7 +209,7 @@
                     }
                 ],
                 postData: {P_MP_LOKASI_ID: <?php echo $P_MP_LOKASI_ID;?>},
-                width: '1090',
+                width: width,
                 AutoWidth: true,
                 height: '100%',
                 scrollOffset: 0,
@@ -213,12 +232,6 @@
                     repeatitems: false
                 },
                 loadComplete: function () {
-                    $(window).on('resize.jqGrid', function () {
-                        grid.jqGrid('setGridWidth', 1090);
-                    });
-                    $(window).on('resize.jqGrid', function () {
-                        pager.jqGrid('setGridWidth', 1090);
-                    });
 
                     var table = this;
                     setTimeout(function () {

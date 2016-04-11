@@ -163,14 +163,21 @@
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
 
-        //resize to fit page size
+
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            $(grid_selector).jqGrid('setGridWidth', $("#contentJgGrid").width());
+            $(grid_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width());
+            $(pager_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width());
         });
 
-        $(window).on('resize.jqGrid', function () {
-            $(pager_selector).jqGrid('setGridWidth', $("#contentJgGrid").width());
+        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
+            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
+                $(grid_selector).jqGrid( 'setGridWidth', parent_column.width() );
+                $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
+            }
         });
+
+        var width =   $(pager_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width());
         
         jQuery("#grid-table").jqGrid({
             url: '<?php echo site_url('mapping_user_mitra/gridUser');?>',
@@ -179,15 +186,15 @@
             //colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
             colModel: [
                 {label: 'ID', name: 'USER_ID', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'User Name', name: 'USER_NAME', width: 90, align: "left", editable: true, editrules: {required: true}},
-                {label: 'Full Name', name: 'FULL_NAME', width: 150, align: "left", editable: true},
-                {label: 'Email', name: 'EMAIL', width: 100, align: "left", editable: true},
-                {label: 'Loker', name: 'LOKER', width: 100, align: "left", editable: true},
-                {label: 'City', name: 'ADDR_CITY', width: 90, align: "left", editable: true},
-                {label: 'Mitra', name: 'PGL_ID', width: 90, align: "left", editable: true, hidden: true},
-                {label: 'Mitra', name: 'PGL_NAME', width: 90, align: "left", editable: true}
+                {label: 'User Name', name: 'USER_NAME', width: 160, align: "left", editable: true, editrules: {required: true}},
+                {label: 'Full Name', name: 'FULL_NAME', width: 200, align: "left", editable: true},
+                {label: 'Email', name: 'EMAIL', width: 250, align: "left", editable: true},
+                {label: 'Loker', name: 'LOKER', width: 150, align: "left", editable: true},
+                {label: 'City', name: 'ADDR_CITY', width: 250, align: "left", editable: true},
+                {label: 'Mitra', name: 'PGL_ID', width: 150, align: "left", editable: true, hidden: true},
+                {label: 'Mitra', name: 'PGL_NAME', width: 250, align: "left", editable: true}
             ],
-            width: 1120,
+            width: width,
             //width: '100%',
             height: '100%',
             autowidth: true,
@@ -199,7 +206,7 @@
             rownumWidth: 35, // the width of the row numbers columns
             sortorder: 'asc',
             altRows: true,
-            shrinkToFit: true,
+            shrinkToFit: false,
             //multiselect: true,
             //multikey: "ctrlKey",
             multiboxonly: true,
@@ -218,6 +225,18 @@
                 
                 $("#mitra_title").html("USER ::" + userName);
                 $("#mitra_row_content").show();
+
+                $(window).on('resize.jqGrid', function () {
+                    $(grid_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width());
+                    $(pager_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width());
+                });
+
+                $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
+                    if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
+                        $(grid_selector).jqGrid( 'setGridWidth', parent_column.width() );
+                        $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
+                    }
+                });
             },
             onSortCol: clearSelection,
             onPaging: clearSelection,

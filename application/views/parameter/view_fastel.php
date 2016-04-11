@@ -2,30 +2,14 @@
     <div class="breadcrumbs" id="breadcrumbs">
         <?= $this->breadcrumb; ?>
     </div>
-    <!-- /section:basics/content.breadcrumbs -->
     <div class="page-content">
-
         <div class="row">
             <div class="col-xs-12">
-
                 <div class="row">
                     <div class="vspace-12-sm"></div>
                     <div class="col-sm-12">
                         <div class="widget-box transparent">
-                            <div class="widget-header red widget-header-flat">
-                                <h4 class="widget-title lighter">
-                                    FASTEL
-                                </h4>
-
-                                <div class="widget-toolbar">
-                                    <a href="#" data-action="collapse">
-                                        <i class="ace-icon fa fa-chevron-up"></i>
-                                    </a>
-                                </div>
-                            </div>
                             <div class="widget-body">
-                                <br>
-
                                 <form class="form-horizontal" role="form" id="filterForm">
                                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                                            value="<?php echo
@@ -44,25 +28,19 @@
                                                         ?>
                                                     </select>
                                                 </div>
-                                                <!--                                                <a id="show"-->
-                                                <!--                                                   class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">-->
-                                                <!--                                                    <span class="ace-icon fa fa-search"></span>Show</a>-->
                                             </div>
                                         </div>
                                         <div class="col-xs-12">
                                             <div class="form-group">
                                                 <label class="col-sm-1 control-label no-padding-right"
                                                        for="form-field-1"> Tenant </label>
-
                                                 <div class="col-sm-3">
                                                     <select class="form-control" id="list_cc" name="tenant">
                                                         <option value="">Pilih Tenant</option>
                                                     </select>
                                                 </div>
                                             </div>
-
                                         </div>
-
                                     </div>
                                 </form>
                             </div><!-- PAGE CONTENT ENDS -->
@@ -86,10 +64,13 @@
                 </div>
             </div>
             <br>
-            <div class="col-xs-12" id="tabel_content">
+            <div class="col-xs-12">
                 <br>
-                <table id="grid-table"></table>
-                <div id="grid-pager"></div>
+                <div id="jgridContent">
+                    <table id="grid-table"></table>
+                    <div id="grid-pager"></div>
+                </div>
+
             </div><!-- /.col -->
         </div>
     </div><!-- /.col -->
@@ -173,7 +154,7 @@
             // async: false,
             url: "<?php echo base_url();?>parameter/modalUploadFastel",
             type: "POST",
-            data: {upload_param:1},
+            data: {upload_param: 1},
             success: function (data) {
                 $('#upload_fastel').html(data);
                 $('#modal_upload_fastel').modal('show');
@@ -185,7 +166,7 @@
             // async: false,
             url: "<?php echo base_url();?>parameter/modalUploadFastel",
             type: "POST",
-            data: {upload_param:2},
+            data: {upload_param: 2},
             success: function (data) {
                 $('#upload_fastel').html(data);
                 $('#modal_upload_fastel').modal('show');
@@ -198,9 +179,25 @@
     $(document).ready(function () {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
+
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $("#jgridContent").width());
+            $(pager_selector).jqGrid('setGridWidth', $("#jgridContent").width());
+        });
+
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                $(pager_selector).jqGrid('setGridWidth', parent_column.width());
+            }
+        });
+
+        var width = $(grid_selector).jqGrid('setGridWidth', $("#jgridContent").width());
+
         var ten_id = $("#list_cc").val();
         var date = '<?= date("d/m/Y");?>';
-        jQuery("#grid-table").jqGrid({
+        $(grid_selector).jqGrid({
             postData: {ten_id: ten_id},
             url: '<?php echo site_url('parameter/gridFastel');?>',
             datatype: "json",
@@ -279,8 +276,7 @@
                                 orientation: 'bottom',
                                 todayHighlight: true,
                             });
-                        },
-                        // readonly: "readonly"
+                        }
                     },
                     hidden: false
                 },
@@ -312,7 +308,7 @@
                     editoption: {}
                 }
             ],
-            // width: '100%',
+            width: width,
             height: '100%',
             scrollOffset: 0,
             rowNum: 5,
@@ -338,8 +334,19 @@
                 repeatitems: false
             },
             loadComplete: function () {
-                $(grid_selector).jqGrid('setGridWidth', $("#tabel_content").width());
-                $(pager_selector).jqGrid('setGridWidth', $("#tabel_content").width());
+                var parent_column = $(grid_selector).closest('[class*="col-"]');
+                $(window).on('resize.jqGrid', function () {
+                    $(grid_selector).jqGrid('setGridWidth', $("#jgridContent").width());
+                    $(pager_selector).jqGrid('setGridWidth', $("#jgridContent").width());
+                });
+
+                $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                    if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                        $(pager_selector).jqGrid('setGridWidth', parent_column.width());
+                    }
+                });
+
 
                 var table = this;
                 setTimeout(function () {
@@ -426,8 +433,8 @@
         {
             //delete record form
             recreateForm: true,
-           // msg : "tes",
-           // width : 700,
+            // msg : "tes",
+            // width : 700,
             beforeShowForm: function (e) {
                 var form = $(e[0]);
                 if (form.data('styled')) return false;
@@ -480,9 +487,6 @@
 
 
     function clearSelection() {
-        //jQuery("#jqGridDetails").jqGrid('setGridParam',{url: "empty.json", datatype: 'json'}); // the last setting is for demo purpose only
-        jQuery("#jqGridDetails").jqGrid('setCaption', 'Menu Child ::');
-        jQuery("#jqGridDetails").trigger("reloadGrid");
 
     }
 

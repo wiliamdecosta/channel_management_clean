@@ -89,14 +89,14 @@
             $(window).on('resize.jqGrid', function () {
                 grid.jqGrid('setGridWidth', $("#tbl_pic").width() - 1);
                 pager.jqGrid('setGridWidth', $("#tbl_pic").width() - 1);
-            })
+            });
             //optional: resize on sidebar collapse/expand and container fixed/unfixed
             $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
                 if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
                     grid.jqGrid('setGridWidth', parent_column.width());
                     pager.jqGrid('setGridWidth', parent_column.width());
                 }
-            })
+            });
             var width = $("#tbl_pic").width();
 
 
