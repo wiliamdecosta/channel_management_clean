@@ -92,7 +92,7 @@
                             // give the editor time to initialize
                             setTimeout( function() {
                                 elm.append('<input id="form_p_app_role_id" type="text"  style="display:none;">'+
-                                        '<input id="form_p_app_role_name" type="text" class="col-xs-5 jqgrid-required" placeholder="Pilih Role">'+
+                                        '<input id="form_p_app_role_name" type="text" disabled class="col-xs-5 jqgrid-required" placeholder="Pilih Role">'+
                     					'<button class="btn btn-warning btn-sm" type="button" onclick="showLovRole(\'form_p_app_role_id\',\'form_p_app_role_name\')">'+
                     					'	<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
                     					'</button>');
