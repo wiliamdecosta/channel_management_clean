@@ -54,7 +54,7 @@
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', name: 'P_WORKFLOW', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
+                {label: 'ID', name: 'P_WORKFLOW_ID', key: true, width: 35, sorttype: 'number', sortable: true, editable: true, hidden:true},
                 {
                     label: 'Nama Workflow',
                     name: 'DOC_NAME', 
