@@ -358,7 +358,7 @@
             {
                 label: 'Prosedur Sebelum', 
                 name: 'PROC_DISPLAY_PREV', 
-                width: 300, 
+                width: 330, 
                 align: "left",  
                 editable: false
             },   
@@ -672,7 +672,7 @@
             delicon: 'ace-icon fa fa-trash-o red',
             search: false,
             searchicon: 'ace-icon fa fa-search orange',
-            refresh: false,
+            refresh: true,
             refreshicon: 'ace-icon fa fa-refresh green',
             view: false,
             viewicon: 'ace-icon fa fa-search-plus grey'
@@ -703,6 +703,7 @@
                 style_edit_form(form);
             },
             afterSubmit: function (response) {  
+                console.log(response);
                 var response = JSON.parse(response.responseText);
                 if(response.success == false) {
                     //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);

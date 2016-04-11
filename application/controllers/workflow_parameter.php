@@ -594,7 +594,10 @@ class Workflow_parameter extends CI_Controller
 
     public function crud_chart_proc_prev()
     {
-        $this->P_workflow_list->crud_chart_proc_prev();
+        $result = $this->P_workflow_list->crud_chart_proc_prev();
+
+        echo json_encode($result);
+        exit;
     }
     /** end chart proc **/
 
