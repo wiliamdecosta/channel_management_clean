@@ -131,7 +131,7 @@ class P_workflow_list extends CI_Model
         $P_PROCEDURE_ID_ALT = $this->input->post('P_PROCEDURE_ID_ALT') ? $this->input->post('P_PROCEDURE_ID_ALT') : "null";
         $IMPORTANCE_LEVEL = $this->input->post('IMPORTANCE_LEVEL');
         $F_INIT = $this->input->post('F_INIT');
-        $SEQUENCE_NO = $this->input->post('SEQUENCE_NO') ? $this->input->post('P_PROCEDURE_ID_NEXT') : "null";
+        $SEQUENCE_NO = $this->input->post('SEQUENCE_NO') ? $this->input->post('SEQUENCE_NO') : "null";
         $VALID_FROM = $this->input->post('VALID_FROM');
         $VALID_TO = $this->input->post('VALID_TO') ? $this->input->post('VALID_TO') : '';
 
@@ -232,6 +232,106 @@ class P_workflow_list extends CI_Model
         
         return $result;
 
+    }
+
+    function crud_daemon() {
+
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+
+        $P_W_CHART_PROC_ID = $this->input->post('P_W_CHART_PROC_ID');
+        $DAEMON_NAME = $this->input->post('DAEMON_NAME');
+        $EXPRESSION_RULE = $this->input->post('EXPRESSION_RULE');
+        $DESCRIPTION = $this->input->post('DESCRIPTION');
+        $VALID_FROM = $this->input->post('VALID_FROM');
+        $VALID_TO = $this->input->post('VALID_TO') ? $this->input->post('VALID_TO') : '';
+        
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+
+        
+        $result = array();
+        
+        switch ($oper) {
+            case 'add':
+                try {
+                    $P_W_DAEMON_PROC_ID = gen_id('P_W_DAEMON_PROC_ID', 'P_W_DAEMON_PROC');
+                    $sql = "INSERT INTO P_W_DAEMON_PROC (P_W_DAEMON_PROC_ID, 
+                                                    P_W_CHART_PROC_ID, 
+                                                    DAEMON_NAME, 
+                                                    EXPRESSION_RULE, 
+                                                    VALID_FROM, 
+                                                    VALID_TO, 
+                                                    DESCRIPTION,                                                     
+                                                    CREATE_DATE, 
+                                                    CREATE_BY, 
+                                                    UPDATE_DATE, 
+                                                    UPDATE_BY)
+                                VALUES (".$P_W_DAEMON_PROC_ID.",
+                                        ".$P_W_CHART_PROC_ID.",
+                                        '".$DAEMON_NAME."',
+                                        '".$EXPRESSION_RULE."',
+                                        to_date('" . $VALID_FROM . "','dd/mm/yyyy'),
+                                        case when '" . $VALID_TO . "' = '' then null else to_date('" . $VALID_TO . "','dd/mm/yyyy') end,
+                                        '".$DESCRIPTION."',
+                                        SYSDATE,
+                                        '".$CREATED_BY."',
+                                        SYSDATE,
+                                        '".$UPDATED_BY."'
+                            )";
+                    
+                    $this->db->query($sql);
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Daemon Berhasil Ditambahkan';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                break;
+            case 'edit':
+                
+                try {
+                    
+                    $sql = "UPDATE P_W_DAEMON_PROC
+                            SET P_W_CHART_PROC_ID = ".$P_W_CHART_PROC_ID.",
+                                DAEMON_NAME = '".$DAEMON_NAME."',                                
+                                EXPRESSION_RULE = '".$EXPRESSION_RULE."',
+                                VALID_FROM = to_date('" . $VALID_FROM . "','dd/mm/yyyy'),
+                                                      VALID_TO = case when '" . $VALID_TO . "' = '' then null else to_date('" . $VALID_TO . "','dd/mm/yyyy') end,
+                                DESCRIPTION = '".$DESCRIPTION."',
+                                UPDATE_DATE = SYSDATE,
+                                UPDATE_BY = '".$UPDATED_BY."'
+                            WHERE P_W_DAEMON_PROC_ID = ".$id_;
+                    
+                    $this->db->query($sql);
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Daemon Berhasil Diupdate';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                break;
+            case 'del':
+                try {
+                    $this->db->where('P_W_DAEMON_PROC_ID', $id_);
+                    $this->db->delete('P_W_DAEMON_PROC');
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Daemon Berhasil Dihapus';
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                break;
+        }
+        
+        return $result;
     }
 
 }

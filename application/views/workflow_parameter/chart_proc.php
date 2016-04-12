@@ -6,43 +6,62 @@
     }
 </script>
 <div class="breadcrumbs" id="breadcrumbs">
-    <?= $this->breadcrumb; ?>
+    <!-- <?= $this->breadcrumb; ?> -->
+    <?php echo getBreadcrumb(array('Workflow Parameter','Daftar Workflow')); ?>
 </div>
 
 <!-- /section:basics/content.breadcrumbs -->
+
 <div class="page-content">
-
-
     <div class="row">
-        <div class="col-xs-12" style="width: 100%;">
+        <div class="col-xs-12">
             <!-- PAGE CONTENT BEGINS -->
-            <table id="grid-table"></table>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs padding-18 tab-size-bigger tab-color-blue">
+                            <li class="active">
+                                <a href="#" data-toggle="tab" aria-expanded="true" id="tab-1">
+                                    <i class="blue bigger-120"></i>
+                                    <strong>Aliran Prosedur</strong>
+                                </a>
+                            </li>
+                        </ul>
+                        <input type="hidden" id="tab_chart_proc_id" value="">
+                        <input type="hidden" id="tab_chart_proc_code" value="">
+                    </div>
+                    
+                    <div class="tab-content no-border">
+                        <div class="row">
+                            <div class="col-xs-12">       
+                               <table id="grid-table"></table>
+                               <div id="grid-pager"></div>
 
+                               <script type="text/javascript">
+                                    var $path_base = "..";//in Ace demo this will be used for editurl parameter
+                                </script>    
+                            </div>
+                        </div>
 
-            <div id="grid-pager"></div>
+                        <br>
+    
+                        <div class="row">
+                            <div class="col-sm-3" id="detailsPlaceholder" style="display:none">
+                                <table id="jqGridDetailPrev"></table>
+                                <div id="jqGridDetailsPagerPrev"></div>
+                            </div>
+                            <div class="col-sm-8" id="detailsPlaceholderNext" style="display:none; padding-left: 100px;">
+                                <table id="jqGridDetailNext"></table>
+                                <div id="jqGridDetailsPagerNext"></div>
+                            </div>
+                        </div>
 
-            <script type="text/javascript">
-                var $path_base = "..";//in Ace demo this will be used for editurl parameter
-            </script>
-
-
+                    </div>
+                </div>    
+            </div>
             <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
     </div><!-- /.row -->
-    
-    <br>
-    
-    <div class="row">
-        <div class="col-sm-3" id="detailsPlaceholder" style="display:none">
-            <table id="jqGridDetailPrev"></table>
-            <div id="jqGridDetailsPagerPrev"></div>
-        </div>
-        <div class="col-sm-8" id="detailsPlaceholderNext" style="display:none; padding-left: 100px;">
-            <table id="jqGridDetailNext"></table>
-            <div id="jqGridDetailsPagerNext"></div>
-        </div>
-    </div>
-
 </div><!-- /.page-content -->
 
 <?php 
@@ -52,6 +71,15 @@
 <script type="text/javascript">
     function showLovProc(id, code) {
         modal_lov_procedure_show(id,code);
+    }
+
+    function showDaemon(idd) {        
+        var code = $("#jqGridDetailNext").jqGrid ('getCell', idd, 'DOC_NAME');
+        // alert(code);
+        loadContentWithParams("workflow_parameter-chart_proc_daemon.php", {
+            p_w_chart_proc_id: idd,
+            workflow_name : code
+        });
     }
 
     $(document).ready(function () {
@@ -95,14 +123,14 @@
                 {
                     label: 'Aktif?', 
                     name: 'LACTIVE', 
-                    width: 200, 
+                    width: 60, 
                     sortable: true, 
                     editable: true
                 }, 
                 {
                     label: 'Jumlah Transisi', 
                     name: 'CABANG', 
-                    width: 200, 
+                    width: 60, 
                     sortable: true, 
                     editable: true
                 }
@@ -753,6 +781,24 @@
                 sorttype: 'number',
                 sortable: true,
                 editable: true,
+                hidden: true
+            },
+            {
+                label: 'Daemon',
+                name: 'P_W_CHART_PROC_ID_NEXT',
+                width: 140, 
+                align: "center",
+                editable: false,
+                formatter: function(cellvalue, options, rowObject) {
+                    return '<a href="#" onclick="showDaemon('+cellvalue+');"> <i class="ace-icon fa fa-folder bigger-130"></i> </a>';
+                }
+            },
+            {
+                label: 'Nama Dokumen',
+                name: 'DOC_NAME',                
+                width: 35,
+                sortable: true,
+                editable: false,
                 hidden: true
             },
             {
