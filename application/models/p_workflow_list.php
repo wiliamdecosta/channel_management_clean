@@ -133,7 +133,7 @@ class P_workflow_list extends CI_Model
         $F_INIT = $this->input->post('F_INIT');
         $SEQUENCE_NO = $this->input->post('SEQUENCE_NO') ? $this->input->post('P_PROCEDURE_ID_NEXT') : "null";
         $VALID_FROM = $this->input->post('VALID_FROM');
-        $VALID_TO = $this->input->post('VALID_TO') ? $this->input->post('P_PROCEDURE_ID_ALT') : '';
+        $VALID_TO = $this->input->post('VALID_TO') ? $this->input->post('VALID_TO') : '';
 
         $oper = $this->input->post('oper');
         $id_ = $this->input->post('id');
@@ -181,6 +181,33 @@ class P_workflow_list extends CI_Model
                     
                     $result['success'] = true;
                     $result['message'] = 'Daftar Aliran Prosedur Berhasil Ditambahkan';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                break;
+            case 'edit':
+                try {
+                    $sql = "UPDATE P_W_CHART_PROC SET P_WORKFLOW_ID = ".$P_WORKFLOW_ID.",
+                                                      P_PROCEDURE_ID_PREV = ".$P_PROCEDURE_ID_PREV.",
+                                                      P_PROCEDURE_ID_NEXT = ".$P_PROCEDURE_ID_NEXT.",
+                                                      P_PROCEDURE_ID_ALT = ".$P_PROCEDURE_ID_ALT.",
+                                                      IMPORTANCE_LEVEL = '".$IMPORTANCE_LEVEL."',
+                                                      F_INIT = '".$F_INIT."',
+                                                      SEQUENCE_NO = ".$SEQUENCE_NO.",
+                                                      VALID_FROM = to_date('" . $VALID_FROM . "','dd/mm/yyyy'),
+                                                      VALID_TO = case when '" . $VALID_TO . "' = '' then null else to_date('" . $VALID_TO . "','dd/mm/yyyy') end,
+                                                      UPDATE_DATE = SYSDATE,
+                                                      UPDATE_BY = '".$UPDATED_BY."' WHERE P_W_CHART_PROC_ID = ".$id_;                    
+                    // print_r($sql);
+                    // exit;
+
+                    $this->db->query($sql);
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Daftar Aliran Prosedur Berhasil Diupdate';
                     
                 }catch(Exception $e) {
                     $result['success'] = false;

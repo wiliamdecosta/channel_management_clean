@@ -2011,7 +2011,7 @@ class Parameter extends CI_Controller
 
         $searchPhrase = $this->input->post('searchPhrase');
 
-        $query = "SELECT P_DOCUMENT_TYPE_ID, DOC_NAME AS DOCUMENT_TYPE_CODE, DISPLAY_NAME FROM P_DOCUMENT_TYPE";
+        $query = "SELECT P_DOCUMENT_TYPE_ID, DISPLAY_NAME AS DOCUMENT_TYPE_CODE, DISPLAY_NAME FROM P_DOCUMENT_TYPE";
 
         $req_param = array (
             "table" => $query,
@@ -2024,7 +2024,7 @@ class Parameter extends CI_Controller
         $req_param['where'] = array();
         
         if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(DOC_NAME) LIKE upper('%".$searchPhrase."%'))";
+             $req_param['where'][] = "(upper(DISPLAY_NAME) LIKE upper('%".$searchPhrase."%'))";
         }
         
 
@@ -2066,7 +2066,7 @@ class Parameter extends CI_Controller
 
         $searchPhrase = $this->input->post('searchPhrase');
 
-        $query = "SELECT P_PROCEDURE_ID, PROC_NAME AS PROCEDURE_CODE, DESCRIPTION, decode(IS_ACTIVE,'Y','YA','TIDAK') AS IS_ACTIVE FROM P_PROCEDURE";
+        $query = "SELECT P_PROCEDURE_ID, DISPLAY_NAME AS PROCEDURE_CODE, DESCRIPTION, decode(IS_ACTIVE,'Y','YA','TIDAK') AS IS_ACTIVE FROM P_PROCEDURE";
 
         $req_param = array (
             "table" => $query,
@@ -2079,7 +2079,7 @@ class Parameter extends CI_Controller
         $req_param['where'] = array();
         
         if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(PROC_NAME) LIKE upper('%".$searchPhrase."%'))";
+             $req_param['where'][] = "(upper(DISPLAY_NAME) LIKE upper('%".$searchPhrase."%'))";
         }
         
 

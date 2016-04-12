@@ -37,8 +37,7 @@
             <table id="jqGridDetailPrev"></table>
             <div id="jqGridDetailsPagerPrev"></div>
         </div>
-
-        <div class="col-sm-8" id="detailsPlaceholderNext" style="display:none">
+        <div class="col-sm-8" id="detailsPlaceholderNext" style="display:none; padding-left: 100px;">
             <table id="jqGridDetailNext"></table>
             <div id="jqGridDetailsPagerNext"></div>
         </div>
@@ -122,7 +121,6 @@
             multiboxonly: true,
 
             onSelectRow: function (rowid) {
-                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'P_WORKFLOW_ID');
                 var grid_id = jQuery("#jqGridDetailPrev");
                 if (rowid != null) {
                     grid_id.jqGrid('setGridParam', {
@@ -131,8 +129,9 @@
                         postData: {P_WORKFLOW_ID: rowid},
                         userData: {row: rowid}
                     });
-                    grid_id.jqGrid('setCaption', 'DAFTAR ALIRAN PROSEDUR');
+                    grid_id.jqGrid('setCaption', 'Daftar Aliran Prosedur');
                     jQuery("#detailsPlaceholder").show();
+                    jQuery("#detailsPlaceholderNext").hide();
                     jQuery("#jqGridDetailPrev").trigger("reloadGrid");
                 }
             }, // use the onSelectRow that is triggered on row click to show a details grid
@@ -348,7 +347,6 @@
             {
                 label: 'P_WORKFLOW_ID',
                 name: 'P_WORKFLOW_ID',
-                key: true,
                 width: 35,
                 sorttype: 'number',
                 sortable: true,
@@ -367,6 +365,7 @@
                 name: 'P_PROCEDURE_ID_PREV', 
                 width: 200, 
                 sortable: true, 
+                key: true,
                 editable: true,
                 hidden: true,
                 editrules: {edithidden: true, number:true, required:true},
@@ -647,6 +646,22 @@
             id: 'id',
             repeatitems: false
         },
+        onSelectRow: function (rowid) {
+            var pw_id = $('#jqGridDetailPrev').jqGrid('getCell', rowid, 'P_WORKFLOW_ID');
+            var dis_prev = $('#jqGridDetailPrev').jqGrid('getCell', rowid, 'PROC_DISPLAY_PREV');
+            var grid_id = jQuery("#jqGridDetailNext");
+            if (rowid != null) {
+                grid_id.jqGrid('setGridParam', {
+                    url: "<?php echo site_url('workflow_parameter/gridChartProcNext');?>/" + rowid,
+                    datatype: 'json',
+                    postData: {P_PROCEDURE_ID_PREV: rowid, PROC_DISPLAY_PREV: dis_prev, P_WORKFLOW_ID: pw_id},
+                    userData: {row: rowid}
+                });
+                grid_id.jqGrid('setCaption', 'Daftar Aliran Prosedur Sesudah');
+                jQuery("#detailsPlaceholderNext").show();
+                jQuery("#jqGridDetailNext").trigger("reloadGrid");
+            }
+        }, // use the onSelectRow that is triggered on row click to show a details grid
         loadComplete: function () {
             var table = this;
             setTimeout(function () {
@@ -726,385 +741,477 @@
 
     //----------------------------------------------------------------------------------------------------------//
     //JqGrid Detail Next
-    // $("#jqGridDetailNext").jqGrid({
-    //     mtype: "POST",
-    //     datatype: "json",
-    //     colModel: [
-    //         {
-    //             label: 'P_WORKFLOW_ID',
-    //             name: 'P_WORKFLOW_ID',
-    //             key: true,
-    //             width: 35,
-    //             sorttype: 'number',
-    //             sortable: true,
-    //             editable: false,
-    //             hidden: true
-    //         },            
-    //         {
-    //             label: 'Prosedur Sebelum', 
-    //             name: 'PROC_DISPLAY_PREV', 
-    //             width: 300, 
-    //             align: "left",  
-    //             editable: false
-    //         },   
-    //         {
-    //             label: 'Pekerjaan Sebelum',
-    //             name: 'P_PROCEDURE_ID_PREV', 
-    //             width: 200, 
-    //             sortable: true, 
-    //             editable: true,
-    //             hidden: true,
-    //             editrules: {edithidden: true, number:true, required:true},
-    //             edittype: 'custom',
-    //             editoptions: {
-    //                 "custom_element":function( value  , options) {                            
-    //                     var elm = $('<span></span>');
+    $("#jqGridDetailNext").jqGrid({
+        mtype: "POST",
+        datatype: "json",
+        colModel: [
+            {
+                label: 'ID',
+                name: 'P_W_CHART_PROC_ID_NEXT',                
+                width: 35,
+                key: true,
+                sorttype: 'number',
+                sortable: true,
+                editable: true,
+                hidden: true
+            },
+            {
+                label: 'P_WORKFLOW_ID',
+                name: 'P_WORKFLOW_ID',                
+                width: 35,
+                sorttype: 'number',
+                sortable: true,
+                editable: false,
+                hidden: true
+            },            
+            {
+                label: 'Prosedur Sebelum', 
+                name: 'PROC_DISPLAY_PREV', 
+                width: 300, 
+                align: "left",  
+                editable: false,
+                hidden: true
+            },   
+            {
+                label: 'Pekerjaan Sebelum',
+                name: 'P_PROCEDURE_ID_PREV', 
+                width: 200, 
+                sortable: true, 
+                editable: true,
+                hidden: true,
+                editrules: {edithidden: true, number:true, required:true},
+                edittype: 'custom',
+                editoptions: {
+                    "custom_element":function( value  , options) {                            
+                        var elm = $('<span></span>');
                         
-    //                     // give the editor time to initialize
-    //                     setTimeout( function() {
-    //                         elm.append('<input id="form_p_procedure_id_prev" type="text"  style="display:none;">'+
-    //                                 '<input id="form_p_procedure_code" disabled type="text" class="col-xs-9 jqgrid-required" placeholder="Pilih Jenis Dokumen">'+
-    //                                 '<button class="btn btn-warning btn-sm" type="button" onclick="showLovProc(\'form_p_procedure_id_prev\',\'form_p_procedure_code\')">'+
-    //                                 '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
-    //                                 '</button>');
-    //                         $("#form_p_procedure_id_prev").val(value);
-    //                         elm.parent().removeClass('jqgrid-required');
-    //                     }, 100);
+                        // give the editor time to initialize
+                        setTimeout( function() {
+                            elm.append('<input id="form_p_procedure_id_prev" type="text"  style="display:none;">'+
+                                    '<input id="form_p_procedure_code" disabled type="text" class="col-xs-9 jqgrid-required" placeholder="Pilih Jenis Dokumen">'+
+                                    '<button id="btn-lov" class="btn btn-warning btn-sm" type="button" onclick="showLovProc(\'form_p_procedure_id_prev\',\'form_p_procedure_code\')">'+
+                                    '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                    '</button>');
+                            $("#form_p_procedure_id_prev").val(value);
+                            elm.parent().removeClass('jqgrid-required');
+                        }, 100);
                         
-    //                     return elm;
-    //                 },
-    //                 "custom_value":function( element, oper, gridval) {
+                        return elm;
+                    },
+                    "custom_value":function( element, oper, gridval) {
                         
-    //                     if(oper === 'get') {
-    //                         return $("#form_p_procedure_id_prev").val();
-    //                     } else if( oper === 'set') {
-    //                         $("#form_p_procedure_id_prev").val(gridval);
-    //                         var gridId = this.id;
-    //                         // give the editor time to set display
-    //                         setTimeout(function(){
-    //                             var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-    //                             if(selectedRowId != null) {
-    //                                 var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PROC_DISPLAY_PREV');
-    //                                 $("#form_p_procedure_code").val( code_display );
-    //                             }
-    //                         },100);
-    //                     }
-    //                 }
-    //             }
-    //         },
-    //         {
-    //             label: 'Prosedur Sesudah', 
-    //             name: 'PEKERJAAN_NEXT', 
-    //             width: 250, 
-    //             align: "left",  
-    //             editable: false,
-    //             hidden: true
-    //         },   
-    //         {
-    //             label: 'Pekerjaan Sesudah',
-    //             name: 'P_PROCEDURE_ID_NEXT', 
-    //             width: 200, 
-    //             sortable: true, 
-    //             editable: true,
-    //             hidden: true,
-    //             editrules: {edithidden: true, number:true},
-    //             edittype: 'custom',
-    //             editoptions: {
-    //                 "custom_element":function( value  , options) {                            
-    //                     var elm = $('<span></span>');
+                        if(oper === 'get') {
+                            return $("#form_p_procedure_id_prev").val();
+                        } else if( oper === 'set') {
+                            $("#form_p_procedure_id_prev").val(gridval);
+                            var gridId = this.id;
+                            // give the editor time to set display
+                            setTimeout(function(){
+                                var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                if(selectedRowId != null) {
+                                    var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PROC_DISPLAY_PREV');
+                                    $("#form_p_procedure_code").val( code_display );
+                                }
+                            },100);
+                        }
+                    }
+                }
+            },
+            {
+                label: 'Prosedur Sesudah', 
+                name: 'PROC_DISPLAY_NEXT', 
+                width: 350, 
+                align: "left",  
+                editable: false
+            },   
+            {
+                label: 'Pekerjaan Sesudah',
+                name: 'P_PROCEDURE_ID_NEXT', 
+                width: 200, 
+                sortable: true,                 
+                editable: true,
+                hidden: true,
+                editrules: {edithidden: true, number:true},
+                edittype: 'custom',
+                editoptions: {
+                    "custom_element":function( value  , options) {                            
+                        var elm = $('<span></span>');
                         
-    //                     // give the editor time to initialize
-    //                     setTimeout( function() {
-    //                         elm.append('<input id="form_p_procedure_id_next" type="text"  style="display:none;">'+
-    //                                 '<input id="form_pekerjaan_next" disabled type="text" class="col-xs-9 jqgrid" placeholder="Pilih Jenis Dokumen">'+
-    //                                 '<button class="btn btn-warning btn-sm" type="button" onclick="showLovProc(\'form_p_procedure_id_next\',\'form_pekerjaan_next\')">'+
-    //                                 '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
-    //                                 '</button>');
-    //                         $("#form_p_procedure_id_next").val(value);
-    //                         elm.parent().removeClass('jqgrid-required');
-    //                     }, 100);
+                        // give the editor time to initialize
+                        setTimeout( function() {
+                            elm.append('<input id="form_p_procedure_id_next" type="text"  style="display:none;">'+
+                                    '<input id="form_pekerjaan_next" disabled type="text" class="col-xs-9 jqgrid" placeholder="Pilih Jenis Dokumen">'+
+                                    '<button class="btn btn-warning btn-sm" type="button" onclick="showLovProc(\'form_p_procedure_id_next\',\'form_pekerjaan_next\')">'+
+                                    '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                    '</button>');
+                            $("#form_p_procedure_id_next").val(value);
+                            elm.parent().removeClass('jqgrid-required');
+                        }, 100);
                         
-    //                     return elm;
-    //                 },
-    //                 "custom_value":function( element, oper, gridval) {
+                        return elm;
+                    },
+                    "custom_value":function( element, oper, gridval) {
                         
-    //                     if(oper === 'get') {
-    //                         return $("#form_p_procedure_id_next").val();
-    //                     } else if( oper === 'set') {
-    //                         $("#form_p_procedure_id_next").val(gridval);
-    //                         var gridId = this.id;
-    //                         // give the editor time to set display
-    //                         setTimeout(function(){
-    //                             var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-    //                             if(selectedRowId != null) {
-    //                                 var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PEKERJAAN_NEXT');
-    //                                 $("#form_pekerjaan_next").val( code_display );
-    //                             }
-    //                         },100);
-    //                     }
-    //                 }
-    //             }
-    //         },
-    //         {
-    //             label: 'Alternate (Dispatcher)', 
-    //             name: 'PEKERJAAN_ALT', 
-    //             width: 250, 
-    //             align: "left",  
-    //             editable: false,
-    //             hidden: true
-    //         },   
-    //         {
-    //             label: 'Alternate (Dispatcher)',
-    //             name: 'P_PROCEDURE_ID_ALT', 
-    //             width: 200, 
-    //             sortable: true, 
-    //             editable: true,
-    //             hidden: true,
-    //             editrules: {edithidden: true, number:true},
-    //             edittype: 'custom',
-    //             editoptions: {
-    //                 "custom_element":function( value  , options) {                            
-    //                     var elm = $('<span></span>');
+                        if(oper === 'get') {
+                            return $("#form_p_procedure_id_next").val();
+                        } else if( oper === 'set') {
+                            $("#form_p_procedure_id_next").val(gridval);
+                            var gridId = this.id;
+                            // give the editor time to set display
+                            setTimeout(function(){
+                                var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                if(selectedRowId != null) {
+                                    var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PEKERJAAN_NEXT');
+                                    $("#form_pekerjaan_next").val( code_display );
+                                }
+                            },100);
+                        }
+                    }
+                }
+            },
+            {
+                label: 'Alternate (Dispatcher)', 
+                name: 'PEKERJAAN_ALT', 
+                width: 250, 
+                align: "left",  
+                editable: false,
+                hidden: true
+            },   
+            {
+                label: 'Alternate (Dispatcher)',
+                name: 'P_PROCEDURE_ID_ALT', 
+                width: 200, 
+                sortable: true, 
+                editable: true,
+                hidden: true,
+                editrules: {edithidden: true, number:true},
+                edittype: 'custom',
+                editoptions: {
+                    "custom_element":function( value  , options) {                            
+                        var elm = $('<span></span>');
                         
-    //                     // give the editor time to initialize
-    //                     setTimeout( function() {
-    //                         elm.append('<input id="form_p_procedure_id_alt" type="text"  style="display:none;">'+
-    //                                 '<input id="form_pekerjaan_alt" disabled type="text" class="col-xs-9 jqgrid" placeholder="Pilih Jenis Dokumen">'+
-    //                                 '<button class="btn btn-warning btn-sm" type="button" onclick="showLovProc(\'form_p_procedure_id_alt\',\'form_pekerjaan_alt\')">'+
-    //                                 '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
-    //                                 '</button>');
-    //                         $("#form_p_procedure_id_alt").val(value);
-    //                         elm.parent().removeClass('jqgrid-required');
-    //                     }, 100);
+                        // give the editor time to initialize
+                        setTimeout( function() {
+                            elm.append('<input id="form_p_procedure_id_alt" type="text"  style="display:none;">'+
+                                    '<input id="form_pekerjaan_alt" disabled type="text" class="col-xs-9 jqgrid" placeholder="Pilih Jenis Dokumen">'+
+                                    '<button class="btn btn-warning btn-sm" type="button" onclick="showLovProc(\'form_p_procedure_id_alt\',\'form_pekerjaan_alt\')">'+
+                                    '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                    '</button>');
+                            $("#form_p_procedure_id_alt").val(value);
+                            elm.parent().removeClass('jqgrid-required');
+                        }, 100);
                         
-    //                     return elm;
-    //                 },
-    //                 "custom_value":function( element, oper, gridval) {
+                        return elm;
+                    },
+                    "custom_value":function( element, oper, gridval) {
                         
-    //                     if(oper === 'get') {
-    //                         return $("#form_p_procedure_id_alt").val();
-    //                     } else if( oper === 'set') {
-    //                         $("#form_p_procedure_id_alt").val(gridval);
-    //                         var gridId = this.id;
-    //                         // give the editor time to set display
-    //                         setTimeout(function(){
-    //                             var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-    //                             if(selectedRowId != null) {
-    //                                 var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PEKERJAAN_ALT');
-    //                                 $("#form_pekerjaan_alt").val( code_display );
-    //                             }
-    //                         },100);
-    //                     }
-    //                 }
-    //             }
-    //         }, 
-    //         {
-    //             label: 'Level Pembatalan Workflow',
-    //             name: 'IMPORTANCE_LEVEL',
-    //             width: 100,
-    //             sortable: true,
-    //             editable: true,
-    //             edittype: 'select',
-    //             formatter: 'select',
-    //             editrules: {edithidden: true, required:true},
-    //             editoptions: {value: {'O': 'OPSIONAL', 'M': 'WAJIB'}},
-    //             hidden: true
-    //         },
-    //         {
-    //             label: 'Fungsi Init',
-    //             name: 'F_INIT',
-    //             width: 300,
-    //             align: "left",
-    //             sortable: true,
-    //             editable: true,
-    //             editoptions: {
-    //                 size: 55,
-    //                 maxlength:64
-    //             },
-    //             editrules: {edithidden: true},
-    //             hidden: true
-    //         },
-    //         {
-    //             label: 'No.',
-    //             name: 'SEQUENCE_NO',
-    //             width: 70,
-    //             align: "center",
-    //             sortable: true,
-    //             editable: true,
-    //             sorttype: 'number',
-    //             editoptions: {
-    //                 size: 10,
-    //                 maxlength:5
-    //             },
-    //             editrules: {edithidden: true, required: false},
-    //             hidden: true
-    //         },
-    //         {
-    //             label: 'Mulai Berlaku',
-    //             name: 'VALID_FROM',
-    //             width: 250,
-    //             editable: true,
-    //             editrules: {edithidden: true, required: true},
-    //             edittype:"text",
-    //             editoptions: {
-    //                 // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
-    //                 // use it to place a third party control to customize the toolbar
-    //                 dataInit: function (element) {
-    //                    $(element).datepicker({
-    //                         autoclose: true,
-    //                         format: 'dd-mm-yyyy',
-    //                         orientation : 'bottom'
-    //                     });
-    //                 }
-    //             },
-    //             hidden: true
-    //         },
-    //         {
-    //             label: 'Akhir Berlaku',
-    //             name: 'VALID_TO',
-    //             width: 250,
-    //             editable: true,
-    //             editrules: {edithidden: true},
-    //             edittype:"text",
-    //             editoptions: {
-    //                 // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
-    //                 // use it to place a third party control to customize the toolbar
-    //                 dataInit: function (element) {
-    //                    $(element).datepicker({
-    //                         autoclose: true,
-    //                         format: 'dd-mm-yyyy',
-    //                         orientation : 'bottom'
-    //                     });
-    //                 }
-    //             },
-    //             hidden: true
-    //         },
-    //         {
-    //             label: 'Tanggal Dibuat',
-    //             name: 'CREATION_DATE',
-    //             width: 250,
-    //             align: "left",
-    //             sortable: true,
-    //             editable: false,
-    //             hidden: true
-    //         },
-    //         {
-    //             label: 'Dibuat Oleh',
-    //             name: 'CREATED_BY',
-    //             width: 250,
-    //             align: "left",
-    //             sortable: true,
-    //             editable: false,
-    //             hidden: true
-    //         },
-    //         {
-    //             label: 'Tanggal Diubah',
-    //             name: 'UPDATED_DATE',
-    //             width: 250,
-    //             align: "left",
-    //             sortable: true,
-    //             editable: false,
-    //             hidden: true
-    //         },
-    //         {
-    //             label: 'Diubah Oleh',
-    //             name: 'UPDATED_BY',
-    //             width: 250,
-    //             align: "left",
-    //             sortable: true,
-    //             editable: false,
-    //             hidden: true
-    //         },
-    //     ],
-    //     width: '100%',
-    //     height: '100%',
-    //     // width: 1120,
-    //     page: 1,
-    //     rowNum: 5,
-    //     shrinkToFit: true,
-    //     rownumbers: true,
-    //     rownumWidth: 35, // the width of the row numbers columns
-    //     viewrecords: true,
-    //     caption: 'Daftar Aliran Prosedur',
-    //     pager: "#jqGridDetailsPagerNext",
-    //     jsonReader: {
-    //         root: 'Data',
-    //         id: 'id',
-    //         repeatitems: false
-    //     },
-    //     loadComplete: function () {
-    //         var table = this;
-    //         setTimeout(function () {
-    //             //  styleCheckbox(table);
+                        if(oper === 'get') {
+                            return $("#form_p_procedure_id_alt").val();
+                        } else if( oper === 'set') {
+                            $("#form_p_procedure_id_alt").val(gridval);
+                            var gridId = this.id;
+                            // give the editor time to set display
+                            setTimeout(function(){
+                                var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                if(selectedRowId != null) {
+                                    var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PEKERJAAN_ALT');
+                                    $("#form_pekerjaan_alt").val( code_display );
+                                }
+                            },100);
+                        }
+                    }
+                }
+            }, 
+            {
+                label: 'Level Pembatalan Workflow',
+                name: 'IMPORTANCE_LEVEL',
+                width: 100,
+                sortable: true,
+                editable: true,
+                edittype: 'select',
+                formatter: 'select',
+                editrules: {edithidden: true, required:true},
+                editoptions: {value: {'O': 'OPSIONAL', 'M': 'WAJIB'}},
+                hidden: true
+            },
+            {
+                label: 'Fungsi Init',
+                name: 'F_INIT',
+                width: 300,
+                align: "left",
+                sortable: true,
+                editable: true,
+                editoptions: {
+                    size: 55,
+                    maxlength:64
+                },
+                editrules: {edithidden: true},
+                hidden: true
+            },
+            {
+                label: 'No.',
+                name: 'SEQUENCE_NO',
+                width: 70,
+                align: "center",
+                sortable: true,
+                editable: true,
+                sorttype: 'number',
+                editoptions: {
+                    size: 10,
+                    maxlength:5
+                },
+                editrules: {edithidden: true, required: false},
+                hidden: true
+            },
+            {
+                label: 'Init Sub?', 
+                name: 'LINITCHILD', 
+                width: 250, 
+                align: "left",  
+                editable: false
+            }, 
+            {
+                label: 'Valid?', 
+                name: 'LVALID', 
+                width: 250, 
+                align: "left",  
+                editable: false
+            }, 
+            {
+                label: 'Mulai Berlaku',
+                name: 'VALID_FROM',
+                width: 250,
+                editable: true,
+                editrules: {edithidden: true, required: true},
+                edittype:"text",
+                editoptions: {
+                    // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                    // use it to place a third party control to customize the toolbar
+                    dataInit: function (element) {
+                       $(element).datepicker({
+                            autoclose: true,
+                            format: 'dd-mm-yyyy',
+                            orientation : 'bottom'
+                        });
+                    }
+                }
+            },
+            {
+                label: 'Akhir Berlaku',
+                name: 'VALID_TO',
+                width: 250,
+                editable: true,
+                editrules: {edithidden: true},
+                edittype:"text",
+                editoptions: {
+                    // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                    // use it to place a third party control to customize the toolbar
+                    dataInit: function (element) {
+                       $(element).datepicker({
+                            autoclose: true,
+                            format: 'dd-mm-yyyy',
+                            orientation : 'bottom'
+                        });
+                    }
+                }
+            },
+            {
+                label: 'Tanggal Dibuat',
+                name: 'CREATION_DATE',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: false,
+                hidden: true
+            },
+            {
+                label: 'Dibuat Oleh',
+                name: 'CREATED_BY',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: false,
+                hidden: true
+            },
+            {
+                label: 'Tanggal Diubah',
+                name: 'UPDATED_DATE',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: false,
+                hidden: true
+            },
+            {
+                label: 'Diubah Oleh',
+                name: 'UPDATED_BY',
+                width: 250,
+                align: "left",
+                sortable: true,
+                editable: false,
+                hidden: true
+            },
+        ],
+        // width: '70%',
+        height: '100%',
+        width: 750,
+        page: 1,
+        rowNum: 5,
+        shrinkToFit: true,
+        rownumbers: true,
+        rownumWidth: 35, // the width of the row numbers columns
+        viewrecords: true,
+        caption: 'Daftar Aliran Prosedur',
+        pager: "#jqGridDetailsPagerNext",
+        jsonReader: {
+            root: 'Data',
+            id: 'id',
+            repeatitems: false
+        },
+        loadComplete: function () {
+            var table = this;
+            setTimeout(function () {
+                //  styleCheckbox(table);
 
-    //             //  updateActionIcons(table);
-    //             updatePagerIcons(table);
-    //             enableTooltips(table);
-    //         }, 0);
-    //     },
-    //     editurl: '<?php echo site_url('workflow_parameter/crud_chart_proc_prev');?>'
-    // });
+                //  updateActionIcons(table);
+                updatePagerIcons(table);
+                enableTooltips(table);
+            }, 0);
+        },
+        editurl: '<?php echo site_url('workflow_parameter/crud_chart_proc_prev');?>'
+    });
 
     //navButtons Grid Detail -- Next
-    // jQuery('#jqGridDetailNext').jqGrid('navGrid', '#jqGridDetailsPagerNext',
-    //     {   //navbar options
-    //         edit: false,
-    //         excel: true,
-    //         editicon: 'ace-icon fa fa-pencil blue',
-    //         add: true,
-    //         addicon: 'ace-icon fa fa-plus-circle purple',
-    //         del: false,
-    //         delicon: 'ace-icon fa fa-trash-o red',
-    //         search: false,
-    //         searchicon: 'ace-icon fa fa-search orange',
-    //         refresh: false,
-    //         refreshicon: 'ace-icon fa fa-refresh green',
-    //         view: false,
-    //         viewicon: 'ace-icon fa fa-search-plus grey'
-    //     },
-    //     {
-    //         // options for the Edit Dialog
-    //     },
-    //     {
-    //         // options for the Edit Dialog
-    //         editData: {
-    //             P_WORKFLOW_ID: function () {
-    //                 var data = jQuery("#jqGridDetailNext").jqGrid('getGridParam', 'postData');
-    //                 var P_WORKFLOW_ID = data.P_WORKFLOW_ID;
-    //                 return P_WORKFLOW_ID;
-    //             }
-    //         },
-    //         //new record form
-    //         width: 700,
-    //         errorTextFormat: function (data) {
-    //             return 'Error: ' + data.responseText
-    //         },
-    //         closeAfterAdd: true,
-    //         recreateForm: true,
-    //         viewPagerButtons: false,
-    //         beforeShowForm: function (e) {
-    //             var form = $(e[0]);
-    //             form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-    //             style_edit_form(form);
-    //         },
-    //         afterSubmit: function (response) {  
-    //             var response = JSON.parse(response.responseText);
-    //             if(response.success == false) {
-    //                 //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
-    //                 swal("Perhatian", response.message, "warning");
-    //             }
-                
-    //             return [true, '', response.responseText];
-    //         }
+    jQuery('#jqGridDetailNext').jqGrid('navGrid', '#jqGridDetailsPagerNext',
+        {   //navbar options
+            edit: true,
+            excel: true,
+            editicon: 'ace-icon fa fa-pencil blue',
+            add: true,
+            addicon: 'ace-icon fa fa-plus-circle purple',
+            del: false,
+            delicon: 'ace-icon fa fa-trash-o red',
+            search: false,
+            searchicon: 'ace-icon fa fa-search orange',
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green',
+            view: false,
+            viewicon: 'ace-icon fa fa-search-plus grey'
+        },
+        {
+            // options for the Edit Dialog
+            editData: {
+                P_WORKFLOW_ID: function () {
+                    var data = jQuery("#jqGridDetailNext").jqGrid('getGridParam', 'postData');
+                    var P_WORKFLOW_ID = data.P_WORKFLOW_ID;
+                    return P_WORKFLOW_ID;
+                }
+            },
+            closeAfterEdit: true,
+            width: 700,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            recreateForm: true,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                style_edit_form(form);
 
-    //     },
-    //     {
-    //         //view record form
-    //         recreateForm: true,
-    //         beforeShowForm: function (e) {
-    //             var form = $(e[0]);
-    //             form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
-    //         }
-    //     }
-    // )
+                setTimeout( function() {                    
+                    var selectedRowId = $("#jqGridDetailPrev").jqGrid ('getGridParam', 'selrow');
+                    var proc_id = $("#jqGridDetailPrev").jqGrid('getCell', selectedRowId, 'P_PROCEDURE_ID_PREV');
+                    var dis_prev = $("#jqGridDetailPrev").jqGrid('getCell', selectedRowId, 'PROC_DISPLAY_PREV');
+
+                    var selectedRowIdNext = $("#jqGridDetailNext").jqGrid ('getGridParam', 'selrow');
+                    var procNextId = $("#jqGridDetailNext").jqGrid('getCell', selectedRowIdNext, 'P_PROCEDURE_ID_NEXT');
+                    var procNext = $("#jqGridDetailNext").jqGrid('getCell', selectedRowIdNext, 'PROC_DISPLAY_NEXT');
+                    
+                    $("#jqGridDetailNext").jqGrid('getCell', selectedRowIdNext, 'P_PROCEDURE_ID_NEXT');
+
+                    $("#form_p_procedure_id_prev").val(proc_id);
+                    $("#form_p_procedure_code").val(dis_prev);
+
+                    if(!procNextId){
+                        $("#form_p_procedure_id_next").val("");
+                        $("#form_pekerjaan_next").val("");
+                    }else{
+                        $("#form_p_procedure_id_next").val(procNextId);
+                        $("#form_pekerjaan_next").val(procNext);
+                    }
+
+                    $("#form_p_procedure_id_alt").val("");
+                    $("#form_pekerjaan_alt").val("");
+                    $('#btn-lov').hide();
+                }, 150);
+
+            },
+            afterSubmit: function (response) {
+                
+                var response = JSON.parse(response.responseText);
+                if(response.success == false) {
+                    //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    swal("Perhatian", response.message, "warning");
+                }
+                
+                return [true, '', response.responseText];
+            }
+        },
+        {
+            // options for the Edit Dialog
+            editData: {
+                P_WORKFLOW_ID: function () {
+                    var data = jQuery("#jqGridDetailNext").jqGrid('getGridParam', 'postData');
+                    var P_WORKFLOW_ID = data.P_WORKFLOW_ID;
+                    return P_WORKFLOW_ID;
+                }
+            },
+            //new record form
+            width: 700,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            closeAfterAdd: true,
+            recreateForm: true,
+            viewPagerButtons: false,
+            beforeShowForm: function (e) {               
+                var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                    style_edit_form(form);
+
+                setTimeout( function() {                    
+                    var selectedRowId = $("#jqGridDetailPrev").jqGrid ('getGridParam', 'selrow');
+                    var proc_id = $("#jqGridDetailPrev").jqGrid('getCell', selectedRowId, 'P_PROCEDURE_ID_PREV');
+                    var dis_prev = $("#jqGridDetailPrev").jqGrid('getCell', selectedRowId, 'PROC_DISPLAY_PREV');
+
+                    $("#form_p_procedure_id_prev").val(proc_id);
+                    $("#form_p_procedure_code").val(dis_prev);
+
+                    $("#form_p_procedure_id_next").val("");
+                    $("#form_pekerjaan_next").val("");
+
+                    $("#form_p_procedure_id_alt").val("");
+                    $("#form_pekerjaan_alt").val("");
+                }, 150);
+            },
+            afterSubmit: function (response) {  
+                var response = JSON.parse(response.responseText);
+                if(response.success == false) {
+                    //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', response.message);
+                    swal("Perhatian", response.message, "warning");
+                }
+                
+                return [true, '', response.responseText];
+            }
+
+        },
+        {
+            //view record form
+            recreateForm: true,
+            beforeShowForm: function (e) {
+                var form = $(e[0]);
+                form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+            }
+        }
+    )
 </script>
