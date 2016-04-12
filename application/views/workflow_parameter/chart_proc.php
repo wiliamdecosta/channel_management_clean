@@ -579,7 +579,7 @@
                 width: 250,
                 editable: true,
                 editrules: {edithidden: true},
-                edittype:"text",
+                edittype:"text",                
                 editoptions: {
                     // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                     // use it to place a third party control to customize the toolbar
@@ -1089,7 +1089,7 @@
             editicon: 'ace-icon fa fa-pencil blue',
             add: true,
             addicon: 'ace-icon fa fa-plus-circle purple',
-            del: false,
+            del: true,
             delicon: 'ace-icon fa fa-trash-o red',
             search: false,
             searchicon: 'ace-icon fa fa-search orange',

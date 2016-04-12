@@ -215,6 +215,19 @@ class P_workflow_list extends CI_Model
                 }
                 
                 break;
+                
+            case 'del':
+                try {
+                    $this->db->where('P_W_CHART_PROC_ID', $id_);
+                    $this->db->delete('P_W_CHART_PROC');
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Daftar Aliran Prosedur Dihapus';
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                break;
         }
         
         return $result;
