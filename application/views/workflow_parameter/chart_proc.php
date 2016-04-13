@@ -6,7 +6,6 @@
     }
 </script>
 <div class="breadcrumbs" id="breadcrumbs">
-    <!-- <?= $this->breadcrumb; ?> -->
     <?php echo getBreadcrumb(array('Workflow Parameter','Daftar Workflow')); ?>
 </div>
 
