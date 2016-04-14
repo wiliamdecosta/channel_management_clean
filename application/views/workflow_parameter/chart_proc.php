@@ -210,16 +210,27 @@
             view: false,
             viewicon: 'ace-icon fa fa-search-plus grey',
         },
+        {}, // settings for edit
+        {}, // settings for add
+        {}, // settings for delete
         {
             //search form
-            // closeAfterSearch: true,
+            closeAfterSearch: true,
             recreateForm: true,
-            afterShowSearch: function (e) {
+            onSearch: function (){
+                jQuery("#detailsPlaceholder").hide();
+                jQuery("#detailsPlaceholderNext").hide();
+            },
+            onReset: function () {
+                jQuery("#detailsPlaceholder").hide();
+                jQuery("#detailsPlaceholderNext").hide();
+            },
+            afterShowSearch: function (e) {                
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 style_search_form(form);
             },
-            afterRedraw: function () {
+            afterRedraw: function () {                
                 style_search_filters($(this));
             }
         },
