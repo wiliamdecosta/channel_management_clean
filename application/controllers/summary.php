@@ -220,68 +220,84 @@ class Summary extends CI_Controller
 
         $mf = $this->db_summary->getTrendMFData();
         // echo "<pre>";
-        //  print_r($mf);
-        //      exit;
+        //  print_r($array_period);
+        //     exit;
 
         foreach ($skema_list as $skema) {
             $skemas[] = $skema['REFERENCE_NAME'];
         }
 
-        /*for ($i = 0; $i < count($array_period); $i++) {
+        if($mf){
+            $sc = array();
             foreach ($mf as $isi) {
-                for ($a = 0; $a < count($skemas); $a++) {
-                    if ($skemas[$a] == $isi['REFERENCE_NAME']) {
-                        $sss[$skemas[$a]] = array($isi['PERIOD'] => $isi['FEE_TO_SHARE']);
+                if(!$sc){
+                    $sc[$isi['REFERENCE_NAME']] = array();
+                }
+                for ($p = 0; $p < count($skemas); $p++) {
+                    if ($skemas[$p] == $isi['REFERENCE_NAME']) {
+
+                        for ($i = 0; $i < count($array_period); $i++) {
+                            if ($array_period[$i] == $isi['PERIOD']) {
+                                $sc[$skemas[$p]][$array_period[$i]] = number_format($isi['FEE_TO_SHARE'],2,'.','');
+                            }else{
+
+                                if (!array_key_exists($array_period[$i], $sc[$skemas[$p]])) {
+                                    $sc[$skemas[$p]][$array_period[$i]] = 0;
+                                }
+
+                            }
+                        }
+                    }else{
+
+                        if (!array_key_exists($skemas[$p], $sc)) {
+                            //$sc[$skemas[$p]] = array() ;
+                            for ($i = 0; $i < count($array_period); $i++) {
+                                $sc[$skemas[$p]][$array_period[$i]] = 0;
+                            }
+                        }
+
                     }
 
-                    if ($array_period[$i] != $isi['PERIOD']) {
-                        $sss[$skemas[$a]] = array($isi['PERIOD'] => $isi['FEE_TO_SHARE']);
-                    }
                 }
 
             }
-
-        }*/
-        $jml = array();
-        foreach ($mf as $isi) {
-
-            for ($p = 0; $p < count($skemas); $p++) {
-                if ($skemas[$p] == $isi['REFERENCE_NAME']) {
-                    for ($i = 0; $i < count($array_period); $i++) {
-
-                        if(in_array($isi['PERIOD'],$array_period)){
-                            $sc[$skemas[$p]][$isi['PERIOD']] = $isi['FEE_TO_SHARE'];
-                        }
-
-
-
-                        if ($array_period[$i] == $isi['PERIOD']) {
-                          //  $sc[$skemas[$p]][$array_period[$i]] = $isi['FEE_TO_SHARE'];
-                        } /*else {
-                            $sc[$skemas[$p]][$array_period[$i]] = null;
-                        }*/
-                    }
-                } else {
-                    for ($i = 0; $i < count($array_period); $i++) {
-                        if ($array_period[$i] == $isi['PERIOD']) {
-                           // $sc[$skemas[$p]][$array_period[$i]] = null;
-                        }
-                    }
-                }
-
-
-
+        }else{
+            for ($i = 0; $i < count($array_period); $i++) {
+                $sc[$skemas[0]][$array_period[$i]] = 0;
             }
-
-
         }
 
 
-
-        echo "<pre>";
+        /*echo "<pre>";
         print_r($sc);
-        exit;
-        $data['periode'] = $string_periode;
+        exit;*/
+        $series = "";
+        foreach($sc as $key=> $val){
+            $series .= "{
+            name : '".$key."',
+            data:[".join($val,',')."]
+            },";
+        }
+      // print_r($series);
+       // exit;
+        /*{
+            name: 'Other',
+                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5]
+            }, {
+        name: 'OTC',
+                data: [17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6]
+            }, {
+        name: 'Wholesale',
+                data: [8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0]
+            }, {
+        name: 'Rev Sharing',
+                data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0]
+            }*/
+
+
+        $data['array_periode'] = $string_periode;
+        $data['periode'] = $periode;
+        $data['series'] = $series;
         $this->load->view('summary/mf_chart', $data);
 
 
