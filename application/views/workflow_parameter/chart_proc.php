@@ -49,7 +49,8 @@
                                 <table id="jqGridDetailPrev"></table>
                                 <div id="jqGridDetailsPagerPrev"></div>
                             </div>
-                            <div class="col-sm-8" id="detailsPlaceholderNext" style="display:none; padding-left: 100px;">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-7" id="detailsPlaceholderNext" style="display:none;">
                                 <table id="jqGridDetailNext"></table>
                                 <div id="jqGridDetailsPagerNext"></div>
                             </div>
