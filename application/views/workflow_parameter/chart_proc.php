@@ -204,6 +204,7 @@
             afterRefresh: function () {
                 // some code here
                 jQuery("#detailsPlaceholder").hide();
+                jQuery("#detailsPlaceholderNext").hide();
             },
             refreshicon: 'ace-icon fa fa-refresh green',
             view: false,
@@ -666,7 +667,7 @@
         shrinkToFit: true,
         rownumbers: true,
         rownumWidth: 35, // the width of the row numbers columns
-        viewrecords: true,
+        viewrecords: false,
         caption: 'Daftar Aliran Prosedur',
         pager: "#jqGridDetailsPagerPrev",
         jsonReader: {
@@ -716,6 +717,10 @@
             search: false,
             searchicon: 'ace-icon fa fa-search orange',
             refresh: true,
+            afterRefresh: function () {
+                // some code here
+                jQuery("#detailsPlaceholderNext").hide();
+            },
             refreshicon: 'ace-icon fa fa-refresh green',
             view: false,
             viewicon: 'ace-icon fa fa-search-plus grey'
