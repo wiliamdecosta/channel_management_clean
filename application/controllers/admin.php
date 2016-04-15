@@ -22,11 +22,10 @@ class Admin extends CI_Controller
 
     }
 
-    public function index()
+    /*public function index()
     {
-        redirect("/");
-    }
-
+        $this->load->view('dashboard/dashboard');
+    }*/
     public function menu()
     {
         //BreadCrumb
@@ -465,7 +464,10 @@ class Admin extends CI_Controller
         
         $strOutput = "";
         
-        echo '<form method="post" id="form-privelege" action="'.site_url('admin/setPrivilegeMenu').'">';
+        
+        echo '<div style="margin-left:10px;margin-top:10px; margin-bottom:10px;">
+                    <input type="submit" class="btn btn-sm btn-primary" value="Save">
+                </div>';
         echo '<table width="100%" class="table table-striped table-bordered">';
         echo '<tr>
                 <th>No</th>
@@ -496,7 +498,7 @@ class Admin extends CI_Controller
         
         echo '</table>';
         echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'">';
-        echo '</form>';
+        
         
         
     }
@@ -526,7 +528,12 @@ class Admin extends CI_Controller
             
             $return_id = $p_app_menu_profile_id[$idx];
         }
-        echo $return_id;
+        $data = array();
+        $data['success'] = true;
+        $data['msg'] = 'Data berhasil ditambahkan';
+        $data['return_id'] = $return_id;
+
+        echo json_encode($data);
     }
 
     public function listProfile(){

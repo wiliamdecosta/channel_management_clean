@@ -51,19 +51,18 @@
 
     </div><!-- /.row -->
     <div class="row" style="visibility: hidden;" id="privilege-table">
-        <div class="col-sm-7">
+        <div class="col-sm-12">
             <div class="widget-box widget-color-blue">
                 <div class="widget-header">
                     <h4 class="widget-title lighter smaller" id="privilege-title">Setting Menu Privilege</h4>
                 </div>
             
-                <div style="margin-left:10px;margin-top:10px;">
-                    <button class="btn btn-sm btn-primary" id="save-privilege">Save</button>
-                </div>
-                
                 <div class="widget-body">
-                    <div class="widget-main padding-8" id="privilege-content">
-                         
+                    <div class="widget-main padding-8">
+                        <span id="privilege-content"></span>
+                        <form role="form" method="post" accept-charset="utf-8" id="form-privelege">
+
+                        </form>
                     </div>
                 </div>
             </div>
