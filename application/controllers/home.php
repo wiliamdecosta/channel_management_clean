@@ -35,7 +35,8 @@ class Home extends CI_Controller {
             //$i++;
             foreach ($data[$parent] as $v) {
                 $child = $this->get_menu($data, $v->MENU_ID);
-                $html .= "<li class='setting_nav' id='".$v->FILE_NAME."' href='".site_url($v->MENU_LINK)."'>";
+               // $html .= "<li class='setting_nav' id='".$v->FILE_NAME."' href='".site_url($v->MENU_LINK)."'>";
+                $html .= "<li class='setting_nav' id='".$v->FILE_NAME."' href='".site_url($v->MENU_LINK)."/".$v->MENU_ID."'>";
                 $html .= "<a href='#' class='dropdown-toggle'>";
                 if($v->MENU_ICON == ""){
                    $html .= '<i class="menu-icon fa fa-caret-right"></i>';

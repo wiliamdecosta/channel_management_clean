@@ -17,6 +17,9 @@ class Admin extends CI_Controller
         $this->load->model('M_jqGrid', 'jqGrid');
         $this->load->model('Gen_id');
 
+
+        $this->menu_id = $this->uri->segment(3);
+
     }
 
     public function index()

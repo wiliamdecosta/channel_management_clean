@@ -24,7 +24,6 @@
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
 
-
     <div class="row">
         <div class="col-sm-7" id="contentJgGrid">
             <!-- PAGE CONTENT BEGINS -->
@@ -378,3 +377,4 @@
     }
 
 </script>
+

@@ -1,6 +1,8 @@
 <div class="breadcrumbs" id="breadcrumbs">
     <?= $this->breadcrumb; ?>
 </div>
+<?php
+$prv = getPrivilege($this->menu_id); ?>
 
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
@@ -35,17 +37,17 @@
         //resize to fit page size
         var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid( 'setGridWidth', $(".page-content").width()-1 );
-            grid2.jqGrid( 'setGridWidth', $(".page-content").width()-1 );
+            grid.jqGrid('setGridWidth', $(".page-content").width() - 1);
+            grid2.jqGrid('setGridWidth', $(".page-content").width() - 1);
         });
         //optional: resize on sidebar collapse/expand and container fixed/unfixed
-        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
-            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
-                grid.jqGrid( 'setGridWidth', parent_column.width() );
-                grid2.jqGrid( 'setGridWidth', parent_column.width() );
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                grid.jqGrid('setGridWidth', parent_column.width());
+                grid2.jqGrid('setGridWidth', parent_column.width());
             }
         });
-        var width =  $(".page-content").width();
+        var width = $(".page-content").width();
         grid.jqGrid({
             url: '<?php echo site_url('admin/gridmenu');?>',
             datatype: "json",
@@ -76,7 +78,7 @@
             width: width,
             //width: '100%',
             height: '100%',
-           // autowidth: true,
+            // autowidth: true,
             rowNum: 5,
             page: 1,
             viewrecords: true,
@@ -137,7 +139,14 @@
         //navButtons grid master
         $('#grid-table').jqGrid('navGrid', '#grid-pager',
             { 	//navbar options
-                edit: true,
+                edit: <?php if (isset($prv['UBAH'])) {
+                            if ($prv['UBAH'] == "Y") {
+                                echo 'false';
+                            }else{
+                                echo true;
+                            }
+                        }
+                ?>,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: true,
@@ -238,8 +247,8 @@
             colModel: [
                 {label: 'Menu ID', name: 'MENU_ID', key: true, autowidth: true, editable: true, hidden: true},
                 // { label: 'Parent', name: 'MENU_PARENT', width: 65, editable: true, hidden:false,editoptions: {size:30, maxlength: 15} },
-                {label: 'Nama Menu', name: 'MENU_NAME',  editable: true},
-                {label: 'Controller', name: 'MENU_LINK',  editable: true},
+                {label: 'Nama Menu', name: 'MENU_NAME', editable: true},
+                {label: 'Controller', name: 'MENU_LINK', editable: true},
                 {label: 'View', name: 'FILE_NAME', editable: true}
             ],
             width: width,
