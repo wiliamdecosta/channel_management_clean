@@ -94,6 +94,13 @@
 <ul class="nav ace-nav">
 
 <!-- #section:basics/navbar.user_menu -->
+<li class="red">
+    <a href="#" id="workflow-inbox" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <i class="ace-icon fa fa-envelope"></i>
+        <span>Inbox</span>
+    </a>
+</li>
+
 <li class="light-blue">
     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
         <img class="nav-user-photo" src="<?php echo base_url();?>assets/avatars/nouser.png" alt="Avatar" />
@@ -186,8 +193,8 @@
 
 <!-- List Menu -->
 <ul class="nav nav-list">
-    <li class="active" id="nav_lvl1">
-        <a href="<?php echo site_url("home");?>">
+    <li class="active setting_nav" id="dashboard" href="<?php echo site_url('wf/inbox'); ?>">
+        <a href="#">
             <i class="menu-icon fa fa-tachometer"></i>
             <span class="menu-text"> Dashboard </span>
         </a>
