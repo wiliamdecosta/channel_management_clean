@@ -21,7 +21,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-
+        
         $('#jqxTree').css('visibility', 'visible');
         $('#save').click(function () {
             var str = [];
@@ -87,7 +87,7 @@
 
     });
 </script>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         // prepare the data
         var source =
@@ -145,6 +145,7 @@
                     $('#privilege-table').css('visibility', 'visible');
                     $('#privilege-title').text('Setting Privilege');
                     $('#privilege-content').html('Setting privilege belum bisa dilakukan. Checklist dan simpan menu yang bersangkutan terlebih dahulu agar dapat mengatur privilege menu.');      
+                    $('#form-privelege').html('');
                 }else {
                     $('#save-privilege').show();
                     $('#privilege-table').css('visibility', 'visible');
@@ -156,7 +157,7 @@
         });
         
         
-        $('#save-privilege').click(function () {
+        /*$('#save-privilege').click(function () {
             var options = { 
                 success:       showResponsePrivilegeFormSubmit  // post-submit callback 
             }; 
@@ -164,29 +165,54 @@
             // bind to the form's submit event 
             $("#form-privelege").ajaxSubmit(options);
             return false;
-        });
-        
+        });*/
+
     });
+
 </script>
 
 <script>
     
+    $("#form-privelege").on('submit', (function (e) {
+        
+        e.preventDefault();
+        var data = $(this).serialize();
+       // data.append('ten_id', ten_id);
+        $.ajax({
+            url: "<?php echo site_url('admin/setPrivilegeMenu');?>", // Url to which the request is send
+            type: "POST",             // Type of request to be send, called as method
+            data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+            cache: false,             // To unable request pages to be cached
+            dataType: "json",
+            success: function (data)   // A function to be called if request succeeds
+            {
+                if (data.success == true) {
+                    swal("", data.msg, "success");
+                    getPrivilegeTable(data.return_id);
+                } else {
+                    swal("", data.msg, "error");
+                }
+            }
+        });
+        return false;
+    }));
+        
     function getPrivilegeTable(the_id) {
-        $("#privilege-content").html("");
+        $("#form-privelege").html("");
         $.ajax({
             type: 'POST',
             url: "<?php echo site_url('admin/getPrivilegeMenuTable');?>",
             data: {app_menu_profile_id: the_id},
             success: function(data) {
-                $("#privilege-content").html(data);
+                $("#form-privelege").html(data);
             }
         });
         
     }    
     
-    function showResponsePrivilegeFormSubmit(responseText, statusText, xhr, $form)  { 
+    /*function showResponsePrivilegeFormSubmit(responseText, statusText, xhr, $form)  { 
         swal("Berhasil", "Data berhasil disimpan", "success");
         getPrivilegeTable(responseText);
-    } 
+    } */
     
 </script>
