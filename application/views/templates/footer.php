@@ -105,6 +105,9 @@
 
         });
         
+        $('#workflow-inbox').click(function(){
+            loadContentWithParams('wf-inbox',{});    
+        });
         
     })
     
