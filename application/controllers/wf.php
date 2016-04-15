@@ -23,7 +23,7 @@ class Wf extends CI_Controller {
 
             $total += $item['JUMLAH'];
             $strOutput .= '<div class="row">
-                                <div class="col-xs-4">
+                                <div class="col-xs-5">
                                     <div class="widget-box ui-sortable-handle" style="opacity: 1;">
                                         <div class="widget-header widget-header-small">
                                             <h5 class="widget-title blue smaller">'.$item['PROFILE_TYPE'].'</h5>
@@ -48,7 +48,7 @@ class Wf extends CI_Controller {
         }
 
         $strOutput .= '<div class="row">
-                            <div class="col-xs-4"> 
+                            <div class="col-xs-5"> 
                                 <hr style="border:width:2px 0 0;">
                                 <h4 class="blue" style="text-align:right;"> Jumlah Pekerjaan Tersedia : '.$total.'</h4>
                             </div>
@@ -74,7 +74,8 @@ class Wf extends CI_Controller {
                             </tr>
                         </thead>
                         ';
-
+        
+        $strOutput .= '<tbody>';
         foreach ($items as $item) {
             
             if($item['STYPE'] == 'PROFILE') {
@@ -83,12 +84,13 @@ class Wf extends CI_Controller {
                               </tr>';
             }else {
                 $strOutput .= '<tr>
-                                    <td style="padding-left:35px;">'.$item['DISPLAY_NAME'].'</td>
+                                    <td style="padding-left:35px;"><strong class="green">'.$item['DISPLAY_NAME'].'</strong></td>
                                     <td style="text-align:right;">'.$item['SCOUNT'].'</td>
-                                    <td class="center"><input type="radio" name="pilih_summary"></td>
+                                    <td class="center"><input class="pointer" type="radio" name="pilih_summary"></td>
                               </tr>';
             }
         }
+        $strOutput .= '</tbody>';
 
         $strOutput .= '</table>';
         echo $strOutput;
