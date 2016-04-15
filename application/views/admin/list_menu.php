@@ -141,9 +141,9 @@ $prv = getPrivilege($this->menu_id); ?>
             { 	//navbar options
                 edit: <?php if (isset($prv['UBAH'])) {
                             if ($prv['UBAH'] == "Y") {
-                                echo 'false';
+                                echo 'true';
                             }else{
-                                echo true;
+                                echo 'false';
                             }
                         }
                 ?>,
