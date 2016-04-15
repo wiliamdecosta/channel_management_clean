@@ -119,7 +119,7 @@
                     editoptions: {value: {'Y': 'YA', 'N': 'TIDAK'}},
                     editrules: {required:true}
                 },
-                {label: 'No Urut Pekerjaan',name: 'SEQNO', width: 200, sortable: true, hidden:true, editable: true,
+                {label: 'Standar Lama Pekerjaan',name: 'SEQNO', width: 200, sortable: true, hidden:true, editable: true,
                     editoptions: {
                         size: 20,
                         maxlength:2
@@ -159,7 +159,7 @@
                     editoptions: {value: {'N': 'TIDAK', 'Y': 'YA'}},
                     editrules: {edithidden: true}
                 },
-                {label: 'Isi Notifikasi SMS',name: 'EMAIL_CONTENT', width: 200, sortable: true, hidden:true, editable: true,
+                {label: 'Isi Notifikasi Email',name: 'EMAIL_CONTENT', width: 200, sortable: true, hidden:true, editable: true,
                     edittype:"textarea",
                     editoptions: {rows:"5",cols:"45"},
                     editrules: {edithidden: true, required:false}
