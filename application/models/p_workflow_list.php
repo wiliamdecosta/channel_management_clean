@@ -334,4 +334,21 @@ class P_workflow_list extends CI_Model
         return $result;
     }
 
+    public function getWorkflow() {
+        $result = array();
+        $sql = $this->db->query('SELECT * FROM P_WORKFLOW');
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;
+
+    }
+
+    public function getMonitoring($id){
+        $result = array();
+        $sql = $this->db->query("SELECT * FROM TABLE(F_MONITOR_TIPRO(".$id."))");
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;
+    }
+
 }

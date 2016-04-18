@@ -733,4 +733,35 @@ class Workflow_parameter extends CI_Controller
     }
     /** end chart proc **/
 
+    /** monitoring **/
+    public function monitoring(){
+        $title = "Monitoring";
+        //BreadCrumb
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        $result['result'] = $this->P_workflow_list->getWorkflow();        
+        $this->load->view('workflow_parameter/monitoring',$result);
+    }
+
+    public function processMonitoring(){
+
+        $p_workflow_id = $this->input->post('p_workflow_id');
+        $result = $this->P_workflow_list->getMonitoring($p_workflow_id);
+        foreach ($result as $rowH) {
+            $exp = explode('|', $rowH->WF_MONITOR);
+            if($exp[0] == 'H'){
+                unset($exp[0]);
+                $data['header'] = $exp;
+            }else{
+                unset($exp[0]);
+                $data['data'][] = $exp;
+            }
+        }
+
+        $this->load->view('workflow_parameter/monitoring_grid',$data);
+        
+    }
+    /** end monitoring **/
+
 }
