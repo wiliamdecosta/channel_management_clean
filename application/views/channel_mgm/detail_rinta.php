@@ -225,7 +225,8 @@
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
             }
         }
-    ).navButtonAdd('#grid-pager',{
+    )
+	.navButtonAdd('#grid-pager',{
             caption:"Export To Excel",
             buttonicon:"ace-icon fa-file-excel-o green",
             position:"last",
@@ -238,7 +239,7 @@
         var c = confirm('Export to Excel ?')
         if(c == true){
             $.ajax({
-                url: "<?php echo site_url(); ?>cm/rintasheet/<?php echo $pgl_id;?>/<?php echo $ten_id;?>/<?php echo $period;?>",
+                url: "<?php echo site_url(); ?>cm/fastelsheet/<?php echo $pgl_id;?>/<?php echo $ten_id;?>/<?php echo $period;?>",
                 data: {},
                 type: 'POST',
                 success: function (response) {

@@ -64,7 +64,7 @@
                                                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1"> Periode </label>
 
                                                 <div class="col-sm-2">
-                                                    <select name="bulan" class="form-control">
+                                                    <select name="bulan" class="form-control" id="formbulan">
                                                         <option selected="selected" value="">Bulan</option>
                                                         <?php
                                                         $bln=array(1=>"Januari","Februari","Maret","April","Mei","Juni","July","Agustus","September","Oktober","November","Desember");
@@ -76,7 +76,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-1">
-                                                    <select class="form-control" name="tahun">
+                                                    <select class="form-control" name="tahun" id="formtahun">
                                                         <option value=""> Tahun</option>
                                                         <?php
                                                         $year = date("Y");
@@ -102,7 +102,33 @@
         </div><!-- /.row -->
 
         <div class="hr hr-double hr-dotted hr18"></div>
-        <div id="tab-content"></div>
+		<div class="row">
+						<div class="vspace-12-sm"></div>
+						<div class="col-sm-12">
+							<div class="widget-box transparent">
+								<div class="widget-header red widget-header-flat">
+									<h4 class="widget-title lighter">
+										<!--                    <i class="ace-icon fa fa-money orange"></i>-->
+										Template
+									</h4>
+									<div class="tabbable">
+										<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="mytab">
+											<li class="tab" id="detail_rinta">
+												<a href="javascript:void(0)">Rincian POTS</a>
+											</li>
+											<li class="tab" id="fastels">
+												<a href="javascript:void(0)">Rincian Data Internet</a>
+											</li>								
+										</ul>										
+									</div>										
+								</div>
+									<div class="tab-content">
+											<div id="main_content" style="min-height: 400px; min-width: 600px;">
+											</div>
+									</div>
+							</div>
+						</div>
+					</div>
 
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
@@ -115,16 +141,23 @@
     $(document).ready(function(){
 
         $('#findFilter').click(function(){
-            //cek
+			//cek
             var mitra = $("#mitra").val();
-            $.ajax({
-                url: '<?php echo site_url('cm/viewRinta');?>',
-                data: $("#filterForm").serialize(),
-                type: 'POST',
-                success: function (data ) {
-                    $('#tab-content').html(data);
-                }
-            });
+				if(mitra.length >0){
+				$.ajax({
+					url: '<?php echo site_url('cm/viewRinta');?>',
+					data: $("#filterForm").serialize(),
+					type: 'POST',
+					success: function (data) {
+						$('#main_content').html(data);
+						$('#detail_rinta').addClass('active');
+						$('#fastels').removeClass('active');
+					}
+				});
+			} else
+			{
+				swal("perhatian","Isi terlebih form terlebih dahulu sebelum memilih","info");
+			}
         })
     })
 
@@ -157,5 +190,50 @@
 
 
     });
+	$('.tab').click(function (e) {
+            e.preventDefault();
+			if( ($('#mitra').val()).length == 0 || ($('#list_cc').val()).length == 0 || ($('#formbulan').val()).length == 0 || ($('#formtahun').val()).length == 0){
+				swal("Perhatian","Isi terlebih dahulu form sebelum bisa melihat isi data","info");
+			} else
+			{
+			
+			
+			// jQuery('input[name="pengelola"]').val();
+			
+            var ctrl = $(this).attr('id');
+            var pgl_ids = $('#mitra').val();
+            var list_cc = $('#list_cc').val();
+            var bulanvalue = $('#formbulan').val();
+            var tahunvalue = $('#formtahun').val();
+			var periode = tahunvalue+""+bulanvalue;
+                $('.tab').removeClass('active');
+                $('#' + ctrl).addClass('active');
+				if(ctrl == "fastels"){
+                $.ajax({ 
+                    type: 'POST',
+                    url: '<?php echo site_url('cm/fastels');?>',
+                    data: {mitra : pgl_ids, period:periode},
+                    timeout: 10000,
+                    async: false,
+                    success: function (data) {
+                        $("#main_content").html(data);
+						$('#detail_rinta').removeClass('active');
+						$('#fastels').addClass('active');
+                    }
+                });
+				} else if(ctrl == "detail_rinta"){
+				$.ajax({
+					url: '<?php echo site_url('cm/viewRinta');?>',
+					data: $("#filterForm").serialize(),
+					type: 'POST',
+					success: function (data) {
+						$('#main_content').html(data);
+						$('#detail_rinta').addClass('active');
+						$('#fastels').removeClass('active');
+					}
+						});
+					}
+			}
+        })
 
 </script>
