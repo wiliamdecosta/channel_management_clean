@@ -30,7 +30,10 @@
             },
             url: "<?php echo site_url('workflow_parameter/getMonProcess');?>",
             selection: true,
-            sorting:true
+            sorting:true,
+            templates: {
+                header: "<div id=\"{{ctx.id}}\" class=\"{{css.header}}\"><div class=\"row\"><div class=\"col-sm-12 actionBar\" style=\"display:none\"><p class=\"{{css.actions}}\"></p></div></div></div>"
+            }
         });
     });
 
