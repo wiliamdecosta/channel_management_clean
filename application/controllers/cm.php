@@ -510,5 +510,206 @@ class Cm extends CI_Controller {
 
         echo json_encode($data);
     }
+	
+	public function fastels()
+    {
+
+        $data['pgl_id'] = $this->input->post('mitra');
+        $data['period'] = $this->input->post('period');
+        $this->load->view('channel_mgm/fastel', $data);
+    }
+	
+	public function gridDatin()
+    {
+        $pgl_id = $this->input->post('pgl_id'); //261
+        $periode = $this->input->post('tahun') . "" . $this->input->post('bulan');
+
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "CUST_RINTA_NP";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        //$req_param['where'] = array('BILL_PRD' => $periode);
+        $req_param['where'] = array('BILL_PRD' => $periode,
+                                    'PGL_ID' => $pgl_id);
+
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+	
+	public function fastelsheet($pgl_id, $period) {
+        // Set unlimited usage memory for big data
+        ini_set('memory_limit', '-1');
+        // Sheet
+        $this->load->library("phpexcel");
+        $filename = "ExcelFastel_".$pgl_id."_".$period.".xls";
+        $this->phpexcel->getProperties()->setCreator("PT Telekomunikasi Indonesia, Tbk")
+            ->setLastModifiedBy("PT Telekomunikasi Indonesia, Tbk")
+            ->setTitle("REPORT")
+            ->setKeywords("office 2007 openxml php")
+            ->setCategory("Rincian Tagihan ");
+        $this->phpexcel->setActiveSheetIndex(0);
+        $sh = & $this->phpexcel->getActiveSheet();
+        $sh->setCellValue('A1', 'NO AKUN')
+            ->setCellValue('B1', 'SID')
+            ->setCellValue('C1', 'Nama Produk')
+            ->setCellValue('D1', 'Total Tagihan')
+            ->setCellValue('E1', 'Abonemen')
+            ->setCellValue('F1', 'Diskon')
+            ->setCellValue('G1', 'Restitusi')
+            ->setCellValue('H1', 'Lain - lain')
+            ->setCellValue('I1', 'Flag Bayar')
+        ;
+
+        $sh->getStyle('A1:I1')->getFont()->setBold(TRUE);
+        $sh->getColumnDimension('A')->setAutoSize(TRUE);
+        $sh->getColumnDimension('B')->setAutoSize(TRUE);
+        $sh->getColumnDimension('C')->setAutoSize(TRUE);
+        $sh->getColumnDimension('D')->setAutoSize(TRUE);
+        $sh->getColumnDimension('E')->setAutoSize(TRUE);
+        $sh->getColumnDimension('F')->setAutoSize(TRUE);
+        $sh->getColumnDimension('G')->setAutoSize(TRUE);
+        $sh->getColumnDimension('H')->setAutoSize(TRUE);
+        $sh->getColumnDimension('I')->setAutoSize(TRUE);
+		
+		
+        $sh->getStyle('A1:I1')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A1:I1')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
+        $sh->getStyle('A1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+
+        $x = 2;
+        $dt = $this->cm->excelFastel($period, $pgl_id);
+        $no = 1;
+        foreach($dt as $k => $r) {
+            $sh->getCell('A'.$x)->setValueExplicit($r->ACCOUNT_NUM, PHPExcel_Cell_DataType::TYPE_STRING);
+            $sh->setCellValue('B'.$x, @$r->PRODUCT_LABEL);
+            $sh->setCellValue('C'.$x, @$r->PRODUCT_NAME);
+            $sh->setCellValue('D'.$x, @$r->ADDRESS_NAME);
+            $sh->setCellValue('E'.$x, @$r->PRODUCT_MNY);
+            $sh->setCellValue('F'.$x, @$r->ABONDEMEN);
+            $sh->setCellValue('G'.$x, @$r->RESTITUSI);
+            $sh->setCellValue('H'.$x, @$r->LAIN_LAIN);
+            $sh->setCellValue('I'.$x, @$r->FLAG_BYR);
+            $no++;
+            $x++;
+            //if($x==8000) break;
+        }
+		$x--;
+        $sh->getStyle('A2:A'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B2:B'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C2:C'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D2:D'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E2:E'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F2:F'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G2:G'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H2:H'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I2:I'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J1:J'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		$x++;
+        $sh->setCellValue('B'.$x, 'TOTAL');     
+
+        $sh->setCellValue('E'.$x, "=SUM(E2:E".($x-1).")");
+        $sh->getStyle('E'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+
+        $sh->setCellValue('F'.$x, "=SUM(F2:F".($x-1).")");
+        $sh->getStyle('F'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+
+        $sh->setCellValue('G'.$x, "=SUM(G2:G".($x-1).")");
+        $sh->getStyle('G'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+
+        $sh->setCellValue('H'.$x, "=SUM(H2:H".($x-1).")");
+        $sh->getStyle('H'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+        $sh->setCellValue('A'.$x, '');
+
+        $sh->getStyle('A'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A'.$x.':I'.$x)->getFont()->setBold(TRUE);
+		$x++;
+		$sh->getStyle('A'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel5');
+        $objWriter->save(dirname(__FILE__).'/../third_party/report/'.$filename);
+        // Write file to the browser
+       // $objWriter->save('php://output');
+        //redirect($this->config->config['base_url'].'application/third_party/report/'.$filename, 'location', 301);
+        $data['redirect'] = "true";
+        $data['redirect_url'] = $this->config->config['base_url'].'application/third_party/report/'.$filename;
+
+        echo json_encode($data);
+    }
 
 }
