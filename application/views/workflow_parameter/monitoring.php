@@ -73,7 +73,7 @@
             var workflow = $("#workflow").val();
 
             if(!workflow){
-                alert('Workflow Belum dipilih');
+                swal("Informasi", "Workflow belum dipilih", "info");
                 return false;
             }
 
