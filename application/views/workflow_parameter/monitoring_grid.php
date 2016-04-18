@@ -2,35 +2,36 @@
     <thead>
       <tr>
         <?php 
+            $i = 0;
             foreach ($header as $rowH) {
-                echo "<th data-column-id='$rowH' >$rowH</th>";
+                $dt = "data".$i;
+                if($i == 0){
+                    echo "<th data-column-id=$dt  data-visible='false'>".$rowH."</th>";
+                }else{
+                    echo "<th data-column-id=$dt >".$rowH."</th>";
+                }
+                $i++;
             }
         ?>
       </tr>
     </thead>
-    <tbody> 
-        <?php 
-            for ($i=0; $i<count($data); $i++){
-                echo "<tr>";
-                foreach ($data[$i] as $rowD) {
-                    echo "<th>$rowD</th>";                    
-                }
-                echo "</tr>";
-            }    
-            // exit;
-        ?>
-    </tbody>
 </table>
 
 <script>
     jQuery(function($) {
-        // $("#grid-basic").bootgrid();
+        $("#grid-basic").bootgrid({
+            rowCount:[5,10],
+            ajax: true,
+            post: function ()
+            {
+                return {
+                    "p_workflow_id": "<?php echo $p_workflow_id?>"
+                };
+            },
+            url: "<?php echo site_url('workflow_parameter/getMonProcess');?>",
+            selection: true,
+            sorting:true
+        });
     });
 
-    // $("#grid-basic").dataTable({
-    //         "ordering": false,
-    //         "info":     true,
-    //         "bFilter" : false,               
-    //         "bLengthChange": false
-    //     });
 </script>

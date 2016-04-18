@@ -751,16 +751,52 @@ class Workflow_parameter extends CI_Controller
         foreach ($result as $rowH) {
             $exp = explode('|', $rowH->WF_MONITOR);
             if($exp[0] == 'H'){
-                unset($exp[0]);
                 $data['header'] = $exp;
-            }else{
-                unset($exp[0]);
-                $data['data'][] = $exp;
             }
+
+            $data['p_workflow_id'] = $p_workflow_id;
         }
 
         $this->load->view('workflow_parameter/monitoring_grid',$data);
         
+    }
+
+    public function getMonProcess(){
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $p_workflow_id = $this->input->post('p_workflow_id');
+        $result = $this->P_workflow_list->getMonitoring($p_workflow_id);
+        foreach ($result as $row) {
+            $exp = explode('|', $row->WF_MONITOR);
+            if($exp[0] == 'H'){
+                $head = $exp;
+            }else{
+                $tmp = array();
+                for($i=0; $i<count($exp); $i++){
+                    $tmp = array_merge($tmp, array("data".$i => $exp[$i]));
+                }
+                $data[] = $tmp;
+
+                if ($page == 0) {
+                    $hasil['current'] = 1;
+                } else {
+                    $hasil['current'] = $page;
+                }
+
+                $hasil['total'] = count($data);
+                $hasil['rowCount'] = $limit;
+                $hasil['success'] = true;
+                $hasil['message'] = 'Berhasil';
+                $hasil['rows'] = $data;
+               
+            }
+        }
+
+        echo(json_encode($hasil));
+        exit;
     }
     /** end monitoring **/
 
