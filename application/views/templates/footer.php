@@ -219,6 +219,7 @@
 
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/bootdialog/bootstrap-dialog.min.css"/>
 <script src="<?php echo base_url(); ?>assets/bootdialog/bootstrap-dialog.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/jquery.simplePagination.js"></script>
 <script>
     function showBootDialog(bootclosable, boottype, boottitle, bootmessage) {
         BootstrapDialog.show({
