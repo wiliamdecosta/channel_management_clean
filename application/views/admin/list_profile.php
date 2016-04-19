@@ -1,7 +1,5 @@
 <?php $prv = getPrivilege($this->menu_id); ?>
 
-<?php print_r($prv); exit;?>
-
 <style>
     li[class*="item-"] {
         border: 0px solid #DDD !important;
