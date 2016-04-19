@@ -139,19 +139,33 @@ $prv = getPrivilege($this->menu_id); ?>
         //navButtons grid master
         $('#grid-table').jqGrid('navGrid', '#grid-pager',
             { 	//navbar options
-                edit: <?php if (isset($prv['UBAH'])) {
-                            if ($prv['UBAH'] == "Y") {
-                                echo 'true';
-                            }else{
-                                echo 'false';
-                            }
-                        }
+                edit: <?php
+                if ($prv['UBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
                 ?>,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
-                add: true,
+                add:  <?php
+                if ($prv['TAMBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
+                del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 delicon: 'ace-icon fa fa-trash-o red',
                 search: true,
                 searchicon: 'ace-icon fa fa-search orange',
@@ -281,15 +295,38 @@ $prv = getPrivilege($this->menu_id); ?>
             editurl: '<?php echo site_url('admin/crud_detail');?>'
         });
 
+
+
         //navButtons Grid Detail
         $('#jqGridDetails').jqGrid('navGrid', '#jqGridDetailsPager',
             { 	//navbar options
-                edit: true,
+                edit: <?php
+                if ($prv['UBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
-                add: true,
+                add:  <?php
+                if ($prv['TAMBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
+                del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 delicon: 'ace-icon fa fa-trash-o red',
                 search: true,
                 searchicon: 'ace-icon fa fa-search orange',

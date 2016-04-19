@@ -16,6 +16,7 @@ class Admin extends CI_Controller
         $this->load->model('M_admin');
         $this->load->model('M_jqGrid', 'jqGrid');
         $this->load->model('Gen_id');
+        $this->load->model('Mfee');
 
 
         $this->menu_id = $this->uri->segment(3);
@@ -284,19 +285,7 @@ class Admin extends CI_Controller
 
     public function updateProfile()
     {
-        $menu_id = $this->input->post('check_val');
-        $prof_id = $this->input->post('prof_id');
-
-        if ($prof_id != "" || $prof_id != null) {
-            // delete app menu profile where id profile = ...
-            $this->M_admin->delMenuProf($prof_id);
-
-            if (!empty($menu_id)) {
-                $menu_ids = implode(",", $menu_id);
-                $this->M_admin->insMenuProf($menu_ids, $prof_id);
-            }
-
-        }
+        $this->M_admin->insMenuProf();
         $this->menuTree();
     }
 

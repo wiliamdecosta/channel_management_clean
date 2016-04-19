@@ -25,16 +25,24 @@
         $('#jqxTree').css('visibility', 'visible');
         $('#save').click(function () {
             var str = [];
+            var uncheck_val = [];
             var items = $('#jqxTree').jqxTree('getCheckedItems');
+            var itemsUn = $('#jqxTree').jqxTree('getUncheckedItems');
+
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 str[i]= item.value ;
+            }
+
+            for (var u = 0; u < itemsUn.length; u++) {
+                var uncheck = itemsUn[u];
+                uncheck_val[u]= uncheck.value ;
             }
             //alert("The checked items are " + str);
             $.ajax({
                 type: 'POST',
                 url: '<?php echo site_url('admin/updateProfile');?>',
-                data: {check_val:str, prof_id:<?= $prof_id;?>},
+                data: {check_val:str,uncheck_val:uncheck_val, prof_id:<?= $prof_id;?>},
                 timeout: 10000,
                 success: function(data) {
                     $("#menutreAjax").html(data);
