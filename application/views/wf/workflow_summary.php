@@ -10,6 +10,14 @@
 
 <div class="page-content">
     <div class="row">
+        <input type="hidden" id="TEMP_ELEMENT_ID" value="<?php echo $this->input->post('ELEMENT_ID'); ?>" />
+        <input type="hidden" id="TEMP_PROFILE_TYPE" value="<?php echo $this->input->post('PROFILE_TYPE'); ?>" />
+        <input type="hidden" id="TEMP_P_W_DOC_TYPE_ID" value="<?php echo $this->input->post('P_W_DOC_TYPE_ID'); ?>" />
+        <input type="hidden" id="TEMP_P_W_PROC_ID" value="<?php echo $this->input->post('P_W_PROC_ID'); ?>" />
+        <input type="hidden" id="TEMP_USER_ID" value="<?php echo $this->input->post('USER_ID'); ?>" />
+        <input type="hidden" id="TEMP_FSUMMARY" value="wf-workflow_summary.php" />
+
+
         <div class="col-xs-12 col-sm-4" id="summary-panel">
 
         </div>
@@ -121,6 +129,7 @@
         openUserTaskList(choosen_radio.value);
     }
 
+    
     function openUserTaskList(element_id) {
         
         var params = {};
@@ -150,7 +159,52 @@
                  $("#task-list-content").html(data.contents);
                  /* update pager */
                  updatePager(data.total);
+            },
+            error: function(xhr, textStatus, errorThrown){
+                swal("Perhatian", "Summary Error", "warning");
             }
         });
     }
+
+
+    function loadWFForm(file_name, wfobj) {
+        if( wfobj.USER_ID_LOGIN == '' || wfobj.USER_ID_LOGIN == null ) {
+            swal("Perhatian", "Session Anda habis. Silahkan login kembali", "warning");
+            return;
+        }
+        
+        if( file_name == '' ) {
+            swal("Perhatian", "File Name Kosong", "warning");
+            return;
+        }
+
+        wfobj.ELEMENT_ID = $('#TEMP_ELEMENT_ID').val();
+        wfobj.PROFILE_TYPE = $('#TEMP_PROFILE_TYPE').val();
+        wfobj.P_W_DOC_TYPE_ID = $('#TEMP_P_W_DOC_TYPE_ID').val();
+        wfobj.P_W_PROC_ID = $('#TEMP_P_W_PROC_ID').val();
+        wfobj.USER_ID = $('#TEMP_USER_ID').val();
+        wfobj.FSUMMARY = $('#TEMP_FSUMMARY').val();
+
+        if(wfobj.ACTION_STATUS == 'TERIMA') {
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '<?php echo site_url('wf/taken_task');?>',
+                data: {curr_ctl_id : wfobj.CURR_CTL_ID, curr_doc_type_id : wfobj.CURR_DOC_TYPE_ID},
+                timeout: 10000,
+                success: function(data) {
+                    if( data.success )
+                        loadContentWithParams( file_name , wfobj );
+                    else
+                        swal("Perhatian", "Taken Task Error", "warning");
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    swal("Perhatian", "Summary Error", "warning");
+                }
+            });
+        }else {
+            loadContentWithParams( file_name , wfobj );
+        }
+    }
+
 </script>
