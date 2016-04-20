@@ -1,5 +1,4 @@
-<?php $prv = getPrivilege($this->menu_id); ?>
-
+<?php $prv = getPrivilege($menu_id); ?>
 <style>
     li[class*="item-"] {
         border: 0px solid #DDD !important;
@@ -25,7 +24,6 @@
 
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
-
     <div class="row">
         <div class="col-sm-7" id="contentJgGrid">
             <!-- PAGE CONTENT BEGINS -->
@@ -40,16 +38,6 @@
 
             </div>
         </div>
-
-<!--        <div class="col-sm-5">-->
-<!---->
-<!--            <div style='margin-left: 60px; float: left;'>-->
-<!--                <div style='margin-top: 10px;'>-->
-<!--                    <button id="save">Save</button>-->
-<!--                    <input type="checkbox" name="all" id="all" value="">All<br>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
 
     </div><!-- /.row -->
     <div class="row" style="visibility: hidden;" id="privilege-table">
@@ -116,7 +104,7 @@
                          $.ajax({
                              type: 'POST',
                              url: '<?php echo site_url('admin/menuTree');?>',
-                             data: {prof_id:rowid},
+                             data: {prof_id:rowid, menu_id : <?php echo $menu_id;?>},
                              timeout: 10000,
                              success: function(data) {
                                  $("#menutreAjax").html(data);

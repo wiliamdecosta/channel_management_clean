@@ -2,7 +2,7 @@
     <?= $this->breadcrumb; ?>
 </div>
 <?php
-$prv = getPrivilege($this->menu_id); ?>
+$prv = getPrivilege($menu_id); ?>
 
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">

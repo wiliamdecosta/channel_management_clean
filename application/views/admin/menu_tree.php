@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div class="widget-box widget-color-blue">
     <div class="widget-header">
         <h4 class="widget-title lighter smaller">Daftar Menu</h4>
@@ -5,7 +6,11 @@
 
     <div style="margin-left:10px;">
         <input type="checkbox" name="all" id="all" value="">All<br>
-        <button class="btn btn-sm btn-primary" id="save">Save</button></div>
+        <?php if($prv['UBAH'] == "Y"){
+            echo '<button class="btn btn-sm btn-primary" id="save">Save</button></div>';
+        };?>
+
+
 
     <div class="widget-body">
         <div class="widget-main padding-8">
@@ -13,15 +18,15 @@
 
              </div>
              <div>
-                <input type="hidden" name="prof_id" id="prof_id" value="<?= $prof_id;?>"> 
+                <input type="hidden" name="prof_id" id="prof_id" value="<?= $prof_id;?>">
              </div>
         </div>
     </div>
-    
+
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        
+
         $('#jqxTree').css('visibility', 'visible');
         $('#save').click(function () {
             var str = [];
@@ -129,10 +134,10 @@
 //            hasThreeStates: true,
 //            theme: 'energyblue'
         });
-        
-        
+
+
         $("#jqxTree").on('select', function (event) {
-                var args = event.args;                
+                var args = event.args;
                 var item = $('#jqxTree').jqxTree('getItem', args.element);
                 var app_menu_profile_id;
                 var id = args.element.id;
@@ -147,12 +152,12 @@
                     };
                 };
                 recursion(records);
-                
+
                 if(app_menu_profile_id == "") {
                     $('#save-privilege').hide();
                     $('#privilege-table').css('visibility', 'visible');
                     $('#privilege-title').text('Setting Privilege');
-                    $('#privilege-content').html('Setting privilege belum bisa dilakukan. Checklist dan simpan menu yang bersangkutan terlebih dahulu agar dapat mengatur privilege menu.');      
+                    $('#privilege-content').html('Setting privilege belum bisa dilakukan. Checklist dan simpan menu yang bersangkutan terlebih dahulu agar dapat mengatur privilege menu.');
                     $('#form-privelege').html('');
                 }else {
                     $('#save-privilege').show();
@@ -160,17 +165,17 @@
                     $('#privilege-title').text('Setting Privilege : ' + item.label);
                     $('#privilege-content').html('');
                     getPrivilegeTable(app_menu_profile_id);
-                }    
+                }
 
         });
-        
-        
+
+
         /*$('#save-privilege').click(function () {
-            var options = { 
-                success:       showResponsePrivilegeFormSubmit  // post-submit callback 
-            }; 
-         
-            // bind to the form's submit event 
+            var options = {
+                success:       showResponsePrivilegeFormSubmit  // post-submit callback
+            };
+
+            // bind to the form's submit event
             $("#form-privelege").ajaxSubmit(options);
             return false;
         });*/
@@ -180,9 +185,9 @@
 </script>
 
 <script>
-    
+
     $("#form-privelege").on('submit', (function (e) {
-        
+
         e.preventDefault();
         var data = $(this).serialize();
        // data.append('ten_id', ten_id);
@@ -204,23 +209,23 @@
         });
         return false;
     }));
-        
+
     function getPrivilegeTable(the_id) {
         $("#form-privelege").html("");
         $.ajax({
             type: 'POST',
             url: "<?php echo site_url('admin/getPrivilegeMenuTable');?>",
-            data: {app_menu_profile_id: the_id},
+            data: {app_menu_profile_id: the_id, menu_id : <?php echo $menu_id;?>},
             success: function(data) {
                 $("#form-privelege").html(data);
             }
         });
-        
-    }    
-    
-    /*function showResponsePrivilegeFormSubmit(responseText, statusText, xhr, $form)  { 
+
+    }
+
+    /*function showResponsePrivilegeFormSubmit(responseText, statusText, xhr, $form)  {
         swal("Berhasil", "Data berhasil disimpan", "success");
         getPrivilegeTable(responseText);
     } */
-    
+
 </script>
