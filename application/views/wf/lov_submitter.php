@@ -77,7 +77,7 @@
             <!-- modal footer -->
             <div class="modal-footer no-margin-top">
                 <div class="bootstrap-dialog-footer">
-                    <div class="bootstrap-dialog-footer-buttons col-xs-6">
+                    <div class="bootstrap-dialog-footer-buttons col-xs-7">
                         <button class="btn btn-primary btn-xs radius-4" id="btn-submitter-submit" data-dismiss="modal">
                             <i class="ace-icon glyphicon glyphicon-upload"></i>
                             Submit
@@ -88,10 +88,10 @@
                         </button>
                         <button class="btn btn-warning btn-xs radius-15" id="btn-submitter-back" data-dismiss="modal">
                             <i class="glyphicon glyphicon-circle-arrow-left"></i>
-                            Back
+                            Send Back Job
                         </button>
                     </div>
-                    <div class="bootstrap-dialog-footer-buttons col-xs-6">
+                    <div class="bootstrap-dialog-footer-buttons col-xs-5">
                         <button class="btn btn-danger btn-xs radius-4" data-dismiss="modal">
                             <i class="ace-icon fa fa-times"></i>
                             Close
