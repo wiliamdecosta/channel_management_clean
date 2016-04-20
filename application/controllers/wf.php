@@ -61,6 +61,7 @@ class Wf extends CI_Controller {
     public function summary_list() {
         $P_W_DOC_TYPE_ID = $this->input->post('P_W_DOC_TYPE_ID');
         $user_name = $this->session->userdata("d_user_name");
+        $ELEMENT_ID = $this->input->post('ELEMENT_ID');
 
         $items = $this->workflow->getSummaryList($P_W_DOC_TYPE_ID, $user_name);
         $strOutput = '<div class="table-header">
@@ -79,15 +80,31 @@ class Wf extends CI_Controller {
         
         $strOutput .= '<tbody>';
 
-        $selected = 'checked=""';
+              
+        $selected = '';
+        $not_checked = true;
         foreach ($items as $item) {
-            
 
             if($item['STYPE'] == 'PROFILE') {
                 $strOutput .= '<tr>
                                     <td colspan="3"><strong class="blue">'.$item['DISPLAY_NAME'].'</strong></td>
                               </tr>';
             }else {
+                
+                if(!empty($ELEMENT_ID)) {
+                    if( $ELEMENT_ID == $item['ELEMENT_ID']) {
+                        $selected = 'checked=""';    
+                    }else {
+                        $selected = ''; 
+                    }
+                }else {
+                    if( $not_checked ) {
+                        $selected = 'checked=""';
+                        $not_checked = false;        
+                    }else {
+                        $selected = '';    
+                    }
+                }
 
                 $strOutput .= '<tr>
                                     <td style="padding-left:35px;"><strong class="green">'.$item['DISPLAY_NAME'].'</strong></td>
@@ -99,8 +116,6 @@ class Wf extends CI_Controller {
                                         <input type="hidden" id="'.$item['ELEMENT_ID'].'_profile_type" value="'.$item['PROFILE_TYPE'].'">
                                     </td>
                               </tr>';
-
-                $selected = '';
 
             }
         }

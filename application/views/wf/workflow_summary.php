@@ -85,7 +85,7 @@
         $.ajax({
             type: 'POST',
             url: '<?php echo site_url('wf/summary_list');?>',
-            data: {P_W_DOC_TYPE_ID : <?php echo $this->input->post('P_W_DOC_TYPE_ID'); ?> },
+            data: {P_W_DOC_TYPE_ID : <?php echo $this->input->post('P_W_DOC_TYPE_ID'); ?> , ELEMENT_ID : $("#TEMP_ELEMENT_ID").val()},
             timeout: 10000,
             success: function(data) {
                  $("#summary-panel").html(data);
@@ -126,6 +126,7 @@
     function loadUserTaskList(choosen_radio) {
         $('#filter_date_task_list').datepicker('setDate', null);
         $('#filter_search_task_list').val("");
+        $('#TEMP_ELEMENT_ID').val( choosen_radio.value );
         openUserTaskList(choosen_radio.value);
     }
 
