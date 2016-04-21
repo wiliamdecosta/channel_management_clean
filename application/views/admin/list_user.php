@@ -1,8 +1,7 @@
-<!-- #section:basics/content.breadcrumbs -->
+<?php $prv = getPrivilege($menu_id); ?>
 <div class="breadcrumbs" id="breadcrumbs">
     <?= $this->breadcrumb; ?>
 </div>
-
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
     <div class="row">
@@ -402,6 +401,14 @@
                 }, 0);
 
                 $("#user_attribute_row_content").hide();
+                var is_submit = '';
+                if (is_submit == "Y") {
+                    $('#reset').show();
+                } else {
+                    $('#reset').hide();
+                }
+
+
             },
 
             //memanggil controller jqgrid yang ada di controller crud
@@ -422,12 +429,33 @@
         //navButtons grid master
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             { 	//navbar options
-                edit: true,
+                edit: <?php
+                if ($prv['UBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
-                add: true,
+                add:  <?php
+                if ($prv['TAMBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
+                del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 delicon: 'ace-icon fa fa-trash-o red',
                 search: true,
                 searchicon: 'ace-icon fa fa-search orange',

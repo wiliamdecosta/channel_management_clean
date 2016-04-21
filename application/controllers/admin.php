@@ -303,70 +303,10 @@ class Admin extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $this->load->view('admin/list_user');
+        $data['menu_id'] = $this->uri->segment(3);
+
+        $this->load->view('admin/list_user', $data);
     }
-
-    /*public function gridUser()
-    {
-        $page = intval($_REQUEST['page']); // Page
-        $limit = intval($_REQUEST['rows']); // Number of record/page
-        $sidx = $_REQUEST['sidx']; // Field name
-        $sord = $_REQUEST['sord']; // Asc / Desc
-
-        $table = "APP_USERS"; // *
-
-        //JqGrid Parameters
-        $req_param = array(
-            "table" => $table,
-            "sort_by" => $sidx,
-            "sord" => $sord,
-            "limit" => null,
-            "field" => null,
-            "where" => null,
-            "where_in" => null,
-            "where_not_in" => null,
-            "or_where" => null,
-            "or_where_in" => null,
-            "or_where_not_in" => null,
-            "search" => $this->input->post('_search'),
-            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
-            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
-            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
-        );
-
-        // Filter Table *
-        $req_param['where_not_in']['field'] = ('NIK');
-        $req_param['where_not_in']['value'] = array('DEV', 'ADMIN');
-
-        // Get limit paging
-        $count = $this->jqGrid->countAll($req_param);
-        if ($count > 0) {
-            $total_pages = ceil($count / $limit);
-        } else {
-            $total_pages = 0;
-        }
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $start = $limit * $page - ($limit - 1);
-
-        $req_param['limit'] = array(
-            'start' => $start,
-            'end' => $limit
-        );
-
-        if ($page == 0) {
-            $result['page'] = 1;
-        } else {
-            $result['page'] = $page;
-        }
-        $result['total'] = $total_pages;
-        $result['records'] = $count;
-
-        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
-        echo json_encode($result);
-
-    }*/
-
 
     public function gridUser()
     {
@@ -469,7 +409,7 @@ class Admin extends CI_Controller
         echo '<div style="margin-left:10px;margin-top:10px; margin-bottom:10px;">';
         if ($prv['UBAH'] == "Y") {
             echo '<input type="submit" class="btn btn-sm btn-primary" value="Save">';
-        }else{
+        } else {
             echo '<input type="submit" class="btn btn-sm btn-primary" value="Save">';
         }
 
