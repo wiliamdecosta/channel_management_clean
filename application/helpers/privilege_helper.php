@@ -32,36 +32,28 @@ if (!function_exists('generatehtml')) {
       //  $CI->db->where('P_APP_OBJECT_TYPE_ID',$object_type);
         $CI->db->from('P_APP_RMDIS_OBJECT a');
         $CI->db->join('P_APP_OBJECT_TYPE b', 'a.P_APP_OBJECT_TYPE_ID = b.P_APP_OBJECT_TYPE_ID');
-        $status = $CI->db->get();
-        //
+        $status = $CI->db->get()->result();
 
-         if($status->num_rows() > 0) {
-             foreach($status->result() as $prv){
-                 $result[$prv->CODE] = $prv->STATUS;
-             }
-          //  $result = $status->result();
-        }else{
-            $result = 'N';
+        // Get List Object
+        $arr_obj = $CI->db->get('P_APP_OBJECT_TYPE')->result_array();
+        $obj = array();
+        foreach($arr_obj as $row){
+            $obj[$row['CODE']] = "N";
         }
 
-       /* if($status->num_rows() > 0) {
-            $result = $status->row()->IS_ACTIVE;
-        }else{
-            $result = 'N';
-        }*/
-       // return $result;
+        foreach ($status as $prv){
+            $obj[$prv->CODE] = $prv->STATUS;
+        }
 
-       // echo "<pre>";
-        /*if(isset($result[7])){
-        print_r($result[7]);
-            exit;
-        }else{
-            print_r('N');
-            exit;
-        }*/
+        /*echo "<pre>";
+        print_r($obj);*/
+        // Free memory array
+        $arr_obj = null;
+        $status = null;
 
 
-        return $result;
+        return $obj;
+
     }
 
 }

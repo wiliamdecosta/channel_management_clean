@@ -103,12 +103,12 @@ class M_admin extends CI_Model
 
                         // For privilege attr
                         $sql = " DECLARE " .
-                            "  v_result VARCHAR2(90); " .
+                            "  v_result VARCHAR2(500); " .
                             "  BEGIN " .
                             "  marfee.INSERT_PRIVILEGE(:params1,:params2, :v_result); END;";
 
                         $params = array(
-                            array('name' => ':params1', 'value' => $new_id, 'type' => SQLT_INT, 'length' => 13),
+                            array('name' => ':params1', 'value' => $new_id, 'type' => SQLT_INT, 'length' => 20),
                             array('name' => ':params2', 'value' => $user, 'type' => SQLT_CHR, 'length' => 32),
                         );
 
@@ -118,7 +118,7 @@ class M_admin extends CI_Model
                             oci_bind_by_name($stmt, $p['name'], $p['value'], $p['length']);
                         }
                         $message = '';
-                        oci_bind_by_name($stmt, ':v_result', $message, 32);
+                        oci_bind_by_name($stmt, ':v_result', $message, 120);
 
                         ociexecute($stmt);
                         // return $message;

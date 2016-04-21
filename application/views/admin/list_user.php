@@ -2,6 +2,7 @@
 <div class="breadcrumbs" id="breadcrumbs">
     <?= $this->breadcrumb; ?>
 </div>
+
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
     <div class="row">
@@ -18,15 +19,24 @@
                 <div class="col-xs-12">
                     <div id="user_attribute_button_group" style="display:inline-block;float:left;">
                         <input id="form_user_id" type="text" style="display:none;" placeholder="User ID">
-                        <button class="btn btn-xs btn-success btn-round" id="user_attribute_btn_add">
+                        <?php
+                        if ($prv['TAMBAH'] == "Y") {
+                            echo '<button class="btn btn-xs btn-success btn-round" id="user_attribute_btn_add">
                             <i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>
                             Add
-                        </button>
+                        </button>';
+                        }
+                        ?>
 
-                        <button class="btn btn-xs btn-danger btn-round" id="user_attribute_btn_delete">
+                        <?php
+                        if ($prv['HAPUS'] == "Y") {
+                            echo '<button class="btn btn-xs btn-danger btn-round" id="user_attribute_btn_delete">
                             <i class="ace-icon glyphicon glyphicon-trash bigger-120"></i>
                             Delete
-                        </button>
+                        </button>';
+                        }
+                        ?>
+
                     </div>
                     <div class="col-xs-12">
                         <table id="user_attribute_grid_selection"

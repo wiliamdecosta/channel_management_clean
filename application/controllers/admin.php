@@ -286,7 +286,9 @@ class Admin extends CI_Controller
     public function updateProfile()
     {
         $this->M_admin->insMenuProf();
-        $this->menuTree();
+        $data['prof_id'] = $this->input->post('prof_id');
+        $data['menu_id'] = $this->input->post('menu_id');
+        $this->load->view('admin/menu_tree', $data);
     }
 
     public function menuTree()

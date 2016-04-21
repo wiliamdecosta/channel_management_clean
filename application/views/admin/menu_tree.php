@@ -28,6 +28,7 @@
     $(document).ready(function () {
 
         $('#jqxTree').css('visibility', 'visible');
+
         $('#save').click(function () {
             var str = [];
             var uncheck_val = [];
@@ -43,14 +44,15 @@
                 var uncheck = itemsUn[u];
                 uncheck_val[u]= uncheck.value ;
             }
-            //alert("The checked items are " + str);
+            var menu_id = '<?php echo $menu_id;?>';
             $.ajax({
                 type: 'POST',
                 url: '<?php echo site_url('admin/updateProfile');?>',
-                data: {check_val:str,uncheck_val:uncheck_val, prof_id:<?= $prof_id;?>},
+                data: {check_val:str,uncheck_val:uncheck_val, prof_id:<?= $prof_id;?>,menu_id : menu_id},
                 timeout: 10000,
                 success: function(data) {
                     $("#menutreAjax").html(data);
+                    $('#jqxTree').jqxTree('refresh');
                 }
             })
         });
@@ -212,10 +214,11 @@
 
     function getPrivilegeTable(the_id) {
         $("#form-privelege").html("");
+        var menu_id = '<?php echo $menu_id;?>';
         $.ajax({
             type: 'POST',
             url: "<?php echo site_url('admin/getPrivilegeMenuTable');?>",
-            data: {app_menu_profile_id: the_id, menu_id : <?php echo $menu_id;?>},
+            data: {app_menu_profile_id: the_id, menu_id : menu_id},
             success: function(data) {
                 $("#form-privelege").html(data);
             }
