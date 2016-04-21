@@ -127,11 +127,11 @@
         $('#filter_date_task_list').datepicker('setDate', null);
         $('#filter_search_task_list').val("");
         $('#TEMP_ELEMENT_ID').val( choosen_radio.value );
-        openUserTaskList(choosen_radio.value);
+        openUserTaskList(choosen_radio.value, 1);
     }
 
     
-    function openUserTaskList(element_id) {
+    function openUserTaskList(element_id, page_number) {
         
         var params = {};
         var p_w_doc_type_id = $("#"+element_id+"_p_w_doc_type_id").val();
@@ -142,10 +142,15 @@
         params.p_w_proc_id = p_w_proc_id;
         params.profile_type = profile_type;
         params.element_id = element_id;
+        if( typeof page_number == 'undefined' ) {
+            params.page = $(pager_selector).pagination('getCurrentPage');
+        }else {
+            params.page = page_number;
+            $(pager_selector).pagination('selectPage', page_number);
+            window.location.replace("#");
+        }
 
-        params.page = $(pager_selector).pagination('getCurrentPage');
         params.limit = pager_items_on_page;
-        
         params.searchPhrase = $('#filter_search_task_list').val();
         params.tgl_terima = $('#filter_date_task_list').val();
         
