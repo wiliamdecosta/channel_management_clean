@@ -195,7 +195,7 @@ class Wf extends CI_Controller {
     
     public function emptyTaskList() {
         return '<tr>
-                        <td colspan="4"> Tidak ada data untuk ditampilkan </td>
+                        <td colspan="4" align="center"> Tidak ada data untuk ditampilkan </td>
                     </tr>';
 
     }
