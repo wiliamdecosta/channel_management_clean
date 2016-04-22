@@ -92,7 +92,7 @@
                         </button>
                     </div>
                     <div class="bootstrap-dialog-footer-buttons col-xs-5">
-                        <button class="btn btn-danger btn-xs radius-4" data-dismiss="modal">
+                        <button class="btn btn-danger btn-xs radius-4" id="btn-submitter-close" data-dismiss="modal">
                             <i class="ace-icon fa fa-times"></i>
                             Close
                         </button>
@@ -129,10 +129,6 @@
                             $('#form_submitter_warning_message').val( response.warning );
 
                             if( response.return_message.trim() == 'BERHASIL') {
-                                $('#btn-submitter-submit').remove();
-                                $('#btn-submitter-reject').remove();
-                                $('#btn-submitter-back').remove();
-
                                 modal_lov_submitter_back_summary();
                             }                            
 
@@ -173,10 +169,6 @@
                             $('#form_submitter_warning_message').val( response.warning );
 
                             if( response.return_message.trim() == 'BERHASIL') {
-                                $('#btn-submitter-submit').remove();
-                                $('#btn-submitter-reject').remove();
-                                $('#btn-submitter-back').remove();
-
                                 modal_lov_submitter_back_summary();
                             }    
 
@@ -216,10 +208,6 @@
                             $('#form_submitter_warning_message').val( response.warning );
 
                             if( response.return_message.trim() == 'BERHASIL') {
-                                $('#btn-submitter-submit').remove();
-                                $('#btn-submitter-reject').remove();
-                                $('#btn-submitter-back').remove();
-
                                 modal_lov_submitter_back_summary();
                             }    
 
@@ -291,6 +279,11 @@
         var file_name = obj_summary_params.FSUMMARY;
         delete obj_summary_params.FSUMMARY;
         
+        $('#btn-submitter-submit').remove();
+        $('#btn-submitter-reject').remove();
+        $('#btn-submitter-back').remove();
+        $('#btn-submitter-close').remove();
+
         setTimeout(function(){
             $("#modal_lov_submitter").modal('hide'); 
             loadContentWithParams( file_name , obj_summary_params );
