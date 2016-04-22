@@ -144,7 +144,12 @@ class Wf extends CI_Controller {
         $tgl_terima        = $this->input->post('tgl_terima');
         
         if(empty($p_w_doc_type_id) || empty($p_w_proc_id) || empty($profile_type)) {
-            return self::emptyTaskList();
+            $data = array();
+            $data['total'] = 0;
+            $data['contents'] = self::emptyTaskList();
+
+            echo json_encode($data);
+            exit;
         }
 
         $sql = "SELECT * FROM TABLE (pack_task_profile.user_task_list (".$p_w_doc_type_id.",".$p_w_proc_id.",'".$profile_type."','".$user_name."',''))";
