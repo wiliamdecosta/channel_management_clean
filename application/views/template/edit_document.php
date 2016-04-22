@@ -271,7 +271,7 @@
 								<a id="submitform2" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" onClick="showTable()"><span>
 								Back</span></a>
 							</div>
-							<div id="buttonTwo" class="col-lg-2">
+							<div id="buttonTwo" class="col-lg-10">
 							<a id="submitform3" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info" value="" data-target="#myModal3" data-toggle="modal"><span>
 								Load From Master Template</span></a>
 							</div>
@@ -302,7 +302,7 @@
 								</div>
 								<div class="row"></br></div></div>
 									<div class="modal-footer">									  
-									  <button type="button" class="btn btn-default" data-dismiss="modal"id="change_name">Add Template</button>
+									  <button type="button" class="btn btn-default" data-dismiss="modal"id="change_names">Add Template</button>
 									  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 									</div>
 							  </div>
@@ -563,7 +563,7 @@ jQuery(function($) {
 		CKEDITOR.instances["textarea2"].setData("");
     });
 	
-	$(document).on('click','#change_name', function(e) {
+	$(document).on('click','#change_names', function(e) {
 		swal({
 		title: "Apakah Anda yakin untuk menggunakan template ini?",
 		text: "File yang anda buat di Editor ini akan terhapus",

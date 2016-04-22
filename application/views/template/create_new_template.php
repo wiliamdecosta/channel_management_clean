@@ -55,6 +55,7 @@
 	<?php 
 		$this->load->library('ckeditor');
 	?>	
+		<div id="id_utama" value=""></div>
 		<div class="row">
 			<div id="disappear_immediately" class="col-lg-6"> 
 				<label for="email"> Document Name  :  </label>
@@ -339,13 +340,13 @@
 		} );
 		$('#variable_btn').click (function(){
 			value_table	= $("#select_table option:selected").text();
+			value_id = $('#id_utama').val();
 			$.ajax({
 					type:"POST",
 				   dataType: "json",
-				   data: {val_table : value_table},
+				   data: {val_table : value_table, val_id : value_id},
 					url: "<?php echo site_url('template/get_variable_content');?>",
 						success: function (data) {
-							// CKEDITOR.instances['editor2'].setData(data);
 							j = 0;
 							for (var i = 0; i < data.length; i++) {
 								$('#variable_adder').prepend($('<div class="row margin-top-20"><div class="col-lg-4">'
@@ -358,7 +359,7 @@
 							}
 						},						
 						error: function(data, xhr, ajaxOptions, thrownError){						
-						// swal("Error",xhr.status+"  "+ thrownError,"error");
+						swal("Error",xhr.status+"  "+ thrownError,"error");
 						}
 			});				
 		} );
@@ -449,6 +450,9 @@
 				});
 			$('#edit_menu').hide(1000);
 			$('#button_temp').show(1000);
+			$('div','#var_main').each(function(){
+                 $(this).remove();
+			});
 		};
 		}
 		});

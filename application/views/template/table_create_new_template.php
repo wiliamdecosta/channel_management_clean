@@ -300,7 +300,7 @@ jQuery(function($) {
 
 		$.ajax({
                 type: "POST",
-				url: "<?php echo base_url(); ?>"+"template/get_content_template",
+				url: "<?php echo base_url(); ?>"+"template/get_content_template_and_replace",
                 data:  {id: id_DOC},
 				dataType:"text",
 				success: function(data){
@@ -416,12 +416,11 @@ jQuery(function($) {
 		var id_DOC = $(this).closest('tr').attr('value');
 		$('#save_temp').val(id_DOC);
 		$('#edit_menu').show(1000);
-		$('#table_id').hide(1000);
-		$('#var_main').empty();
-		$('#var_main').val(0);
+		$('#table_id').hide(1000);		
 		$('#id_list_tab').val();
 		var id_n = $(this).closest('tr').attr('id');
 		$('#id_list_tab').val(id_n);
+		$('#id_utama').val(id_DOC);
 		CKEDITOR.instances['editor2'].setData("");
 		var_reccur = $('#var_main').val();
 		$.ajax({
@@ -444,6 +443,8 @@ jQuery(function($) {
                 data:  {id: id_DOC},
 				dataType:"json",
 				success: function(data){
+					$('#var_main').empty();
+					$('#var_main').val(0);
 					for (var i = 0; i < data.length; i++) {
 								if(data[i].length >0 ){
 									var_reccur = parseInt(var_reccur, 2);
