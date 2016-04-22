@@ -56,8 +56,7 @@ class Loaddata extends CI_Controller {
         //$req_param['field'] = array('P_BATCH_TYPE_ID');
        // $req_param['value'] = array(1);
 
-        $req_param['where'] = array('P_BATCH_TYPE_ID' => 1);
-
+        $req_param['where'] = array('P_BATCH_TYPE_ID' => 7);
         $row = $this->jqGrid->get_data($req_param)->result_array();
         $count = count($row);
 
@@ -157,6 +156,15 @@ class Loaddata extends CI_Controller {
         $batch_id = $this->input->post('batch_id');
 
         $result['data'] = $this->loadData->batchProcess($batch_id,$username);
+        echo json_encode($result);
+    }
+	
+	public function processBatch_Datin(){
+        $username = $this->session->userdata('d_user_nik');
+        $batch_id = $this->input->post('batch_id');
+        $periode = $this->input->post('periode');
+
+        $result['data'] = $this->loadData->batchProcessDatin($batch_id,$username,$periode);
         echo json_encode($result);
     }
 
@@ -493,6 +501,13 @@ class Loaddata extends CI_Controller {
     public function createBatchND(){
         $arrND = $this->input->post('arrND');
     }
-
+	
+	public function loadDatin(){
+		$title = $_POST['title'];
+        //BreadCrumb
+        $bc = array($this->head,$title);
+        $this->breadcrumb = getBreadcrumb($bc);
+        $this->load->view('loaddata/load_datin');
+    }
 
 }
