@@ -302,9 +302,24 @@
                     editrules: {required: true, email: true}
                 },
                 {
-                    label: 'Loker', name: 'LOKER', width: 150, align: "left", editable: true, editoptions: {
+                    label: 'Loker',
+                    name: 'LOKER',
+                    width: 150,
+                    align: "left",
+                    editable: true, editoptions: {
                     size: 30
                 }
+                },
+                {
+                    label: 'Profile',
+                    name: 'PROF_NAME',
+                    width: 100,
+                    sortable: true,
+                    align: 'left',
+                    editable: true,
+                    edittype: 'select',
+                    //  formatter: 'select'
+                    editoptions: {dataUrl: '<?php echo site_url('admin/listProfile');?>'}
                 },
                 {
                     label: 'Address Street',
@@ -342,17 +357,6 @@
                     editrules: {
                         required: true
                     }
-                },
-                {
-                    label: 'Profile',
-                    name: 'PROF_NAME',
-                    width: 100,
-                    sortable: true,
-                    align: 'left',
-                    editable: true,
-                    edittype: 'select',
-                    //  formatter: 'select'
-                    editoptions: {dataUrl: '<?php echo site_url('admin/listProfile');?>'}
                 },
                 {
                     label: 'Is Employee ?',

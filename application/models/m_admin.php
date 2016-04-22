@@ -46,7 +46,7 @@ class M_admin extends CI_Model
     public function getTreeMenu()
     {
         $result = array();
-        $sql = "SELECT * FROM APP_MENU ORDER BY MENU_ID ";
+        $sql = "SELECT * FROM APP_MENU ORDER BY MENU_NAME ";
         $qs = $this->db->query($sql);
 
         if ($qs->num_rows() > 0) $result = $qs->result();
