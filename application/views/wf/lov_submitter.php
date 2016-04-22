@@ -292,6 +292,9 @@
         delete obj_summary_params.FSUMMARY;
 
         loadContentWithParams( file_name , obj_summary_params );
+        setTimeout(function(){
+            $("#modal_lov_submitter").modal('hide');    
+        },3000);
     }
 
     
