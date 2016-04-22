@@ -109,7 +109,7 @@
     $(function() {
         /* submit */
         $('#btn-submitter-submit').on('click', function() {
-            result = confirm('Anda yakin akan menutup pekerjaan ini ?');
+            result = confirm('Apakah Anda yakin menutup pekerjaan ini ?');
             if (result) { 
                 var submitter_params = $('#form_submitter_params').val();
                 var messages = $('#form_submitter_interactive_message').val();
@@ -149,7 +149,7 @@
                 return false;
             }
 
-            result = confirm('Anda yakin akan menolak pekerjaan ini ?');
+            result = confirm('Apakah Anda yakin menolak pekerjaan ini ?');
             if (result) { 
                 var submitter_params = $('#form_submitter_params').val();
                 var messages = $('#form_submitter_interactive_message').val();
@@ -188,7 +188,7 @@
                 return false;
             }
 
-            result = confirm('Anda yakin akan mengembalikan pekerjaan ini ?');
+            result = confirm('Apakah Anda yakin mengembalikan pekerjaan ini ?');
             if (result) { 
                 var submitter_params = $('#form_submitter_params').val();
                 var messages = $('#form_submitter_interactive_message').val();
