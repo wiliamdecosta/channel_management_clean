@@ -290,10 +290,10 @@
         var obj_summary_params = JSON.parse( $('#form_submitter_back_summary').val() );
         var file_name = obj_summary_params.FSUMMARY;
         delete obj_summary_params.FSUMMARY;
-
-        loadContentWithParams( file_name , obj_summary_params );
+        
         setTimeout(function(){
-            $("#modal_lov_submitter").modal('hide');    
+            $("#modal_lov_submitter").modal('hide'); 
+            loadContentWithParams( file_name , obj_summary_params );
         },3000);
     }
 

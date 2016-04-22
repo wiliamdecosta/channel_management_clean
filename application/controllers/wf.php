@@ -136,7 +136,7 @@ class Wf extends CI_Controller {
         
         $page = intval($this->input->post('page')) ;
         $limit = $this->input->post('limit');
-        $sort = 'PERIOD';
+        $sort = 'DONOR_DATE';
         $dir = 'DESC';
         
         /* search parameter */
