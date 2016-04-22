@@ -245,6 +245,7 @@
 
         $('#form_submitter_params').val( JSON.stringify(params_submit) );
         $('#form_submitter_back_summary').val( JSON.stringify(params_back_summary) );
+        $('#form_submitter_interactive_message').val("");
         /*init date*/
         $("#form_submitter_date").datepicker({
                                 format: 'dd-mm-yyyy',
@@ -289,7 +290,7 @@
         var obj_summary_params = JSON.parse( $('#form_submitter_back_summary').val() );
         var file_name = obj_summary_params.FSUMMARY;
         delete obj_summary_params.FSUMMARY;
-        
+
         loadContentWithParams( file_name , obj_summary_params );
     }
 
