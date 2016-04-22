@@ -226,14 +226,17 @@ class M_template extends CI_Model {
         return $result;		
 	}
 	
-	public function get_var_content($data){
-		$result = array();
-        $q = "SELECT DISTINCT VARIABLE_NAME 
-					FROM TEMPLATE_VARIABLE WHERE TABLE_NAME = '".$data."'";
-        $sql = $this->db->query($q);
+	public function get_var_content($data, $data2){
+		$ret = array();
+        $q = "SELECT DISTINCT VARIABLE_NAME
+				FROM TEMPLATE_VARIABLE TV
+					WHERE EXISTS (SELECT *
+					 FROM TEMPLATE_MASTER TM
+					 WHERE TM.VARIABLE_TEMPLATE NOT LIKE '%'||TV.VARIABLE_NAME||'||'||TV.TABLE_NAME||'%'
+					 AND  TABLE_NAME LIKE '%".$data."%' AND TEMPLATE_ID = '".$data2."' )";   	
+		$sql = $this->db->query($q);
         if($sql->num_rows() > 0)
             $ret = $sql->result();
-
         return $ret;		
 	}
 	
