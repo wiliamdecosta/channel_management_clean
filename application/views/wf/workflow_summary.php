@@ -42,6 +42,8 @@
             
             <div class="row">
                 <div class="col-xs-12 well well-sm" style="margin-bottom:0px;">
+                <div class="form-group"> 
+                    <label class="control-label">&nbsp;</label>   
                     <div class="col-sm-3">   
                         <div class="input-group">
                             <input class="form-control" type="text" placeholder="Tgl Terima" id="filter_date_task_list"/>
@@ -51,14 +53,18 @@
                         </div>
                     </div> 
                    
-                    <div class="col-sm-6 input-group">
-                        <input class="form-control" type="text" placeholder="Pencarian teks" id="filter_search_task_list"/>
-                        <span class="input-group-btn">
-                            <button class="btn btn-xs btn-success" type="button" id="btn_filter_task_list">
-                                <span class="ace-icon fa fa-search icon-on-right bigger-130"> Filter </span> 
-                            </button>
-                        </span>
+                   <label class="control-label">&nbsp;</label> 
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <input class="form-control" type="text" placeholder="Pencarian teks" id="filter_search_task_list"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-xs btn-success" type="button" id="btn_filter_task_list">
+                                    <span class="ace-icon fa fa-search icon-on-right bigger-130"> Filter </span> 
+                                </button>
+                            </span>
+                        </div>
                     </div>
+                </div>
                 </div>
             </div>                       
             <div class="row">
