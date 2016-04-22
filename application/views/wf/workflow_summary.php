@@ -3,6 +3,17 @@
     .pointer {
         cursor:pointer;
     }
+
+    .summary-table {
+        table-layout:fixed !important;
+        white-space:nowrap !important;
+    }
+
+    .summary-table td {
+        overflow:hidden !important;
+        white-space:nowrap !important;
+        text-overflow: ellipsis !important;                                          
+    }
 </style>
 <div class="breadcrumbs" id="breadcrumbs">
     <?php echo getBreadcrumb(array('Workflow Summary')); ?>
@@ -39,7 +50,7 @@
                             </span>
                         </div>
                     </div> 
-                    
+                   
                     <div class="col-sm-6 input-group">
                         <input class="form-control" type="text" placeholder="Pencarian teks" id="filter_search_task_list"/>
                         <span class="input-group-btn">
@@ -52,7 +63,7 @@
             </div>                       
             <div class="row">
                 <div class="col-sm-12-offset">
-                    <table class="table table-bordered" style="margin-bottom:0px;">
+                    <table class="table table-bordered summary-table" style="margin-bottom:0px;">
                         <thead>
                             <tr>
                                 <th width="80">Terima</th>
