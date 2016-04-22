@@ -86,25 +86,26 @@
     $(function() {
 
         /* parameter kembali ke workflow summary */
-        params = {};
-        params.ELEMENT_ID = $('#TEMP_ELEMENT_ID').val();
-        params.PROFILE_TYPE = $('#TEMP_PROFILE_TYPE').val();
-        params.P_W_DOC_TYPE_ID = $('#TEMP_P_W_DOC_TYPE_ID').val();
-        params.P_W_PROC_ID = $('#TEMP_P_W_PROC_ID').val();
-        params.USER_ID = $('#TEMP_USER_ID').val();
+        params_back_summary = {};
+        params_back_summary.ELEMENT_ID = $('#TEMP_ELEMENT_ID').val();
+        params_back_summary.PROFILE_TYPE = $('#TEMP_PROFILE_TYPE').val();
+        params_back_summary.P_W_DOC_TYPE_ID = $('#TEMP_P_W_DOC_TYPE_ID').val();
+        params_back_summary.P_W_PROC_ID = $('#TEMP_P_W_PROC_ID').val();
+        params_back_summary.USER_ID = $('#TEMP_USER_ID').val();
+        params_back_summary.FSUMMARY = $('#TEMP_FSUMMARY').val();
         /* end parameter */
 
         /*ketika link 'workflow summary' diklik, maka kembali ke summary */
         $("a").on('click', function(e) {
             var txt = $(e.target).text();
             if( txt.toLowerCase() == 'workflow summary' ) {
-                loadContentWithParams( $('#TEMP_FSUMMARY').val() , params );
+                loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
             }
         });
 
         /*ketika tombol cancel diklik, maka kembali ke summary*/
         $("#form_customer_order_btn_cancel").on('click', function() {
-            loadContentWithParams( $('#TEMP_FSUMMARY').val() , params );
+            loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
         });
 
 
@@ -183,7 +184,7 @@
             params_submit.PROFILE_TYPE        = $('#PROFILE_TYPE').val();
             params_submit.ACTION_STATUS       = $('#ACTION_STATUS').val();
 
-            modal_lov_submitter_show(params_submit);    
+            modal_lov_submitter_show(params_submit, params_back_summary);    
         });
 
     });

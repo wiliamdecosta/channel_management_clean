@@ -12,6 +12,7 @@
             <div class="modal-body">
                 <form class="form-horizontal" application="form" id="form_submitter">
                     <input type="hidden" id="form_submitter_params">
+                    <input type="hidden" id="form_submitter_back_summary">
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right"> Tanggal :</label>
                         <div class="col-sm-3">
@@ -127,13 +128,17 @@
                             $('#form_submitter_error_message').val( response.error_message );
                             $('#form_submitter_warning_message').val( response.warning );
 
+                            if( response.return_message.trim() == 'BERHASIL') {
+                                $('#btn-submitter-submit').remove();
+                                $('#btn-submitter-reject').remove();
+                                $('#btn-submitter-back').remove();
+
+                                modal_lov_submitter_back_summary();
+                            }                            
+
                         }else {
                             swal("", data.message, "warning");
                         }
-
-                        $('#btn-submitter-submit').remove();
-                        $('#btn-submitter-reject').remove();
-                        $('#btn-submitter-back').remove();
                     }
                 });
             }
@@ -167,13 +172,17 @@
                             $('#form_submitter_error_message').val( response.error_message );
                             $('#form_submitter_warning_message').val( response.warning );
 
+                            if( response.return_message.trim() == 'BERHASIL') {
+                                $('#btn-submitter-submit').remove();
+                                $('#btn-submitter-reject').remove();
+                                $('#btn-submitter-back').remove();
+
+                                modal_lov_submitter_back_summary();
+                            }    
+
                         }else {
                             swal("", data.message, "warning");
                         }
-
-                        $('#btn-submitter-submit').remove();
-                        $('#btn-submitter-reject').remove();
-                        $('#btn-submitter-back').remove();
                     }
                 });    
             }
@@ -206,13 +215,17 @@
                             $('#form_submitter_error_message').val( response.error_message );
                             $('#form_submitter_warning_message').val( response.warning );
 
+                            if( response.return_message.trim() == 'BERHASIL') {
+                                $('#btn-submitter-submit').remove();
+                                $('#btn-submitter-reject').remove();
+                                $('#btn-submitter-back').remove();
+
+                                modal_lov_submitter_back_summary();
+                            }    
+
                         }else {
                             swal("", data.message, "warning");
                         }
-
-                        $('#btn-submitter-submit').remove();
-                        $('#btn-submitter-reject').remove();
-                        $('#btn-submitter-back').remove();
                     }
                 });
             }
@@ -220,17 +233,18 @@
         });
     });
 
-    function modal_lov_submitter_show(params_submit) {
-        modal_lov_submitter_init(params_submit, modal_lov_submitter_show_up);
+    function modal_lov_submitter_show(params_submit, params_back_summary) {
+        modal_lov_submitter_init(params_submit, params_back_summary, modal_lov_submitter_show_up);
     }
 
     function modal_lov_submitter_show_up() {
         $("#modal_lov_submitter").modal({backdrop: 'static'});
     }
 
-    function modal_lov_submitter_init(params_submit, callback) {
+    function modal_lov_submitter_init(params_submit, params_back_summary, callback) {
 
         $('#form_submitter_params').val( JSON.stringify(params_submit) );
+        $('#form_submitter_back_summary').val( JSON.stringify(params_back_summary) );
         /*init date*/
         $("#form_submitter_date").datepicker({
                                 format: 'dd-mm-yyyy',
@@ -271,6 +285,13 @@
         callback();
     }
 
+    function modal_lov_submitter_back_summary() {
+        var obj_summary_params = JSON.parse( $('#form_submitter_back_summary').val() );
+        var file_name = obj_summary_params.FSUMMARY;
+        delete obj_summary_params.FSUMMARY;
+        
+        loadContentWithParams( file_name , obj_summary_params );
+    }
 
     
 </script>
