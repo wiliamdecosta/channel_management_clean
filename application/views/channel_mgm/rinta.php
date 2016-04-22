@@ -109,7 +109,7 @@
 								<div class="widget-header red widget-header-flat">
 									<h4 class="widget-title lighter">
 										<!--                    <i class="ace-icon fa fa-money orange"></i>-->
-										Template
+										Detail Rincian Tagihan
 									</h4>
 									<div class="tabbable">
 										<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="mytab">

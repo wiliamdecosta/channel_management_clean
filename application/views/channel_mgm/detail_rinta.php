@@ -13,12 +13,16 @@
             var pager_selector = "#grid-pager";
 
             //resize to fit page size
-            $(window).on('resize.jqGrid', function () {
-                $(grid_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width() );
-            });
+            // $(window).on('resize.jqGrid', function () {
+                // $(grid_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width() );
+            // });
         $(window).on('resize.jqGrid', function () {
-            $(pager_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width() );
+            // $(pager_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width() );
+			 grid2.jqGrid('setGridWidth', $("#notif").width() - 1);
+            pager2.jqGrid('setGridWidth', $("#notif").width() - 1);
         });
+		
+		var width2 = $("#notif").width();
          jQuery("#grid-table").jqGrid({
                  url: "<?php echo site_url(); ?>cm/gridRinta/<?php echo $period;?>/<?php echo $pgl_id;?>/<?php echo $ten_id;?>",
                  datatype: "json",
@@ -85,7 +89,7 @@
                      { label: 'TGL BAYAR', name: 'TGL_BYR', width:100, align:"left", editable:true}
 
                  ],
-                 width: 1120,
+                 width: width2,
                  height: '100%',
                   scrollOffset:0,
                  rowNum:10,
