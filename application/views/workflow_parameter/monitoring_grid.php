@@ -25,7 +25,8 @@
             post: function ()
             {
                 return {
-                    "p_workflow_id": "<?php echo $p_workflow_id?>"
+                    "p_workflow_id": "<?php echo $p_workflow_id?>",
+                    "skeyword": "<?php echo $skeyword?>"
                 };
             },
             url: "<?php echo site_url('workflow_parameter/getMonProcess');?>",

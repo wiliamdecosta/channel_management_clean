@@ -836,15 +836,19 @@ class Workflow_parameter extends CI_Controller
     public function processMonitoring(){
 
         $p_workflow_id = $this->input->post('p_workflow_id');
-        $result = $this->P_workflow_list->getMonitoring($p_workflow_id, 'H');
+        $skeyword = $this->input->post('skeyword');
+
+        $result = $this->P_workflow_list->getMonitoring($p_workflow_id, $skeyword,'H');
         foreach ($result as $rowH) {
             $exp = explode('|', $rowH->WF_MONITOR);
             if($exp[0] == 'H'){
                 $data['header'] = $exp;
             }
-
-            $data['p_workflow_id'] = $p_workflow_id;
+            
         }
+
+        $data['p_workflow_id'] = $p_workflow_id;
+        $data['skeyword'] = $skeyword;
 
         $this->load->view('workflow_parameter/monitoring_grid',$data);
         
@@ -857,14 +861,21 @@ class Workflow_parameter extends CI_Controller
         $dir = $this->input->post('dir');
 
         $p_workflow_id = $this->input->post('p_workflow_id');
-        $result = $this->P_workflow_list->getMonitoring($p_workflow_id, 'D');
+        $skeyword = $this->input->post('skeyword');
+
+        $result = $this->P_workflow_list->getMonitoring($p_workflow_id, $skeyword,'D');
+
         $data = array();
+        $no = 1;
         foreach ($result as $row) {
             $exp = explode('|', $row->WF_MONITOR);
             if($exp[0] == 'D'){
                 $tmp = array();
 
                 for($i=0; $i<count($exp); $i++){
+                    if($i==0){
+                        $tmp = array("urutan" => $no);                        
+                    }
                     $tmp = array_merge($tmp, array("data".$i => $exp[$i]));
                 }
 
@@ -883,10 +894,11 @@ class Workflow_parameter extends CI_Controller
                     $end = ($limit * $hasil['current']);
                     $start = $end - ($limit - 1);
                 }
-
-                if(($exp[1] >=$start) && ($exp[1] <= $end)){
+                // print_r($start);
+                // exit;
+                if(($tmp['urutan'] >= $start) && ($tmp['urutan'] <= $end)){
                     $data[] = $tmp;
-                }
+                }              
 
                 $hasil['total'] = count($jmlCount);
                 $hasil['rowCount'] = $limit;
@@ -895,6 +907,8 @@ class Workflow_parameter extends CI_Controller
                 $hasil['rows'] = $data;
                
             }
+
+            $no++;
         }
 
         echo(json_encode($hasil));

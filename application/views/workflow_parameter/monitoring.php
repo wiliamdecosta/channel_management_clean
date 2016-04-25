@@ -40,6 +40,12 @@
                                                         ?>
                                                     </select>
                                                 </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"> No. Order </label>
+                                                <div class="col-sm-3">
+                                                    <input class="form-control" type="text" id="skeyword" name="skeyword" placeholder="Nomor Order" />
+                                                </div>
                                                 <a id="findFilter" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
                                                     <span class="ace-icon fa fa-search"></span>Find</a>
                                             </div>
@@ -71,6 +77,7 @@
 
         $('#findFilter').click(function(){
             var workflow = $("#workflow").val();
+            var skeyword = $("#skeyword").val();
 
             if(!workflow){
                 swal("Informasi", "Workflow belum dipilih", "info");
@@ -79,7 +86,7 @@
 
             $.ajax({
                 url: '<?php echo site_url('workflow_parameter/processMonitoring');?>',
-                data: {p_workflow_id : workflow},
+                data: {p_workflow_id : workflow, skeyword: skeyword},
                 type: 'POST',
                 success: function (data) {
                     $('#tab-content').html(data);
