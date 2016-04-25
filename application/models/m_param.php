@@ -42,6 +42,16 @@ class M_param extends CI_Model {
     public function getParamProducts() {
         return array('1'=>'POTS', '11'=>'SPEEDY', '9'=>'FLEXI');
     }
+
+    public function getLogAktifitas($idd){
+    	$result = array();
+    	$sql = "select * from v_t_nwo_log_kronologis where t_customer_order_id=".$idd;
+    	$q = $this->db->query($sql);
+    	if($q->num_rows() > 0) $result = $q->result();
+
+		return $result;
+
+    }
     
     
 }

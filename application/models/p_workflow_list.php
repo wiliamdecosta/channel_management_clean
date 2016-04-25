@@ -343,9 +343,9 @@ class P_workflow_list extends CI_Model
 
     }
 
-    public function getMonitoring($id){
+    public function getMonitoring($id, $tmp){
         $result = array();
-        $sql = $this->db->query("SELECT * FROM TABLE(F_MONITOR_TIPRO(".$id."))");
+        $sql = $this->db->query("SELECT * FROM TABLE(F_MONITOR_TIPRO(".$id.")) WHERE WF_MONITOR LIKE '".$tmp."%' ");
         if($sql->num_rows() > 0)
             $result = $sql->result();
         return $result;

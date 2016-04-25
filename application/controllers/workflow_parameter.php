@@ -740,8 +740,10 @@ class Workflow_parameter extends CI_Controller
         $sidx = empty($_REQUEST['sidx']) ? "t_customer_order_id" : $_REQUEST['sidx'];
         $sord = empty($_REQUEST['sord']) ? "ASC" : $_REQUEST['sord'];
 
-        $table = "SELECT * FROM T_CUSTOMER_ORDER";
+        //$table = "SELECT * FROM T_CUSTOMER_ORDER";
+        $table = "SELECT * FROM V_CUSTOMER_ORDER";
         $t_customer_order_id = $this->input->post('t_customer_order_id');
+        $p_w_proc_id = $this->input->post('p_w_proc_id');
 
         $req_param = array(
             "table" => $table,
@@ -761,7 +763,11 @@ class Workflow_parameter extends CI_Controller
         // Filter Table *
         $req_param['where'] = array();
         if(!empty($t_customer_order_id)) {
-            $req_param['where'][] = 't_customer_order_id = '.$t_customer_order_id;
+            $req_param['where'][] = 'T_CUSTOMER_ORDER_ID = '.$t_customer_order_id;
+        }
+
+        if(!empty($p_w_proc_id)) {
+            $req_param['where'][] = 'P_W_PROC_ID = '.$p_w_proc_id;
         }
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
@@ -830,7 +836,7 @@ class Workflow_parameter extends CI_Controller
     public function processMonitoring(){
 
         $p_workflow_id = $this->input->post('p_workflow_id');
-        $result = $this->P_workflow_list->getMonitoring($p_workflow_id);
+        $result = $this->P_workflow_list->getMonitoring($p_workflow_id, 'H');
         foreach ($result as $rowH) {
             $exp = explode('|', $rowH->WF_MONITOR);
             if($exp[0] == 'H'){
@@ -851,17 +857,16 @@ class Workflow_parameter extends CI_Controller
         $dir = $this->input->post('dir');
 
         $p_workflow_id = $this->input->post('p_workflow_id');
-        $result = $this->P_workflow_list->getMonitoring($p_workflow_id);
+        $result = $this->P_workflow_list->getMonitoring($p_workflow_id, 'D');
+        $data = array();
         foreach ($result as $row) {
             $exp = explode('|', $row->WF_MONITOR);
-            if($exp[0] == 'H'){
-                $head = $exp;
-            }else{
+            if($exp[0] == 'D'){
                 $tmp = array();
+
                 for($i=0; $i<count($exp); $i++){
                     $tmp = array_merge($tmp, array("data".$i => $exp[$i]));
                 }
-                $data[] = $tmp;
 
                 if ($page == 0) {
                     $hasil['current'] = 1;
@@ -869,7 +874,21 @@ class Workflow_parameter extends CI_Controller
                     $hasil['current'] = $page;
                 }
 
-                $hasil['total'] = count($data);
+                $jmlCount[] = $tmp;
+
+                if($hasil['current'] == 1){    
+                    $start = $hasil['current'];
+                    $end = $limit;
+                }else{                    
+                    $end = ($limit * $hasil['current']);
+                    $start = $end - ($limit - 1);
+                }
+
+                if(($exp[1] >=$start) && ($exp[1] <= $end)){
+                    $data[] = $tmp;
+                }
+
+                $hasil['total'] = count($jmlCount);
                 $hasil['rowCount'] = $limit;
                 $hasil['success'] = true;
                 $hasil['message'] = 'Berhasil';

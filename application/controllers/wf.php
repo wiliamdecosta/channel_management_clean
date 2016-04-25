@@ -327,6 +327,44 @@ class Wf extends CI_Controller {
         return $result;
     }
 
+    /*
+    public function cust_order() {
+        $this->load->view('wf/cust_order');
+    }
+
+    public function modalLogAktifitas()
+    {
+        $upload_param = $this->input->post('upload_param');
+        // 1 = add, 2 = update
+
+        if ($upload_param == 1) {
+            $result['param_code'] = "Add Log Aktifitas";
+        } else {
+            $result['param_code'] = "Update Log Aktifitas";
+        }
+
+        $result['param_upload'] = $upload_param;
+        // $result['data'] = $this->M_param->getLogAktifitas();
+        $this->load->view('wf/modal_log', $result);
+    }
+
+    public function modalLegalDoc()
+    {
+        $upload_param = $this->input->post('upload_param');
+        // 1 = add, 2 = update
+
+        if ($upload_param == 1) {
+            $result['param_code'] = "Add Dokumen Pendukung";
+        } else {
+            $result['param_code'] = "Update Dokumen Pendukung";
+        }
+
+        $result['param_upload'] = $upload_param;
+        // $result['data'] = $this->M_param->getLogAktifitas();
+        $this->load->view('wf/modal_legaldoc', $result);
+    }
+    */
+
 
     public function taken_task() {
         $curr_ctl_id = $this->input->post('curr_ctl_id');
@@ -716,6 +754,224 @@ class Wf extends CI_Controller {
         }
 
         echo json_encode($data);
+    }
+
+    public function getLogKronologi(){
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $result = array();
+        $sql = $this->db->query("SELECT * FROM v_t_nwo_log_kronologis WHERE T_CUSTOMER_ORDER_ID = ".$this->input->post('t_customer_order_id')." ");
+        //$sql = $this->db->query("SELECT * FROM v_t_nwo_log_kronologis");
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        
+
+        if ($page == 0) {
+            $hasil['current'] = 1;
+        } else {
+            $hasil['current'] = $page;
+        }
+
+        $hasil['total'] = count($result);
+        $hasil['rowCount'] = $limit;
+        $hasil['success'] = true;
+        $hasil['message'] = 'Berhasil';
+        $hasil['rows'] = $result;
+
+        echo(json_encode($hasil));
+        exit;
+    }
+
+    public function save_log(){
+        $log_params = json_decode($this->input->post('params') , true);
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+        $log_params['CURR_DOC_ID'] = empty($log_params['CURR_DOC_ID']) ? NULL : $log_params['CURR_DOC_ID'];
+        $log_params['USER_ID_LOGIN'] = empty($log_params['USER_ID_LOGIN']) ? NULL : $log_params['USER_ID_LOGIN'];
+
+        try {
+
+            $sql = "INSERT INTO T_ORDER_LOG_KRONOLOGIS(  DESCRIPTION, 
+                                                         CREATE_DATE, 
+                                                         UPDATE_DATE, 
+                                                         ACTIVITY, 
+                                                         CREATE_BY, 
+                                                         UPDATE_BY, 
+                                                         COUNTER_NO, 
+                                                         T_CUSTOMER_ORDER_ID, 
+                                                         P_APP_USER_ID, 
+                                                         EMPLOYEE_NO,   
+                                                         LOG_DATE,
+                                                         P_PROCEDURE_ID,
+                                                         INPUT_TYPE ) 
+                                                VALUES(  '".$this->input->post('description')."',
+                                                         SYSDATE,
+                                                         SYSDATE,
+                                                         '".$this->input->post('activity')."',
+                                                         '".$CREATED_BY."',
+                                                         '".$UPDATED_BY."',
+                                                         (SELECT NVL(MAX(COUNTER_NO),0)+1 FROM T_ORDER_LOG_KRONOLOGIS WHERE T_CUSTOMER_ORDER_ID=".$log_params['CURR_DOC_ID']."),
+                                                         ".$log_params['CURR_DOC_ID'].",
+                                                         ".$log_params['USER_ID_LOGIN'].",
+                                                         NULL,
+                                                         SYSDATE,
+                                                         ".$log_params['CURR_PROC_ID'].",
+                                                         'M'
+                                                )";
+
+            $this->db->query($sql);
+
+            $result['success'] = true;
+            $result['message'] = 'Log Kronologis Berhasil Ditambah';
+            
+        }catch(Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+        }
+
+         echo json_encode($result);
+    }
+
+    public function getLegalDoc(){
+        $page = intval($this->input->post('current')) ;
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $result = array();
+        $sql = $this->db->query("SELECT a.*, b.CODE as LEGAL_DOC_DESC FROM t_cust_order_legal_doc a
+                                 LEFT JOIN p_legal_doc_type b ON a.P_LEGAL_DOC_TYPE_ID = b.P_LEGAL_DOC_TYPE_ID
+                                 WHERE a.T_CUSTOMER_ORDER_ID = ".$this->input->post('t_customer_order_id')." ");
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        
+
+        if ($page == 0) {
+            $hasil['current'] = 1;
+        } else {
+            $hasil['current'] = $page;
+        }
+
+        $hasil['total'] = count($result);
+        $hasil['rowCount'] = $limit;
+        $hasil['success'] = true;
+        $hasil['message'] = 'Berhasil';
+        $hasil['rows'] = $result;
+
+        echo(json_encode($hasil));
+        exit;
+    }
+
+    public function doc_type() {
+
+        $sql = "select * from p_legal_doc_type";
+        $query = $this->workflow->db->query($sql);
+
+        $items = $query->result_array();
+        $opt_status = '';
+
+        foreach ($items as $item) {
+            $opt_status .= '<option value="'.$item['P_LEGAL_DOC_TYPE_ID'].'"> '.$item['CODE'].' </option>';
+        }
+
+        echo json_encode( array('opt_status' => $opt_status ) );
+    }
+
+    public function save_legaldoc(){
+        $params = json_decode($this->input->post('legaldoc_params') , true);
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+        $log_params['CURR_DOC_ID'] = empty($log_params['CURR_DOC_ID']) ? NULL : $log_params['CURR_DOC_ID'];
+        $log_params['USER_ID_LOGIN'] = empty($log_params['USER_ID_LOGIN']) ? NULL : $log_params['USER_ID_LOGIN'];
+
+        try {
+            // Upload Process
+            $config['upload_path'] = './application/third_party/upload';
+            $config['allowed_types'] = '*';
+            $config['max_size'] = '10000000';
+            $config['overwrite'] = TRUE;
+            $file_id = date("YmdHis");
+            $config['file_name'] = "wf_" . $file_id;
+
+            $this->load->library('upload');
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload("filename")) {
+
+                $error = $this->upload->display_errors();
+                $result['success'] = false;
+                $result['message'] = $error;
+
+                echo json_encode($result);
+                exit;
+            }else{
+                
+                // Do Upload
+                $data = $this->upload->data();
+                $idd = gen_id('T_CUST_ORDER_LEGAL_DOC_ID', 'T_CUST_ORDER_LEGAL_DOC');
+
+                $sql = "INSERT INTO T_CUST_ORDER_LEGAL_DOC(T_CUST_ORDER_LEGAL_DOC_ID, 
+                                                           DESCRIPTION, 
+                                                           CREATED_BY, 
+                                                           UPDATED_BY, 
+                                                           CREATION_DATE, 
+                                                           UPDATED_DATE, 
+                                                           P_LEGAL_DOC_TYPE_ID, 
+                                                           T_CUSTOMER_ORDER_ID, 
+                                                           ORIGIN_FILE_NAME, 
+                                                           FILE_FOLDER, 
+                                                           FILE_NAME) 
+                            VALUES (".$idd.", 
+                                    '".$this->input->post('desc')."', 
+                                    '".$CREATED_BY."', 
+                                    '".$UPDATED_BY."', 
+                                    SYSDATE, 
+                                    SYSDATE, 
+                                    ".$this->input->post('p_legal_doc_type_id').", 
+                                    ".$params['CURR_DOC_ID'].", 
+                                    '".$data['client_name']."',
+                                    'application/third_party/upload',
+                                    '".$data['file_name']."'
+                                    )";
+
+                $this->db->query($sql);
+                
+
+                $result['success'] = true;
+                $result['message'] = 'Dokumen Pendukung Berhasil Ditambah';
+
+            }
+
+        }catch(Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+        }
+
+        echo json_encode($result);
+
+
+    }
+
+    public function delete_legaldoc(){
+        try {
+
+            $id_ = $this->input->post('t_cust_order_legal_doc_id');
+            $this->db->where('T_CUST_ORDER_LEGAL_DOC_ID', $id_);
+            $this->db->delete('T_CUST_ORDER_LEGAL_DOC');
+
+            $result['success'] = true;
+            $result['message'] = 'Dokumen Pendukung Berhasil Ditambah';
+
+        } catch (Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+        }
+
+        echo json_encode($result);
+
     }
 
 }
