@@ -1,6 +1,6 @@
 <!-- #section:basics/content.breadcrumbs -->
 <div class="breadcrumbs" id="breadcrumbs">
-    <?php echo getBreadcrumb(array('Workflow Parameter','File Pekerjaan')); ?>
+    <?php echo getBreadcrumb(array('Workflow Parameter','Daemon')); ?>
 </div>
 
 <!-- /section:basics/content.breadcrumbs -->
@@ -15,7 +15,7 @@
     					    <li class="">
     					    	<a href="#" data-toggle="tab" aria-expanded="true" id="tab-1">
     					    		<i class="blue bigger-120"></i>
-    					    		<strong>Aliran Prosedur</strong>
+    					    		<strong>Aliran Workflow</strong>
     					    	</a>
     					    </li>
     					    <li class="active">

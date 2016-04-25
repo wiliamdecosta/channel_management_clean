@@ -6,7 +6,7 @@
     }
 </script>
 <div class="breadcrumbs" id="breadcrumbs">
-    <?php echo getBreadcrumb(array('Workflow Parameter','Daftar Workflow')); ?>
+    <?php echo getBreadcrumb(array('Workflow Parameter','Aliran Workflow')); ?>
 </div>
 
 <!-- /section:basics/content.breadcrumbs -->
@@ -22,7 +22,7 @@
                             <li class="active">
                                 <a href="#" data-toggle="tab" aria-expanded="true" id="tab-1">
                                     <i class="blue bigger-120"></i>
-                                    <strong>Aliran Prosedur</strong>
+                                    <strong>Aliran Workflow</strong>
                                 </a>
                             </li>
                         </ul>
