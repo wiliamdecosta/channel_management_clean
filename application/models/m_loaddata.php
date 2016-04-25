@@ -73,6 +73,40 @@ class M_loaddata extends CI_Model
         return $message;
 
     }
+	
+		public function batchProcessDatin($batch_id,$username) {
+		//        $result = array();
+        $sql = " DECLARE ".
+            "  v_result VARCHAR2(90); ".
+            "  BEGIN ".
+            "  PKG_PROC_BATCH.proc_datin_batch(:params1,:params2, :v_result);". 
+            // "  PCKG_LOAD_DATIN.p_run_job_load_datin(:params3,:params2, :v_result1, :v_result2);". 
+			"END;";
+
+        //$params =  array($period, $username, $batch_type);
+
+
+        $params = array(
+            array('name' => ':params1', 'value' => $batch_id, 'type' => SQLT_CHR, 'length' => 100),
+            array('name' => ':params2', 'value' => $username, 'type' => SQLT_CHR, 'length' => 100),
+            // array('name' => ':params3', 'value' => $periode, 'type' => SQLT_CHR, 'length' => 100),
+        );
+        // Bind the output parameter
+
+
+
+        $stmt = oci_parse($this->db->conn_id,$sql);
+
+        foreach($params as $p){
+            // Bind Input
+            oci_bind_by_name($stmt,$p['name'], $p['value'], $p['length']);
+        }
+        $message = '';
+        oci_bind_by_name($stmt,':v_result',$message,32);
+        ociexecute($stmt);
+        return $message;
+
+    }
 
     public function getLogProcess($param)
     {
