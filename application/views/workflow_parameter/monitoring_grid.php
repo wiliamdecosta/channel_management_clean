@@ -6,7 +6,7 @@
             foreach ($header as $rowH) {
                 $dt = "data".$i;
                 if($i == 0){
-                    echo "<th data-column-id=$dt  data-visible='false'>".$rowH."</th>";
+                    echo "<th data-column-id=$dt data-visible='false'>".$rowH."</th>";
                 }else{
                     echo "<th data-column-id=$dt >".$rowH."</th>";
                 }

@@ -237,7 +237,11 @@
             params_submit.PROFILE_TYPE        = $('#PROFILE_TYPE').val();
             params_submit.ACTION_STATUS       = $('#ACTION_STATUS').val();
 
-            modal_lov_submitter_show(params_submit, params_back_summary); 
+            if (  $('#ACTION_STATUS').val() != 'VIEW' ) {
+                modal_lov_submitter_show(params_submit, params_back_summary); 
+            } else {
+                loadContentWithParams( $('#TEMP_FSUMMARY').val() , params_back_summary );
+            }
         }); 
 
         /*ketika link 'workflow summary' diklik, maka kembali ke summary */
@@ -259,6 +263,8 @@
         if (  $('#ACTION_STATUS').val() == 'VIEW' ) {
             $('#form_customer_order_btn_submit').remove();
             $('#form_customer_order_btn_save').remove();
+            $('#add_legal_doc').hide();
+            $('#add_log').hide();
         }
 
         /* mengisi form customer order */
