@@ -1,4 +1,4 @@
-<!-- #section:basics/content.breadcrumbs -->
+<?php $prv = getPrivilege($menu_id); ?>
 <script type="text/css">
     .ui-jqgrid .ui-jqgrid-btable {
         table-layout: auto;
@@ -188,12 +188,33 @@
     //navButtons grid master
     jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
         { 	//navbar options
-            edit: true,
+            edit: <?php
+            if ($prv['UBAH'] == "Y") {
+                echo 'true';
+            } else {
+                echo 'false';
+
+            }
+            ?>,
             excel: true,
             editicon: 'ace-icon fa fa-pencil blue',
-            add: true,
+            add:  <?php
+            if ($prv['TAMBAH'] == "Y") {
+                echo 'true';
+            } else {
+                echo 'false';
+
+            }
+            ?>,
             addicon: 'ace-icon fa fa-plus-circle purple',
-            del: true,
+            del: <?php
+            if ($prv['HAPUS'] == "Y") {
+                echo 'true';
+            } else {
+                echo 'false';
+
+            }
+            ?>,
             delicon: 'ace-icon fa fa-trash-o red',
             search: true,
             searchicon: 'ace-icon fa fa-search orange',

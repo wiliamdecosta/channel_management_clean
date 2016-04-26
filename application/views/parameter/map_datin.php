@@ -1,61 +1,68 @@
-<!-- #section:basics/content.breadcrumbs -->
-<script type="text/css">
-    .ui-jqgrid .ui-jqgrid-btable
-    {
-        table-layout:auto;
-    }
-</script>
+<?php $prv = getPrivilege($menu_id); ?>
+<div class="breadcrumbs" id="breadcrumbs">
+    <?= $this->breadcrumb; ?>
+</div>
+
 <div class="row" style="margin-top:20px;" id="map_datin_attr">
     <div class="col-xs-12">
-        <div class="well well-sm"> <h4 class="blue" id="pgl_acc_num_form_title"> Pilih Pengelola Dan Nama Akun </h4></div>
-        <form class="form-horizontal" role="form" id="pgl_acc_num_form">       
-            
+        <div class="well well-sm"><h4 class="blue" id="pgl_acc_num_form_title"> Pilih Pengelola Dan Nama Akun </h4>
+        </div>
+        <form class="form-horizontal" role="form" id="pgl_acc_num_form">
+
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right"> Pengelola </label>
                 <div class="col-sm-8">
-                    <input id="form_pgl_id" type="text" style="display:none;" placeholder="PGL ID">                    
-                    <input id="form_pgl_type_id" type="text"  style="display:none;">
-                    <input id="form_pgl_code" type="text" class="col-xs-10 col-sm-5 required" placeholder="Pilih Pengelola" readonly>
+                    <input id="form_pgl_id" type="text" style="display:none;" placeholder="PGL ID">
+                    <input id="form_pgl_type_id" type="text" style="display:none;">
+                    <input id="form_pgl_code" type="text" class="col-xs-10 col-sm-5 required"
+                           placeholder="Pilih Pengelola" readonly>
                     <span class="input-group-btn">
 						<button class="btn btn-warning btn-sm" type="button" id="btn_lov_pgl">
-							<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
-						</button>
+                            <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                        </button>
 					</span>
-                </div>                
-            </div>                 
-            
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right"> Nama Akun</label>
                 <div class="col-sm-8">
                     <input id="form_nama_akun_id" type="text" style="display:none;">
-                    <input id="form_nama_akun_code" type="text" class="col-xs-10 col-sm-5"  placeholder="Pilih Nama Akun" readonly>
+                    <input id="form_nama_akun_code" type="text" class="col-xs-10 col-sm-5" placeholder="Pilih Nama Akun"
+                           readonly>
                     <span>
 						<button class="btn btn-warning btn-sm" type="button" id="btn_lov_user_acc_num">
-							<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
-						</button> &nbsp; &nbsp;
-					<a id="findFilter" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
-					<!-- class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info || fm-button ui-state-default ui-reset btn btn-sm btn-info center-block -->
-					<span class="ace-icon fa fa-search"></span>Find</a>	
-					</span>						
-                </div>				
+                            <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                        </button> &nbsp; &nbsp;
+
+					<?php
+                    if ($prv['SUBMIT'] == "Y") {
+                    echo '<a id="findFilter"
+                             class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
+                            <span class="ace-icon fa fa-search"></span>Find</a>
+					</span>';
+                    }
+                    ?>
+                </div>
             </div>
-			
-       </form>
-    </div>
-	<div id="tab-content">            
-            <br>
-            <div class="col-xs-12" id="tabel_content">
-                <br>
-                <table id="grid-table"></table>
-                <div id="grid-pager"></div>
-            </div><!-- /.col -->
+
+        </form>
+        <div id="tab-content">
+            <div class="row">
+                <div class="col-xs-12" id="tabel_content">
+                    <table id="grid-table"></table>
+                    <div id="grid-pager"></div>
+                </div><!-- /.col -->
+            </div>
         </div>
+    </div>
+
 </div>
 <?php $this->load->view('parameter/map_datin_list_pgl.php'); ?>
 <?php $this->load->view('parameter/map_datin_list_acc_num.php'); ?>
 
 <!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">	
+<div class="page-content">
     <div class="row">
         <div class="col-xs-12" style="width: 100%;">
             <!-- PAGE CONTENT BEGINS -->
@@ -71,41 +78,40 @@
     </div><!-- /.row -->
 </div><!-- /.page-content -->
 <script type="text/javascript">
-	
-		$("#findFilter").click(function (){	
-			var select_pgl = $("#form_pgl_id").val();
-			var select_acc_num = $("#form_nama_akun_code").val();		
-			if (select_acc_num.length != 0 ) {
-				prepareGridTable();
-				$("#tabel_content").show();
-			}	
-		 else
-		{
-			swal("Perhatian", "Isilah terlebih dahulu nama akun sebelum melakukan pencarian", "info");
-		}
-	})
+
+    $("#findFilter").click(function () {
+        var select_pgl = $("#form_pgl_id").val();
+        var select_acc_num = $("#form_nama_akun_code").val();
+        if (select_acc_num.length != 0) {
+            prepareGridTable();
+            $("#tabel_content").show();
+        }
+        else {
+            swal("Perhatian", "Isilah terlebih dahulu nama akun sebelum melakukan pencarian", "info");
+        }
+    })
 </script>
 <script type="text/javascript">
 
-	function prepareGridTable() {
-		delete $("#grid-table");
-		$("#grid-table").GridUnload("#grid-table");
-		
-		var grid_selector = "#grid-table";
-        var pager_selector = "#grid-pager";		
-		var select_pgl = $("#form_pgl_type_id").val();
-		var pg = $("#form_pgl_code").val();
-		var select_acc_num = $("#form_nama_akun_code").val();			
+    function prepareGridTable() {
+        delete $("#grid-table");
+        $("#grid-table").GridUnload("#grid-table");
+
+        var grid_selector = "#grid-table";
+        var pager_selector = "#grid-pager";
+        var select_pgl = $("#form_pgl_type_id").val();
+        var pg = $("#form_pgl_code").val();
+        var select_acc_num = $("#form_nama_akun_code").val();
         //resize to fit page size
         $(window).on('resize.jqGrid', function () {
             $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
         })
         jQuery("#grid-table").jqGrid({
-			postData: {pgl_id: select_pgl, account_num: select_acc_num },
-			url: '<?php echo site_url('parameter/gridCustMapDatin');?>',
+            postData: {pgl_id: select_pgl, account_num: select_acc_num},
+            url: '<?php echo site_url('parameter/gridCustMapDatin');?>',
             datatype: "json",
             mtype: "POST",
-			caption: "Daftar Data Internet Pengelola-Nomor Akun",
+            caption: "Daftar Data Internet Pengelola-Nomor Akun",
             colModel: [
                 {
                     label: 'ID',
@@ -116,12 +122,15 @@
                     sortable: true,
                     editable: true,
                     hidden: true,
-					editrules: {required: true},
+                    editrules: {required: true},
                     //edittype: "select",
-					// formatter:{defaultValue: $("#form_pgl_code").val()},
-					editoptions: {value: $("#form_pgl_type_id").val()+":"+$("#form_pgl_type_id").val(), defaultValue:$("#form_pgl_type_id").val()},
+                    // formatter:{defaultValue: $("#form_pgl_code").val()},
+                    editoptions: {
+                        value: $("#form_pgl_type_id").val() + ":" + $("#form_pgl_type_id").val(),
+                        defaultValue: $("#form_pgl_type_id").val()
+                    },
                 },
-				{
+                {
                     label: 'ACNM',
                     name: 'ACCOUNT_NUM',
                     // key: true,
@@ -130,11 +139,14 @@
                     sortable: true,
                     editable: true,
                     hidden: true,
-					editrules: {required: true},
-					editoptions: {value: $("#form_nama_akun_code").val()+":"+$("#form_nama_akun_code").val(), defaultValue:$("#form_nama_akun_code").val()},
+                    editrules: {required: true},
+                    editoptions: {
+                        value: $("#form_nama_akun_code").val() + ":" + $("#form_nama_akun_code").val(),
+                        defaultValue: $("#form_nama_akun_code").val()
+                    },
                 },
-				
-				{
+
+                {
                     label: 'PMD',
                     name: 'P_MAP_DATIN_ACC_ID',
                     key: true,
@@ -142,57 +154,56 @@
                     sorttype: 'number',
                     sortable: true,
                     editable: true,
-                    hidden: true,					
+                    hidden: true,
                 },
                 {
                     label: 'Created By',
                     name: 'CREATED_BY',
                     width: 250,
                     align: "left",
-                    editable: false,                                      
+                    editable: false,
                 },
-				{
+                {
                     label: 'Updated By',
                     name: 'UPDATE_BY',
                     width: 250,
                     align: "left",
-                    editable: false,                                     
+                    editable: false,
                 },
-				{
+                {
                     label: 'Valid From',
                     name: 'VALID_FROM',
                     width: 250,
                     align: "left",
-                    editable: true,                    
+                    editable: true,
                     editoptions: {
-						dataInit: function (element) 
-						{
-                       $(element).datepicker({
-			    			autoclose: true,
-			    			format: 'dd-M-yy',
-			    			orientation : 'bottom'
-							});
-						}						
-					}
+                        dataInit: function (element) {
+                            $(element).datepicker({
+                                autoclose: true,
+                                format: 'dd-M-yy',
+                                orientation: 'bottom'
+                            });
+                        }
+                    }
                 },
                 {
                     label: 'Valid Until',
                     name: 'VALID_UNTIL',
                     width: 250,
                     align: "left",
-                    editable: true,                    
+                    editable: true,
                     editoptions: {
-						dataInit: function (element) {
-                       $(element).datepicker({
-			    			autoclose: true,
-			    			format: 'dd-M-yy',
-			    			orientation : 'bottom'
-                        });
+                        dataInit: function (element) {
+                            $(element).datepicker({
+                                autoclose: true,
+                                format: 'dd-M-yy',
+                                orientation: 'bottom'
+                            });
+                        }
+
                     }
-						
-					}
                 },
-				{
+                {
                     label: 'Creation Date',
                     name: 'CREATION_DATE',
                     width: 250,
@@ -200,34 +211,34 @@
                     sortable: true,
                     editable: true,
                     editoptions: {
-						dataInit: function (element) {
-                       $(element).datepicker({
-			    			autoclose: true,
-			    			format: 'dd-M-yy',
-			    			orientation : 'bottom'
-                        });
+                        dataInit: function (element) {
+                            $(element).datepicker({
+                                autoclose: true,
+                                format: 'dd-M-yy',
+                                orientation: 'bottom'
+                            });
+                        }
+
                     }
-						
-					}
                 },
-                {   
-                    label :'Update Date',
-                    name : 'UPDATE_DATE',
-                    width:200,
-                    sortable:true,
-                    align:'left',
-                    editable:true,
+                {
+                    label: 'Update Date',
+                    name: 'UPDATE_DATE',
+                    width: 200,
+                    sortable: true,
+                    align: 'left',
+                    editable: true,
                     editoptions: {
-						dataInit: function (element) {
-                       $(element).datepicker({
-			    			autoclose: true,
-			    			format: 'dd-M-yy',
-			    			orientation : 'bottom'
-                        });
+                        dataInit: function (element) {
+                            $(element).datepicker({
+                                autoclose: true,
+                                format: 'dd-M-yy',
+                                orientation: 'bottom'
+                            });
+                        }
+
                     }
-						
-					}
-                }                     
+                }
             ],
             caption: "List Mapping Data Internet",
             width: 1120,
@@ -270,7 +281,7 @@
                 repeatitems: false
             },
             loadComplete: function () {
-				$(grid_selector).jqGrid('setGridWidth', $("#tabel_content").width());
+                $(grid_selector).jqGrid('setGridWidth', $("#tabel_content").width());
                 $(pager_selector).jqGrid('setGridWidth', $("#tabel_content").width());
                 var table = this;
                 setTimeout(function () {
@@ -284,119 +295,138 @@
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo site_url('parameter/crud_map_datin');?>'
         });
-		
-		//navButtons grid master
-		jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
-			{ 	//navbar options
-				edit: true,
-				excel: true,
-				editicon: 'ace-icon fa fa-pencil blue',
-				add: true,
-				addicon: 'ace-icon fa fa-plus-circle purple',
-				del: true,
-				delicon: 'ace-icon fa fa-trash-o red',
-				search: true,
-				searchicon: 'ace-icon fa fa-search orange',
-				refresh: true,
-				afterRefresh: function () {
-					// some code here
-					jQuery("#detailsPlaceholder").hide();
-				},
-				refreshicon: 'ace-icon fa fa-refresh green',
-				view: false,
-				viewicon: 'ace-icon fa fa-search-plus grey',
-			},
-			{
-				// options for the Edit Dialog
-				closeAfterEdit: true,
-				width: 500,
-				errorTextFormat: function (data) {
-					return 'Error: ' + data.responseText
-				},
-				recreateForm: true,
-				beforeShowForm: function (e) {
-					$("#form_pgl_type_id").prop("readonly", true);
-					var form = $(e[0]);
-					form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-					style_edit_form(form);
-					$("#form_nama_akun_code").prop("readonly", true);
-				}				
 
-			},
-			{
-				//new record form
-				width: 500,
-				errorTextFormat: function (data) {
-					return 'Error: ' + data.responseText
-				},
-				closeAfterAdd: true,
-				recreateForm: true,
-				viewPagerButtons: false,
-				beforeShowForm: function (e) {
-					var form = $(e[0]);
-					form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
-						.wrapInner('<div class="widget-header" />')
-					style_edit_form(form);
-				},				
-			},
-			{
-				//delete record form
-				recreateForm: true,
-				beforeShowForm: function (e) {
-					var form = $(e[0]);
-					if (form.data('styled')) return false;
+        //navButtons grid master
+        jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
+            { 	//navbar options
+                edit: <?php
+                if ($prv['UBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
 
-					form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-					style_delete_form(form);
+                }
+                ?>,
+                excel: true,
+                editicon: 'ace-icon fa fa-pencil blue',
+                add:  <?php
+                if ($prv['TAMBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
 
-					form.data('styled', true);
-				},
-				onClickSubmit: function () {
-					var gr = jQuery("#grid-table").jqGrid('getGridParam', 'selrow');
-					var pmds = jQuery('#grid-table').jqGrid('getCell', gr, 'PMD');			
-					return {PMD: pmd};
-					
-				}
-			},
-			{
-				//search form
-				// closeAfterSearch: true,
-				recreateForm: true,
-				afterShowSearch: function (e) {
-					var form = $(e[0]);
-					form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
-					style_search_form(form);
-				},
-				afterRedraw: function () {
-					style_search_filters($(this));
-				}
+                }
+                ?>,
+                addicon: 'ace-icon fa fa-plus-circle purple',
+                del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
 
-				//multipleSearch: true,
-				//showQuery: true
-				/**
-				 multipleGroup:true,
-				 showQuery: true
-				 */
-			},
-			{
-				//view record form
-				recreateForm: true,
-				beforeShowForm: function (e) {
-					var form = $(e[0]);
-					form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
-				}
-			}
-		)
-		
-	}	
+                }
+                ?>,
+                delicon: 'ace-icon fa fa-trash-o red',
+                search: true,
+                searchicon: 'ace-icon fa fa-search orange',
+                refresh: true,
+                afterRefresh: function () {
+                    // some code here
+                    jQuery("#detailsPlaceholder").hide();
+                },
+                refreshicon: 'ace-icon fa fa-refresh green',
+                view: false,
+                viewicon: 'ace-icon fa fa-search-plus grey',
+            },
+            {
+                // options for the Edit Dialog
+                closeAfterEdit: true,
+                width: 500,
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                },
+                recreateForm: true,
+                beforeShowForm: function (e) {
+                    $("#form_pgl_type_id").prop("readonly", true);
+                    var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                    style_edit_form(form);
+                    $("#form_nama_akun_code").prop("readonly", true);
+                }
+
+            },
+            {
+                //new record form
+                width: 500,
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                },
+                closeAfterAdd: true,
+                recreateForm: true,
+                viewPagerButtons: false,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
+                        .wrapInner('<div class="widget-header" />')
+                    style_edit_form(form);
+                },
+            },
+            {
+                //delete record form
+                recreateForm: true,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                    if (form.data('styled')) return false;
+
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+                    style_delete_form(form);
+
+                    form.data('styled', true);
+                },
+                onClickSubmit: function () {
+                    var gr = jQuery("#grid-table").jqGrid('getGridParam', 'selrow');
+                    var pmds = jQuery('#grid-table').jqGrid('getCell', gr, 'PMD');
+                    return {PMD: pmd};
+
+                }
+            },
+            {
+                //search form
+                // closeAfterSearch: true,
+                recreateForm: true,
+                afterShowSearch: function (e) {
+                    var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+                    style_search_form(form);
+                },
+                afterRedraw: function () {
+                    style_search_filters($(this));
+                }
+
+                //multipleSearch: true,
+                //showQuery: true
+                /**
+                 multipleGroup:true,
+                 showQuery: true
+                 */
+            },
+            {
+                //view record form
+                recreateForm: true,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                    form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+                }
+            }
+        )
+
+    }
     $(document).ready(function () {
-		
+
         prepareGridTable();
-		$("#tabel_content").hide();
+        $("#tabel_content").hide();
     });
     //JqGrid Detail
-
-    
 
 
     function clearSelection() {
@@ -523,37 +553,37 @@
         $(table).find('.ui-pg-div').tooltip({container: 'body'});
     }
 
-	
-// ---------------------------------------- LovGrid Attribute ----------------------------------------
-jQuery(function($) {
-        $("#user_attribute_form_btn_cancel").on(ace.click_event, function() {
+
+    // ---------------------------------------- LovGrid Attribute ----------------------------------------
+    jQuery(function ($) {
+        $("#user_attribute_form_btn_cancel").on(ace.click_event, function () {
             user_attribute_toggle_main_content();
-        });    
-        $("#user_attribute_form_btn_save").on(ace.click_event, function() {
+        });
+        $("#user_attribute_form_btn_save").on(ace.click_event, function () {
             alert("test save");
-			//user_attribute_save();
-        });        
-        $("#btn_lov_pgl").on(ace.click_event, function() {
-            modal_lov_map_datin_show("form_pgl_type_id","form_pgl_code");
-        });        
-        $("#btn_lov_user_acc_num").on(ace.click_event, function() {
-            if( $("#form_pgl_type_id").val() == "") {
+            //user_attribute_save();
+        });
+        $("#btn_lov_pgl").on(ace.click_event, function () {
+            modal_lov_map_datin_show("form_pgl_type_id", "form_pgl_code");
+        });
+        $("#btn_lov_user_acc_num").on(ace.click_event, function () {
+            if ($("#form_pgl_type_id").val() == "") {
                 //showBootDialog(true, BootstrapDialog.TYPE_WARNING, 'Attention', 'Inputkan Attribute Type Terlebih Dahulu');
                 swal("Informasi", "Inputkan Nama Pengelola Terlebih Dahulu", "info");
                 return;
             }
             $("#modal_lov_acc_num_grid_selection").bootgrid("destroy");
             modal_lov_map_datin_acc_prepare_table();
-            modal_lov_map_datin_acc_show("form_nama_akun_id","form_nama_akun_code");
-        });        
-        $("#form_valid_from").datepicker({ autoclose: true, todayHighlight: true });
-        $("#form_valid_to").datepicker({ autoclose: true, todayHighlight: true });
-    });      
-	
-	$("#add_fastel").click(function () {
+            modal_lov_map_datin_acc_show("form_nama_akun_id", "form_nama_akun_code");
+        });
+        $("#form_valid_from").datepicker({autoclose: true, todayHighlight: true});
+        $("#form_valid_to").datepicker({autoclose: true, todayHighlight: true});
+    });
+
+    $("#add_fastel").click(function () {
         alert($("#form_pgl_type_id").val());
     })
-	$("#update_fastel").click(function () {
+    $("#update_fastel").click(function () {
         alert($("#form_nama_akun_code").val());
     })
 </script>

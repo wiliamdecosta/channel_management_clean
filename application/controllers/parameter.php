@@ -53,8 +53,9 @@ class Parameter extends CI_Controller
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
+        $data['menu_id'] = $this->uri->segment(3);
 
-        $this->load->view('parameter/mitra');
+        $this->load->view('parameter/mitra',$data);
     }
 
 
@@ -126,7 +127,7 @@ class Parameter extends CI_Controller
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
-        $this->load->view('parameter/uploaddatinmainpage', $result);
+        $this->load->view('parameter/uploaddatinmainpage');
     }
     public function uploadDatin()
     {
@@ -137,6 +138,7 @@ class Parameter extends CI_Controller
 
         $result['result'] = $this->cm->getPglList();
         $result['product'] = $this->M_param->getParamProducts();
+        $result['menu_id'] = $this->uri->segment(3);
         $this->load->view('parameter/uploaddatin', $result);
     }
     public function datinuploaddo()
@@ -652,9 +654,8 @@ class Parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $result['result'] = $this->cm->getPglList();
-        $result['product'] = $this->M_param->getParamProducts();
-        $this->load->view('parameter/reference');
+        $data['menu_id'] = $this->uri->segment(3);
+        $this->load->view('parameter/reference',$data);
     }
 
 
@@ -987,10 +988,9 @@ class Parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $result['result'] = $this->cm->getPglList();
-        $result['product'] = $this->M_param->getParamProducts();
+        $data['menu_id'] = $this->uri->segment(3);
 
-        $this->load->view('parameter/pic');
+        $this->load->view('parameter/pic',$data);
     }
 
 
@@ -1062,10 +1062,8 @@ class Parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $result['result'] = $this->cm->getPglList();
-        $result['product'] = $this->M_param->getParamProducts();
-
-        $this->load->view('parameter/dat_am');
+        $data['menu_id'] = $this->uri->segment(3);
+        $this->load->view('parameter/dat_am',$data);
     }
 
 
@@ -1137,6 +1135,7 @@ class Parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
+        $result['menu_id'] = $this->uri->segment(3);
 
         // prof id 3 = C2BI User
         $this->load->model('M_cm', 'cm');
@@ -1419,7 +1418,9 @@ class Parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $this->load->view('parameter/mitra_segment');
+        $result['menu_id'] = $this->uri->segment(3);
+
+        $this->load->view('parameter/mitra_segment',$result);
     }
 
     public function addmitra()
@@ -1441,18 +1442,21 @@ class Parameter extends CI_Controller
 
     public function mapping_mitra()
     {
-        $this->load->view('parameter/mapping_mitra');
+        $result['menu_id'] = $this->input->post('menu_id');
+        $this->load->view('parameter/mapping_mitra',$result);
     }
 
     public function mapping_lokasi()
     {
         $data["p_map_mit_cc_id"] = $this->input->post("P_MAP_MIT_CC_ID");
+        $data["menu_id"] = $this->input->post("menu_id");
         $this->load->view('parameter/mapping_lokasi', $data);
     }
     public function mapping_pic()
     {
         $data["P_MP_LOKASI_ID"] = $this->input->post("P_MP_LOKASI_ID");
         $data["p_map_mit_cc_id"] = $this->input->post("P_MAP_MIT_CC_ID");
+        $data["menu_id"] = $this->input->post("menu_id");
         $this->load->view('parameter/mapping_pic', $data);
     }
 
@@ -1678,8 +1682,11 @@ class Parameter extends CI_Controller
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
+
 		$this->load->model('M_cm', 'cm');
 		$result['result'] = $this->cm->mapDatinRequest();
+        $result['menu_id'] = $this->uri->segment(3);
+
         $this->load->view('parameter/map_datin',$result);
     }
 

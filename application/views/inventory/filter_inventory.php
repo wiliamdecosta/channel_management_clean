@@ -26,7 +26,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('.tab').click(function (e) {
-           // e.preventDefault();
+            var menu_id = '<?php echo $menu_id;?>';
             var ctrl = $(this).attr('id');
 
             $('.tab').removeClass('active');
@@ -34,7 +34,7 @@
             $.ajax({
                 type: 'POST',
                 url: "<?php echo site_url();?>inventory/" + ctrl,
-                data: {},
+                data: {menu_id:menu_id},
                 timeout: 10000,
                 //async: false,
                 success: function (data) {

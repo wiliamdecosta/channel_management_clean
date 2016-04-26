@@ -32,13 +32,16 @@ class Inventory extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $this->load->view('inventory/filter_inventory');
+        $data['menu_id'] = $this->uri->segment(3);
+
+        $this->load->view('inventory/filter_inventory',$data);
     }
 
 
     public function list_item()
     {
-        $this->load->view('inventory/list_inventory');
+        $data['menu_id'] = $this->input->post('menu_id');
+        $this->load->view('inventory/list_inventory',$data);
     }
 
 
@@ -183,7 +186,8 @@ class Inventory extends CI_Controller
 
     public function list_request()
     {
-        $this->load->view('inventory/list_request');
+        $data['menu_id'] = $this->input->post('menu_id');
+        $this->load->view('inventory/list_request',$data);
     }
 
     public function gridListRequest()

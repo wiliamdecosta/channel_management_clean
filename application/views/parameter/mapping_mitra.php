@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div class="col-sm-12">
     <!-- #section:elements.tab -->
     <div class="tabbable">
@@ -20,10 +21,14 @@
         <div class="tab-content">
             <div id="home" class="tab-pane fade active in">
                 <div id="tbl_pic">
-                    <button class="btn btn-white btn-sm btn-round" id="add_mitra" style="margin-bottom:10px">
+                    <?php if ($prv['TAMBAH'] == "Y") {
+                        echo '<button class="btn btn-white btn-sm btn-round" id="add_mitra" style="margin-bottom:10px">
                         <i class="ace-icon fa fa-plus green"></i>
                         Tambah Mitra
-                    </button>
+                    </button>';
+                    }
+                    ?>
+
                     &nbsp;
                     <div class="row">
                         <div class="col-xs-12">
@@ -46,15 +51,16 @@
                 //resize to fit page size
                 var parent_column = grid.closest('[class*="col-"]');
                 $(window).on('resize.jqGrid', function () {
-                    grid.jqGrid( 'setGridWidth', $(".tab-content").width()-10 );
+                    grid.jqGrid('setGridWidth', $(".tab-content").width() - 10);
                 })
                 //optional: resize on sidebar collapse/expand and container fixed/unfixed
-                $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
-                    if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
-                        grid.jqGrid( 'setGridWidth', parent_column.width() );
+                $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                    if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                        grid.jqGrid('setGridWidth', parent_column.width());
                     }
-                })
-                var width =  $(".tab-content").width()-10;
+                });
+
+                var width = $(".tab-content").width() - 10;
                 grid.jqGrid({
                     url: '<?php echo site_url('parameter/gridMapMitraSegment');?>',
                     datatype: "json",
@@ -100,7 +106,7 @@
                     ],
                     //postData: data,
                     width: width,
-                   // AutoWidth: true,
+                    // AutoWidth: true,
                     height: '100%',
                     scrollOffset: 0,
                     rowNum: 5,
@@ -122,15 +128,14 @@
                         repeatitems: false
                     },
                     loadComplete: function () {
-                      //  grid.jqGrid( 'setGridWidth', $(".tab-content").width() );
-                       /* $(window).on('resize.jqGrid', function () {
-                            grid.jqGrid('setGridWidth', 1090);
-                        });
 
-                        $(window).on('resize.jqGrid', function () {
-                            pager.jqGrid('setGridWidth', 1090);
-                        });
-*/
+                        var ubah = '<?php echo $prv['UBAH'];?>';
+                        if (ubah == "Y") {
+                            $('#edit').show();
+                        } else {
+                            $('#edit').hide();
+                        }
+
                         var table = this;
                         setTimeout(function () {
                             updatePagerIcons(table);
@@ -151,7 +156,14 @@
                         editicon: 'ace-icon fa fa-pencil blue',
                         add: false,
                         addicon: 'ace-icon fa fa-plus-circle purple',
-                        del: true,
+                        del: <?php
+                        if ($prv['HAPUS'] == "Y") {
+                            echo 'true';
+                        } else {
+                            echo 'false';
+
+                        }
+                        ?>,
                         delicon: 'ace-icon fa fa-trash-o red',
                         search: true,
                         searchicon: 'ace-icon fa fa-search orange',
@@ -236,7 +248,7 @@
                     position: "first",
                     title: "Edit Record",
                     cursor: "pointer",
-                    id: "edit",
+                    id: "edit"
                 });
 
                 function edit() {
@@ -428,12 +440,16 @@
 </div>
 <script type="text/javascript">
     $('#lokasi').click(function () {
+        var menu_id = '<?php echo $menu_id;?>';
         var map_mitra_id = $("#grid-table1").jqGrid('getGridParam', 'selrow');
         if (map_mitra_id) {
             $.ajax({
                 type: 'POST',
                 url: "<?php echo site_url();?>parameter/mapping_lokasi",
-                data: {P_MAP_MIT_CC_ID: map_mitra_id},
+                data: {
+                    P_MAP_MIT_CC_ID: map_mitra_id,
+                    menu_id: menu_id
+                },
                 timeout: 10000,
                 success: function (data) {
                     $("#mappingmitra").html(data);

@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="content">
     <div class="breadcrumbs" id="breadcrumbs">
         <?= $this->breadcrumb; ?>
@@ -53,14 +54,19 @@
         <div id="tab-content">
             <div class="col-sm-8">
                 <div id="btn_add_update" style="float: left;">
-                    <a id="add_fastel" class="btn btn-white btn-sm btn-round">
-                        <i class="ace-icon fa fa-plus green"></i>
-                        Add Fastel
-                    </a>
-                    <a id="update_fastel" class="btn btn-white btn-sm btn-round">
-                        <i class="ace-icon fa fa-upload green"></i>
-                        Update Fastel
-                    </a>
+                    <?php
+                    if ($prv['UPLOAD'] == "Y") {
+                        echo '<a id="add_fastel" class="btn btn-white btn-sm btn-round">
+                                <i class="ace-icon fa fa-plus green"></i>
+                                Add Fastel
+                            </a>
+                            <a id="update_fastel" class="btn btn-white btn-sm btn-round">
+                                <i class="ace-icon fa fa-upload green"></i>
+                                Update Fastel
+                            </a>';
+                    }
+                    ?>
+
                 </div>
             </div>
             <br>
@@ -366,12 +372,33 @@
     //navButtons grid master
     jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
         { 	//navbar options
-            edit: true,
+            edit: <?php
+            if ($prv['UBAH'] == "Y") {
+                echo 'true';
+            } else {
+                echo 'false';
+
+            }
+            ?>,
             excel: true,
             editicon: 'ace-icon fa fa-pencil blue',
-            add: true,
+            add:  <?php
+            if ($prv['TAMBAH'] == "Y") {
+                echo 'true';
+            } else {
+                echo 'false';
+
+            }
+            ?>,
             addicon: 'ace-icon fa fa-plus-circle purple',
-            del: true,
+            del: <?php
+            if ($prv['HAPUS'] == "Y") {
+                echo 'true';
+            } else {
+                echo 'false';
+
+            }
+            ?>,
             delicon: 'ace-icon fa fa-trash-o red',
             search: true,
             searchicon: 'ace-icon fa fa-search orange',

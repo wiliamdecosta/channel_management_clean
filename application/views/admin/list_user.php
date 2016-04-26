@@ -415,7 +415,7 @@
                 }, 0);
 
                 $("#user_attribute_row_content").hide();
-                var is_submit = '';
+                var is_submit = '<?php $prv['SUBMIT'];?>';
                 if (is_submit == "Y") {
                     $('#reset').show();
                 } else {

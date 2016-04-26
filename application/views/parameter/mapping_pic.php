@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div class="col-sm-12">
     <div class="tabbable">
         <ul class="nav nav-tabs" id="myTab">
@@ -24,10 +25,14 @@
             <div id="home" class="tab-pane fade active in">
                 <div class="row">
                     <div class="col-xs-12">
-                        <button class="btn btn-white btn-sm btn-round" id="add_pic" style="margin-bottom:10px">
+                        <?php if ($prv['TAMBAH'] == "Y") {
+                            echo '<button class="btn btn-white btn-sm btn-round" id="add_pic" style="margin-bottom:10px">
                             <i class="ace-icon fa fa-plus green"></i>
                             Tambah PIC
-                        </button>
+                        </button>';
+                        }
+                        ?>
+
                         &nbsp;
                         <div id="tbl_pic">
                             <table id="grid_table_pic"></table>
@@ -44,10 +49,12 @@
 
     <script type="text/javascript">
         $(function () {
+            var menu_id = '<?php echo $menu_id;?>';
             $('#mapping_mitra_tab').click(function () {
                 $.ajax({
                     type: 'POST',
                     url: "<?php echo site_url();?>parameter/mapping_mitra",
+                    data: {menu_id: menu_id},
                     timeout: 10000,
                     success: function (data) {
                         $("#mappingmitra").html("");
@@ -61,7 +68,10 @@
                     $.ajax({
                         type: 'POST',
                         url: "<?php echo site_url();?>parameter/mapping_lokasi",
-                        data: {P_MAP_MIT_CC_ID: <?php echo $p_map_mit_cc_id;?>},
+                        data: {
+                            P_MAP_MIT_CC_ID: <?php echo $p_map_mit_cc_id;?>,
+                            menu_id: menu_id
+                        },
                         timeout: 10000,
                         success: function (data) {
                             $("#mappingmitra").html(data);
@@ -232,6 +242,13 @@
                     repeatitems: false
                 },
                 loadComplete: function () {
+
+                    var ubah = '<?php echo $prv['UBAH'];?>';
+                    if (ubah == "Y") {
+                        $('#edit').show();
+                    } else {
+                        $('#edit').hide();
+                    }
 
                     var table = this;
                     setTimeout(function () {

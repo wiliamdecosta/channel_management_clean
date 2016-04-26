@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div class="col-sm-12">
     <!-- #section:elements.tab -->
     <div class="tabbable">
@@ -50,10 +51,12 @@
 
     <script type="text/javascript">
         $(function () {
+            var menu_id = '<?php echo $menu_id;?>';
             $('#mapping_mitra_tab').click(function () {
                 $.ajax({
                     type: 'POST',
                     url: "<?php echo site_url();?>parameter/mapping_mitra",
+                    data: {menu_id: menu_id},
                     timeout: 10000,
                     success: function (data) {
                         $("#mappingmitra").html("");
@@ -67,7 +70,11 @@
                     $.ajax({
                         type: 'POST',
                         url: "<?php echo site_url();?>parameter/mapping_pic",
-                        data: {P_MP_LOKASI_ID: lokasi_id, P_MAP_MIT_CC_ID: <?php echo $p_map_mit_cc_id;?>},
+                        data: {
+                            P_MP_LOKASI_ID: lokasi_id,
+                            P_MAP_MIT_CC_ID: <?php echo $p_map_mit_cc_id;?>,
+                            menu_id: menu_id
+                        },
                         timeout: 10000,
                         success: function (data) {
                             $("#mappingmitra").html(data);
@@ -227,12 +234,33 @@
             //navButtons grid master
             grid.jqGrid('navGrid', '#grid_pager_lokasi',
                 { 	//navbar options
-                    edit: true,
-                    excel: false,
+                    edit: <?php
+                    if ($prv['UBAH'] == "Y") {
+                        echo 'true';
+                    } else {
+                        echo 'false';
+
+                    }
+                    ?>,
+                    excel: true,
                     editicon: 'ace-icon fa fa-pencil blue',
-                    add: true,
+                    add:  <?php
+                    if ($prv['TAMBAH'] == "Y") {
+                        echo 'true';
+                    } else {
+                        echo 'false';
+
+                    }
+                    ?>,
                     addicon: 'ace-icon fa fa-plus-circle purple',
-                    del: true,
+                    del: <?php
+                    if ($prv['HAPUS'] == "Y") {
+                        echo 'true';
+                    } else {
+                        echo 'false';
+
+                    }
+                    ?>,
                     delicon: 'ace-icon fa fa-trash-o red',
                     search: true,
                     searchicon: 'ace-icon fa fa-search orange',
@@ -502,12 +530,33 @@
             //navButtons Grid Detail
             grid_pks.jqGrid('navGrid', '#grid_pager_pks',
                 { 	//navbar options
-                    edit: true,
+                    edit: <?php
+                    if ($prv['UBAH'] == "Y") {
+                        echo 'true';
+                    } else {
+                        echo 'false';
+
+                    }
+                    ?>,
                     excel: true,
                     editicon: 'ace-icon fa fa-pencil blue',
-                    add: true,
+                    add:  <?php
+                    if ($prv['TAMBAH'] == "Y") {
+                        echo 'true';
+                    } else {
+                        echo 'false';
+
+                    }
+                    ?>,
                     addicon: 'ace-icon fa fa-plus-circle purple',
-                    del: true,
+                    del: <?php
+                    if ($prv['HAPUS'] == "Y") {
+                        echo 'true';
+                    } else {
+                        echo 'false';
+
+                    }
+                    ?>,
                     delicon: 'ace-icon fa fa-trash-o red',
                     search: true,
                     searchicon: 'ace-icon fa fa-search orange',

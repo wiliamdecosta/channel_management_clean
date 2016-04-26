@@ -1,4 +1,9 @@
+<?php $prv = getPrivilege($menu_id); ?>
+<?php if($prv['UBAH'] == 'Y'){
+
+;?>
 <div class="btn-group">
+
     <button class="btn btn-sm btn-round btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         Edit Stok
         <i class="ace-icon fa fa-angle-down icon-on-right"></i>
@@ -12,7 +17,9 @@
             <a href="#" class="edit_stok" id="kurang_stok">Kurangin Stok</a>
         </li>
     </ul>
+
 </div>
+<?php };?>
 <div class="row">
     <div class="col-xs-12">
         &nbsp;
@@ -218,7 +225,14 @@
                 edit: false,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
-                add: true,
+                add: <?php
+                if ($prv['TAMBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 addicon: 'ace-icon fa fa-plus-circle purple',
                 del: false,
                 delicon: 'ace-icon fa fa-trash-o red',

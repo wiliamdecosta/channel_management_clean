@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div class="row">
     <div class="col-xs-12">
         &nbsp;
@@ -183,7 +184,14 @@
 
         grid.jqGrid('navGrid', '#grid-pager',
             { 	//navbar options
-                edit: true,
+                edit: <?php
+                if ($prv['UBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 excel: true,
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: false,
@@ -213,10 +221,10 @@
                     selRowId = grid.jqGrid('getGridParam', 'selrow');
                     status = grid.jqGrid('getCell', selRowId, 'STATUS');
 
-                    if(status != 18){
-                        swal('','Tidak bisa merubah data karena status bukan Waiting','error');
+                    if (status != 18) {
+                        swal('', 'Tidak bisa merubah data karena status bukan Waiting', 'error');
                         return false;
-                    }else{
+                    } else {
                         return true;
                     }
 
