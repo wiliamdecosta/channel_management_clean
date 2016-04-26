@@ -1,4 +1,6 @@
-<!-- #section:basics/content.breadcrumbs -->
+<?php 
+$menu_id = !isset($menu_id) ? $this->input->post('menu_id') : $menu_id ;
+$prv = getPrivilege($menu_id); ?>
 <div class="breadcrumbs" id="breadcrumbs">
     <?php echo getBreadcrumb(array('Workflow Parameter','Daftar Pekerjaan Workflow')); ?>
 </div>
@@ -57,7 +59,8 @@
             
             loadContentWithParams("workflow_parameter-procedure_role.php", {
                 procedure_id: the_id,
-                procedure_code : the_code
+                procedure_code : the_code,
+                menu_id : <?php echo $menu_id; ?>
             });
         });
     });
@@ -66,7 +69,8 @@
         var procedure_code = $("#grid-table").jqGrid ('getCell', procedure_id, 'PROC_NAME');
         loadContentWithParams("workflow_parameter-procedure_files.php", {
             procedure_id: procedure_id,
-            procedure_code : procedure_code
+            procedure_code : procedure_code,
+            menu_id : <?php echo $menu_id; ?>
         });
     }
     
@@ -216,11 +220,32 @@
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             {   //navbar options
-                edit: true,
+                edit: <?php
+                if ($prv['UBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 editicon: 'ace-icon fa fa-pencil blue',
-                add: true,
+                add:  <?php
+                if ($prv['TAMBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
+                del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 delicon: 'ace-icon fa fa-trash-o red',
                 search: true,
                 searchicon: 'ace-icon fa fa-search orange',

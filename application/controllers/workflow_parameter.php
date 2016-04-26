@@ -30,7 +30,9 @@ class Workflow_parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $this->load->view('workflow_parameter/document_type');
+        $result = array();
+        $result['menu_id'] = $this->uri->segment(3);
+        $this->load->view('workflow_parameter/document_type', $result);
     }
 
     public function grid_document_type() {
@@ -125,7 +127,9 @@ class Workflow_parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $this->load->view('workflow_parameter/workflow_list');
+        $result = array();
+        $result['menu_id'] = $this->uri->segment(3);
+        $this->load->view('workflow_parameter/workflow_list', $result);
     }
 
     public function grid_workflow() {
@@ -234,7 +238,9 @@ class Workflow_parameter extends CI_Controller
     
     public function procedure() {
 
-        $this->load->view('workflow_parameter/procedure');
+        $result = array();
+        $result['menu_id'] = empty( $this->uri->segment(3) ) ? $this->input->post('menu_id') : $this->uri->segment(3);
+        $this->load->view('workflow_parameter/procedure', $result);
     }
 
     public function grid_procedure() {
@@ -465,7 +471,9 @@ class Workflow_parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $this->load->view('workflow_parameter/chart_proc');
+        $result = array();
+        $result['menu_id'] = $this->uri->segment(3);
+        $this->load->view('workflow_parameter/chart_proc', $result);
     }
 
     public function grid_workflow_list() {

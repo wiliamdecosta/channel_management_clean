@@ -1,4 +1,6 @@
-<!-- #section:basics/content.breadcrumbs -->
+<?php 
+$menu_id = !isset($menu_id) ? $this->input->post('menu_id') : $menu_id ;
+$prv = getPrivilege($menu_id); ?>
 <script type="text/css">
     .ui-jqgrid .ui-jqgrid-btable
     {
@@ -78,7 +80,8 @@
         // alert(code);
         loadContentWithParams("workflow_parameter-chart_proc_daemon.php", {
             p_w_chart_proc_id: idd,
-            workflow_name : code
+            workflow_name : code,
+            menu_id : '<?php echo $menu_id; ?>'
         });
     }
 
@@ -721,7 +724,14 @@
             edit: false,
             excel: true,
             editicon: 'ace-icon fa fa-pencil blue',
-            add: true,
+            add:  <?php
+                if ($prv['TAMBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+            ?>,
             addicon: 'ace-icon fa fa-plus-circle purple',
             del: false,
             delicon: 'ace-icon fa fa-trash-o red',
@@ -1146,12 +1156,33 @@
     //navButtons Grid Detail -- Next
     jQuery('#jqGridDetailNext').jqGrid('navGrid', '#jqGridDetailsPagerNext',
         {   //navbar options
-            edit: true,
+            edit: <?php
+                if ($prv['UBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+            ?>,
             excel: true,
             editicon: 'ace-icon fa fa-pencil blue',
-            add: true,
+            add:  <?php
+                if ($prv['TAMBAH'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+            ?>,
             addicon: 'ace-icon fa fa-plus-circle purple',
-            del: true,
+            del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+            ?>,
             delicon: 'ace-icon fa fa-trash-o red',
             search: false,
             searchicon: 'ace-icon fa fa-search orange',
