@@ -404,7 +404,11 @@
             },
             "action": function(column, row)
             {
-                return '<button type="button" class="btn btn-xs btn-default command-delete" onclick="deleteLegal('+ row.T_CUST_ORDER_LEGAL_DOC_ID +')"><span class="ace-icon glyphicon glyphicon-trash"></span></button>';
+                if (  $('#ACTION_STATUS').val() == 'VIEW' ) {
+                    return '<button type="button" class="btn btn-xs btn-default command-delete" onclick="#"><span class="ace-icon glyphicon glyphicon-trash"></span></button>';
+                }else{
+                    return '<button type="button" class="btn btn-xs btn-danger command-delete" onclick="deleteLegal('+ row.T_CUST_ORDER_LEGAL_DOC_ID +')"><span class="ace-icon glyphicon glyphicon-trash"></span></button>'
+                }
             }
 
         }
