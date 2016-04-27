@@ -239,7 +239,7 @@ class Workflow_parameter extends CI_Controller
     public function procedure() {
 
         $result = array();
-        $result['menu_id'] = empty( $this->uri->segment(3) ) ? $this->input->post('menu_id') : $this->uri->segment(3);
+        $result['menu_id'] = $this->uri->segment(3) == "" ? $this->input->post('menu_id') : $this->uri->segment(3);
         $this->load->view('workflow_parameter/procedure', $result);
     }
 
