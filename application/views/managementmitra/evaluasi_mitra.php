@@ -1,21 +1,26 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="dokEvaluasiMitra">
-    <div class="form-group">
-        <div id="btn_add_update" class="col-sm-12">
-            <a id="btn_upload_evaluasi" class="btn btn-white btn-sm btn-round">
-                <i class="ace-icon fa fa-plus green"></i>
-                Upload Dokumen
-            </a>
-        </div>
-        <br>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-xs-12" id="tabel_content">
-                <table id="grid-table"></table>
-                <div id="grid-pager"></div>
+    <div class="row">
+        <div class="col-xs-12">
+            <?php if($prv['UPLOAD'] == "Y"){ ;?>
+            <div class="form-group">
+                <div id="btn_add_update">
+                    <a id="btn_upload_evaluasi" class="btn btn-white btn-sm btn-round">
+                        <i class="ace-icon fa fa-plus green"></i>
+                        Upload Dokumen
+                    </a>
+                </div>
+            </div>
+            <?php };?>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12" id="tabel_content">
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 </div>
 <div id="upload_evaluasi">
@@ -185,7 +190,14 @@
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: false,
                 addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
+                del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 delicon: 'ace-icon fa fa-trash-o red',
                 search: false,
                 searchicon: 'ace-icon fa fa-search orange',

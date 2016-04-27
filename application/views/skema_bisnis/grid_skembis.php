@@ -1,9 +1,13 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="tbl_skema">
+    <?php if($prv['TAMBAH'] == "Y"){ ;?>
     <button class="btn btn-white btn-sm btn-round" id="add_skema" style="margin-bottom:10px">
         <i class="ace-icon fa fa-plus green"></i>
         Tambah Skema
     </button>
-    &nbsp;
+        &nbsp;
+    <?php };?>
+
     <div class="row">
         <div class="col-xs-12">
             <table id="grid_table_pic"></table>

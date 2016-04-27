@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="calculate_mf">
     <div class="row">
         <div class="col-xs-12">
@@ -21,6 +22,7 @@
                         <?php echo tahun('', date('Y')); ?>
                     </div>
                 </div>
+                <?php if($prv['SUBMIT'] == "Y"){ ;?>
                 <div class="form-group">
                     <label class="col-sm-1 control-label no-padding-right"></label>
                     <div class="col-sm-4">
@@ -30,6 +32,7 @@
                         </a>
                     </div>
                 </div>
+                <?php };?>
                 <div class="form-group">
                     <label class="col-sm-1 control-label no-padding-right"></label>
                     <div class="col-sm-11" id="gridCalculate">

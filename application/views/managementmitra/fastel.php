@@ -538,7 +538,7 @@
                 grid2.jqGrid('setGridWidth', parent_column.width());
                 pager2.jqGrid('setGridWidth', parent_column.width());
             }
-        })
+        });
         var width2 = $("#nonpot").width();
         var bulan = $('#bulan').val();
         var tahun = $('#tahun').val();

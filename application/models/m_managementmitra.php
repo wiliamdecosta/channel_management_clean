@@ -206,6 +206,17 @@ class M_managementmitra extends CI_Model
 
     }
 
+    public function insertDokNPK($data)
+    {
+        $this->db->_protect_identifiers = false;
+
+        $new_id = gen_id('P_NPK_ID', 'P_NPK');
+        $this->db->set('P_NPK_ID', $new_id);
+        $this->db->insert('P_NPK', $data);
+        return $this->db->affected_rows();
+
+    }
+
     public function insertDokEvaluasi($data)
     {
         $this->db->_protect_identifiers = false;
@@ -237,11 +248,12 @@ class M_managementmitra extends CI_Model
         $table = "P_PKS";
         $pk = "P_PKS_ID";
 
+        $datas = array();
         switch ($oper) {
             case 'add':
 
                 $config['upload_path'] = './application/third_party/upload/pks';
-                $config['allowed_types'] = 'docx|pdf|doc|zip|rar';
+                $config['allowed_types'] = 'docx|pdf|doc|xls|xlsx';
                 $config['max_size'] = '0';
                 $config['overwrite'] = TRUE;
                 $file_id = time();
@@ -280,11 +292,11 @@ class M_managementmitra extends CI_Model
                     if ($this->db->affected_rows() > 0) {
                         $datas["success"] = true;
                         $datas["message"] = "Data berhasil ditambahakan";
-                        echo json_encode($datas);
+
                     } else {
                         $datas["success"] = false;
                         $datas["message"] = "Gagal menambah data";
-                        echo json_encode($datas);
+
                     }
                 }
 
@@ -304,11 +316,10 @@ class M_managementmitra extends CI_Model
                 if ($this->db->affected_rows() > 0) {
                     $datas["success"] = true;
                     $datas["message"] = "Edit data berhasil";
-                    echo json_encode($datas);
                 } else {
                     $datas["success"] = false;
                     $datas["message"] = "Gagal edit data";
-                    echo json_encode($datas);
+
                 }
 
                 break;
@@ -317,7 +328,7 @@ class M_managementmitra extends CI_Model
                 $this->db->delete($table);
                 break;
         }
-
+        echo json_encode($datas);
 
     }
 
@@ -339,6 +350,30 @@ class M_managementmitra extends CI_Model
                 break;
             case 'del':
                 $this->db->where('P_DOK_KONTRAK_ID', $id);
+                $this->db->delete($table);
+                break;
+        }
+
+    }
+
+    public function crud_npk()
+    {
+
+        $this->db->_protect_identifiers = false;
+        $oper = $this->input->post('oper');
+        $id = $this->input->post('id');
+
+        $table = "P_NPK";
+
+        switch ($oper) {
+            case 'add':
+
+                break;
+            case 'edit':
+
+                break;
+            case 'del':
+                $this->db->where('P_NPK_ID', $id);
                 $this->db->delete($table);
                 break;
         }

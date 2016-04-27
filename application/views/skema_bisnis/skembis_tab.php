@@ -38,7 +38,14 @@
             var mitra = $('#mitra').val();
             //var lokasisewa = $('#lokasisewa option:selected').text();
             var lokasisewa = $('#lokasisewa').val();
-            var data = {ccid: ccid, mitra: mitra, lokasisewa: lokasisewa, segment: segment}
+            var menu_id = '<?php echo $menu_id;?>';
+            var data = {
+                ccid: ccid,
+                mitra: mitra,
+                lokasisewa: lokasisewa,
+                segment: segment,
+                menu_id: menu_id
+            };
             if (checkFilter()) {
                 $('.tab').removeClass('active');
                 $('#' + ctrl).addClass('active');

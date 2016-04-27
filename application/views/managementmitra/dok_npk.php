@@ -1,51 +1,27 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="dok_npk">
     <form class="form-horizontal" role="form">
-        <div class="rows">
-            <!--<div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">Tanggal PKS </label>
-                <div class="col-sm-6">
-                    <input class="date-picker col-sm-3" id="valid_from" type="text" data-date-format="dd-mm-yyyy"
-                           placeholder="Tgl Mulai PKS" style="margin-right:10px;"/>
-                    <label></label>
-                    <input class="date-picker col-sm-3" id="valid_until" type="text" data-date-format="dd-mm-yyyy"
-                           placeholder="Tgl berakhir PKS"/>
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="btn_add_update" class="form-group">
+                    <?php if ($prv['UPLOAD'] == "Y") {
+                        ; ?>
+                        <div class="col-sm-4">
+                            <a id="btn_upload_npk" class="btn btn-white btn-sm btn-round">
+                                <i class="ace-icon fa fa-plus green"></i>
+                                Upload Dokumen
+                            </a>
+                        </div>
+                    <?php }; ?>
                 </div>
-            </div>-->
-            <!--<div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right"> Periode </label>
-                <div class="col-sm-2">
-                    <?php /*echo bulan('', date('m')); */?>
-                </div>
-                <div class="col-sm-1">
-                    <?php /*echo tahun('', date('Y')); */?>
-                </div>
-            </div>-->
-
-            <div id="btn_add_update" class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"></label>
-                <div class="col-sm-4">
-                    <a id="btn_upload_npk" class="btn btn-white btn-sm btn-round">
-                        <i class="ace-icon fa fa-plus green"></i>
-                        Upload Dokumen
-                    </a>
-                    <!--<a id="btn_edit" class="btn btn-white btn-sm btn-round">
-                        <i class="ace-icon fa fa-plus green"></i>
-                        Edit Dokumen
-                    </a>-->
-                </div>
-                <div class="col-sm-4">
-
-                </div>
-
-            </div>
-            <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">&nbsp;</label>
-                <div class="col-sm-11">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div id="jqgrid">
-                                <table id="grid-table"></table>
-                                <div id="grid-pager"></div>
+                <div class="form-group">
+                    <div class="col-sm-11">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div id="jqgrid">
+                                    <table id="grid-table"></table>
+                                    <div id="grid-pager"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,10 +137,10 @@
                     formatter: function (cellvalue, options, rowObject) {
                         var file_name = rowObject.FILE_PATH;
                         return '<div class="hidden-sm hidden-xs action-buttons">'
-                            + '<a class="purple" href="<?php echo site_url('managementmitra/downloadPKS');?>/' + file_name + '" data-rel="tooltip" data-original-title="Download">'
+                            + '<a class="purple" href="<?php echo site_url('managementmitra/downloadNPK');?>/' + file_name + '" data-rel="tooltip" data-original-title="Download">'
                             + ' <i class="ace-icon fa fa-download bigger-130"></i>'
                             + '</a>'
-                            + '<a class="blue" href="<?php echo base_url();?>application/third_party/upload/pks/' + file_name + '" target="_blank" data-rel="tooltip" data-original-title="Print">'
+                            + '<a class="blue" href="<?php echo base_url();?>application/third_party/upload/npk/' + file_name + '" target="_blank" data-rel="tooltip" data-original-title="Print">'
                             + '<i class="ace-icon fa fa-print bigger-130"></i></a>'
                             + '</div>';
                     }
@@ -205,7 +181,7 @@
                     enableTooltips(table);
                 }, 0);
             },
-            editurl: '<?php echo site_url('managementmitra/crud_pks');?>'
+            editurl: '<?php echo site_url('managementmitra/crud_npk');?>'
 
 
         });
@@ -219,7 +195,14 @@
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: false,
                 addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
+                del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 delicon: 'ace-icon fa fa-trash-o red',
                 search: false,
                 searchicon: 'ace-icon fa fa-search orange',

@@ -11,7 +11,6 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="widget-main">
-                            &nbsp;
                             <div class="form-group">
                                 <div id="label" class="col-xs-3">
                                     <label>Nama Dokumen</label>
@@ -42,9 +41,10 @@
                                     <label>File</label>
                                 </div>
                                 <div class="col-xs-9">
-                                    <!-- #section:custom/file-input -->
                                     <input type="file" id="filename" name="filename" required/>
+                                    <div class="col-sm-9 help-block">*Allow File (docx|pdf|doc|xls|xlsx)</div>
                                 </div>
+
                             </div>
                             <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                                    value="<?php echo
@@ -104,7 +104,7 @@
                    // alert(data.msg);
                     swal("", data.msg, "success")
                     grid.trigger("reloadGrid", [{page: 1}]);
-                    $("#modal_upload_kontrak").modal("hide");
+                    $("#modal_upload_npk").modal("hide");
 
                 } else {
                    // $("#output").html(data.msg);

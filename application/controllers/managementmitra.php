@@ -37,6 +37,8 @@ class Managementmitra extends CI_Controller
             $result['result'] = $this->cm->getPglList();
         }
 
+        $result['menu_id'] = $this->uri->segment(3);
+
         $this->load->view($this->folder . '/filter_mitra', $result);
         $this->load->view($this->folder . '/mm_tab', $result);
     }
@@ -59,8 +61,8 @@ class Managementmitra extends CI_Controller
         $lokasi_id = $this->input->post("lokasisewa");
         $result["P_MP_LOKASI_ID"] = $lokasi_id;
 
-        //   $this->m_mm_mitra->getListPKSByLokasi();
 
+        $result['menu_id'] = $this->input->post('menu_id');
         $this->load->view($this->folder . '/dok_pks', $result);
     }
 
@@ -68,6 +70,7 @@ class Managementmitra extends CI_Controller
     {
 
         $data['pgl_id'] = $this->input->post('mitra');
+        $data['menu_id'] = $this->input->post('menu_id');
         $this->load->view($this->folder . '/dok_npk', $data);
     }
 
@@ -216,7 +219,7 @@ class Managementmitra extends CI_Controller
 
         //$req_param['where'] = array('BILL_PRD' => $periode);
         $req_param['where'] = array('BILL_PRD' => $periode,
-                                    'PGL_ID' => $pgl_id);
+            'PGL_ID' => $pgl_id);
 
 
         // Get limit paging
@@ -251,12 +254,14 @@ class Managementmitra extends CI_Controller
     public function dokKontrak()
     {
         $result['pgl_id'] = $this->input->post("mitra");
+        $result['menu_id'] = $this->input->post('menu_id');
         $this->load->view($this->folder . '/dok_kontrak', $result);
     }
 
     public function evaluasiMitra()
     {
         $result['pgl_id'] = $this->input->post("mitra");
+        $result['menu_id'] = $this->input->post('menu_id');
         $this->load->view($this->folder . '/evaluasi_mitra', $result);
     }
 
@@ -1064,12 +1069,17 @@ class Managementmitra extends CI_Controller
     {
         $doc_name = trim(ucfirst($this->input->post("doc_name")));
         $pgl_id = $this->input->post("pgl_id");
-        $bulan = $this->input->post("bulan");
-        $tahun = $this->input->post("tahun");
         $periode = $this->input->post('tahun') . "" . $this->input->post('bulan');
+
+        $CREATED_DATE = date('d/M/Y');
+        $UPDATED_DATE = date('d/M/Y');
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+
+
         // Upload Process
-        $config['upload_path'] = './application/third_party/upload/kontrak';
-        $config['allowed_types'] = 'docx|pdf|doc';
+        $config['upload_path'] = './application/third_party/upload/npk';
+        $config['allowed_types'] = 'doc|pdf|docx|xls|xlsx';
         $config['max_size'] = '0';
         $config['overwrite'] = TRUE;
         $file_id = time();
@@ -1082,7 +1092,6 @@ class Managementmitra extends CI_Controller
         $ck = $this->Mfee->checkDuplicated('P_NPK', array('DOC_NAME' => $doc_name, 'PGL_ID' => $pgl_id));
 
         if ($ck == 1) {
-
             $data['status'] = false;
             $data['msg'] = "Nama dokumen sudah ada !";
             echo json_encode($data);
@@ -1097,13 +1106,17 @@ class Managementmitra extends CI_Controller
                 $data = $this->upload->data();
                 $datas = array(
                     "DOC_NAME" => $doc_name,
+                    "PERIODE" => $periode,
+                    "FILE_NAME" => $data['client_name'],
                     "FILE_PATH" => $data['file_name'],
-                    "UPDATE_DATE" => date('d/M/Y'),
-                    "UPDATE_BY" => $this->session->userdata('d_user_name'),
+                    'CREATED_BY' => $CREATED_BY,
+                    'CREATED_DATE' => $CREATED_DATE,
+                    'UPDATED_DATE' => $UPDATED_DATE,
+                    'UPDATED_BY' => $UPDATED_BY,
                     "PGL_ID" => $pgl_id
                 );
 
-                $this->m_mitra->insertDokKontrak($datas);
+                $this->m_mitra->insertDokNPK($datas);
                 $data['success'] = true;
                 $data['msg'] = "Upload Berhasil";
                 echo json_encode($data);
@@ -1227,9 +1240,20 @@ class Managementmitra extends CI_Controller
         force_download($FILE_PATH, $data);
     }
 
+    public function downloadNPK($FILE_PATH)
+    {
+        $data = file_get_contents("./application/third_party/upload/npk/" . $FILE_PATH);
+        force_download($FILE_PATH, $data);
+    }
+
     public function crud_pks()
     {
         $this->m_mitra->crud_pks();
+    }
+
+    public function crud_npk()
+    {
+        $this->m_mitra->crud_npk();
     }
 
     public function crud_kontrak()

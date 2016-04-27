@@ -1,51 +1,36 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="dok_pks">
     <form class="form-horizontal" role="form">
-        <div class="rows">
-            <!--<div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">Tanggal PKS </label>
-                <div class="col-sm-6">
-                    <input class="date-picker col-sm-3" id="valid_from" type="text" data-date-format="dd-mm-yyyy"
-                           placeholder="Tgl Mulai PKS" style="margin-right:10px;"/>
-                    <label></label>
-                    <input class="date-picker col-sm-3" id="valid_until" type="text" data-date-format="dd-mm-yyyy"
-                           placeholder="Tgl berakhir PKS"/>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <?php echo buatcombo("list_pks", "list_pks", "P_MP_PKS", "NO_PKS", "P_MP_PKS_ID", array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID), "Pilih PKS"); ?>
+                    </div>
+                    <a id="cari_pks"
+                       class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
+                        <span class="ace-icon fa fa-search"></span>Cari</a>
                 </div>
-            </div>-->
-            <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right">No PKS </label>
-                <div class="col-sm-4">
-                    <?php echo buatcombo("list_pks","list_pks","P_MP_PKS","NO_PKS","P_MP_PKS_ID",array('P_MP_LOKASI_ID' => $P_MP_LOKASI_ID),"Pilih PKS");?>
+                <?php if($prv['UPLOAD'] == "Y"){ ;?>
+                <div id="btn_add_update" class="form-group">
+                    <div class="col-sm-4">
+                        <a id="add_pks" class="btn btn-white btn-sm btn-round">
+                            <i class="ace-icon fa fa-plus green"></i>
+                            Upload Dokumen
+                        </a>
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
                 </div>
-                <a id="cari_pks"
-                   class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
-                    <span class="ace-icon fa fa-search"></span>Cari</a>
-            </div>
-
-            <div id="btn_add_update" class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"></label>
-                <div class="col-sm-4">
-                    <a id="add_pks" class="btn btn-white btn-sm btn-round">
-                        <i class="ace-icon fa fa-plus green"></i>
-                        Upload Dokumen
-                    </a>
-                    <!--<a id="btn_edit" class="btn btn-white btn-sm btn-round">
-                        <i class="ace-icon fa fa-plus green"></i>
-                        Edit Dokumen
-                    </a>-->
-                </div>
-                <div class="col-sm-4">
-
-                </div>
-
-            </div>
-            <div class="form-group">
-                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1">&nbsp;</label>
-                <div class="col-sm-11">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div id="jqgrid">
-                                <table id="grid-table"></table>
-                                <div id="grid-pager"></div>
+                <?php };?>
+                <div class="form-group">
+                    <div class="col-sm-11">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div id="jqgrid">
+                                    <table id="grid-table"></table>
+                                    <div id="grid-pager"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -90,6 +75,7 @@
                     <div class="col-sm-4">
                         <input type="file" id="filename" name="filename"/>
                     </div>
+                    <div class="col-sm-5 help-block">*Allow File (docx|pdf|doc|xls|xlsx)</div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right"> Description </label>
@@ -218,8 +204,8 @@
         $("#div_pks").show("slow");
     });
     $("#btn_edit").click(function () {
-        var rowKey =  $("#grid-table").jqGrid('getGridParam', 'selrow');
-        if(rowKey){
+        var rowKey = $("#grid-table").jqGrid('getGridParam', 'selrow');
+        if (rowKey) {
 
             $.post("<?php echo site_url('managementmitra/gridPKS');?>",
                 {
@@ -244,8 +230,8 @@
             $("#oper").val("edit");
             $("#dok_pks").hide("slow");
             $("#div_pks").show("slow");
-        }else{
-            swal("Warning","Silahkan pilih row PKS !","warning");
+        } else {
+            swal("Warning", "Silahkan pilih row PKS !", "warning");
 
         }
 
@@ -278,7 +264,7 @@
         var grid = $("#grid-table");
         var pager = $("#grid-pager");
         var postdata = grid.jqGrid('getGridParam', 'postData');
-        $.extend(postdata, {valid_from: valid_from, valid_until:valid_until});
+        $.extend(postdata, {valid_from: valid_from, valid_until: valid_until});
         grid.trigger("reloadGrid", [{page: 1}]);
     });
 </script>
@@ -292,23 +278,23 @@
 
         var parent_column = grid.closest('[class*="col-"]');
         $(window).on('resize.jqGrid', function () {
-            grid.jqGrid( 'setGridWidth', $("#jqgrid").width()-1 );
-            grid2.jqGrid( 'setGridWidth', $("#jqgrid").width()-1 );
+            grid.jqGrid('setGridWidth', $("#jqgrid").width() - 1);
+            grid2.jqGrid('setGridWidth', $("#jqgrid").width() - 1);
         })
         //optional: resize on sidebar collapse/expand and container fixed/unfixed
-        $(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
-            if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
-                grid.jqGrid( 'setGridWidth', parent_column.width() );
-                pager.jqGrid( 'setGridWidth', parent_column.width() );
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                grid.jqGrid('setGridWidth', parent_column.width());
+                pager.jqGrid('setGridWidth', parent_column.width());
             }
         })
-        var width =  $("#jqgrid").width();
+        var width = $("#jqgrid").width();
 
         grid.jqGrid({
             url: '<?php echo site_url('managementmitra/gridPKS');?>',
             datatype: "json",
             mtype: "POST",
-            postData : {P_MP_LOKASI_ID:<?php echo $P_MP_LOKASI_ID;?>},
+            postData: {P_MP_LOKASI_ID:<?php echo $P_MP_LOKASI_ID;?>},
             caption: "Dokumen PKS",
             colModel: [
                 {
@@ -443,7 +429,14 @@
                 editicon: 'ace-icon fa fa-pencil blue',
                 add: false,
                 addicon: 'ace-icon fa fa-plus-circle purple',
-                del: true,
+                del: <?php
+                if ($prv['HAPUS'] == "Y") {
+                    echo 'true';
+                } else {
+                    echo 'false';
+
+                }
+                ?>,
                 delicon: 'ace-icon fa fa-trash-o red',
                 search: false,
                 searchicon: 'ace-icon fa fa-search orange',

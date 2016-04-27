@@ -38,6 +38,8 @@ class Skema_bisnis extends CI_Controller
             $result['result'] = $this->cm->getPglList();
         }
 
+        $result['menu_id'] = $this->uri->segment(3);
+
         $this->load->view('managementmitra/filter_mitra', $result);
         $this->load->view('skema_bisnis/skembis_tab');
     }
@@ -95,6 +97,7 @@ class Skema_bisnis extends CI_Controller
     public function calculateMF()
     {
         $data['pgl_id'] = $this->input->post('mitra');
+        $data['menu_id'] = $this->input->post('menu_id');
         $this->load->view($this->folder . '/calculate_mf', $data);
     }
 
@@ -181,6 +184,7 @@ class Skema_bisnis extends CI_Controller
     public function skembis()
     {
         $data['pgl_id'] = $this->input->post('mitra');
+        $data['menu_id'] = $this->input->post('menu_id');
         $this->load->view($this->folder . '/grid_skembis', $data);
     }
 
