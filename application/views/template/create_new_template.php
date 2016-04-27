@@ -300,6 +300,9 @@
 		
 		$('#create_template_btn').click (function(){
 			var doc_title = $('#doc_name_field').val();
+			if(doc_title.length == 0){
+				swal("Perhatian","Isilah nama terlebih dahulu sebelum input template baru","info");
+			} else {
 			$.ajax({				
 					type: "POST",
 				   dataType: "html",
@@ -313,6 +316,7 @@
 						swal("Error",xhr.status+"  "+ thrownError,"error");
 						} 
 				});
+			}
 		});
 		$('#view_template_btn').click (function(){			
 			$.ajax({				
