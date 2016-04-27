@@ -55,6 +55,16 @@ class mfee extends CI_Model
 
     }
 
+    public function checkDuplicateND_NP($ten_id, $sid)
+    {
+        $this->db->where('PRODUCT_ID', $sid);
+        $this->db->where('TEN_ID', $ten_id);
+        $query = $this->db->get('TEN_ND_NP');
+
+        return $query->num_rows();
+
+    }
+
     public function checkDuplicate($table, $field, $value)
     {
         $this->db->where($field, $value);

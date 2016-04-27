@@ -407,25 +407,19 @@
 
                 var table = this;
                 setTimeout(function () {
-                    //  styleCheckbox(table);
-
-                    //  updateActionIcons(table);
                     updatePagerIcons(table);
                     enableTooltips(table);
                 }, 0);
 
                 $("#user_attribute_row_content").hide();
-                var is_submit = '<?php $prv['SUBMIT'];?>';
+                var is_submit = '<?php echo $prv['SUBMIT'];?>';
                 if (is_submit == "Y") {
                     $('#reset').show();
                 } else {
                     $('#reset').hide();
                 }
 
-
             },
-
-            //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo site_url('admin/crud_user');?>',
             caption: "Daftar User"
 

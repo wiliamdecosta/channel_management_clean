@@ -55,7 +55,7 @@ class Parameter extends CI_Controller
         $this->breadcrumb = getBreadcrumb($bc);
         $data['menu_id'] = $this->uri->segment(3);
 
-        $this->load->view('parameter/mitra',$data);
+        $this->load->view('parameter/mitra', $data);
     }
 
 
@@ -121,6 +121,7 @@ class Parameter extends CI_Controller
         $id = $this->input->post('id');
         $this->jqGrid->crud($table, 'PROF_ID', $id, array('PROF_NAME', 'PROF_DESC'));
     }
+
     public function datin_main_page()
     {
         $title = $_POST['title'];
@@ -129,23 +130,36 @@ class Parameter extends CI_Controller
         $this->breadcrumb = getBreadcrumb($bc);
         $this->load->view('parameter/uploaddatinmainpage');
     }
+
     public function uploadDatin()
     {
         $title = $_POST['title'];
-        //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
+
+        $result['menu_id'] = $this->uri->segment(3);
+
+        // prof id 3 = C2BI User
+        $this->load->model('M_cm', 'cm');
+        if ($this->session->userdata('d_prof_id') == 3) {
+            $result['result'] = $this->cm->getPglListByID($this->session->userdata('d_user_id'));
+        } else {
+            $result['result'] = $this->cm->getPglList();
+        }
 
         $result['result'] = $this->cm->getPglList();
         $result['product'] = $this->M_param->getParamProducts();
         $result['menu_id'] = $this->uri->segment(3);
-        $this->load->view('parameter/uploaddatin', $result);
+
+        $this->load->view('parameter/form_upload_datin', $result);
+        //$this->load->view('parameter/uploaddatin', $result);
     }
+
     public function datinuploaddo()
     {
         $ten_id = $this->input->post("ten_id");
-      //  $pu_action = $this->input->post("pu_action");
-      //  $cprod = $this->input->post("cprod");
+        //  $pu_action = $this->input->post("pu_action");
+        //  $cprod = $this->input->post("cprod");
         //$file = $this->input->post("file");
         if ($ten_id != "") {
             // switch ($pu_action) {
@@ -203,10 +217,10 @@ class Parameter extends CI_Controller
 
     }
 
-    public function datinuploadparse($file_name, $file_ext, $cprod, $ten_id = "", $confirm)
+    public function datinuploadparse_old($file_name, $file_ext, $ten_id = "", $confirm)
     {
         //error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
-        error_reporting(0); 
+        error_reporting(0);
         $this->load->library('phpexcel');
 
         if ($file_ext == ".xlsx") $readerType = 'Excel2007';
@@ -223,54 +237,54 @@ class Parameter extends CI_Controller
 
         if ($ten_id != "") {
 
-                $username = $this->session->userdata('d_nik');
-                $cekND = 0;
-                //$batch_id = $this->M_tenant->getBatchID();
-                $dataDatin = array();
-                // $retStat='';
-                // $retCount=0;
-                $msgret = 'Duplicate Data on row';
-                for ($row = 1; $row <= $highestRow; ++$row) {
+            $username = $this->session->userdata('d_nik');
+            $cekND = 0;
+            //$batch_id = $this->M_tenant->getBatchID();
+            $dataDatin = array();
+            // $retStat='';
+            // $retCount=0;
+            $msgret = 'Duplicate Data on row';
+            for ($row = 1; $row <= $highestRow; ++$row) {
 
-                    $dataDatin['TEN_ID'] = $ten_id;
-                    //$dataDatin['CUSTOMER_REF'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
-                    $dataDatin['ACCOUNT_NUM'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
-                    //$dataDatin['GL_ACCOUNT'] = $sh->getCellByColumnAndRow(2, $row)->getValue();
-                    $dataDatin['PRODUCT_ID'] = $sh->getCellByColumnAndRow(1, $row)->getValue();
-                    $dataDatin['USERID'] = $username;
+                $dataDatin['TEN_ID'] = $ten_id;
+                //$dataDatin['CUSTOMER_REF'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
+                $dataDatin['ACCOUNT_NUM'] = $sh->getCellByColumnAndRow(0, $row)->getValue();
+                //$dataDatin['GL_ACCOUNT'] = $sh->getCellByColumnAndRow(2, $row)->getValue();
+                $dataDatin['PRODUCT_ID'] = $sh->getCellByColumnAndRow(1, $row)->getValue();
+                $dataDatin['USERID'] = $username;
 
-                    $check = $this->M_tenant->insertDatin($dataDatin);
-                   
-                    if ($check > 0){
-                        $msgret.= ' '.$row;
-                        $cekND = 1;
-                    }
+                $check = $this->M_tenant->insertDatin($dataDatin);
 
-                } // End Loop
+                if ($check > 0) {
+                    $msgret .= ' ' . $row;
+                    $cekND = 1;
+                }
 
-                    if ($cekND > 0){
-                        $data['status'] = "F";
-                        $data['msg'] = $data['msg'] = "<div class='alert alert-danger'>" . "
+            } // End Loop
+
+            if ($cekND > 0) {
+                $data['status'] = "F";
+                $data['msg'] = $data['msg'] = "<div class='alert alert-danger'>" . "
                                                 <button type='button' class='close' data-dismiss='alert'>
                                                     <i class='ace-icon fa fa-times'></i>
                                                 </button>
-                                                  ".$msgret."
+                                                  " . $msgret . "
                                                 <br />
                                             </div>";
-                    }else{
-                        $data['status'] = "T";
-                        $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "
+            } else {
+                $data['status'] = "T";
+                $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "
                                                 <button type='button' class='close' data-dismiss='alert'>
                                                     <i class='ace-icon fa fa-times'></i>
                                                 </button>
                                                   All records has been inserted successfully
                                                 <br />
                                             </div>";
-                    }
-        
-        }else{
-                    $data['status'] = "F";
-                    $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "
+            }
+
+        } else {
+            $data['status'] = "F";
+            $data['msg'] = $data['msg'] = "<div class='alert alert-success'>" . "
                                                 <button type='button' class='close' data-dismiss='alert'>
                                                     <i class='ace-icon fa fa-times'></i>
                                                 </button>
@@ -278,7 +292,7 @@ class Parameter extends CI_Controller
                                                 <br />
                                             </div>";
         }
-          echo json_encode($data);
+        echo json_encode($data);
     }
 
     public function datindel($ten_id, $nd)
@@ -655,7 +669,7 @@ class Parameter extends CI_Controller
         $this->breadcrumb = getBreadcrumb($bc);
 
         $data['menu_id'] = $this->uri->segment(3);
-        $this->load->view('parameter/reference',$data);
+        $this->load->view('parameter/reference', $data);
     }
 
 
@@ -990,7 +1004,7 @@ class Parameter extends CI_Controller
 
         $data['menu_id'] = $this->uri->segment(3);
 
-        $this->load->view('parameter/pic',$data);
+        $this->load->view('parameter/pic', $data);
     }
 
 
@@ -1063,7 +1077,7 @@ class Parameter extends CI_Controller
         $this->breadcrumb = getBreadcrumb($bc);
 
         $data['menu_id'] = $this->uri->segment(3);
-        $this->load->view('parameter/dat_am',$data);
+        $this->load->view('parameter/dat_am', $data);
     }
 
 
@@ -1155,6 +1169,12 @@ class Parameter extends CI_Controller
         $this->load->view('parameter/list_fastel', $data);
     }
 
+    public function show_datin()
+    {
+        $data['ten_id'] = $this->input->post("ten_id");
+        $this->load->view('parameter/list_datin', $data);
+    }
+
     public function gridFastel()
     {
         $page = intval($_REQUEST['page']);
@@ -1207,9 +1227,66 @@ class Parameter extends CI_Controller
         echo json_encode($result);
     }
 
+    public function gridDatin()
+    {
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $table = "TEN_ND_NP";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        $req_param['where'] = array('TEN_ID' => $this->input->post("ten_id"));
+
+        $row = $this->jqGrid->get_data($req_param)->result_array();
+        //print_r($row);exit;
+        $count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+    }
+
     public function crud_fastel()
     {
         $this->M_parameter->crud_fastel();
+    }
+
+    public function crud_datin()
+    {
+        $this->M_parameter->crud_datin();
     }
 
     public function modalUploadFastel()
@@ -1226,6 +1303,21 @@ class Parameter extends CI_Controller
         $result['param_upload'] = $upload_param;
         $result['product'] = $this->M_param->getParamProducts();
         $this->load->view('parameter/upload_fastel', $result);
+    }
+
+    public function modalUploadDatin()
+    {
+        $upload_param = $this->input->post('upload_param');
+        // 1 = upload, 2 = update
+
+        if ($upload_param == 1) {
+            $result['param_code'] = "Add Datin";
+        } else {
+            $result['param_code'] = "Update Datin";
+        }
+
+        $result['param_upload'] = $upload_param;
+        $this->load->view('parameter/upload_datin', $result);
     }
 
     public function fastel_uploaddo()
@@ -1348,6 +1440,92 @@ class Parameter extends CI_Controller
         echo json_encode($data);
     }
 
+    public function datin_uploaddo()
+    {
+        $ten_id = $this->input->post("ten_id");
+        $param_upload = $this->input->post("param_upload");
+
+        if ($ten_id != "") {
+
+            // Upload Process
+            $config['upload_path'] = './application/third_party/upload';
+            $config['allowed_types'] = 'xls|xlsx|csv';
+            $config['max_size'] = '100000000';
+            $config['overwrite'] = TRUE;
+            $file_id = date("YmdHis");
+            $config['file_name'] = "datin_" . $file_id;
+
+            $this->load->library('upload');
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload("filename")) {
+                $error = $this->upload->display_errors();
+                $data['status'] = "F";
+                $data['msg'] = "<div class='alert alert-danger'>" . "
+											<button type='button' class='close' data-dismiss='alert'>
+												<i class='ace-icon fa fa-times'></i>
+											</button>
+											    " . $error . "
+											<br />
+										</div>";
+                echo json_encode($data);
+            } else {
+                // Do Upload
+                $data = $this->upload->data();
+                // Parse file
+                $this->datinuploadparse($data['file_name'], $data["file_ext"], $ten_id, $param_upload);
+            }
+        }
+
+    }
+
+    public function datinuploadparse($file_name, $file_ext, $ten_id = "", $param_upload)
+    {
+        error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+        $this->load->library('phpexcel');
+
+        if ($file_ext == ".xlsx") $readerType = 'Excel2007';
+        elseif ($file_ext == ".xls") $readerType = 'Excel5';
+        elseif ($file_ext == ".csv" || $file_ext == ".txt") $readerType = 'CSV';
+
+        $reader = PHPExcel_IOFactory::createReader($readerType);
+        $reader->setReadDataOnly(true);
+        $phpexcel = $reader->load(APPPATH . 'third_party/upload/' . $file_name);
+        $sh = $phpexcel->getActiveSheet();
+        $highestRow = $sh->getHighestRow();
+        $highestColumn = $sh->getHighestColumn();
+        $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+
+        // jika 2 = upload
+        if ($param_upload == 2) {
+            $this->M_parameter->deleteDatinByTenant($ten_id);
+        }
+
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $sid = (string)$sh->getCellByColumnAndRow(1, $row)->getValue(); // SID row
+            //$vf = $sh->getCellByColumnAndRow(1, $row)->getValue(); // Valid from
+            // $vt = $sh->getCellByColumnAndRow(2, $row)->getValue(); // Valid to
+
+
+            // Insert ND
+            $data = array(
+                'TEN_ID' => $ten_id,
+                'PRODUCT_ID' => $sid,
+                'CREATED_DATE' => date('d/M/Y'),
+                'CREATED_BY' => $this->session->userdata('d_user_name')
+            );
+
+            $check = $this->Mfee->checkDuplicateND_NP($ten_id, $sid);
+            if ($check == 0) {
+                $this->M_parameter->insertDatin($data);
+            }
+        }
+
+        $data['success'] = true;
+        $data['msg'] = "Upload Berhasil";
+        echo json_encode($data);
+    }
+
     public function gridMapMitraSegment()
     {
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
@@ -1420,7 +1598,7 @@ class Parameter extends CI_Controller
 
         $result['menu_id'] = $this->uri->segment(3);
 
-        $this->load->view('parameter/mitra_segment',$result);
+        $this->load->view('parameter/mitra_segment', $result);
     }
 
     public function addmitra()
@@ -1443,7 +1621,7 @@ class Parameter extends CI_Controller
     public function mapping_mitra()
     {
         $result['menu_id'] = $this->input->post('menu_id');
-        $this->load->view('parameter/mapping_mitra',$result);
+        $this->load->view('parameter/mapping_mitra', $result);
     }
 
     public function mapping_lokasi()
@@ -1452,6 +1630,7 @@ class Parameter extends CI_Controller
         $data["menu_id"] = $this->input->post("menu_id");
         $this->load->view('parameter/mapping_lokasi', $data);
     }
+
     public function mapping_pic()
     {
         $data["P_MP_LOKASI_ID"] = $this->input->post("P_MP_LOKASI_ID");
@@ -1621,7 +1800,6 @@ class Parameter extends CI_Controller
         }
 
 
-
         // Get limit paging
         $count = $this->jqGrid->countAll($req_param);
         if ($count > 0) {
@@ -1650,10 +1828,13 @@ class Parameter extends CI_Controller
         echo json_encode($result);
     }
 
-    public function crud_lokasimitra(){
+    public function crud_lokasimitra()
+    {
         $this->M_parameter->crud_lokasimitra();
     }
-    public function crud_pks(){
+
+    public function crud_pks()
+    {
         $this->M_parameter->crud_pks();
     }
 
@@ -1665,7 +1846,8 @@ class Parameter extends CI_Controller
         $this->load->view('parameter/mapping_pic_form', $data);
     }
 
-    public function crud_pic_mapping(){
+    public function crud_pic_mapping()
+    {
         $this->M_parameter->crud_mapping_pic();
     }
 
@@ -1676,24 +1858,24 @@ class Parameter extends CI_Controller
         $this->load->view('parameter/mapping_pic_form', $data);
     }
 
-	public function mapping_datin()
+    public function mapping_datin()
     {
         $title = "Mapping Datin";
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-		$this->load->model('M_cm', 'cm');
-		$result['result'] = $this->cm->mapDatinRequest();
+        $this->load->model('M_cm', 'cm');
+        $result['result'] = $this->cm->mapDatinRequest();
         $result['menu_id'] = $this->uri->segment(3);
 
-        $this->load->view('parameter/map_datin',$result);
+        $this->load->view('parameter/map_datin', $result);
     }
 
-	    public function gridCustMapDatin()
+    public function gridCustMapDatin()
     {
-		$ACCOUNT_NUM = $this->input->post('account_num');
-		$ID_PGL = $this->input->post('pgl_id');
+        $ACCOUNT_NUM = $this->input->post('account_num');
+        $ID_PGL = $this->input->post('pgl_id');
 
         $page = intval($_REQUEST['page']);
         $limit = $_REQUEST['rows'];
@@ -1704,7 +1886,7 @@ class Parameter extends CI_Controller
 				a.CREATED_BY CB, a.UPDATE_BY UB, a.CREATION_DATE CD, a.VALID_FROM VF,
 				a.UPDATE_DATE UD, a.P_MAP_DATIN_ACC_ID PMD
 				FROM P_MAP_DATIN_ACC a
-				WHERE a.PGL_ID ='". $ID_PGL ."' AND a.ACCOUNT_NUM = '". $ACCOUNT_NUM ."'";
+				WHERE a.PGL_ID ='" . $ID_PGL . "' AND a.ACCOUNT_NUM = '" . $ACCOUNT_NUM . "'";
         $req_param = array(
             "table" => $table,
             "sort_by" => $sidx,
@@ -1744,16 +1926,19 @@ class Parameter extends CI_Controller
         echo json_encode($result);
 
     }
-	    public function crud_map_datin()
+
+    public function crud_map_datin()
     {
         $this->M_parameter->crud_map_datin();
     }
-	public function gridmapDatin() {
+
+    public function gridmapDatin()
+    {
 
         $user_id = $this->input->post('user_id');
         $p_user_attribute_id = $this->input->post('p_user_attribute_id');
 
-        $page = intval($this->input->post('current')) ;
+        $page = intval($this->input->post('current'));
         $limit = $this->input->post('rowCount');
         $sort = $this->input->post('sort');
         $dir = $this->input->post('dir');
@@ -1769,258 +1954,7 @@ class Parameter extends CI_Controller
                        LEFT JOIN p_user_attribute_list c
                        ON a.p_user_attribute_list_id = c.p_user_attribute_list_id";
 
-        $req_param = array (
-            "table" => $query,
-            "sort_by" => $sort,
-            "sord" => $dir,
-            "limit" => null,
-			"search" => $searchPhrase
-        );
-
-        if(!empty($user_id)) {
-            $req_param['where'][] = "a.user_id = ".$user_id;
-        }
-
-        if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(a.user_attribute_value) LIKE upper('%".$searchPhrase."%') OR upper(b.code) LIKE upper('%".$searchPhrase."%') OR upper(c.code) LIKE upper('%".$searchPhrase."%') OR upper(c.name) LIKE upper('%".$searchPhrase."%'))";
-        }
-
-        if(!empty($p_user_attribute_id)) {
-            $req_param['where'][] = "a.p_user_attribute_id = ".$p_user_attribute_id;
-        }
-
-
-        $count = $this->jqGrid->bootgrid_countAll($req_param);
-        if( $count > 0 && !empty($limit) ) {
-            $total_pages = ceil($count/$limit);
-        } else {
-            $total_pages = 0;
-        }
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
-
-        $req_param['limit'] = array(
-            'start' => $start,
-            'end' => $limit
-        );
-
-		if ($page == 0) {
-            $result['current'] = 1;
-        } else {
-            $result['current'] = $page;
-        }
-
-        $result['total'] = $count;
-        $result['rowCount'] = $limit;
-        $result['success'] = true;
-        $result['message'] = 'Berhasil';
-        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
-        echo json_encode($result);
-    }
-
-//-----------------------------------------------------
-    public function gridMapDatin_pgl() {
-
-        $p_user_attribute_type_id = $this->input->post('P_PGL_ID');
-
-        $page = intval($this->input->post('current')) ;
-        $limit = $this->input->post('rowCount');
-        $sort = $this->input->post('sort');
-        $dir = $this->input->post('dir');
-
-        $searchPhrase = $this->input->post('searchPhrase');
-
-        $query = "SELECT * FROM cust_pgl";
-
-        $req_param = array (
-            "table" => $query,
-            "sort_by" => $sort,
-            "sord" => $dir,
-            "limit" => null,
-			"search" => $searchPhrase
-        );
-
-        $req_param['where'] = array();
-
-        if(!empty($p_user_attribute_type_id)) {
-            $req_param['where'][] = "PGL_ID = ".$p_user_attribute_type_id;
-        }
-
-        if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(PGL_NAME) LIKE upper('%".$searchPhrase."%') OR upper(PGL_ADDR) LIKE upper('%".$searchPhrase."%'))";
-        }
-
-
-        $count = $this->jqGrid->bootgrid_countAll($req_param);
-        if( $count > 0 && !empty($limit) ) {
-            $total_pages = ceil($count/$limit);
-        } else {
-            $total_pages = 0;
-        }
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
-
-        $req_param['limit'] = array(
-            'start' => $start,
-            'end' => $limit
-        );
-
-		if ($page == 0) {
-            $result['current'] = 1;
-        } else {
-            $result['current'] = $page;
-        }
-
-        $result['total'] = $count;
-        $result['rowCount'] = $limit;
-        $result['success'] = true;
-        $result['message'] = 'Berhasil';
-        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
-        echo json_encode($result);
-    }
-
-	public function gridMapDatin_acc() {
-
-        $ACCOUNT_NUM = $this->input->post('P_ACC_NUM');
-
-        $page = intval($this->input->post('current')) ;
-        $limit = $this->input->post('rowCount');
-        $sort = $this->input->post('sort');
-        $dir = $this->input->post('dir');
-
-        $searchPhrase = $this->input->post('searchPhrase');
-
-        $query = 	"SELECT ACCOUNT_NUM, CUSTOMER_REF FROM MV_LIS_ACCOUNT_NP";
-
-        $req_param = array (
-            "table" => $query,
-            "sort_by" => $sort,
-            "sord" => $dir,
-            "limit" => null,
-			"search" => $searchPhrase
-        );
-
-        $req_param['where'] = array();
-
-        if(!empty($ACCOUNT_NUM)) {
-            $req_param['where'][] = "ACCOUNT_NUM = ".$ACCOUNT_NUM;
-        }
-
-        if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(ACCOUNT_NUM) LIKE upper('%".$searchPhrase."%') OR upper(CUSTOMER_REF) LIKE upper('%".$searchPhrase."%'))";
-        }
-
-
-        $count = $this->jqGrid->bootgrid_countAll($req_param);
-        if( $count > 0 && !empty($limit) ) {
-            $total_pages = ceil($count/$limit);
-        } else {
-            $total_pages = 0;
-        }
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
-
-        $req_param['limit'] = array(
-            'start' => $start,
-            'end' => $limit
-        );
-
-		if ($page == 0) {
-            $result['current'] = 1;
-        } else {
-            $result['current'] = $page;
-        }
-
-        $result['total'] = $count;
-        $result['rowCount'] = $limit;
-        $result['success'] = true;
-        $result['message'] = 'Berhasil';
-        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
-        echo json_encode($result);
-    }
-
-	public function list_Dynamic_Pengelola() {
-        $id_pg = $this->input->post("id_pgl_grid");
-		$id_acc = $this->input->post("form_nama_akun_code");
-        $result = $this->cm->getListPglAcc($id_pg,$id_acc);
-
-        $option = "";
-        foreach($result as $content){
-            $option  .= "<option value=".$content->PG.">".$content->PG."</option>";
-        }
-        echo $option;
-    }
-    
-    public function gridLovAppProfile() {
-
-        $page = intval($this->input->post('current')) ;
-        $limit = $this->input->post('rowCount');
-        $sort = $this->input->post('sort');
-        $dir = $this->input->post('dir');
-
-        $searchPhrase = $this->input->post('searchPhrase');
-
-        $query = "SELECT * FROM APP_PROFILE";
-
-        $req_param = array (
-            "table" => $query,
-            "sort_by" => $sort,
-            "sord" => $dir,
-            "limit" => null,
-			"search" => $searchPhrase
-        );
-
-        $req_param['where'] = array();
-        
-        if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(prof_name) LIKE upper('%".$searchPhrase."%'))";
-        }
-        
-
-        $count = $this->jqGrid->bootgrid_countAll($req_param);
-        if( $count > 0 && !empty($limit) ) {
-            $total_pages = ceil($count/$limit);
-        } else {
-            $total_pages = 0;
-        }
-        if ($page > $total_pages)
-            $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
-
-        $req_param['limit'] = array(
-            'start' => $start,
-            'end' => $limit
-        );
-
-		if ($page == 0) {
-            $result['current'] = 1;
-        } else {
-            $result['current'] = $page;
-        }
-
-        $result['total'] = $count;
-        $result['rowCount'] = $limit;
-        $result['success'] = true;
-        $result['message'] = 'Berhasil';
-        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
-        echo json_encode($result);
-    }
-
-    public function gridLovDocumentType() {
-
-        $page = intval($this->input->post('current')) ;
-        $limit = $this->input->post('rowCount');
-        $sort = $this->input->post('sort');
-        $dir = $this->input->post('dir');
-
-        $searchPhrase = $this->input->post('searchPhrase');
-
-        $query = "SELECT P_DOCUMENT_TYPE_ID, DISPLAY_NAME AS DOCUMENT_TYPE_CODE, DISPLAY_NAME FROM P_DOCUMENT_TYPE";
-
-        $req_param = array (
+        $req_param = array(
             "table" => $query,
             "sort_by" => $sort,
             "sord" => $dir,
@@ -2028,22 +1962,28 @@ class Parameter extends CI_Controller
             "search" => $searchPhrase
         );
 
-        $req_param['where'] = array();
-        
-        if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(DISPLAY_NAME) LIKE upper('%".$searchPhrase."%'))";
+        if (!empty($user_id)) {
+            $req_param['where'][] = "a.user_id = " . $user_id;
         }
-        
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(a.user_attribute_value) LIKE upper('%" . $searchPhrase . "%') OR upper(b.code) LIKE upper('%" . $searchPhrase . "%') OR upper(c.code) LIKE upper('%" . $searchPhrase . "%') OR upper(c.name) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
+        if (!empty($p_user_attribute_id)) {
+            $req_param['where'][] = "a.p_user_attribute_id = " . $p_user_attribute_id;
+        }
+
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
-        if( $count > 0 && !empty($limit) ) {
-            $total_pages = ceil($count/$limit);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
         } else {
             $total_pages = 0;
         }
         if ($page > $total_pages)
             $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
 
         $req_param['limit'] = array(
             'start' => $start,
@@ -2064,18 +2004,22 @@ class Parameter extends CI_Controller
         echo json_encode($result);
     }
 
-    public function gridLovProcedure() {
+//-----------------------------------------------------
+    public function gridMapDatin_pgl()
+    {
 
-        $page = intval($this->input->post('current')) ;
+        $p_user_attribute_type_id = $this->input->post('P_PGL_ID');
+
+        $page = intval($this->input->post('current'));
         $limit = $this->input->post('rowCount');
         $sort = $this->input->post('sort');
         $dir = $this->input->post('dir');
 
         $searchPhrase = $this->input->post('searchPhrase');
 
-        $query = "SELECT P_PROCEDURE_ID, DISPLAY_NAME AS PROCEDURE_CODE, DESCRIPTION, decode(IS_ACTIVE,'Y','YA','TIDAK') AS IS_ACTIVE FROM P_PROCEDURE";
+        $query = "SELECT * FROM cust_pgl";
 
-        $req_param = array (
+        $req_param = array(
             "table" => $query,
             "sort_by" => $sort,
             "sord" => $dir,
@@ -2084,21 +2028,268 @@ class Parameter extends CI_Controller
         );
 
         $req_param['where'] = array();
-        
-        if(!empty($searchPhrase)) {
-             $req_param['where'][] = "(upper(DISPLAY_NAME) LIKE upper('%".$searchPhrase."%'))";
+
+        if (!empty($p_user_attribute_type_id)) {
+            $req_param['where'][] = "PGL_ID = " . $p_user_attribute_type_id;
         }
-        
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(PGL_NAME) LIKE upper('%" . $searchPhrase . "%') OR upper(PGL_ADDR) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
 
         $count = $this->jqGrid->bootgrid_countAll($req_param);
-        if( $count > 0 && !empty($limit) ) {
-            $total_pages = ceil($count/$limit);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
         } else {
             $total_pages = 0;
         }
         if ($page > $total_pages)
             $page = $total_pages;
-        $start = $limit*$page - ($limit-1); // do not put $limit*($page - 1)
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+    public function gridMapDatin_acc()
+    {
+
+        $ACCOUNT_NUM = $this->input->post('P_ACC_NUM');
+
+        $page = intval($this->input->post('current'));
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT ACCOUNT_NUM, CUSTOMER_REF FROM MV_LIS_ACCOUNT_NP";
+
+        $req_param = array(
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+
+        if (!empty($ACCOUNT_NUM)) {
+            $req_param['where'][] = "ACCOUNT_NUM = " . $ACCOUNT_NUM;
+        }
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(ACCOUNT_NUM) LIKE upper('%" . $searchPhrase . "%') OR upper(CUSTOMER_REF) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+    public function list_Dynamic_Pengelola()
+    {
+        $id_pg = $this->input->post("id_pgl_grid");
+        $id_acc = $this->input->post("form_nama_akun_code");
+        $result = $this->cm->getListPglAcc($id_pg, $id_acc);
+
+        $option = "";
+        foreach ($result as $content) {
+            $option .= "<option value=" . $content->PG . ">" . $content->PG . "</option>";
+        }
+        echo $option;
+    }
+
+    public function gridLovAppProfile()
+    {
+
+        $page = intval($this->input->post('current'));
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT * FROM APP_PROFILE";
+
+        $req_param = array(
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(prof_name) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+    public function gridLovDocumentType()
+    {
+
+        $page = intval($this->input->post('current'));
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT P_DOCUMENT_TYPE_ID, DISPLAY_NAME AS DOCUMENT_TYPE_CODE, DISPLAY_NAME FROM P_DOCUMENT_TYPE";
+
+        $req_param = array(
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(DISPLAY_NAME) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+    public function gridLovProcedure()
+    {
+
+        $page = intval($this->input->post('current'));
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT P_PROCEDURE_ID, DISPLAY_NAME AS PROCEDURE_CODE, DESCRIPTION, decode(IS_ACTIVE,'Y','YA','TIDAK') AS IS_ACTIVE FROM P_PROCEDURE";
+
+        $req_param = array(
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(DISPLAY_NAME) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
 
         $req_param['limit'] = array(
             'start' => $start,

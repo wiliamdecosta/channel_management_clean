@@ -615,12 +615,52 @@ class M_parameter extends CI_Model
                 $this->db->insert($table, $data);
                 break;
             case 'edit':
-                $this->db->where('ND', $ND);
+                $this->db->where('ND', $id_);
                 $this->db->where('TEN_ID', $TEN_ID);
                 $this->db->update($table, $data);
                 break;
             case 'del':
-                $this->db->where('ND', $ND);
+                $this->db->where('ND', $id_);
+                $this->db->where('TEN_ID', $TEN_ID);
+                $this->db->delete($table);
+                break;
+        }
+
+    }
+
+    public function crud_datin()
+    {
+        $this->db->_protect_identifiers = false;
+        $this->db->protect_identifiers('TEN_ND_NP', FALSE);
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+
+        $table = "TEN_ND_NP";
+        $PRODUCT_ID = $this->input->post('PRODUCT_ID');
+        $TEN_ID = $this->input->post('TEN_ID');
+        $CREATED_DATE = date('d/M/Y');
+        $CREATED_BY = $this->session->userdata('d_user_name');
+
+        $data = array('PRODUCT_ID' => $PRODUCT_ID,
+            'TEN_ID' => $TEN_ID,
+            'CREATED_DATE' => $CREATED_DATE,
+            'CREATED_BY' => $CREATED_BY
+        );
+
+        switch ($oper) {
+            case 'add':
+                $check = $this->Mfee->checkDuplicateND_NP($TEN_ID, $PRODUCT_ID);
+                if ($check == 0) {
+                    $this->db->insert($table, $data);
+                }
+                break;
+            case 'edit':
+                $this->db->where('PRODUCT_ID', $id_);
+                $this->db->where('TEN_ID', $TEN_ID);
+                $this->db->update($table, $data);
+                break;
+            case 'del':
+                $this->db->where('PRODUCT_ID', $id_);
                 $this->db->where('TEN_ID', $TEN_ID);
                 $this->db->delete($table);
                 break;
@@ -635,10 +675,23 @@ class M_parameter extends CI_Model
         return $this->db->affected_rows();
     }
 
+    public function insertDatin($data)
+    {
+        $this->db->_protect_identifiers = false;
+        $this->db->insert('TEN_ND_NP', $data);
+        return $this->db->affected_rows();
+    }
+
     public function deleteFastelByTenant($ten_id)
     {
         $this->db->where('TEN_ID', $ten_id);
         $this->db->delete('TEN_ND');
+    }
+
+    public function deleteDatinByTenant($ten_id)
+    {
+        $this->db->where('TEN_ID', $ten_id);
+        $this->db->delete('TEN_ND_NP');
     }
 
     public function crud_detailmitra()

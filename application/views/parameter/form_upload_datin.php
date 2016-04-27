@@ -7,7 +7,6 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="row">
-                    <div class="vspace-12-sm"></div>
                     <div class="col-sm-12">
                         <div class="widget-box transparent">
                             <div class="widget-body">
@@ -57,13 +56,13 @@
                 <div id="btn_add_update" style="float: left;">
                     <?php
                     if ($prv['UPLOAD'] == "Y") {
-                        echo '<a id="add_fastel" class="btn btn-white btn-sm btn-round">
+                        echo '<a id="add_datin" class="btn btn-white btn-sm btn-round">
                                 <i class="ace-icon fa fa-plus green"></i>
-                                Add Fastel
+                                Add Datin
                             </a>
-                            <a id="update_fastel" class="btn btn-white btn-sm btn-round">
+                            <a id="update_datin" class="btn btn-white btn-sm btn-round">
                                 <i class="ace-icon fa fa-upload green"></i>
-                                Update Fastel
+                                Update Datin
                             </a>';
                     }
                     ?>
@@ -83,34 +82,11 @@
     </div><!-- /.col -->
 </div><!-- /.row
 </div><!-- /.page-content -->
-<div id="upload_fastel">
+<div id="upload_datin">
 
 </div>
 
-<!-- #section:basics/content.breadcrumbs -->
-<!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
 <script type="text/javascript">
-    $(document).ready(function () {
-
-        $('#show').click(function () {
-            var mitra = $("#mitra").val();
-            var tenant = $("#list_cc").val();
-
-            if (!mitra) {
-                return false;
-            }
-
-            $.ajax({
-                url: '<?php echo site_url('parameter/show_fastel');?>',
-                data: {ten_id: tenant},
-                type: 'POST',
-                success: function (data) {
-                    $('#tab-content').html(data);
-                }
-            });
-        })
-    })
-
     $("#mitra").change(function () {
         var mitra = $("#mitra").val();
         if (mitra) {
@@ -156,27 +132,27 @@
         }
     });
 
-    $("#add_fastel").click(function () {
+    $("#add_datin").click(function () {
         $.ajax({
             // async: false,
-            url: "<?php echo base_url();?>parameter/modalUploadFastel",
+            url: "<?php echo base_url();?>parameter/modalUploadDatin",
             type: "POST",
             data: {upload_param: 1},
             success: function (data) {
-                $('#upload_fastel').html(data);
-                $('#modal_upload_fastel').modal('show');
+                $('#upload_datin').html(data);
+                $('#modal_upload_datin').modal('show');
             }
         });
     })
-    $("#update_fastel").click(function () {
+    $("#update_datin").click(function () {
         $.ajax({
             // async: false,
-            url: "<?php echo base_url();?>parameter/modalUploadFastel",
+            url: "<?php echo base_url();?>parameter/modalUploadDatin",
             type: "POST",
             data: {upload_param: 2},
             success: function (data) {
-                $('#upload_fastel').html(data);
-                $('#modal_upload_fastel').modal('show');
+                $('#upload_datin').html(data);
+                $('#modal_upload_datin').modal('show');
             }
         });
     })
@@ -206,115 +182,29 @@
         var date = '<?= date("d/m/Y");?>';
         $(grid_selector).jqGrid({
             postData: {ten_id: ten_id},
-            url: '<?php echo site_url('parameter/gridFastel');?>',
+            url: '<?php echo site_url('parameter/gridDatin');?>',
             datatype: "json",
             mtype: "POST",
-            caption: "List Fastel",
+            caption: "List Datin",
             colModel: [
                 {
-                    label: 'ND',
-                    name: 'ND',
+                    label: 'SID',
+                    name: 'PRODUCT_ID',
                     key: true,
-                    width: 200,
+                    width: 300,
                     sortable: true,
                     editable: true,
                     editrules: {required: true},
                     hidden: false
                 },
                 {
-                    label: 'TEN_ID',
-                    name: 'TEN_ID',
+                    label: 'Account Num',
+                    name: 'ACCOUNT_NUM',
                     width: 200,
                     sortable: true,
-                    editable: false,
+                    editable: true,
+                    editrules: {required: false},
                     hidden: true
-                },
-                {
-                    label: 'Aktif',
-                    name: 'AKTIF',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    editable: true,
-                    formatter : function(cellValue){
-                        if(cellValue == 0){
-                            return 'Tidak Aktif';
-                        }
-                        if(cellValue == 1){
-                            return 'Aktif';
-                        }
-                        else{
-                            return 'Unknown';
-                        }
-                    },
-                    editrules: {required: true},
-                    edittype: "select",
-                    editoptions: {
-                        value: {1:'Aktif',0:'Tidak aktif'}
-                    }
-                },
-                {
-                    label: 'Valid From',
-                    name: 'VALID_FROM',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    // sorttype: "date",
-                    editable: true,
-                    editoptions: {
-                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
-                        // use it to place a third party control to customize the toolbar
-                        dataInit: function (element) {
-                            $(element).datepicker({
-                                autoclose: true,
-                                format: 'dd-M-yy',
-                                orientation: 'bottom',
-                                todayHighlight: true,
-                            });
-                        }
-                        // readonly: "readonly"
-                    },
-                    hidden: false
-                },
-                {
-                    label: 'Valid To',
-                    name: 'VALID_TO',
-                    width: 100,
-                    align: "left",
-                    sortable: true,
-                    editable: true,
-                    editoptions: {
-                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
-                        // use it to place a third party control to customize the toolbar
-                        dataInit: function (element) {
-                            $(element).datepicker({
-                                autoclose: true,
-                                format: 'dd-M-yy',
-                                //format: 'yyyy-mm-dd',
-                                orientation: 'bottom',
-                                todayHighlight: true,
-                            });
-                        }
-                    },
-                    hidden: false
-                },
-                {
-                    label: 'Tanggal Diubah',
-                    name: 'CREATED_DATE',
-                    width: 105,
-                    align: "left",
-                    sortable: true,
-                    editable: false,
-                    hidden: false
-                },
-                {
-                    label: 'Diubah Oleh',
-                    name: 'CREATED_BY',
-                    width: 110,
-                    align: "left",
-                    sortable: true,
-                    editable: false,
-                    hidden: false
                 },
                 {
                     label: 'TEN_ID',
@@ -324,6 +214,24 @@
                     editable: true,
                     hidden: true,
                     editoption: {}
+                },
+                {
+                    label: 'Tanggal Diubah',
+                    name: 'CREATED_DATE',
+                    width: 135,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
+                },
+                {
+                    label: 'Diubah Oleh',
+                    name: 'CREATED_BY',
+                    width: 130,
+                    align: "left",
+                    sortable: true,
+                    editable: false,
+                    hidden: false
                 }
             ],
             width: width,
@@ -332,7 +240,7 @@
             rowNum: 10,
             viewrecords: true,
             rowList: [10, 20, 50],
-            sortname: 'ND', // default sorting ID
+            sortname: 'ACCOUNT_NUM', // default sorting ID
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             sortorder: 'asc',
@@ -375,7 +283,7 @@
                     enableTooltips(table);
                 }, 0);
             },
-            editurl: '<?php echo site_url('parameter/crud_fastel');?>'
+            editurl: '<?php echo site_url('parameter/crud_datin');?>'
 
 
         });
@@ -436,7 +344,7 @@
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
-               // $("#ND").prop("readonly", true);
+                $("#ND").prop("readonly", true);
             }
         },
         {

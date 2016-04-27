@@ -194,7 +194,7 @@
 
 <!-- List Menu -->
 <ul class="nav nav-list">
-    <li class="active setting_nav" id="dashboard" href="<?php echo site_url('wf/inbox'); ?>">
+    <li class="active setting_nav" id="dashboard" href="<?php echo site_url('dashboard/index'); ?>">
         <a href="#">
             <i class="menu-icon fa fa-tachometer"></i>
             <span class="menu-text"> Dashboard </span>
