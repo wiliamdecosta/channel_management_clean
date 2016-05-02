@@ -27,7 +27,9 @@ class Loaddata extends CI_Controller {
         $bc = array($this->head,$title);
         $this->breadcrumb = getBreadcrumb($bc);
         //
-		$this->load->view('loaddata/data_bulanan');
+        $data['menu_id'] = $this->uri->segment(3);
+
+		$this->load->view('loaddata/data_bulanan',$data);
 	}
 	
 	public function grid_databulanan() {
@@ -207,7 +209,9 @@ class Loaddata extends CI_Controller {
         $bc = array($this->head,$title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $this->load->view('loaddata/flag_payment');
+        $data['menu_id'] = $this->uri->segment(3);
+
+        $this->load->view('loaddata/flag_payment',$data);
 
     }
     public function grid_flagPayment(){
@@ -507,7 +511,9 @@ class Loaddata extends CI_Controller {
         //BreadCrumb
         $bc = array($this->head,$title);
         $this->breadcrumb = getBreadcrumb($bc);
-        $this->load->view('loaddata/load_datin');
+
+        $data['menu_id'] = $this->uri->segment(3);
+        $this->load->view('loaddata/load_datin',$data);
     }
 
 }

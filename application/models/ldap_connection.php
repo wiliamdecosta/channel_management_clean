@@ -8,7 +8,7 @@ class Ldap_connection extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        $this->Host = "10.0.32.230";
+        $this->Host = "ldap.telkom.co.id";
 		$this->Authrealm = "User Intranet Telkom ND";
 		$this->AuthResult = 0;
     }

@@ -311,6 +311,8 @@ class Parameter extends CI_Controller
 
         $result['result'] = $this->cm->getPglList();
         $result['product'] = $this->M_param->getParamProducts();
+
+        $result['menu_id'] = $this->uri->segment(3);
         $this->load->view('parameter/uploadnd', $result);
     }
 

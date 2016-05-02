@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="content">
     <!-- #section:basics/content.breadcrumbs -->
     <div class="breadcrumbs" id="breadcrumbs">
@@ -9,6 +10,8 @@
 
         <div id="table-content">
             <div class="col-xs-12">
+                <?php if($prv['TAMBAH'] == "Y"){
+                    ;?>
 
                 <button class="btn btn-sm btn-success" id="create_batch">
                     <i class="ace-icon fa fa-pencil align-top bigger-125"></i>
@@ -17,7 +20,7 @@
 
                 <br>
                 <br>
-
+                <?php };?>
                 <div id="table">
                     <table id="grid-table"></table>
                     <div id="grid-pager"></div>

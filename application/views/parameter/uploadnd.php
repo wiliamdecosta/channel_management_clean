@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="content">
 <!-- #section:basics/content.breadcrumbs -->
 <div class="breadcrumbs" id="breadcrumbs">
@@ -108,10 +109,12 @@
 
                             </div>
                             <div class="col-xs-9">
+                                <?php if($prv['UPLOAD'] == "Y"){;?>
                                 <button class="btn btn-xs btn-primary" id="submitForm" type="submit">
                                     <i class="ace-icon fa fa-upload bigger-110"></i>
                                     Upload
                                 </button>
+                                <?php };?>
                                 <a class="btn btn-xs btn-warning" id="cancelUpload">
                                     <i class="ace-icon fa fa-refresh bigger-110"></i>
                                     Reset

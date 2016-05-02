@@ -1,3 +1,4 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="content">
     <!-- #section:basics/content.breadcrumbs -->
     <div class="breadcrumbs" id="breadcrumbs">
@@ -465,7 +466,8 @@
             caption:"",
             buttonicon:"ui-separator",
             id:"saparator"
-    }).navButtonAdd('#grid-pager',{
+    })<?php if($prv['SUBMIT'] == 'Y'){;?>
+        .navButtonAdd('#grid-pager',{
             caption:" ",
             buttonicon:"ace-icon fa fa-gear purple",
             onClickButton: getSelectedRow,
@@ -473,7 +475,9 @@
             title: "process",
             cursor: "pointer",
             id :"process_btn"
-    }).navButtonAdd('#grid-pager',{
+        })
+    <?php };?>
+   .navButtonAdd('#grid-pager',{
             caption:" ",
             buttonicon:"ace-icon fa fa-calendar red",
             onClickButton: insertPeriod,

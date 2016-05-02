@@ -1,7 +1,8 @@
+<?php $prv = getPrivilege($menu_id); ?>
 <div id="content">
     <!-- #section:basics/content.breadcrumbs -->
     <div class="breadcrumbs" id="breadcrumbs">
-        <?=$this->breadcrumb;?>
+        <?= $this->breadcrumb; ?>
     </div>
 
     <!-- /section:basics/content.breadcrumbs -->
@@ -9,14 +10,17 @@
 
         <div id="table-content">
             <div class="col-xs-12">
+                <?php if ($prv['TAMBAH'] == "Y") {
+                    ; ?>
 
-                <button class="btn btn-sm btn-success" id="create_batch">
-                    <i class="ace-icon fa fa-pencil align-top bigger-125"></i>
-                    Create Batch
-                </button>
+                    <button class="btn btn-sm btn-success" id="create_batch">
+                        <i class="ace-icon fa fa-pencil align-top bigger-125"></i>
+                        Create Batch
+                    </button>
 
-                <br>
-                <br>
+                    <br>
+                    <br>
+                <?php }; ?>
 
                 <div id="table">
                     <table id="grid-table"></table>
@@ -30,7 +34,6 @@
                     </div>
                 </div>
                 <!-- PAGE CONTENT BEGINS -->
-
 
 
                 <!-- PAGE CONTENT ENDS -->
@@ -52,7 +55,7 @@
                                     <option value=""> Pilih Tahun</option>
                                     <?php
                                     $year = date("Y");
-                                    for($i = ($year); $i >= $year-5; $i--){
+                                    for ($i = ($year); $i >= $year - 5; $i--) {
                                         echo "<option value=$i>$i</option>";
                                     }
                                     ?>
@@ -95,14 +98,14 @@
 
 <script type="text/javascript">
     // Hide Show
-    jQuery('#create_batch').click(function(){
-       // $('#table-content').hide("drop", { direction: "down" }, "fast");
+    jQuery('#create_batch').click(function () {
+        // $('#table-content').hide("drop", { direction: "down" }, "fast");
         $('#table-content').hide("slow");
-       // $('#new_batch').show("drop", { direction: "top" }, "slow");
+        // $('#new_batch').show("drop", { direction: "top" }, "slow");
         $('#new_batch').show("slow");
     });
     // Hide Show Cancel
-    jQuery('#cancel_batch').click(function(){
+    jQuery('#cancel_batch').click(function () {
         //$('#new_batch').hide("drop", { direction: "top" }, "fast");
         $('#new_batch').hide("fast");
         //$('#table-content').show("drop", { direction: "down" }, "slow");
@@ -113,125 +116,145 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-            var grid_selector = "#grid-table";
-            var pager_selector = "#grid-pager";
+        var grid_selector = "#grid-table";
+        var pager_selector = "#grid-pager";
 
-            //resize to fit page size
-            $(window).on('resize.jqGrid', function () {
-                $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
-            })
-         jQuery("#grid-table").jqGrid({
-                 url:'<?php echo site_url('loaddata/grid_flagPayment');?>',
-                 datatype: "json",
-                 mtype: "POST",
-                 //colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
-                 colModel: [
-                     { label: 'ID', name: 'BATCH_CONTROL_ID', key: true, width:10, sorttype:'number', editable: false,hidden:true },
-                     { label: 'Tanggal Batch', name: 'START_DATE', width:125, align:"left", editable:false},
-                     { label: 'P_PROCESS_STATUS_ID', name: 'P_PROCESS_STATUS_ID', width:125, align:"left", editable:false,hidden:true},
-                     { label: 'Proses', name: 'JOB_CODE', width:155, align:"left", editable:false},
-                     { label: 'Status Proses', name: 'STATUS_CODE', width:125, align:"left", editable:false},
-                     { label: 'Diproses Oleh', name: 'UPDATE_BY', width:135, align:"left", editable:false},
-                     { label: 'Awal Proses', name: 'START_PROCESS', width:135, align:"left", editable:false},
-                     { label: 'Akhir Proses', name: 'END_PROCESS', width:135, align:"left", editable:false},
-                     { label: 'Deskripsi', name: 'DESCRIPTION', width:165, align:"left", editable:false}
-                 ],
-                 width: 1120,
-                 //width: '100%',
-                 height: '100%',
-                 autoWidth: true,
-                 rowNum:5,
-                 viewRecords: true,
-                 rowList:[5,10,20],
-                 sortname: 'BATCH_CONTROL_ID ', // default sorting ID
-                 rownumbers: true, // show row numbers
-                 rownumWidth: 35, // the width of the row numbers columns
-                 sortorder: 'DESC',
-                 altRows: true,
-                 shrinkToFit: true,
-                 //multiselect: true,
-                 //multikey: "ctrlKey",
-                 multiboxonly: true,
-
-                    // Show hide button process
-                 beforeSelectRow: function (rowid) {
-                     var selRowId = $(this).getGridParam('selrow'),
-                         tr = $(this.rows.namedItem(rowid)),
-                         celValue = $('#grid-table').jqGrid ('getCell', rowid, 'P_PROCESS_STATUS_ID');
-                         thisId = $.jgrid.jqID(this.id);
-                     // you can use getCell or getRowData to examine the contain of
-                     // the selected row to decide whether the row is editable or not
-                     if (celValue == 5) { //0 = initial
-                         //alert('initial');
-                         $("#process_btn").show();
-
-                         // eneble the "Edit" button in the navigator
-                        // $("#edit_" + thisId).removeClass('ui-state-disabled');
-                         //$("#edit_" + thisId).removeClass('ui-state-disabled');
-                        // $("#del_" + thisId).removeClass('ui-state-disabled');
-                     } else {
-                        // alert('dalam proses');
-                         $("#process_btn").hide();
-                         // unselect previous selected row
-                         // disable the "Edit" and "Del" button in the navigator
-                        // $("#edit_" + thisId).hide();
-                        // $("#edit_" + thisId).addClass('ui-state-disabled');
-                        // $("#del_" + thisId).addClass('ui-state-disabled');
-                     }
-                     return true; // allow selection or unselection
-                 },
-
-                 subGrid: true, // set the subGrid property to true to show expand buttons for each row
-                 subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
-                 subGridOptions : {
-                     // load the subgrid data only once
-                     // and the just show/hide
-                     reloadOnExpand :false,
-                     // select the row when the expand column is clicked
-                     selectOnExpand : true,
-                     plusicon : "ace-icon fa fa-plus center bigger-110 blue",
-                     minusicon  : "ace-icon fa fa-minus center bigger-110 blue"
-                    // openicon : "ace-icon fa fa-chevron-right center orange"
-                 },
-
-                 onSelectRow: function(rowid) {
-                    var celValue = $('#grid-table').jqGrid ('getCell', rowid, 'JOB_CODE');
-                    var grid_id = jQuery("#jqGridDetails");
-                    if(rowid != null) {
-                        grid_id.jqGrid('setGridParam',{url:"<?php echo site_url('loaddata/LogProcess');?>/"+rowid,datatype: 'json',postData:{batch_id:rowid}, userData:{tes:rowid}}); // the last setting is for demo only
-                        grid_id.jqGrid('setCaption', 'Flag Pembayaran Detail :: '+celValue);
-                        jQuery("#detailsPlaceholder").show();
-                        jQuery("#jqGridDetails").trigger("reloadGrid");
-//                        jQuery('#process').html('<button type="button" class="btn btn-success btn-round" id="process_batch">" <i class="ace-icon fa fa-floppy-o bigger-120"></i>Proses</button>');
-                    }
-                }, // use the onSelectRow that is triggered on row click to show a details grid
-                onSortCol : clearSelection,
-                onPaging : clearSelection,
-                //#pager merupakan div id pager
-                pager: '#grid-pager',
-                jsonReader: {
-                    root: 'Data',
-                    id: 'id',
-                    repeatitems: false
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        jQuery("#grid-table").jqGrid({
+            url: '<?php echo site_url('loaddata/grid_flagPayment');?>',
+            datatype: "json",
+            mtype: "POST",
+            //colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
+            colModel: [
+                {
+                    label: 'ID',
+                    name: 'BATCH_CONTROL_ID',
+                    key: true,
+                    width: 10,
+                    sorttype: 'number',
+                    editable: false,
+                    hidden: true
                 },
-                loadComplete : function() {
+                {label: 'Tanggal Batch', name: 'START_DATE', width: 125, align: "left", editable: false},
+                {
+                    label: 'P_PROCESS_STATUS_ID',
+                    name: 'P_PROCESS_STATUS_ID',
+                    width: 125,
+                    align: "left",
+                    editable: false,
+                    hidden: true
+                },
+                {label: 'Proses', name: 'JOB_CODE', width: 155, align: "left", editable: false},
+                {label: 'Status Proses', name: 'STATUS_CODE', width: 125, align: "left", editable: false},
+                {label: 'Diproses Oleh', name: 'UPDATE_BY', width: 135, align: "left", editable: false},
+                {label: 'Awal Proses', name: 'START_PROCESS', width: 135, align: "left", editable: false},
+                {label: 'Akhir Proses', name: 'END_PROCESS', width: 135, align: "left", editable: false},
+                {label: 'Deskripsi', name: 'DESCRIPTION', width: 165, align: "left", editable: false}
+            ],
+            width: 1120,
+            //width: '100%',
+            height: '100%',
+            autoWidth: true,
+            rowNum: 5,
+            viewRecords: true,
+            rowList: [5, 10, 20],
+            sortname: 'BATCH_CONTROL_ID ', // default sorting ID
+            rownumbers: true, // show row numbers
+            rownumWidth: 35, // the width of the row numbers columns
+            sortorder: 'DESC',
+            altRows: true,
+            shrinkToFit: true,
+            //multiselect: true,
+            //multikey: "ctrlKey",
+            multiboxonly: true,
+
+            // Show hide button process
+            beforeSelectRow: function (rowid) {
+                var selRowId = $(this).getGridParam('selrow'),
+                    tr = $(this.rows.namedItem(rowid)),
+                    celValue = $('#grid-table').jqGrid('getCell', rowid, 'P_PROCESS_STATUS_ID');
+                thisId = $.jgrid.jqID(this.id);
+                // you can use getCell or getRowData to examine the contain of
+                // the selected row to decide whether the row is editable or not
+                if (celValue == 5) { //0 = initial
+                    //alert('initial');
+                    $("#process_btn").show();
+
+                    // eneble the "Edit" button in the navigator
+                    // $("#edit_" + thisId).removeClass('ui-state-disabled');
+                    //$("#edit_" + thisId).removeClass('ui-state-disabled');
+                    // $("#del_" + thisId).removeClass('ui-state-disabled');
+                } else {
+                    // alert('dalam proses');
                     $("#process_btn").hide();
+                    // unselect previous selected row
+                    // disable the "Edit" and "Del" button in the navigator
+                    // $("#edit_" + thisId).hide();
+                    // $("#edit_" + thisId).addClass('ui-state-disabled');
+                    // $("#del_" + thisId).addClass('ui-state-disabled');
+                }
+                return true; // allow selection or unselection
+            },
 
-                    var table = this;
-                    setTimeout(function(){
-                      //  styleCheckbox(table);
+            subGrid: true, // set the subGrid property to true to show expand buttons for each row
+            subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
+            subGridOptions: {
+                // load the subgrid data only once
+                // and the just show/hide
+                reloadOnExpand: false,
+                // select the row when the expand column is clicked
+                selectOnExpand: true,
+                plusicon: "ace-icon fa fa-plus center bigger-110 blue",
+                minusicon: "ace-icon fa fa-minus center bigger-110 blue"
+                // openicon : "ace-icon fa fa-chevron-right center orange"
+            },
 
-                      //  updateActionIcons(table);
-                        updatePagerIcons(table);
-                        enableTooltips(table);
-                    }, 0);
-                },
-                //memanggil controller jqgrid yang ada di controller crud
+            onSelectRow: function (rowid) {
+                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'JOB_CODE');
+                var grid_id = jQuery("#jqGridDetails");
+                if (rowid != null) {
+                    grid_id.jqGrid('setGridParam', {
+                        url: "<?php echo site_url('loaddata/LogProcess');?>/" + rowid,
+                        datatype: 'json',
+                        postData: {batch_id: rowid},
+                        userData: {tes: rowid}
+                    }); // the last setting is for demo only
+                    grid_id.jqGrid('setCaption', 'Flag Pembayaran Detail :: ' + celValue);
+                    jQuery("#detailsPlaceholder").show();
+                    jQuery("#jqGridDetails").trigger("reloadGrid");
+//                        jQuery('#process').html('<button type="button" class="btn btn-success btn-round" id="process_batch">" <i class="ace-icon fa fa-floppy-o bigger-120"></i>Proses</button>');
+                }
+            }, // use the onSelectRow that is triggered on row click to show a details grid
+            onSortCol: clearSelection,
+            onPaging: clearSelection,
+            //#pager merupakan div id pager
+            pager: '#grid-pager',
+            jsonReader: {
+                root: 'Data',
+                id: 'id',
+                repeatitems: false
+            },
+            loadComplete: function () {
+                $("#process_btn").hide();
 
-                editurl: '<?php echo site_url('admin/crud_master');?>',
-                caption:"Flag Pembayaran"
+                var table = this;
+                setTimeout(function () {
+                    //  styleCheckbox(table);
 
-         });
+                    //  updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+            },
+            //memanggil controller jqgrid yang ada di controller crud
+
+            editurl: '<?php echo site_url('admin/crud_master');?>',
+            caption: "Flag Pembayaran"
+
+        });
     });
     function showChildGrid(parentRowID, parentRowKey) {
         var childGridID = parentRowID + "_table";
@@ -252,12 +275,20 @@
             rownumWidth: 35,
             shrinkToFit: false,
 //            scrollbar : false,
-            postData:{batch_id:encodeURIComponent(parentRowKey)},
+            postData: {batch_id: encodeURIComponent(parentRowKey)},
             colModel: [
-                { label: 'ID', name: 'JOB_CONTROL_ID', key: true, width:10, sorttype:'number', editable: false,hidden:true },
-                { label: 'Periode', name: 'PERIODE', width:125, align:"left", editable:false},
-                { label: 'Job Code', name: 'JOB_CODE', width:205, align:"left", editable:false},
-                { label: 'Status', name: 'CODE', width:155, align:"left", editable:false}
+                {
+                    label: 'ID',
+                    name: 'JOB_CONTROL_ID',
+                    key: true,
+                    width: 10,
+                    sorttype: 'number',
+                    editable: false,
+                    hidden: true
+                },
+                {label: 'Periode', name: 'PERIODE', width: 125, align: "left", editable: false},
+                {label: 'Job Code', name: 'JOB_CODE', width: 205, align: "left", editable: false},
+                {label: 'Status', name: 'CODE', width: 155, align: "left", editable: false}
             ],
 //            loadonce: true,
             width: 600,
@@ -279,10 +310,18 @@
         datatype: "json",
         page: 1,
         colModel: [
-            { label: 'ID', name: 'JOB_CONTROL_ID', key: true, width:10, sorttype:'number', editable: false,hidden:true },
-            { label: 'Periode', name: 'PERIODE', width:125, align:"left", editable:false},
-            { label: 'Job Code', name: 'JOB_CODE', width:205, align:"left", editable:false},
-            { label: 'Status', name: 'CODE', width:155, align:"left", editable:false}
+            {
+                label: 'ID',
+                name: 'JOB_CONTROL_ID',
+                key: true,
+                width: 10,
+                sorttype: 'number',
+                editable: false,
+                hidden: true
+            },
+            {label: 'Periode', name: 'PERIODE', width: 125, align: "left", editable: false},
+            {label: 'Job Code', name: 'JOB_CODE', width: 205, align: "left", editable: false},
+            {label: 'Status', name: 'CODE', width: 155, align: "left", editable: false}
         ],
         width: 1120,
         height: '100%',
@@ -294,7 +333,7 @@
         rownumWidth: 35, // the width of the row numbers columns
         viewrecords: true,
         sortname: 'COUNTER_NO ', // default sorting ID
-       // caption: 'Menu Child',
+        // caption: 'Menu Child',
         sortorder: 'asc',
         pager: "#jqGridDetailsPager",
         jsonReader: {
@@ -302,9 +341,9 @@
             id: 'id',
             repeatitems: false
         },
-        loadComplete : function() {
+        loadComplete: function () {
             var table = this;
-            setTimeout(function(){
+            setTimeout(function () {
                 //  styleCheckbox(table);
 
                 //  updateActionIcons(table);
@@ -316,26 +355,26 @@
     });
 
     //navButtons grid master
-    jQuery('#grid-table').jqGrid('navGrid','#grid-pager',
+    jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
 
         { 	//navbar options
             edit: false,
-            excel:false,
-            editicon : 'ace-icon fa fa-pencil blue',
+            excel: false,
+            editicon: 'ace-icon fa fa-pencil blue',
             add: false,
-            addicon : 'ace-icon fa fa-plus-circle purple',
+            addicon: 'ace-icon fa fa-plus-circle purple',
             del: false,
-            delicon : 'ace-icon fa fa-trash-o red',
+            delicon: 'ace-icon fa fa-trash-o red',
             search: false,
-            searchicon : 'ace-icon fa fa-search orange',
+            searchicon: 'ace-icon fa fa-search orange',
             refresh: false,
-            afterRefresh : function () {
-            // some code here
+            afterRefresh: function () {
+                // some code here
                 jQuery("#detailsPlaceholder").hide();
             },
-            refreshicon : 'ace-icon fa fa-refresh green',
+            refreshicon: 'ace-icon fa fa-refresh green',
             view: false,
-            viewicon : 'ace-icon fa fa-search-plus grey'
+            viewicon: 'ace-icon fa fa-search-plus grey'
         },
         {
             // options for the Edit Dialog
@@ -345,7 +384,7 @@
                 return 'Error: ' + data.responseText
             },
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
@@ -360,7 +399,7 @@
             closeAfterAdd: true,
             recreateForm: true,
             viewPagerButtons: false,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                     .wrapInner('<div class="widget-header" />')
@@ -370,34 +409,34 @@
         {
             //delete record form
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
-                if(form.data('styled')) return false;
+                if (form.data('styled')) return false;
 
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_delete_form(form);
 
                 form.data('styled', true);
             },
-            onClick : function(e) {
+            onClick: function (e) {
                 //alert(1);
             }
         },
         {
             //search form
-           // closeAfterSearch: true,
+            // closeAfterSearch: true,
             recreateForm: true,
-            afterShowSearch: function(e){
+            afterShowSearch: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 style_search_form(form);
             },
-            afterRedraw: function(){
+            afterRedraw: function () {
                 style_search_filters($(this));
             }
 
 //            multipleSearch: true,
- //           showQuery: true
+            //           showQuery: true
             /**
              multipleGroup:true,
              showQuery: true
@@ -406,36 +445,39 @@
         {
             //view record form
             recreateForm: true,
-            beforeShowForm: function(e){
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
             }
         }
-    ).navButtonAdd('#grid-pager',{
-            caption:"Process Batch",
-            buttonicon:"ace-icon fa fa-gear purple",
+        )<?php if($prv['SUBMIT'] == 'Y'){;?>
+        .navButtonAdd('#grid-pager', {
+            caption: "Process Batch",
+            buttonicon: "ace-icon fa fa-gear purple",
             onClickButton: getSelectedRow,
-            position:"last",
+            position: "last",
 //            title: "process",
             cursor: "pointer",
-            id :"process_btn"
-    });
+            id: "process_btn"
+        });
+         <?php };?>
 
     function getSelectedRow() {
         var grid = $("#grid-table");
-        var rowKey = grid.jqGrid('getGridParam','selrow');
+        var rowKey = grid.jqGrid('getGridParam', 'selrow');
 
-        if (rowKey){
-           // alert("Selected row primary key is: " + rowKey);
+        if (rowKey) {
+            // alert("Selected row primary key is: " + rowKey);
             var c = confirm('Apakah anda akan melakukan process batch?')
-            if(c == true){
+            if (c == true) {
                 $.ajax({
                     url: '<?php echo site_url('loaddata/processBatch');?>',
-                    data: {batch_id:rowKey},
+                    data: {batch_id: rowKey},
                     type: 'POST',
-                    success: function ( data ) {
+                    success: function (data) {
                         $("#create_batch").notify("Success",
-                            {className :"success",
+                            {
+                                className: "success",
                                 globalPosition: 'right',
                                 position: 'right',
                                 autoHideDelay: 2000
@@ -446,55 +488,57 @@
 //                        var isi = output['data'];
 //                        alert(isi);
 
-                        $('#grid-table').trigger( 'reloadGrid' );
-                        $('#jqGridDetails').trigger( 'reloadGrid' );
+                        $('#grid-table').trigger('reloadGrid');
+                        $('#jqGridDetails').trigger('reloadGrid');
 
                     }
                 });
-            }else{
+            } else {
                 return false;
             }
 
         }
 
-        else{
+        else {
             alert("Please Select Row !!!");
         }
 
     }
 
     //navButtons Grid Detail
-    jQuery('#jqGridDetails').jqGrid('navGrid','#jqGridDetailsPager',
-    { 	//navbar options
+    jQuery('#jqGridDetails').jqGrid('navGrid', '#jqGridDetailsPager',
+        { 	//navbar options
             edit: false,
-            excel:true,
-            editicon : 'ace-icon fa fa-pencil blue',
+            excel: true,
+            editicon: 'ace-icon fa fa-pencil blue',
             add: false,
-            addicon : 'ace-icon fa fa-plus-circle purple',
+            addicon: 'ace-icon fa fa-plus-circle purple',
             del: false,
-            delicon : 'ace-icon fa fa-trash-o red',
+            delicon: 'ace-icon fa fa-trash-o red',
             search: false,
-            searchicon : 'ace-icon fa fa-search orange',
+            searchicon: 'ace-icon fa fa-search orange',
             refresh: false,
-            refreshicon : 'ace-icon fa fa-refresh green',
+            refreshicon: 'ace-icon fa fa-refresh green',
             view: false,
-            viewicon : 'ace-icon fa fa-search-plus grey'
+            viewicon: 'ace-icon fa fa-search-plus grey'
         },
         {
 
             // options for the Edit Dialog
-            editData: {MENU_PARENT: function (){
-                var data =  jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
-                var parent_id  = data.parent_id;
-                return parent_id;
-            }},
+            editData: {
+                MENU_PARENT: function () {
+                    var data = jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
+                    var parent_id = data.parent_id;
+                    return parent_id;
+                }
+            },
             closeAfterEdit: true,
             width: 500,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_edit_form(form);
@@ -502,12 +546,14 @@
         },
         {
 
-            editData: {MENU_PARENT: function (){
-                var data =  jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
-                var parent_id  = data.parent_id;
-                return parent_id;
-            }},
-            onClickButton : function() {
+            editData: {
+                MENU_PARENT: function () {
+                    var data = jQuery("#jqGridDetails").jqGrid('getGridParam', 'postData');
+                    var parent_id = data.parent_id;
+                    return parent_id;
+                }
+            },
+            onClickButton: function () {
                 alert('sss');
             },
             //new record form
@@ -518,7 +564,7 @@
             closeAfterAdd: true,
             recreateForm: true,
             viewPagerButtons: false,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                     .wrapInner('<div class="widget-header" />')
@@ -529,16 +575,16 @@
         {
             //delete record form
             recreateForm: true,
-            beforeShowForm : function(e) {
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
-                if(form.data('styled')) return false;
+                if (form.data('styled')) return false;
 
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                 style_delete_form(form);
 
                 form.data('styled', true);
             },
-            onClick : function(e) {
+            onClick: function (e) {
                 //alert(1);
             }
         },
@@ -546,16 +592,16 @@
             //search form
             //closeAfterSearch: true,
             recreateForm: true,
-            afterShowSearch: function(e){
+            afterShowSearch: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 style_search_form(form);
             },
-            afterRedraw: function(){
+            afterRedraw: function () {
                 style_search_filters($(this));
             }
             ,
-           // multipleSearch: true
+            // multipleSearch: true
             /**
              multipleGroup:true,
              showQuery: true
@@ -564,23 +610,23 @@
         {
             //view record form
             recreateForm: true,
-            beforeShowForm: function(e){
+            beforeShowForm: function (e) {
                 var form = $(e[0]);
                 form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
             }
-         }
+        }
     );
 
     function clearSelection() {
         //jQuery("#jqGridDetails").jqGrid('setGridParam',{url: "empty.json", datatype: 'json'}); // the last setting is for demo purpose only
-       // jQuery("#jqGridDetails").jqGrid('setCaption', 'Menu Child ::');
+        // jQuery("#jqGridDetails").jqGrid('setCaption', 'Menu Child ::');
         jQuery("#jqGridDetails").trigger("reloadGrid");
 
     }
 
     function style_edit_form(form) {
         //enable datepicker on "sdate" field and switches for "stock" field
-        form.find('input[name=sdate]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
+        form.find('input[name=sdate]').datepicker({format: 'yyyy-mm-dd', autoclose: true})
 
         form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
         //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
@@ -622,7 +668,7 @@
 
     function beforeDeleteCallback(e) {
         var form = $(e[0]);
-        if(form.data('styled')) return false;
+        if (form.data('styled')) return false;
 
         form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
         style_delete_form(form);
@@ -635,7 +681,6 @@
         form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
         style_edit_form(form);
     }
-
 
 
     //it causes some flicker when reloading or navigating grid
@@ -678,30 +723,30 @@
     function updatePagerIcons(table) {
         var replacement =
         {
-            'ui-icon-seek-first' : 'ace-icon fa fa-angle-double-left bigger-140',
-            'ui-icon-seek-prev' : 'ace-icon fa fa-angle-left bigger-140',
-            'ui-icon-seek-next' : 'ace-icon fa fa-angle-right bigger-140',
-            'ui-icon-seek-end' : 'ace-icon fa fa-angle-double-right bigger-140'
+            'ui-icon-seek-first': 'ace-icon fa fa-angle-double-left bigger-140',
+            'ui-icon-seek-prev': 'ace-icon fa fa-angle-left bigger-140',
+            'ui-icon-seek-next': 'ace-icon fa fa-angle-right bigger-140',
+            'ui-icon-seek-end': 'ace-icon fa fa-angle-double-right bigger-140'
         };
-        $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
+        $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
             var icon = $(this);
             var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
 
-            if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+            if ($class in replacement) icon.attr('class', 'ui-icon ' + replacement[$class]);
         })
     }
 
     function enableTooltips(table) {
-        $('.navtable .ui-pg-button').tooltip({container:'body'});
-        $(table).find('.ui-pg-div').tooltip({container:'body'});
+        $('.navtable .ui-pg-button').tooltip({container: 'body'});
+        $(table).find('.ui-pg-div').tooltip({container: 'body'});
     }
 
 
 </script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#tahun').change(function() {
+    $(document).ready(function () {
+        $('#tahun').change(function () {
             var val = $(this).val();
             addCheckbox(val);
         });
@@ -710,19 +755,19 @@
     function addCheckbox(name) {
         var container = $('#checkbox_period');
         var inputs = container.find('input');
-        var id = inputs.length+1;
+        var id = inputs.length + 1;
 
         var i;
         var input = '';
         var tgl = ''
         for (i = 1; i <= 12; i++) {
-            if(i<10){
-                tgl = '0'+i;
-            }else{
+            if (i < 10) {
+                tgl = '0' + i;
+            } else {
                 tgl = i;
             }
 
-            input += "<div class='checkbox'><label> <input name='form-field-checkbox[]' id='check_id' type='checkbox' class='ace' value="+name+""+tgl+"><span class='lbl'> "+name+""+tgl+"</span></label>";
+            input += "<div class='checkbox'><label> <input name='form-field-checkbox[]' id='check_id' type='checkbox' class='ace' value=" + name + "" + tgl + "><span class='lbl'> " + name + "" + tgl + "</span></label>";
             //container.html($('<input />', { type: 'checkbox', id: 'cb'+id, value: name }));
             //container.html( $('<label />', { 'for': 'cb'+id, text: name }));
         }
@@ -731,41 +776,41 @@
         //  container.html( $('<label />', { 'for': 'cb'+id, text: name }));
 
     }
-    jQuery("#save_batch" ).click(function() {
+    jQuery("#save_batch").click(function () {
 
 
         // Get value checked
         var val = [];
-        $(':checkbox:checked').each(function(i){
+        $(':checkbox:checked').each(function (i) {
             val[i] = $(this).val();
 
         });
         // Cek Apakah tahun sudah dipilih
         var thn = $('#tahun').val();
-        if(!thn) {
-            alert ('Silahkan pilih tahun !!!');
+        if (!thn) {
+            alert('Silahkan pilih tahun !!!');
             return false;
         }
-        if(val.length == 0){
-            alert ('Silahkan pilih periode !!!');
+        if (val.length == 0) {
+            alert('Silahkan pilih periode !!!');
             return false;
         }
 
-        var c =  confirm('Apakah Anda Yakin Create New Batch ?');
-        if(c == true){
+        var c = confirm('Apakah Anda Yakin Create New Batch ?');
+        if (c == true) {
 
             $.ajax({
                 type: 'POST',
                 url: '<?php echo site_url('loaddata/createBatch');?>',
-                data: {periode:val,batch_type:2},
-                success: function(data) {
+                data: {periode: val, batch_type: 2},
+                success: function (data) {
                     $('#new_batch').hide("fast");
                     $('#table-content').show("slow");
                     $('#application_form')[0].reset();
                     jQuery("#grid-table").trigger("reloadGrid");
                     jQuery("#jqGridDetails").trigger("reloadGrid");
                 },
-                error: function(jqXHR, textStatus, errorThrown){
+                error: function (jqXHR, textStatus, errorThrown) {
                     // alert(errorThrown);
                     $("#ajaxContent").html(errorThrown);
                 },
