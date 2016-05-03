@@ -27,7 +27,7 @@ class M_template extends CI_Model {
               order by COLUMN_NAME asc ";
         $sql = $this->db->query($q);
         if($sql->num_rows() > 0)
-            $result = $sql->resultresult();
+            $result = $sql->result();
         return $result;
     }
 
@@ -233,7 +233,7 @@ class M_template extends CI_Model {
 					WHERE EXISTS (SELECT *
 					 FROM TEMPLATE_MASTER TM
 					 WHERE TM.VARIABLE_TEMPLATE NOT LIKE '%'||TV.VARIABLE_NAME||'||'||TV.TABLE_NAME||'%'
-					 AND  TABLE_NAME LIKE '%".$data."%' AND TEMPLATE_ID = '".$data2."' )";   	
+					 AND  TABLE_NAME LIKE '%".$data."%' AND TEMPLATE_ID = '".$data2."' OR VARIABLE_TEMPLATE  IS NULL)";   	
 		$sql = $this->db->query($q);
         if($sql->num_rows() > 0)
             $ret = $sql->result();
