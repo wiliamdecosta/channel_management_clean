@@ -1042,6 +1042,24 @@ class Workflow_parameter extends CI_Controller
         }
     }
 
+    public function doc_type() {
+        try {
+            $sql = "select * from p_legal_doc_type";
+            $query = $this->workflow->db->query($sql);
+            $items = $query->result_array();
+
+            echo '<select>';
+            foreach ($items as $item) {
+                echo '<option value="'.$item['P_LEGAL_DOC_TYPE_ID'].'"> '.$item['CODE'].' </option>';
+            }
+            echo '</select>';
+            exit;
+        }catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+    }
+
     public function crud_invoice() {
         $result = $this->P_workflow_list->crud_invoice();
 
@@ -1086,6 +1104,67 @@ class Workflow_parameter extends CI_Controller
         echo json_encode($data);
     }
 
+    public function grid_legaldoc() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $table = "SELECT a.*, b.CODE as LEGAL_DOC_DESC FROM t_cust_order_legal_doc a
+                 LEFT JOIN p_legal_doc_type b ON a.P_LEGAL_DOC_TYPE_ID = b.P_LEGAL_DOC_TYPE_ID";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array('a.T_CUSTOMER_ORDER_ID = '.$this->input->post('t_customer_order_id'));
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        // print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
     /*end Invoice*/
 
 }

@@ -23,9 +23,15 @@ $prv = getPrivilege($menu_id); ?>
                             <strong>Invoice</strong>
                         </a>
                     </li>
+                    <li class="">
+                        <a href="#" data-toggle="tab" aria-expanded="true" id="tab-2">
+                            <i class="blue bigger-120"></i>
+                            <strong>Dokumen Pendukung</strong>
+                        </a>
+                    </li>
+                    <input type="hidden" id="tab_customer_order_id" value="">
+                    <input type="hidden" id="tab_order_no" value="">
                 </ul>
-                <!-- <input type="hidden" id="t_invoice_id" value="">
-                <input type="hidden" id="tab_chart_proc_code" value=""> -->
             </div>
 
             <div class="tab-content no-border">
@@ -61,6 +67,24 @@ $prv = getPrivilege($menu_id); ?>
 ?>
 
 <script>
+
+    jQuery(function($) {
+        $( "#tab-2" ).on( "click", function() {
+            var the_id = $("#tab_customer_order_id").val();
+            var the_no = $("#tab_order_no").val();
+            if(the_id == "") {
+                swal("Informasi", "Silahkan Pilih Salah Satu Baris Data", "info");
+                return false;
+            }
+            
+            loadContentWithParams("workflow_parameter-cust_order_legal_doc.php", {
+                t_customer_order_id: the_id,
+                order_no: the_no,
+                menu_id : <?php echo $menu_id; ?>
+            });
+        });
+    });
+
     function showLovContractInfo(P_MP_PKS_ID, CUST_PGL_ID, CONTRACT_NO, MITRA_NAME, MITRA_ADDRESS) {
         var idd = $('#CONTRACT_TYPE_ID').val();
         modal_lov_contract_info_show(P_MP_PKS_ID, CUST_PGL_ID, CONTRACT_NO, MITRA_NAME, MITRA_ADDRESS, idd);
@@ -427,7 +451,11 @@ $prv = getPrivilege($menu_id); ?>
             shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
-                // var celValue = $('#grid-table').jqGrid('getCell', rowid, 'P_WORKFLOW_ID');
+                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'T_CUSTOMER_ORDER_ID');
+                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'ORDER_NO');
+         
+                $('#tab_customer_order_id').val(celValue);
+                $('#tab_order_no').val(celCode);
                 
             },
             onSortCol: clearSelection,

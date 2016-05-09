@@ -885,7 +885,6 @@ class Wf extends CI_Controller {
         $CREATED_BY = $this->session->userdata('d_user_name');
         $UPDATED_BY = $this->session->userdata('d_user_name');
         $log_params['CURR_DOC_ID'] = empty($log_params['CURR_DOC_ID']) ? NULL : $log_params['CURR_DOC_ID'];
-        $log_params['USER_ID_LOGIN'] = empty($log_params['USER_ID_LOGIN']) ? NULL : $log_params['USER_ID_LOGIN'];
 
         try {
             // Upload Process
@@ -963,7 +962,26 @@ class Wf extends CI_Controller {
             $this->db->delete('T_CUST_ORDER_LEGAL_DOC');
 
             $result['success'] = true;
-            $result['message'] = 'Dokumen Pendukung Berhasil Ditambah';
+            $result['message'] = 'Dokumen Pendukung Berhasil Dihapus';
+
+        } catch (Exception $e) {
+            $result['success'] = false;
+            $result['message'] = $e->getMessage();
+        }
+
+        echo json_encode($result);
+
+    }
+
+    public function delete_legaldoc2(){
+        try {
+
+            $id_ = $this->input->post('id');
+            $this->db->where('T_CUST_ORDER_LEGAL_DOC_ID', $id_);
+            $this->db->delete('T_CUST_ORDER_LEGAL_DOC');
+
+            $result['success'] = true;
+            $result['message'] = 'Dokumen Pendukung Berhasil Dihapus';
 
         } catch (Exception $e) {
             $result['success'] = false;
