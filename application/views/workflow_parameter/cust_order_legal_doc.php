@@ -31,12 +31,12 @@
     		        
     		        <div class="tab-content no-border">
     		            <div class="row">
-                            <div class="col-xs-12">
+                            <!-- <div class="col-xs-12">
                                 <button class="btn btn-sm btn-success" id="legal_doc">
                                     <i class="ace-icon fa fa-plus align-top bigger-125"></i>
                                     Add Dokumen Pendukung
                                 </button>
-                            </div>
+                            </div> -->
 
                             <div class="col-xs-12">       
                                <table id="grid-table"></table>
@@ -234,7 +234,19 @@
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
                 }
             }
-        );
+        ).navButtonAdd('#grid-pager',{
+           caption:"", 
+           buttonicon:"ace-icon fa fa-plus-circle purple", 
+           onClickButton: function(){ 
+                var params_legaldoc = {};
+                params_legaldoc.CURR_DOC_ID = $("#tab_customer_order_id").val(); 
+
+                modal_lov_legaldoc_show(params_legaldoc);
+           }, 
+           position:"first",
+           cursor: "pointer",
+           id :"process_btn"
+        });
         
     }); /* end jquery onload */
     
@@ -325,11 +337,11 @@
         $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
     }
 
-    $("#legal_doc").on('click',function(){
-        var params_legaldoc = {};
-        params_legaldoc.CURR_DOC_ID = $("#tab_customer_order_id").val(); 
+    // $("#legal_doc").on('click',function(){
+    //     var params_legaldoc = {};
+    //     params_legaldoc.CURR_DOC_ID = $("#tab_customer_order_id").val(); 
 
-        modal_lov_legaldoc_show(params_legaldoc);
-    });
+    //     modal_lov_legaldoc_show(params_legaldoc);
+    // });
     
 </script>
