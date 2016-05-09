@@ -15,6 +15,7 @@ class Workflow_parameter extends CI_Controller
         $this->load->model('P_procedure');
         $this->load->model('P_procedure_files');
         $this->load->model('P_procedure_role');
+        $this->load->model('Workflow','workflow');
     }
 
 
@@ -923,5 +924,168 @@ class Workflow_parameter extends CI_Controller
         exit;
     }
     /** end monitoring **/
+
+    /* Invoice */
+    public function invoice() {
+
+        $result = array();
+        $result['menu_id'] = $this->uri->segment(3);
+        $this->load->view('workflow_parameter/invoice', $result);
+    }
+
+    public function grid_invoice() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $table = "SELECT * FROM V_INVOICE";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array('P_ORDER_STATUS_ID = 1');
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        // print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
+
+    function html_select_options_rqst_type() {
+        try {
+            
+            $items = $this->P_workflow_list->getRqstType();
+            echo '<select>';
+            foreach($items  as $item ){
+                echo '<option value="'.$item['P_RQST_TYPE_ID'].'">'.$item['CODE'].'</option>';
+            }
+            echo '</select>';
+            exit;
+        }catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+    }
+
+    function html_select_options_order_status() {
+        try {
+            
+            $items = $this->P_workflow_list->getOrderStatus();
+            echo '<select>';
+            foreach($items  as $item ){
+                echo '<option value="'.$item['P_ORDER_STATUS_ID'].'">'.$item['CODE'].'</option>';
+            }
+            echo '</select>';
+            exit;
+        }catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+    }
+
+    function html_select_options_reference() {
+        try {
+            
+            $items = $this->P_workflow_list->getReference();
+            echo '<select>';
+            foreach($items  as $item ){
+                echo '<option value="'.$item['CONTRACT_TYPE_ID'].'">'.$item['REFERENCE_NAME'].'</option>';
+            }
+            echo '</select>';
+            exit;
+        }catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+    }
+
+    public function crud_invoice() {
+        $result = $this->P_workflow_list->crud_invoice();
+
+        echo json_encode($result);
+        exit;
+    }
+
+    public function submitWF() {
+        $doc_type_id = 1;
+        $t_customer_order_id = $this->input->post('T_CUSTOMER_ORDER_ID');
+        $username = $this->session->userdata('d_user_name');
+
+        try {
+
+            $sql = "  BEGIN ".
+                            "  p_first_submit_engine(:i_doc_type_id, :i_cust_req_id, :i_username, :o_result_code, :o_result_msg ); END;";
+
+           
+
+            $stmt = oci_parse($this->workflow->db->conn_id, $sql);
+
+            //  Bind the input parameter
+            oci_bind_by_name($stmt, ':i_doc_type_id', $doc_type_id);
+            oci_bind_by_name($stmt, ':i_cust_req_id', $t_customer_order_id);
+            oci_bind_by_name($stmt, ':i_username', $username);
+
+            // Bind the output parameter
+            oci_bind_by_name($stmt, ':o_result_code', $code);
+            oci_bind_by_name($stmt, ':o_result_msg', $msg, 20000);
+
+            ociexecute($stmt);
+
+            $data['success'] = true;
+            $data['error_code'] = $code;
+            $data['error_message'] = $msg;
+
+        } catch( Exception $e ) {
+            $data['success'] = false;
+            $data['message'] = $e->getMessage();
+        }
+
+        echo json_encode($data);
+    }
+
+    /*end Invoice*/
 
 }

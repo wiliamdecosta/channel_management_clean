@@ -351,4 +351,249 @@ class P_workflow_list extends CI_Model
         return $result;
     }
 
+    public function getRqstType() {
+        $sql = "SELECT P_RQST_TYPE_ID, CODE FROM P_RQST_TYPE";
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    public function getOrderStatus() {
+        $sql = "SELECT P_ORDER_STATUS_ID, CODE FROM P_ORDER_STATUS";
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    public function getReference() {
+        $sql = "SELECT  REFERENCE_NAME, 
+                        P_REFERENCE_LIST_ID AS CONTRACT_TYPE_ID
+                FROM    P_REFERENCE_LIST 
+                WHERE   P_REFERENCE_TYPE_ID = 15";
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    function crud_invoice() {
+
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+
+        //post t_customer_order
+        $T_CUSTOMER_ORDER_ID = $this->input->post('T_CUSTOMER_ORDER_ID'); 
+
+        $ORDER_NO = $this->input->post('ORDER_NO'); 
+        $P_RQST_TYPE_ID = $this->input->post('P_RQST_TYPE_ID'); 
+        $P_ORDER_STATUS_ID = $this->input->post('P_ORDER_STATUS_ID'); 
+        $ORDER_DATE = $this->input->post('ORDER_DATE'); 
+        $DESCRIPTION = $this->input->post('DESCRIPTION');
+
+        $T_INVOICE_ID = $this->input->post('T_INVOICE_ID'); 
+        $INVOICE_NO = $this->input->post('INVOICE_NO'); 
+        $CONTRACT_TYPE_ID = $this->input->post('CONTRACT_TYPE_ID'); 
+        $CONTRACT_NO = $this->input->post('CONTRACT_NO'); 
+        $P_MP_PKS_ID = $this->input->post('P_MP_PKS_ID') ? $this->input->post('P_MP_PKS_ID') : "null"; 
+        $CUST_PGL_ID = $this->input->post('CUST_PGL_ID') ? $this->input->post('CUST_PGL_ID') : "null"; 
+        $MITRA_NAME = $this->input->post('MITRA_NAME'); 
+        $MITRA_ADDRESS = $this->input->post('MITRA_ADDRESS'); 
+        $MITRA_PIC = $this->input->post('MITRA_PIC'); 
+        $PIC_PHONE = $this->input->post('PIC_PHONE'); 
+        $MITRA_NPWP = $this->input->post('MITRA_NPWP'); 
+        $INVOICE_AMOUNT = $this->input->post('INVOICE_AMOUNT'); 
+        $VAT_AMOUNT = $this->input->post('VAT_AMOUNT') ? $this->input->post('VAT_AMOUNT') : "null";
+        
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+
+        
+        $result = array();
+        
+        switch ($oper) {
+            case 'add':
+                try {
+                    $cust_order_id = gen_id('T_CUSTOMER_ORDER_ID', 'T_CUSTOMER_ORDER');
+                    $sql = "INSERT INTO T_CUSTOMER_ORDER (  T_CUSTOMER_ORDER_ID, 
+                                                            ORDER_NO, 
+                                                            P_RQST_TYPE_ID, 
+                                                            P_ORDER_STATUS_ID, 
+                                                            ORDER_DATE, 
+                                                            DESCRIPTION, 
+                                                            CREATION_DATE, 
+                                                            CREATED_BY, 
+                                                            UPDATED_DATE, 
+                                                            UPDATED_BY )
+                                VALUES (".$cust_order_id.",
+                                        LPAD(T_CUSTOMER_ORDER_SEQ.NEXTVAL, 10, '0'),
+                                        ".$P_RQST_TYPE_ID.",
+                                        ".$P_ORDER_STATUS_ID.",
+                                        to_date('" . $ORDER_DATE . "','yyyy/mm/dd'),
+                                        '".$DESCRIPTION."',
+                                        SYSDATE,
+                                        '".$CREATED_BY."',
+                                        SYSDATE,
+                                        '".$UPDATED_BY."'
+                            )";
+                    
+                    $dt = $this->db->query($sql);
+
+                    if($dt){
+                        $invoice_id = gen_id('T_INVOICE_ID', 'T_INVOICE');
+                        $sql_invoice = "INSERT INTO T_INVOICE ( T_INVOICE_ID, 
+                                                        T_CUSTOMER_ORDER_ID, 
+                                                        INVOICE_NO, 
+                                                        CONTRACT_TYPE_ID, 
+                                                        CONTRACT_NO, 
+                                                        P_MP_PKS_ID, 
+                                                        CUST_PGL_ID, 
+                                                        MITRA_NAME, 
+                                                        MITRA_ADDRESS, 
+                                                        MITRA_PIC, 
+                                                        PIC_PHONE, 
+                                                        MITRA_NPWP, 
+                                                        INVOICE_AMOUNT, 
+                                                        VAT_AMOUNT, 
+                                                        CREATION_DATE, 
+                                                        CREATED_BY, 
+                                                        UPDATED_DATE, 
+                                                        UPDATED_BY )
+                                VALUES (".$invoice_id.",
+                                        ".$cust_order_id.",
+                                        '".$INVOICE_NO."',
+                                        ".$CONTRACT_TYPE_ID.",
+                                        '".$CONTRACT_NO."',
+                                        ".$P_MP_PKS_ID.",
+                                        ".$CUST_PGL_ID.",
+                                        '".$MITRA_NAME."',
+                                        '".$MITRA_ADDRESS."',
+                                        '".$MITRA_PIC."',
+                                        '".$PIC_PHONE."',
+                                        '".$MITRA_NPWP."',
+                                        ".$INVOICE_AMOUNT.",
+                                        ".$VAT_AMOUNT.",
+                                        SYSDATE,
+                                        '".$CREATED_BY."',
+                                        SYSDATE,
+                                        '".$UPDATED_BY."'
+                            )";
+
+                        $this->db->query($sql_invoice);
+                    }
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Invoice Berhasil Ditambahkan';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                break;
+            case 'edit':
+                
+                try {
+                    
+                    $sql = "UPDATE T_CUSTOMER_ORDER
+                            SET P_RQST_TYPE_ID = ".$P_RQST_TYPE_ID.", 
+                                P_ORDER_STATUS_ID =  ".$P_ORDER_STATUS_ID.", 
+                                ORDER_DATE = to_date('" . $ORDER_DATE . "','yyyy/mm/dd'), 
+                                DESCRIPTION = '".$DESCRIPTION."', 
+                                UPDATED_DATE = SYSDATE, 
+                                UPDATED_BY = '".$UPDATED_BY."'
+                            WHERE T_CUSTOMER_ORDER_ID = ".$T_CUSTOMER_ORDER_ID." ";
+                    
+                    $this->db->query($sql);
+
+                    if(empty($T_INVOICE_ID)){
+                        $invoice_id = gen_id('T_INVOICE_ID', 'T_INVOICE');
+                        $sql_invoice = "INSERT INTO T_INVOICE ( T_INVOICE_ID, 
+                                                        T_CUSTOMER_ORDER_ID, 
+                                                        INVOICE_NO, 
+                                                        CONTRACT_TYPE_ID, 
+                                                        CONTRACT_NO, 
+                                                        P_MP_PKS_ID, 
+                                                        CUST_PGL_ID, 
+                                                        MITRA_NAME, 
+                                                        MITRA_ADDRESS, 
+                                                        MITRA_PIC, 
+                                                        PIC_PHONE, 
+                                                        MITRA_NPWP, 
+                                                        INVOICE_AMOUNT, 
+                                                        VAT_AMOUNT, 
+                                                        CREATION_DATE, 
+                                                        CREATED_BY, 
+                                                        UPDATED_DATE, 
+                                                        UPDATED_BY )
+                                VALUES (".$invoice_id.",
+                                        ".$T_CUSTOMER_ORDER_ID.",
+                                        '".$INVOICE_NO."',
+                                        ".$CONTRACT_TYPE_ID.",
+                                        '".$CONTRACT_NO."',
+                                        ".$P_MP_PKS_ID.",
+                                        ".$CUST_PGL_ID.",
+                                        '".$MITRA_NAME."',
+                                        '".$MITRA_ADDRESS."',
+                                        '".$MITRA_PIC."',
+                                        '".$PIC_PHONE."',
+                                        '".$MITRA_NPWP."',
+                                        ".$INVOICE_AMOUNT.",
+                                        ".$VAT_AMOUNT.",
+                                        SYSDATE,
+                                        '".$CREATED_BY."',
+                                        SYSDATE,
+                                        '".$UPDATED_BY."'
+                            )";
+
+                        $this->db->query($sql_invoice);
+                    }else{
+                        $sql_invoice = "UPDATE T_INVOICE
+                                SET T_CUSTOMER_ORDER_ID = ".$T_CUSTOMER_ORDER_ID.", 
+                                    INVOICE_NO = '".$INVOICE_NO."', 
+                                    CONTRACT_TYPE_ID = ".$CONTRACT_TYPE_ID.", 
+                                    CONTRACT_NO = '".$CONTRACT_NO."',
+                                    P_MP_PKS_ID = ".$P_MP_PKS_ID.",
+                                    CUST_PGL_ID = ".$CUST_PGL_ID.", 
+                                    MITRA_NAME = '".$MITRA_NAME."', 
+                                    MITRA_ADDRESS = '".$MITRA_ADDRESS."', 
+                                    MITRA_PIC = '".$MITRA_PIC."', 
+                                    PIC_PHONE = '".$PIC_PHONE."', 
+                                    MITRA_NPWP = '".$MITRA_NPWP."', 
+                                    INVOICE_AMOUNT = ".$INVOICE_AMOUNT.", 
+                                    VAT_AMOUNT = ".$VAT_AMOUNT.", 
+                                    UPDATED_DATE = SYSDATE, 
+                                    UPDATED_BY = '".$UPDATED_BY."'
+                            WHERE T_INVOICE_ID = ".$T_INVOICE_ID." ";
+                    
+                    $this->db->query($sql_invoice);
+                    }
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Invoice Berhasil Diupdate';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                break;
+            case 'del':
+                try {
+                    $this->db->where('T_CUSTOMER_ORDER_ID', $id_);
+                    $this->db->delete('T_INVOICE');
+
+                    $this->db->where('T_CUSTOMER_ORDER_ID', $id_);
+                    $this->db->delete('T_CUSTOMER_ORDER');
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Invoice Berhasil Dihapus';
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                break;
+        }
+        
+        return $result;
+    }
+
 }
