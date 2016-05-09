@@ -191,8 +191,9 @@ class Template extends CI_Controller
 		$this->load->model('M_template');
 		$result = $this->input->post('id_doc');
 		$res = $this->cm->selectFile($result);
+		$result2 = $this->M_template->replace_contents($res);
 		// $res = $this->M_template->get_data_var_template('PERHITUNGAN_BILL_COLL',$result,$res);
-		echo $res;
+		echo $result2;
 	}
 	public function delete_DOC(){
 		$this->load->model('M_cm', 'cm');
