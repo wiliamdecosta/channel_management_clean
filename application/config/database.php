@@ -43,21 +43,10 @@
 | The $active_record variables lets you determine whether or not to load
 | the active record class
 */
-//putenv("ORACLE_HOME=/usr/lib/oracle/11.1/client64/lib");
 
 $active_group = 'default';
 $active_record = TRUE;
 
-//$db['default']['hostname'] ='
-//    (DESCRIPTION=
-//        (FAILOVER=on)
-//        (LOAD_BALANCE=on)
-//        (ADDRESS_LIST=(ADDRESS= (PROTOCOL=TCP) (HOST=127.0.0.1) (PORT=1521) ))
-//        (CONNECT_DATA=
-//			(SERVICE_NAME=orcl)
-//			(SERVER = DEDICATED))
-//    )';
-	
 	
 $db['default']['hostname'] ='
     (DESCRIPTION=
@@ -69,17 +58,6 @@ $db['default']['hostname'] ='
 			(SERVER = DEDICATED))
     )';
 
-/*$db['default']['hostname'] ='
-(DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = 10.0.53.105)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SERVICE_NAME = jepunrac.telkom.co.id)
-    )
-  )';*/
-
-//$db['default']['username'] = 'marfee';
-//$db['default']['password'] = 'telkom123';
 $db['default']['username'] = 'marfee';
 $db['default']['password'] = 'telkom123';
 $db['default']['database'] = '';
