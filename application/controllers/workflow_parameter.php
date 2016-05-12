@@ -23,7 +23,7 @@ class Workflow_parameter extends CI_Controller
         redirect("/");
     }
 
-    
+
     public function document_type() {
 
         $title = "Daftar Jenis Workflow";
@@ -99,14 +99,14 @@ class Workflow_parameter extends CI_Controller
 
     public function crud_document_type() {
         $result = $this->P_document_type->crud_document_type();
-        
+
         echo json_encode($result);
         exit;
     }
-    
+
     function html_select_options_reference_list($code = '') {
         try {
-            
+
 		    $items = $this->P_document_type->getReferenceList($code);
 		    echo '<select>';
             foreach($items  as $item ){
@@ -196,14 +196,14 @@ class Workflow_parameter extends CI_Controller
 
     public function crud_workflow_list() {
         $result = $this->P_workflow_list->crud_workflow_list();
-        
+
         echo json_encode($result);
         exit;
     }
 
     function html_select_options_doc_type() {
         try {
-            
+
             $items = $this->P_workflow_list->getDocumentType();
             echo '<select>';
             foreach($items  as $item ){
@@ -219,7 +219,7 @@ class Workflow_parameter extends CI_Controller
 
     function html_select_options_procedure() {
         try {
-            
+
             $items = $this->P_workflow_list->getProcedure();
             echo '<select>';
             foreach($items  as $item ){
@@ -233,10 +233,10 @@ class Workflow_parameter extends CI_Controller
         }
     }
     /* End Daftar Workflow*/
-    
-    
+
+
     /* P_procedure */
-    
+
     public function procedure() {
 
         $result = array();
@@ -307,19 +307,19 @@ class Workflow_parameter extends CI_Controller
 
     public function crud_procedure() {
         $result = $this->P_procedure->crud_procedure();
-        
+
         echo json_encode($result);
         exit;
     }
-    
-    
+
+
     public function grid_procedure_files() {
 
         $page = intval($_REQUEST['page']);
         $limit = $_REQUEST['rows'];
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
-        
+
         $p_procedure_id = $this->input->post('procedure_id');
         $table = "SELECT * FROM P_PROCEDURE_FILES";
 
@@ -377,19 +377,19 @@ class Workflow_parameter extends CI_Controller
 
     public function crud_procedure_files() {
         $result = $this->P_procedure_files->crud_procedure_files();
-        
+
         echo json_encode($result);
         exit;
     }
-    
-    
+
+
     public function grid_procedure_role() {
 
         $page = intval($_REQUEST['page']);
         $limit = $_REQUEST['rows'];
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
-        
+
         $p_procedure_id = $this->input->post('procedure_id');
         $table = "SELECT a.P_PROCEDURE_ROLE_ID,
                         a.P_PROCEDURE_ID,
@@ -400,8 +400,8 @@ class Workflow_parameter extends CI_Controller
                         a.UPDATED_DATE,
                         a.UPDATED_BY,
                         a.CREATED_BY,
-                        a.CREATION_DATE,                        
-                        b.PROF_NAME 
+                        a.CREATION_DATE,
+                        b.PROF_NAME
                     FROM P_PROCEDURE_ROLE a
                     LEFT JOIN APP_PROFILE b ON a.P_APP_ROLE_ID = b.PROF_ID";
 
@@ -459,7 +459,7 @@ class Workflow_parameter extends CI_Controller
 
     public function crud_procedure_role() {
         $result = $this->P_procedure_role->crud_procedure_role();
-        
+
         echo json_encode($result);
         exit;
     }
@@ -678,7 +678,7 @@ class Workflow_parameter extends CI_Controller
         $limit = $_REQUEST['rows'];
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
-        
+
         $p_w_chart_proc_id = $this->input->post('p_w_chart_proc_id');
         $table = "SELECT * FROM P_W_DAEMON_PROC";
 
@@ -838,7 +838,7 @@ class Workflow_parameter extends CI_Controller
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
 
-        $result['result'] = $this->P_workflow_list->getWorkflow();        
+        $result['result'] = $this->P_workflow_list->getWorkflow();
         $this->load->view('workflow_parameter/monitoring',$result);
     }
 
@@ -853,14 +853,14 @@ class Workflow_parameter extends CI_Controller
             if($exp[0] == 'H'){
                 $data['header'] = $exp;
             }
-            
+
         }
 
         $data['p_workflow_id'] = $p_workflow_id;
         $data['skeyword'] = $skeyword;
 
         $this->load->view('workflow_parameter/monitoring_grid',$data);
-        
+
     }
 
     public function getMonProcess(){
@@ -875,6 +875,7 @@ class Workflow_parameter extends CI_Controller
         $result = $this->P_workflow_list->getMonitoring($p_workflow_id, $skeyword,'D');
 
         $data = array();
+        $hasil = array();
         $no = 1;
         foreach ($result as $row) {
             $exp = explode('|', $row->WF_MONITOR);
@@ -883,7 +884,7 @@ class Workflow_parameter extends CI_Controller
 
                 for($i=0; $i<count($exp); $i++){
                     if($i==0){
-                        $tmp = array("urutan" => $no);                        
+                        $tmp = array("urutan" => $no);
                     }
                     $tmp = array_merge($tmp, array("data".$i => $exp[$i]));
                 }
@@ -896,10 +897,10 @@ class Workflow_parameter extends CI_Controller
 
                 $jmlCount[] = $tmp;
 
-                if($hasil['current'] == 1){    
+                if($hasil['current'] == 1){
                     $start = $hasil['current'];
                     $end = $limit;
-                }else{                    
+                }else{
                     $end = ($limit * $hasil['current']);
                     $start = $end - ($limit - 1);
                 }
@@ -907,14 +908,14 @@ class Workflow_parameter extends CI_Controller
                 // exit;
                 if(($tmp['urutan'] >= $start) && ($tmp['urutan'] <= $end)){
                     $data[] = $tmp;
-                }              
+                }
 
                 $hasil['total'] = count($jmlCount);
                 $hasil['rowCount'] = $limit;
                 $hasil['success'] = true;
                 $hasil['message'] = 'Berhasil';
                 $hasil['rows'] = $data;
-               
+
             }
 
             $no++;
@@ -996,7 +997,7 @@ class Workflow_parameter extends CI_Controller
 
     function html_select_options_rqst_type() {
         try {
-            
+
             $items = $this->P_workflow_list->getRqstType();
             echo '<select>';
             foreach($items  as $item ){
@@ -1012,7 +1013,7 @@ class Workflow_parameter extends CI_Controller
 
     function html_select_options_order_status() {
         try {
-            
+
             $items = $this->P_workflow_list->getOrderStatus();
             echo '<select>';
             foreach($items  as $item ){
@@ -1028,7 +1029,7 @@ class Workflow_parameter extends CI_Controller
 
     function html_select_options_reference() {
         try {
-            
+
             $items = $this->P_workflow_list->getReference();
             echo '<select>';
             foreach($items  as $item ){
@@ -1077,7 +1078,7 @@ class Workflow_parameter extends CI_Controller
             $sql = "  BEGIN ".
                             "  p_first_submit_engine(:i_doc_type_id, :i_cust_req_id, :i_username, :o_result_code, :o_result_msg ); END;";
 
-           
+
 
             $stmt = oci_parse($this->workflow->db->conn_id, $sql);
 
