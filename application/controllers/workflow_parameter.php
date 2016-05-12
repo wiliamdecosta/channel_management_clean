@@ -921,6 +921,15 @@ class Workflow_parameter extends CI_Controller
             $no++;
         }
 
+        if(count($hasil) == 0) {
+            $hasil['current'] = 1;
+            $hasil['total'] = 1;
+            $hasil['rowCount'] = 1;
+            $hasil['success'] = true;
+            $hasil['message'] = 'Berhasil';
+            $hasil['rows'] = array();
+        }
+
         echo(json_encode($hasil));
         exit;
     }
