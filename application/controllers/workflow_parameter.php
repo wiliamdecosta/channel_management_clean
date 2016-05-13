@@ -1253,4 +1253,142 @@ class Workflow_parameter extends CI_Controller
 
     /* END CONTRACT REGISTRATION */
 
+    public function grid_customer_order_contract_reg() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = empty($_REQUEST['sidx']) ? "t_customer_order_id" : $_REQUEST['sidx'];
+        $sord = empty($_REQUEST['sord']) ? "ASC" : $_REQUEST['sord'];
+
+        $table = "SELECT * FROM V_WF_CONTRACT_REG";
+        $t_customer_order_id = $this->input->post('t_customer_order_id');
+        $p_w_proc_id = $this->input->post('p_w_proc_id');
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => isset($_REQUEST['_search']) ? $_REQUEST['_search'] : null,
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array();
+        if(!empty($t_customer_order_id)) {
+            $req_param['where'][] = 'T_CUSTOMER_ORDER_ID = '.$t_customer_order_id;
+        }
+
+        if(!empty($p_w_proc_id)) {
+            $req_param['where'][] = 'P_W_PROC_ID = '.$p_w_proc_id;
+        }
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        //print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+    public function grid_customer_order_invoice() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = empty($_REQUEST['sidx']) ? "t_customer_order_id" : $_REQUEST['sidx'];
+        $sord = empty($_REQUEST['sord']) ? "ASC" : $_REQUEST['sord'];
+
+        $table = "SELECT * FROM V_WF_INVOICE";
+        $t_customer_order_id = $this->input->post('t_customer_order_id');
+        $p_w_proc_id = $this->input->post('p_w_proc_id');
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => isset($_REQUEST['_search']) ? $_REQUEST['_search'] : null,
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array();
+        if(!empty($t_customer_order_id)) {
+            $req_param['where'][] = 'T_CUSTOMER_ORDER_ID = '.$t_customer_order_id;
+        }
+
+        if(!empty($p_w_proc_id)) {
+            $req_param['where'][] = 'P_W_PROC_ID = '.$p_w_proc_id;
+        }
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        //print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
 }

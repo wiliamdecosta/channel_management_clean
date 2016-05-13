@@ -160,20 +160,20 @@ $prv = getPrivilege($menu_id); ?>
                     },
                     editrules: {required: false}
                 },
-                {   
-                    label: 'Jenis Permohonan',
-                    name: 'P_RQST_TYPE_ID', 
-                    width: 200, 
-                    hidden:true,
-                    sortable: true, 
-                    editable: true,
-                    editrules: {edithidden: true, required: true},
-                    edittype: 'select',
-                    editoptions: {
-                        style: "width: 270px", 
-                        dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_rqst_type"); ?>'
-                    }
-                },
+                // {   
+                //     label: 'Jenis Permohonan',
+                //     name: 'P_RQST_TYPE_ID', 
+                //     width: 200, 
+                //     hidden:true,
+                //     sortable: true, 
+                //     editable: true,
+                //     editrules: {edithidden: true, required: true},
+                //     edittype: 'select',
+                //     editoptions: {
+                //         style: "width: 270px", 
+                //         dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_rqst_type"); ?>'
+                //     }
+                // },
                 {   
                     label: 'Jenis Permohonan',
                     name: 'RQST_TYPE_CODE', 
@@ -181,20 +181,20 @@ $prv = getPrivilege($menu_id); ?>
                     sortable: true, 
                     editable: false
                 },
-                {   
-                    label: 'Status Permohonan',
-                    name: 'P_ORDER_STATUS_ID', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: true,
-                    hidden:true,
-                    editrules: {edithidden: true, required: true},
-                    edittype: 'select',
-                    editoptions: {
-                        style: "width: 200px", 
-                        dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_order_status"); ?>'
-                    }
-                },
+                // {   
+                //     label: 'Status Permohonan',
+                //     name: 'P_ORDER_STATUS_ID', 
+                //     width: 200, 
+                //     sortable: true, 
+                //     editable: true,
+                //     hidden:true,
+                //     editrules: {edithidden: true, required: true},
+                //     edittype: 'select',
+                //     editoptions: {
+                //         style: "width: 200px", 
+                //         dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_order_status"); ?>'
+                //     }
+                // },
                 {   
                     label: 'Jenis Permohonan',
                     name: 'ORDER_STATUS_CODE', 

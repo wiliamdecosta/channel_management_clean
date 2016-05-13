@@ -384,8 +384,10 @@ class P_workflow_list extends CI_Model
         $T_CUSTOMER_ORDER_ID = $this->input->post('T_CUSTOMER_ORDER_ID'); 
 
         $ORDER_NO = $this->input->post('ORDER_NO'); 
-        $P_RQST_TYPE_ID = $this->input->post('P_RQST_TYPE_ID'); 
-        $P_ORDER_STATUS_ID = $this->input->post('P_ORDER_STATUS_ID'); 
+        // $P_RQST_TYPE_ID = $this->input->post('P_RQST_TYPE_ID'); 
+        $P_RQST_TYPE_ID = 1; 
+        // $P_ORDER_STATUS_ID = $this->input->post('P_ORDER_STATUS_ID'); 
+        $P_ORDER_STATUS_ID = 1; 
         $ORDER_DATE = $this->input->post('ORDER_DATE'); 
         $DESCRIPTION = $this->input->post('DESCRIPTION');
 
