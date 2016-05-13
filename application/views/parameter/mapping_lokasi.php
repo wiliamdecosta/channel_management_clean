@@ -145,8 +145,9 @@
                         name: 'VALID_FROM',
                         width: 150,
                         align: "left",
-                        editable: true,
-                        editrules: {required: true},
+                        editable: false,
+                        hidden : true,
+                        editrules: {required: false},
                         editoptions: {
 
                             dataInit: function (element) {
@@ -163,8 +164,9 @@
                         name: 'VALID_UNTIL',
                         width: 150,
                         align: "left",
-                        editable: true,
-                        editrules: {required: true},
+                        editable: false,
+                        hidden : true,
+                        editrules: {required: false},
                         editoptions: {
                             dataInit: function (element) {
                                 $(element).datepicker({
