@@ -8,7 +8,7 @@ $prv = getPrivilege($menu_id); ?>
     }
 </script>
 <div class="breadcrumbs" id="breadcrumbs">
-    <?php echo getBreadcrumb(array('Workflow Parameter','Invoice')); ?>
+    <?php echo getBreadcrumb(array('Workflow Parameter','Pembuatan Kontrak')); ?>
 </div>
 
 <!-- /section:basics/content.breadcrumbs -->
@@ -20,7 +20,7 @@ $prv = getPrivilege($menu_id); ?>
                     <li class="active">
                         <a href="#" data-toggle="tab" aria-expanded="true" id="tab-1">
                             <i class="blue bigger-120"></i>
-                            <strong>Invoice</strong>
+                            <strong>Pembuatan Kontrak</strong>
                         </a>
                     </li>
                     <li class="">
@@ -63,7 +63,8 @@ $prv = getPrivilege($menu_id); ?>
 </div><!-- /.page-content -->
 
 <?php 
-    $this->load->view('parameter/lov_contract_info.php');
+   $this->load->view('parameter/lov_mitra.php');
+   $this->load->view('parameter/lov_lokasi.php');
 ?>
 
 <script>
@@ -77,7 +78,7 @@ $prv = getPrivilege($menu_id); ?>
                 return false;
             }
             
-            loadContentWithParams("workflow_parameter-cust_order_legal_doc.php", {
+            loadContentWithParams("workflow_parameter-cust_order_legal_doc_kontrak.php", {
                 t_customer_order_id: the_id,
                 order_no: the_no,
                 menu_id : <?php echo $menu_id; ?>
@@ -85,9 +86,18 @@ $prv = getPrivilege($menu_id); ?>
         });
     });
 
-    function showLovContractInfo(P_MP_PKS_ID, CUST_PGL_ID, CONTRACT_NO, MITRA_NAME, MITRA_ADDRESS) {
-        var idd = $('#CONTRACT_TYPE_ID').val();
-        modal_lov_contract_info_show(P_MP_PKS_ID, CUST_PGL_ID, CONTRACT_NO, MITRA_NAME, MITRA_ADDRESS, idd);
+    function showLovMitra(PGL_ID, PGL_NAME, PGL_ADDR) {
+        modal_lov_mitra_show(PGL_ID, PGL_NAME, PGL_ADDR);
+    }
+
+    function showLovLokasi(P_LOCATION_ID, LOKASI) {
+        var pgl_id = $('#form_pgl_id').val();
+
+        if(pgl_id){
+            modal_lov_lokasi_show(P_LOCATION_ID, LOKASI, pgl_id);
+        }else{
+            swal("", "Nama Mitra Belum Diisi", "warning");
+        }
     }
 
     function submitWF(T_CUSTOMER_ORDER_ID, ORDER_NO) {        
@@ -98,7 +108,7 @@ $prv = getPrivilege($menu_id); ?>
                 type: 'POST',
                 datatype: "json",
                 url: '<?php echo site_url('workflow_parameter/submitWF');?>',
-                data: { T_CUSTOMER_ORDER_ID : T_CUSTOMER_ORDER_ID, DOC_TYPE_ID : 1 },
+                data: { T_CUSTOMER_ORDER_ID : T_CUSTOMER_ORDER_ID, DOC_TYPE_ID : 2 },
                 timeout: 10000,
                 success: function(data) {
                     var response = JSON.parse(data);
@@ -131,7 +141,7 @@ $prv = getPrivilege($menu_id); ?>
         
         
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo site_url('workflow_parameter/grid_invoice');?>',
+            url: '<?php echo site_url('workflow_parameter/grid_contract_registration');?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
@@ -160,20 +170,20 @@ $prv = getPrivilege($menu_id); ?>
                     },
                     editrules: {required: false}
                 },
-                {   
-                    label: 'Jenis Permohonan',
-                    name: 'P_RQST_TYPE_ID', 
-                    width: 200, 
-                    hidden:true,
-                    sortable: true, 
-                    editable: true,
-                    editrules: {edithidden: true, required: true},
-                    edittype: 'select',
-                    editoptions: {
-                        style: "width: 270px", 
-                        dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_rqst_type"); ?>'
-                    }
-                },
+                // {   
+                //     label: 'Jenis Permohonan',
+                //     name: 'P_RQST_TYPE_ID', 
+                //     width: 200, 
+                //     hidden:true,
+                //     sortable: true, 
+                //     editable: true,
+                //     editrules: {edithidden: true, required: true},
+                //     edittype: 'select',
+                //     editoptions: {
+                //         style: "width: 270px", 
+                //         dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_rqst_type"); ?>'
+                //     }
+                // },
                 {   
                     label: 'Jenis Permohonan',
                     name: 'RQST_TYPE_CODE', 
@@ -181,20 +191,20 @@ $prv = getPrivilege($menu_id); ?>
                     sortable: true, 
                     editable: false
                 },
-                {   
-                    label: 'Status Permohonan',
-                    name: 'P_ORDER_STATUS_ID', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: true,
-                    hidden:true,
-                    editrules: {edithidden: true, required: true},
-                    edittype: 'select',
-                    editoptions: {
-                        style: "width: 200px", 
-                        dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_order_status"); ?>'
-                    }
-                },
+                // {   
+                //     label: 'Status Permohonan',
+                //     name: 'P_ORDER_STATUS_ID', 
+                //     width: 200, 
+                //     sortable: true, 
+                //     editable: true,
+                //     hidden:true,
+                //     editrules: {edithidden: true, required: true},
+                //     edittype: 'select',
+                //     editoptions: {
+                //         style: "width: 200px", 
+                //         dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_order_status"); ?>'
+                //     }
+                // },
                 {   
                     label: 'Jenis Permohonan',
                     name: 'ORDER_STATUS_CODE', 
@@ -220,49 +230,35 @@ $prv = getPrivilege($menu_id); ?>
                             });
                         }
                     }
-                },     
+                },                 
                 {
-                    label: 'Deskripsi',
-                    name: 'DESCRIPTION', 
-                    width: 200, 
-                    sortable: true, 
-                    hidden:true, 
-                    editable: true,
-                    editoptions: {
-                                    size: 50,
-                                    maxlength:128
-                    },
-                    editrules: {edithidden: true, required:false}
-                },
-                {
-                    label: 'No. Invoice',
-                    name: 'INVOICE_NO', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: true,
-                    editoptions: {
-                        size: 20,
-                        maxlength:64
-                    },
-                    editrules: {required: true}
-                },
-                {   
-                    label: 'Jenis Kontrak',
-                    name: 'CONTRACT_TYPE_ID', 
+                    label: 'T_CONTRACT_REG_ID',
+                    name: 'T_CONTRACT_REG_ID', 
                     width: 200, 
                     sortable: true, 
                     editable: true,
                     hidden:true,
-                    editrules: {edithidden: true, required: true},
-                    edittype: 'select',
                     editoptions: {
-                        style: "width: 200px", 
-                        dataUrl: '<?php echo site_url("workflow_parameter/html_select_options_reference"); ?>'
-                    }
+                        size: 10,
+                        maxlength:64
+                    },
+                    editrules: {required: false}
                 },
                 {
                     label: 'No. Kontrak',
                     name: 'CONTRACT_NO', 
+                    width: 200, 
+                    sortable: true, 
+                    editable: true,
+                    editoptions: {
+                        size: 40,
+                        maxlength:64
+                    },
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Nama Mitra',
+                    name: 'PGL_ID', 
                     width: 200, 
                     sortable: true, 
                     editable: true,
@@ -275,12 +271,13 @@ $prv = getPrivilege($menu_id); ?>
                                                         
                             // give the editor time to initialize
                             setTimeout( function() {
-                                elm.append('<input id="form_contract_no" type="text" class="col-xs-4 jqgrid-required">'+
-                                        '<button class="btn btn-warning btn-sm" type="button" onclick="showLovContractInfo(\'P_MP_PKS_ID\',\'CUST_PGL_ID\',\'form_contract_no\',\'MITRA_NAME\',\'MITRA_ADDRESS\')">'+
+                                elm.append('<input id="form_pgl_id" type="text"  style="display:none;">'+
+                                        '<input id="form_pgl_name" type="text" class="col-xs-6 jqgrid-required">'+
+                                        '<button class="btn btn-warning btn-sm" type="button" onclick="showLovMitra(\'form_pgl_id\',\'form_pgl_name\',\'PGL_ADDR\')">'+
                                         '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
                                         '</button>');
 
-                                
+                                $("#form_pgl_id").val(value);
                                 elm.parent().removeClass('jqgrid-required');
                             }, 100);
                             
@@ -289,16 +286,16 @@ $prv = getPrivilege($menu_id); ?>
                         "custom_value":function( element, oper, gridval) {
                             
                             if(oper === 'get') {
-                                return $("#form_contract_no").val();
+                                return $("#form_pgl_id").val();
                             } else if( oper === 'set') {
-                                $("#form_contract_no").val(gridval);
+                                $("#form_pgl_id").val(gridval);
                                 var gridId = this.id;
                                 // give the editor time to set display
                                 setTimeout(function(){
                                     var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
                                     if(selectedRowId != null) {                                        
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'CONTRACT_NO');
-                                        $("#form_contract_no").val( code_display );
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PGL_NAME');
+                                        $("#form_pgl_name").val( code_display );
                                     }
 
                                 },100);
@@ -307,134 +304,130 @@ $prv = getPrivilege($menu_id); ?>
                     }
                 },
                 {
-                    label: 'T_INVOICE_ID',
-                    name: 'T_INVOICE_ID', 
+                    label: 'Nama Mitra', 
+                    name: 'PGL_NAME', 
+                    width: 250, 
+                    editable: false,
+                    hidden: true
+                },  
+                {
+                    label: 'Alamat',
+                    name: 'PGL_ADDR', 
+                    edittype: 'textarea',
                     width: 200, 
                     sortable: true, 
-                    editable: true,
-                    hidden:true,
-                    editoptions: {
-                        size: 10,
-                        maxlength:64
-                    },
-                    editrules: {required: false}
-                },
-                {
-                    label: 'P_MP_PKS_ID',
-                    name: 'P_MP_PKS_ID', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: true,
-                    hidden:true,
-                    editoptions: {
-                        size: 10,
-                        maxlength:64
-                    },
-                    editrules: {required: false}
-                },
-                {
-                    label: 'CUST_PGL_ID',
-                    name: 'CUST_PGL_ID', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: true,
-                    hidden:true,
-                    editoptions: {
-                        size: 10,
-                        maxlength:64
-                    },
-                    editrules: {required: false}
-                },
-                {
-                    label: 'Nama Mitra',
-                    name: 'MITRA_NAME', 
-                    width: 200, 
-                    sortable: true, 
+                    hidden:true, 
                     editable: true,
                     editoptions: {
-                        size: 50,
-                        maxlength:64
+                                    style : 'width:400px',
+                                    rows : 3,
+                                    readonly: "readonly"
                     },
-                    editrules: {required: true}
+                    editrules: {edithidden: true, required:false}
                 },
                 {
-                    label: 'Alamat Mitra',
-                    name: 'MITRA_ADDRESS', 
+                    label: 'Lokasi',
+                    name: 'P_LOCATION_ID', 
                     width: 200, 
                     sortable: true, 
                     editable: true,
                     hidden: true,
+                    editrules: {edithidden: true, required:true},
+                    edittype: 'custom',
                     editoptions: {
-                        size: 60,
-                        maxlength:64
-                    },
-                    editrules: {edithidden: true, required: true}
+                        "custom_element":function( value  , options) {                            
+                            var elm = $('<span></span>');
+                                                        
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_p_location_id" type="text"  style="display:none;">'+
+                                    '<input id="form_lokasi" type="text" class="col-xs-6 jqgrid-required">'+
+                                        '<button class="btn btn-warning btn-sm" type="button" onclick="showLovLokasi(\'form_p_location_id\',\'form_lokasi\')">'+
+                                        '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+
+                                $("#form_p_location_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+                            
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+                            
+                            if(oper === 'get') {
+                                return $("#form_p_location_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_p_location_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {                                        
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'LOKASI');
+                                        $("#form_lokasi").val( code_display );
+                                    }
+
+                                },100);
+                            }
+                        }
+                    }
                 },
                 {
-                    label: 'Mitra PIC',
-                    name: 'MITRA_PIC', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: true,
-                    hidden: true,
-                    editoptions: {
-                        size: 40,
-                        maxlength:64
-                    },
-                    editrules: {edithidden: true, required: false}
-                },
+                    label: 'Lokasi', 
+                    name: 'LOKASI', 
+                    width: 250, 
+                    editable: false,
+                    hidden: true
+                },   
                 {
-                    label: 'Telephone PIC',
-                    name: 'PIC_PHONE', 
-                    width: 200, 
-                    sortable: true, 
+                    label: 'Berlaku Dari', 
+                    name: 'VALID_FROM', 
+                    width: 130, 
                     editable: true,
-                    hidden: true,
+                    edittype:"text",
+                    editrules: {required: true},
                     editoptions: {
-                        size: 30,
-                        maxlength:64
-                    },
-                    editrules: {edithidden: true, required: false}
-                },
+                        dataInit: function (element) {
+                           $(element).datepicker({
+                                autoclose: true,
+                                format: 'yyyy-mm-dd',
+                                orientation : 'top',
+                                todayHighlight : true
+                            });
+                        }
+                    }
+                }, 
                 {
-                    label: 'NPWP Mitra',
-                    name: 'MITRA_NPWP', 
-                    width: 200, 
-                    sortable: true, 
+                    label: 'Sampai', 
+                    name: 'VALID_TO', 
+                    width: 130, 
                     editable: true,
-                    hidden: true,
+                    edittype:"text",
+                    editrules: {required: false},
                     editoptions: {
-                        size: 45,
-                        maxlength:64
-                    },
-                    editrules: {edithidden: true, required: false}
-                },
+                        dataInit: function (element) {
+                           $(element).datepicker({
+                                autoclose: true,
+                                format: 'yyyy-mm-dd',
+                                orientation : 'top',
+                                todayHighlight : true
+                            });
+                        }
+                    }
+                }, 
                 {
-                    label: 'Jumlah Invoice',
-                    name: 'INVOICE_AMOUNT', 
+                    label: 'Deskripsi',
+                    name: 'DESCRIPTION', 
                     width: 200, 
                     sortable: true, 
+                    hidden:true, 
                     editable: true,
-                    hidden: true,
                     editoptions: {
-                        size: 30,
-                        maxlength:32
+                                    size: 50,
+                                    maxlength:128
                     },
-                    editrules: {edithidden: true, required: true}
-                },
-                {
-                    label: 'Pajak',
-                    name: 'VAT_AMOUNT', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: true,
-                    hidden: true,
-                    editoptions: {
-                        size: 10,
-                        maxlength:2
-                    },
-                    editrules: {edithidden: true, required: false}
-                },
+                    editrules: {edithidden: true, required:false}
+                },   
                 {label: 'Tgl Pembuatan', name: 'CREATION_DATE', width: 120, align: "left", hidden:true, editable: false},
                 {label: 'Dibuat Oleh', name: 'CREATED_BY', width: 120, align: "left", hidden:true, editable: false},
                 {label: 'Tgl Update', name: 'UPDATED_DATE', width: 120, align: "left", hidden:true, editable: false},
@@ -475,8 +468,8 @@ $prv = getPrivilege($menu_id); ?>
             },
 
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo site_url('workflow_parameter/crud_invoice');?>',
-            caption: "Invoice"
+            editurl: '<?php echo site_url('workflow_parameter/crud_contract_reg');?>',
+            caption: "Pembuatan Kontrak"
         });
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
@@ -536,8 +529,6 @@ $prv = getPrivilege($menu_id); ?>
                     style_edit_form(form);
                     form.css({"height": 0.60*screen.height+"px"});
                     form.css({"width": 0.50*screen.width+"px"});
-                    $("#INVOICE_AMOUNT").css("text-align","right");
-                    $("#VAT_AMOUNT").css("text-align","right");
                     /*$("#USER_NAME").prop("readonly", true);*/                    
                 },
                 afterShowForm: function(form) {
@@ -571,14 +562,9 @@ $prv = getPrivilege($menu_id); ?>
                     form.css({"height": 0.60*screen.height+"px"});
                     form.css({"width": 0.50*screen.width+"px"});
                     setTimeout( function() {    
-                        $('#P_MP_PKS_ID').val('');
-                        $('#CUST_PGL_ID').val('');
-                        $('#MITRA_NAME').val('');
-                        $('#MITRA_ADDRESS').val('');
-                        $('#form_contract_no').val('');
+                        $('#form_pgl_name').val('');
+                        $('#form_lokasi').val('');
                     }, 150);
-                    $("#INVOICE_AMOUNT").css("text-align","right");
-                    $("#VAT_AMOUNT").css("text-align","right");
                     
                 },
                 afterShowForm: function(form) {

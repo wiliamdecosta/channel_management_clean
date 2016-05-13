@@ -2368,4 +2368,121 @@ class Parameter extends CI_Controller
         $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
         echo json_encode($result);
     }
+
+    public function gridLovMitra()
+    {
+
+        $page = intval($this->input->post('current'));
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT * FROM CUST_PGL";
+
+        $req_param = array(
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(pgl_name) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
+
+    public function gridLovLokasi()
+    {
+
+        $page = intval($this->input->post('current'));
+        $limit = $this->input->post('rowCount');
+        $sort = $this->input->post('sort');
+        $dir = $this->input->post('dir');
+        $plg_id = $this->input->post('plg_id');
+
+        $searchPhrase = $this->input->post('searchPhrase');
+
+        $query = "SELECT a.P_MP_LOKASI_ID as P_LOCATION_ID, a.LOKASI, a.VALID_FROM, a.VALID_UNTIL
+                    FROM P_MP_LOKASI a, 
+                         P_MAP_MIT_CC b
+                    WHERE a.P_MAP_MIT_CC_ID = b.P_MAP_MIT_CC_ID
+                    AND b.PGL_ID = ".$plg_id;
+
+        $req_param = array(
+            "table" => $query,
+            "sort_by" => $sort,
+            "sord" => $dir,
+            "limit" => null,
+            "search" => $searchPhrase
+        );
+
+        $req_param['where'] = array();
+
+        if (!empty($searchPhrase)) {
+            $req_param['where'][] = "(upper(a.LOKASI) LIKE upper('%" . $searchPhrase . "%'))";
+        }
+
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        if ($count > 0 && !empty($limit)) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['current'] = 1;
+        } else {
+            $result['current'] = $page;
+        }
+
+        $result['total'] = $count;
+        $result['rowCount'] = $limit;
+        $result['success'] = true;
+        $result['message'] = 'Berhasil';
+        $result['rows'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+    }
 }

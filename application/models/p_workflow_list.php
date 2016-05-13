@@ -596,4 +596,185 @@ class P_workflow_list extends CI_Model
         return $result;
     }
 
+    function crud_contract_reg() {
+
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+
+        //post t_customer_order
+        $T_CUSTOMER_ORDER_ID = $this->input->post('T_CUSTOMER_ORDER_ID'); 
+
+        $ORDER_NO = $this->input->post('ORDER_NO'); 
+        $P_RQST_TYPE_ID = 2; 
+        $P_ORDER_STATUS_ID = 1; 
+        $ORDER_DATE = $this->input->post('ORDER_DATE'); 
+        
+        $T_CONTRACT_REG_ID = $this->input->post('T_CONTRACT_REG_ID'); 
+        $PGL_ID = $this->input->post('PGL_ID'); 
+        $P_LOCATION_ID = $this->input->post('P_LOCATION_ID'); 
+      
+        $CONTRACT_NO = $this->input->post('CONTRACT_NO'); 
+        $VALID_FROM = $this->input->post('VALID_FROM'); 
+        $VALID_TO = $this->input->post('VALID_TO') ? $this->input->post('VALID_TO') : ''; 
+        $DESCRIPTION = $this->input->post('DESCRIPTION');
+        
+        $CREATED_BY = $this->session->userdata('d_user_name');
+        $UPDATED_BY = $this->session->userdata('d_user_name');
+
+        
+        $result = array();
+        
+        switch ($oper) {
+            case 'add':
+                try {
+                    $cust_order_id = gen_id('T_CUSTOMER_ORDER_ID', 'T_CUSTOMER_ORDER');
+                    $sql = "INSERT INTO T_CUSTOMER_ORDER (  T_CUSTOMER_ORDER_ID, 
+                                                            ORDER_NO, 
+                                                            P_RQST_TYPE_ID, 
+                                                            P_ORDER_STATUS_ID, 
+                                                            ORDER_DATE, 
+                                                            CREATION_DATE, 
+                                                            CREATED_BY, 
+                                                            UPDATED_DATE, 
+                                                            UPDATED_BY )
+                                VALUES (".$cust_order_id.",
+                                        LPAD(T_CUSTOMER_ORDER_SEQ.NEXTVAL, 10, '0'),
+                                        ".$P_RQST_TYPE_ID.",
+                                        ".$P_ORDER_STATUS_ID.",
+                                        to_date('" . $ORDER_DATE . "','yyyy/mm/dd'),
+                                        SYSDATE,
+                                        '".$CREATED_BY."',
+                                        SYSDATE,
+                                        '".$UPDATED_BY."'
+                            )";
+                    
+                    $dt = $this->db->query($sql);
+
+                    if($dt){
+                        $t_contract_reg_id = gen_id('T_CONTRACT_REG_ID', 'T_CONTRACT_REGISTRATION');
+                        $sql_reg = "INSERT INTO T_CONTRACT_REGISTRATION ( T_CONTRACT_REG_ID, 
+                                                                T_CUSTOMER_ORDER_ID, 
+                                                                PGL_ID, 
+                                                                P_LOCATION_ID, 
+                                                                CONTRACT_NO, 
+                                                                VALID_FROM, 
+                                                                VALID_TO, 
+                                                                DESCRIPTION, 
+                                                                CREATION_DATE, 
+                                                                CREATED_BY, 
+                                                                UPDATED_DATE, 
+                                                                UPDATED_BY )
+                                VALUES (".$t_contract_reg_id.",
+                                        ".$cust_order_id.",
+                                        ".$PGL_ID.",
+                                        ".$P_LOCATION_ID.",
+                                        '".$CONTRACT_NO."',
+                                         to_date('" . $VALID_FROM . "','yyyy/mm/dd'),
+                                         case when '" . $VALID_TO . "' = '' then null else to_date('" . $VALID_TO . "','yyyy/mm/dd') end,
+                                        '".$DESCRIPTION."',
+                                        SYSDATE,
+                                        '".$CREATED_BY."',
+                                        SYSDATE,
+                                        '".$UPDATED_BY."'
+                            )";
+
+                        $this->db->query($sql_reg);
+                    }
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Kontrak Berhasil Ditambahkan';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                break;
+            case 'edit':
+                
+                try {
+                    
+                    $sql = "UPDATE T_CUSTOMER_ORDER
+                            SET P_RQST_TYPE_ID = ".$P_RQST_TYPE_ID.", 
+                                P_ORDER_STATUS_ID =  ".$P_ORDER_STATUS_ID.", 
+                                ORDER_DATE = to_date('" . $ORDER_DATE . "','yyyy/mm/dd'), 
+                                UPDATED_DATE = SYSDATE, 
+                                UPDATED_BY = '".$UPDATED_BY."'
+                            WHERE T_CUSTOMER_ORDER_ID = ".$T_CUSTOMER_ORDER_ID." ";
+                    
+                    $this->db->query($sql);
+
+                    if(empty($T_CONTRACT_REG_ID)){
+                        $t_contract_reg_id = gen_id('T_CONTRACT_REG_ID', 'T_CONTRACT_REGISTRATION');
+                        $sql_reg = "INSERT INTO T_CONTRACT_REGISTRATION ( T_CONTRACT_REG_ID, 
+                                                                T_CUSTOMER_ORDER_ID, 
+                                                                PGL_ID, 
+                                                                P_LOCATION_ID, 
+                                                                CONTRACT_NO, 
+                                                                VALID_FROM, 
+                                                                VALID_TO, 
+                                                                DESCRIPTION, 
+                                                                CREATION_DATE, 
+                                                                CREATED_BY, 
+                                                                UPDATED_DATE, 
+                                                                UPDATED_BY )
+                                VALUES (".$t_contract_reg_id.",
+                                        ".$T_CUSTOMER_ORDER_ID.",
+                                        ".$PGL_ID.",
+                                        ".$P_LOCATION_ID.",
+                                        '".$CONTRACT_NO."',
+                                         to_date('" . $VALID_FROM . "','yyyy/mm/dd'),
+                                         case when '" . $VALID_TO . "' = '' then null else to_date('" . $VALID_TO . "','yyyy/mm/dd') end,
+                                        '".$DESCRIPTION."',
+                                        SYSDATE,
+                                        '".$CREATED_BY."',
+                                        SYSDATE,
+                                        '".$UPDATED_BY."'
+                            )";
+                        $this->db->query($sql_reg);
+                    }else{
+                        $sql_reg = "UPDATE T_CONTRACT_REGISTRATION
+                                SET T_CUSTOMER_ORDER_ID = ".$T_CUSTOMER_ORDER_ID.", 
+                                    PGL_ID = ".$PGL_ID.",
+                                    P_LOCATION_ID = ".$P_LOCATION_ID.",
+                                    CONTRACT_NO = '".$CONTRACT_NO."',
+                                    VALID_FROM = to_date('" . $VALID_FROM . "','yyyy/mm/dd'), 
+                                    VALID_TO = case when '" . $VALID_TO . "' = '' then null else to_date('" . $VALID_TO . "','yyyy/mm/dd') end,
+                                    DESCRIPTION = '".$DESCRIPTION."',
+                                    UPDATED_DATE = SYSDATE, 
+                                    UPDATED_BY = '".$UPDATED_BY."'
+                            WHERE T_CONTRACT_REG_ID = ".$T_CONTRACT_REG_ID." ";
+                    
+                    $this->db->query($sql_reg);
+                    }
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Kontrak Berhasil Diupdate';
+                    
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                
+                break;
+            case 'del':
+                try {
+                    $this->db->where('T_CUSTOMER_ORDER_ID', $id_);
+                    $this->db->delete('T_CONTRACT_REGISTRATION');
+
+                    $this->db->where('T_CUSTOMER_ORDER_ID', $id_);
+                    $this->db->delete('T_CUSTOMER_ORDER');
+                    
+                    $result['success'] = true;
+                    $result['message'] = 'Kontrak Berhasil Dihapus';
+                }catch(Exception $e) {
+                    $result['success'] = false;
+                    $result['message'] = $e->getMessage();
+                }
+                break;
+        }
+        
+        return $result;
+    }
+
 }

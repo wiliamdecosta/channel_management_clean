@@ -1078,7 +1078,7 @@ class Workflow_parameter extends CI_Controller
     }
 
     public function submitWF() {
-        $doc_type_id = 1;
+        $doc_type_id = $this->input->post('DOC_TYPE_ID');
         $t_customer_order_id = $this->input->post('T_CUSTOMER_ORDER_ID');
         $username = $this->session->userdata('d_user_name');
 
@@ -1086,8 +1086,6 @@ class Workflow_parameter extends CI_Controller
 
             $sql = "  BEGIN ".
                             "  p_first_submit_engine(:i_doc_type_id, :i_cust_req_id, :i_username, :o_result_code, :o_result_msg ); END;";
-
-
 
             $stmt = oci_parse($this->workflow->db->conn_id, $sql);
 
@@ -1097,8 +1095,8 @@ class Workflow_parameter extends CI_Controller
             oci_bind_by_name($stmt, ':i_username', $username);
 
             // Bind the output parameter
-            oci_bind_by_name($stmt, ':o_result_code', $code);
-            oci_bind_by_name($stmt, ':o_result_msg', $msg, 20000);
+            oci_bind_by_name($stmt, ':o_result_code', $code, 2000000);
+            oci_bind_by_name($stmt, ':o_result_msg', $msg, 2000000);
 
             ociexecute($stmt);
 
@@ -1176,5 +1174,83 @@ class Workflow_parameter extends CI_Controller
 
     }
     /*end Invoice*/
+
+     /* CONTRACT REGISTRATION */
+    public function contract_registration() {
+
+        $result = array();
+        $result['menu_id'] = $this->uri->segment(3);
+        $this->load->view('workflow_parameter/contract_registration', $result);
+    }
+
+    public function grid_contract_registration() {
+
+        $page = intval($_REQUEST['page']);
+        $limit = $_REQUEST['rows'];
+        $sidx = $_REQUEST['sidx'];
+        $sord = $_REQUEST['sord'];
+
+        $table = "SELECT * FROM V_CONTRACT_REG";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+            "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+            "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+        );
+
+        // Filter Table *
+        $req_param['where'] = array('P_ORDER_STATUS_ID = 1');
+
+        $count = $this->jqGrid->bootgrid_countAll($req_param);
+        // print_r($row);exit;
+        //$count = count($row);
+
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1); // do not put $limit*($page - 1)
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        //$result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->jqGrid->bootgrid_get_data($req_param);
+        echo json_encode($result);
+
+    }
+
+    public function crud_contract_reg() {
+        $result = $this->P_workflow_list->crud_contract_reg();
+
+        echo json_encode($result);
+        exit;
+    }
+
+    /* END CONTRACT REGISTRATION */
 
 }
