@@ -332,7 +332,7 @@
         rownumbers: true,
         rownumWidth: 35, // the width of the row numbers columns
         viewrecords: true,
-        sortname: 'COUNTER_NO ', // default sorting ID
+        sortname: 'COUNTER', // default sorting ID
         // caption: 'Menu Child',
         sortorder: 'asc',
         pager: "#jqGridDetailsPager",
