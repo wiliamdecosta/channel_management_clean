@@ -310,30 +310,18 @@
         datatype: "json",
         page: 1,
         colModel: [
-            {
-                label: 'ID',
-                name: 'JOB_CONTROL_ID',
-                key: true,
-                width: 10,
-                sorttype: 'number',
-                editable: false,
-                hidden: true
-            },
-            {label: 'Periode', name: 'PERIODE', width: 125, align: "left", editable: false},
-            {label: 'Job Code', name: 'JOB_CODE', width: 205, align: "left", editable: false},
-            {label: 'Status', name: 'CODE', width: 155, align: "left", editable: false}
+            { label: 'Log Date', name: 'LOG_DATE', width: 140 },
+            { label: 'Log Message', name: 'LOG_MSG', width: 145, editable: true },
+            { label: 'Code', name: 'CODE', width: 145, editable: true }
         ],
         width: 1120,
         height: '100%',
-//        scrollOffset: 0,
         rowNum: 5,
         shrinkToFit: true,
-//        loadonce: true,
         rownumbers: true,
         rownumWidth: 35, // the width of the row numbers columns
         viewrecords: true,
         sortname: 'COUNTER', // default sorting ID
-        // caption: 'Menu Child',
         sortorder: 'asc',
         pager: "#jqGridDetailsPager",
         jsonReader: {
@@ -341,9 +329,9 @@
             id: 'id',
             repeatitems: false
         },
-        loadComplete: function () {
+        loadComplete : function() {
             var table = this;
-            setTimeout(function () {
+            setTimeout(function(){
                 //  styleCheckbox(table);
 
                 //  updateActionIcons(table);
