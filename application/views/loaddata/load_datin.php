@@ -126,7 +126,7 @@
                 $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
             })
          jQuery("#grid-table").jqGrid({
-                 url:'<?php echo site_url('loaddata/grid_databulanan');?>',
+                 url:'<?php echo site_url('loaddata/grid_datin');?>',
                  datatype: "json",
                  mtype: "POST",
                  //colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],

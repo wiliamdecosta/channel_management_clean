@@ -78,7 +78,7 @@
                         {
                             label: 'Nama Mitra',
                             name: 'PGL_NAME',
-                            width: 200,
+                            width: 300,
                             align: "left",
                             editable: true,
                             editrules: {required: true}
@@ -99,10 +99,24 @@
                             editable: true,
                             editrules: {required: true}
                         },
-                        {label: 'NAMA EAM', name: 'AM_NAME', width: 150, align: "left"},
+                        {label: 'Nama EAM', name: 'AM_NAME', width: 150, align: "left"},
                         {label: 'NIK', name: 'NIK', width: 100, align: "left"},
-                        {label: 'EMAIL AM', name: 'EMAIL_AM', width: 150, align: "left"},
-                        {label: 'NO HP AM', name: 'NO_HP_AM', width: 150, align: "left"}
+                        {label: 'Email AM', name: 'EMAIL_AM', width: 200, align: "left"},
+                        {label: 'No HP AM', name: 'NO_HP_AM', width: 200, align: "left"},
+                        {label: 'Dibuat Oleh',
+                            width: 150,
+                            align: "left",
+                            formatter : function(cellvalue,option,rowObject){
+                                return rowObject.CREATE_BY + ' - ' + rowObject.CREATION_DATE;
+                            }
+                        },
+                        {label: 'Diubah Oleh',
+                            width: 150,
+                            align: "left",
+                            formatter : function(cellvalue,option,rowObject){
+                                return rowObject.UPDATE_BY + ' - ' + rowObject.UPDATE_DATE;
+                            }
+                        }
                     ],
                     //postData: data,
                     width: width,
@@ -117,7 +131,7 @@
                     rownumWidth: 35,
                     sortorder: 'asc',
                     altRows: true,
-                    shrinkToFit: true,
+                    shrinkToFit: false,
                     multiboxonly: true,
                     onSortCol: clearSelection,
                     onPaging: clearSelection,
