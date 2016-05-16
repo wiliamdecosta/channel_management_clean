@@ -400,17 +400,28 @@ jQuery(function($) {
 	$(document).on('click', '#dynamic-table #tooltip_delete', function(e) {
 		var id_DOC = $(this).closest('tr').attr('value');
 		var aPos = oTable1.fnGetPosition( $(this).closest('tr').get(0) );
-		oTable1.fnDeleteRow(aPos);		
-		$.ajax({
-                type: "POST",
+		swal(
+		{title: "Apakah Anda Yakin?",   
+			text: "File tidak dapat di recover begitu anda menghapus template",   
+			type: "warning",   
+			showCancelButton: true,   
+			confirmButtonColor: "#DD6B55",   
+			confirmButtonText: "Ya, hapus template",   
+			closeOnConfirm: false }, 
+			function(){
+				oTable1.fnDeleteRow(aPos);		
+				$.ajax({
+				type: "POST",
 				url: "<?php echo base_url(); ?>"+"template/delete_Temp",
-                data:  {id_doc: id_DOC},
+				data:  {id_doc: id_DOC},
 				dataType:"text",
 				success: function(data){
-					swal("Sukses","Data template berhasil dihapus","success");					
-                }
-		});
-    });
+							swal("Sukses", "Data template berhasil dihapus", "success"); 							
+				}
+				}
+				);
+			});			
+		});		
 	
 	$(document).on('click', '#dynamic-table #tooltip_edit', function(e) {
 		var id_DOC = $(this).closest('tr').attr('value');
