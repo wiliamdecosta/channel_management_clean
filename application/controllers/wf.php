@@ -506,6 +506,9 @@ class Wf extends CI_Controller {
             );
             // Bind the output parameter
 
+            //print_r($params);
+            //exit;
+
             $stmt = oci_parse($this->workflow->db->conn_id,$sql);
 
             foreach($params as $p){

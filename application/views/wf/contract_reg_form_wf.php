@@ -471,7 +471,7 @@
         formatters: {
             "origin": function(column, row)
             {
-                return "<a href=\"<?php echo base_url(); ?>"+row.FILE_FOLDER+"/"+row.FILE_NAME+"\">"+row.ORIGIN_FILE_NAME+"</a> ";
+               return "<a href=\"<?php echo base_url(); ?>"+row.FILE_FOLDER+"/"+row.FILE_NAME+"\">"+row.ORIGIN_FILE_NAME+"</a> ";
             },
             "action": function(column, row)
             {

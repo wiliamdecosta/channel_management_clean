@@ -54,17 +54,17 @@
         /* submit */
         $('#btn_submit').on('click', function() {
             var log_params = $('#log_params').val();           
-            var description = $('#description').val();           
-            var activity = $('#activity').val();           
-
+            var description = $('textarea#description').val();           
+            var activity = $('#activity').val();  
+            
             $.ajax({
                 type: 'POST',
                 datatype: "json",
                 url: '<?php echo site_url('wf/save_log');?>',
                 data: { params : log_params, description: description, activity: activity },
                 timeout: 10000,
-                success: function(data) {
-                    // console.log(data);
+                success: function(data) {           
+                    console.log(data);
                     var response = JSON.parse(data);
                     if(response.success) {
                         $('#grid-log').bootgrid('reload');

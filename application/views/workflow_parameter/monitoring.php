@@ -32,7 +32,7 @@
                                                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"> Workflow </label>
                                                 <div class="col-sm-3">
                                                     <select class="form-control" id="workflow" name="workflow">
-                                                        <option value="">Pilih Workflow</option>
+                                                        <!-- <option value="">Pilih Workflow</option> -->
 
                                                         <?php foreach ($result as $row){
                                                             echo "<option value='".$row->P_WORKFLOW_ID."'>".$row->DISPLAY_NAME."</option>";

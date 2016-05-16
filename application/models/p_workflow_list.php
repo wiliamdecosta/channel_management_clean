@@ -343,6 +343,15 @@ class P_workflow_list extends CI_Model
 
     }
 
+    public function getWorkflowNew($ids) {
+        $result = array();
+        $sql = $this->db->query('SELECT * FROM P_WORKFLOW WHERE P_WORKFLOW_ID = '.$ids);
+        if($sql->num_rows() > 0)
+            $result = $sql->result();
+        return $result;
+
+    }
+
     public function getMonitoring($id, $search, $tmp){
         $result = array();
         $sql = $this->db->query("SELECT * FROM TABLE(F_MONITOR_TIPRO(".$id.", '".$search."')) WHERE WF_MONITOR LIKE '".$tmp."%' ");
@@ -403,6 +412,7 @@ class P_workflow_list extends CI_Model
         $PIC_PHONE = $this->input->post('PIC_PHONE'); 
         $MITRA_NPWP = $this->input->post('MITRA_NPWP'); 
         $INVOICE_AMOUNT = $this->input->post('INVOICE_AMOUNT'); 
+        $INVOICE_DATE = $this->input->post('INVOICE_DATE'); 
         $VAT_AMOUNT = $this->input->post('VAT_AMOUNT') ? $this->input->post('VAT_AMOUNT') : "null";
         
         $CREATED_BY = $this->session->userdata('d_user_name');
@@ -444,6 +454,7 @@ class P_workflow_list extends CI_Model
                         $sql_invoice = "INSERT INTO T_INVOICE ( T_INVOICE_ID, 
                                                         T_CUSTOMER_ORDER_ID, 
                                                         INVOICE_NO, 
+                                                        INVOICE_DATE,
                                                         CONTRACT_TYPE_ID, 
                                                         CONTRACT_NO, 
                                                         P_MP_PKS_ID, 
@@ -462,6 +473,7 @@ class P_workflow_list extends CI_Model
                                 VALUES (".$invoice_id.",
                                         ".$cust_order_id.",
                                         '".$INVOICE_NO."',
+                                        to_date('" . $INVOICE_DATE . "','yyyy/mm/dd'),
                                         ".$CONTRACT_TYPE_ID.",
                                         '".$CONTRACT_NO."',
                                         ".$P_MP_PKS_ID.",
@@ -511,6 +523,7 @@ class P_workflow_list extends CI_Model
                         $sql_invoice = "INSERT INTO T_INVOICE ( T_INVOICE_ID, 
                                                         T_CUSTOMER_ORDER_ID, 
                                                         INVOICE_NO, 
+                                                        INVOICE_DATE,
                                                         CONTRACT_TYPE_ID, 
                                                         CONTRACT_NO, 
                                                         P_MP_PKS_ID, 
@@ -529,6 +542,7 @@ class P_workflow_list extends CI_Model
                                 VALUES (".$invoice_id.",
                                         ".$T_CUSTOMER_ORDER_ID.",
                                         '".$INVOICE_NO."',
+                                        to_date('" . $INVOICE_DATE . "','yyyy/mm/dd'),
                                         ".$CONTRACT_TYPE_ID.",
                                         '".$CONTRACT_NO."',
                                         ".$P_MP_PKS_ID.",
@@ -551,6 +565,7 @@ class P_workflow_list extends CI_Model
                         $sql_invoice = "UPDATE T_INVOICE
                                 SET T_CUSTOMER_ORDER_ID = ".$T_CUSTOMER_ORDER_ID.", 
                                     INVOICE_NO = '".$INVOICE_NO."', 
+                                    INVOICE_DATE = to_date('" . $INVOICE_DATE . "','yyyy/mm/dd'), 
                                     CONTRACT_TYPE_ID = ".$CONTRACT_TYPE_ID.", 
                                     CONTRACT_NO = '".$CONTRACT_NO."',
                                     P_MP_PKS_ID = ".$P_MP_PKS_ID.",

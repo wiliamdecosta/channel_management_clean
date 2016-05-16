@@ -175,14 +175,14 @@ $prv = getPrivilege($menu_id); ?>
                 //     }
                 // },
                 {   
-                    label: 'Jenis Permohonan',
+                    label: 'Jenis Order',
                     name: 'RQST_TYPE_CODE', 
                     width: 130, 
                     sortable: true, 
                     editable: false
                 },
                 // {   
-                //     label: 'Status Permohonan',
+                //     label: 'Status Order',
                 //     name: 'P_ORDER_STATUS_ID', 
                 //     width: 200, 
                 //     sortable: true, 
@@ -196,7 +196,7 @@ $prv = getPrivilege($menu_id); ?>
                 //     }
                 // },
                 {   
-                    label: 'Jenis Permohonan',
+                    label: 'Jenis Order',
                     name: 'ORDER_STATUS_CODE', 
                     width: 200, 
                     sortable: true, 
@@ -204,7 +204,7 @@ $prv = getPrivilege($menu_id); ?>
                     hidden: true
                 },
                 {
-                    label: 'Tgl. Permohonan', 
+                    label: 'Tgl. Order', 
                     name: 'ORDER_DATE', 
                     width: 130, 
                     editable: true,
@@ -307,6 +307,24 @@ $prv = getPrivilege($menu_id); ?>
                     }
                 },
                 {
+                    label: 'Tgl. Invoice', 
+                    name: 'INVOICE_DATE', 
+                    width: 130, 
+                    editable: true,
+                    edittype:"text",
+                    editrules: {required: true},
+                    editoptions: {
+                        dataInit: function (element) {
+                           $(element).datepicker({
+                                autoclose: true,
+                                format: 'yyyy-mm-dd',
+                                orientation : 'top',
+                                todayHighlight : true
+                            });
+                        }
+                    }
+                }, 
+                {
                     label: 'T_INVOICE_ID',
                     name: 'T_INVOICE_ID', 
                     width: 200, 
@@ -357,18 +375,33 @@ $prv = getPrivilege($menu_id); ?>
                     },
                     editrules: {required: true}
                 },
+                // {
+                //     label: 'Alamat Mitra',
+                //     name: 'MITRA_ADDRESS', 
+                //     width: 200, 
+                //     sortable: true, 
+                //     editable: true,
+                //     hidden: true,
+                //     editoptions: {
+                //         size: 60,
+                //         maxlength:64
+                //     },
+                //     editrules: {edithidden: true, required: true}
+                // },
                 {
                     label: 'Alamat Mitra',
                     name: 'MITRA_ADDRESS', 
+                    edittype: 'textarea',
                     width: 200, 
                     sortable: true, 
+                    hidden:true, 
                     editable: true,
-                    hidden: true,
                     editoptions: {
-                        size: 60,
-                        maxlength:64
+                                    style : 'width:400px',
+                                    rows : 3,
+                                    readonly: "readonly"
                     },
-                    editrules: {edithidden: true, required: true}
+                    editrules: {edithidden: true, required:false}
                 },
                 {
                     label: 'Mitra PIC',
@@ -410,7 +443,7 @@ $prv = getPrivilege($menu_id); ?>
                     editrules: {edithidden: true, required: false}
                 },
                 {
-                    label: 'Jumlah Invoice',
+                    label: 'Nilai Invoice',
                     name: 'INVOICE_AMOUNT', 
                     width: 200, 
                     sortable: true, 
