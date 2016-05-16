@@ -317,8 +317,7 @@
                 updatePagerIcons(table);
                 enableTooltips(table);
             }, 0);
-        },
-        editurl: '<?php echo site_url('admin/crud_detail');?>'
+        }
     });
 
     //navButtons grid master

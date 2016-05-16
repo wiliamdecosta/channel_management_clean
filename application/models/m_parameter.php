@@ -709,20 +709,19 @@ class M_parameter extends CI_Model
         $mitra_id = $this->input->post("mitra_id");
         $eam_id = $this->input->post("eam_id");
         $action = $this->input->post("action");
-        $CREATED_DATE = date('d/M/Y');
-        $CREATED_BY = $this->session->userdata('d_user_name');
+        $user = $this->session->userdata('d_user_name');
 
 
         $data = array('PGL_ID' => $mitra_id,
             'P_DAT_AM_ID' => $eam_id,
-            'ID_CC' => $cc_id,
-            'CREATION_DATE' => $CREATED_DATE,
-            'CREATE_BY' => $CREATED_BY
+            'ID_CC' => $cc_id
         );
 
         if ($action == "add") {
             $new_id = gen_id($pk, $table);
             $this->db->set($pk, $new_id);
+            $this->db->set('CREATION_DATE',"SYSDATE",FALSE);
+            $this->db->set('CREATED_BY',$user);
             $this->db->insert($table, $data);
             if ($this->db->affected_rows() > 0) {
                 $data["success"] = true;
@@ -733,6 +732,8 @@ class M_parameter extends CI_Model
             }
 
         } elseif ($action == "edit") {
+            $this->db->set('UPDATE_DATE',"SYSDATE",FALSE);
+            $this->db->set('UPDATE_BY',$user);
             $this->db->where($pk, $p_map_mit_cc);
             $this->db->update($table, $data);
             if ($this->db->affected_rows() > 0) {
