@@ -901,20 +901,6 @@ class Wf extends CI_Controller {
             $this->load->library('upload');
             $this->upload->initialize($config);
 
-            $config2['upload_path'] = '../managementmitra/downloadPKS';
-            $config2['allowed_types'] = '*';
-            $config2['max_size'] = '10000000';
-            $config2['overwrite'] = TRUE;
-            $config2['file_name'] = $config['file_name'];
-            $this->upload->initialize($config2);
-
-            $config3['upload_path'] = './application/third_party/upload/pks';
-            $config3['allowed_types'] = '*';
-            $config3['max_size'] = '10000000';
-            $config3['overwrite'] = TRUE;
-            $config3['file_name'] = $config['file_name'];
-            $this->upload->initialize($config3);
-
             if (!$this->upload->do_upload("filename")) {
 
                 $error = $this->upload->display_errors();
@@ -927,6 +913,18 @@ class Wf extends CI_Controller {
                 
                 // Do Upload
                 $data = $this->upload->data();            
+                // $uploads_dir = '/managementmitra/downloadPKS/'.$data['file_name'];  
+                // $tmp_name = '/application/third_party/upload/'.$data['file_name'];  
+                // move_uploaded_file($tmp_name, $uploads_dir);
+                // copy($tmp_name, $uploads_dir);
+
+                $uploads_dir2 = '/application/third_party/upload/pks/'.$data['file_name'];  
+                $tmp_name2 = '/application/third_party/upload/'.$data['file_name'];  
+                // move_uploaded_file($tmp_name2, $uploads_dir2);
+                copy($tmp_name2, $uploads_dir2);
+
+                // copy(APPPATH.'application/third_party/upload/'.$data['file_name'], APPPATH.'managementmitra/downloadPKS/'.$data['file_name']);
+                // copy(APPPATH.'application/third_party/upload/'.$data['file_name'], APPPATH.'application/third_party/upload/pks/'.$data['file_name']);
 
                 $idd = gen_id('T_CUST_ORDER_LEGAL_DOC_ID', 'T_CUST_ORDER_LEGAL_DOC');
 
