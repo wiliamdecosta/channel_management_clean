@@ -9,17 +9,13 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-            var grid_selector = "#grid-table";
-            var pager_selector = "#grid-pager";
+            var grid_selector = $("#grid-table");
+            var pager_selector = $("#grid-pager");
 
-            //resize to fit page size
-            // $(window).on('resize.jqGrid', function () {
-                // $(grid_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width() );
-            // });
         $(window).on('resize.jqGrid', function () {
             // $(pager_selector).jqGrid( 'setGridWidth', $("#contentJgGrid").width() );
-			 grid2.jqGrid('setGridWidth', $("#notif").width() - 1);
-            pager2.jqGrid('setGridWidth', $("#notif").width() - 1);
+            grid_selector.jqGrid('setGridWidth', $("#notif").width() - 1);
+            pager_selector.jqGrid('setGridWidth', $("#notif").width() - 1);
         });
 		
 		var width2 = $("#notif").width();
@@ -243,7 +239,7 @@
         var c = confirm('Export to Excel ?')
         if(c == true){
             $.ajax({
-                url: "<?php echo site_url(); ?>cm/fastelsheet/<?php echo $pgl_id;?>/<?php echo $ten_id;?>/<?php echo $period;?>",
+                url: "<?php echo site_url(); ?>cm/rintasheet/<?php echo $pgl_id;?>/<?php echo $ten_id;?>/<?php echo $period;?>",
                 data: {},
                 type: 'POST',
                 success: function (response) {

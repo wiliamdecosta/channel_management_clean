@@ -181,7 +181,6 @@ class M_loaddata extends CI_Model
             $rowstart = (($pagenum - 1) * $rowsnum) + 1;
             $rowend = $rowstart + ($rowsnum - 1);
         }
-        //$this->db->get('APP_MENU');
 
         $sql2 = "SELECT * FROM ( ";
         $sql3 = "SELECT ROWNUM RN,a.CODE,a.COUNTER,TO_CHAR(a.LOG_DATE,'DD/MM/YYYY HH24:MI:SS') LOG_DATE,a.LOG_MSG,a.BATCH_ID FROM V_LOG_LOAD_PROCESS a WHERE a.BATCH_ID = " . $param['id'] . " ORDER BY " . $param['sort_by'] . " " . $param['sord'];
