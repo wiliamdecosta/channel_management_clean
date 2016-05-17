@@ -252,7 +252,7 @@ class Contract extends CI_Controller
     }
 
     public function summary_current_month(){
-        $items = $this->T_invoice->getSumMonth();
+        $items = $this->T_contract->getSumMonth();
         $result = '';
         foreach($items as $item) {
             $result .= '<tr>
@@ -268,7 +268,7 @@ class Contract extends CI_Controller
     }
 
     public function summary_current_year(){
-        $items = $this->T_invoice->getSumYear();
+        $items = $this->T_contract->getSumYear();
         $result = '';
         foreach($items as $item) {
             $result .= '<tr>

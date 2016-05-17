@@ -913,12 +913,12 @@ class Wf extends CI_Controller {
                 
                 // Do Upload
                 $data = $this->upload->data();            
-                $uploads_dir = '/managementmitra/downloadPKS/';  
+                $uploads_dir = '/managementmitra/downloadPKS/'.$data['file_name'];  
                 $tmp_name = '/application/third_party/upload/'.$data['file_name'];  
                 // move_uploaded_file($tmp_name, $uploads_dir);
                 copy($tmp_name, $uploads_dir);
 
-                $uploads_dir2 = '/application/third_party/upload/pks/';  
+                $uploads_dir2 = '/application/third_party/upload/pks/'.$data['file_name'];  
                 $tmp_name2 = '/application/third_party/upload/'.$data['file_name'];  
                 // move_uploaded_file($tmp_name2, $uploads_dir2);
                 copy($tmp_name2, $uploads_dir2);
