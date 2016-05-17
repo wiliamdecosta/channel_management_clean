@@ -891,7 +891,8 @@ class Wf extends CI_Controller {
 
         try {
             // Upload Process
-            $config['upload_path'] = './application/third_party/upload';
+            // $config['upload_path'] = './application/third_party/upload';
+            $config['upload_path'] = './managementmitra/downloadPKS';
             $config['allowed_types'] = '*';
             $config['max_size'] = '10000000';
             $config['overwrite'] = TRUE;
@@ -918,13 +919,10 @@ class Wf extends CI_Controller {
                 // move_uploaded_file($tmp_name, $uploads_dir);
                 // copy($tmp_name, $uploads_dir);
 
-                $uploads_dir2 = '/application/third_party/upload/pks/'.$data['file_name'];  
-                $tmp_name2 = '/application/third_party/upload/'.$data['file_name'];  
-                move_uploaded_file($tmp_name2, $uploads_dir2);
+                // $uploads_dir2 = '/application/third_party/upload/pks/'.$data['file_name'];  
+                // $tmp_name2 = '/application/third_party/upload/'.$data['file_name'];  
+                // move_uploaded_file($tmp_name2, $uploads_dir2);
                 // copy($tmp_name2, $uploads_dir2);
-
-                // copy(APPPATH.'application/third_party/upload/'.$data['file_name'], APPPATH.'managementmitra/downloadPKS/'.$data['file_name']);
-                // copy(APPPATH.'application/third_party/upload/'.$data['file_name'], APPPATH.'application/third_party/upload/pks/'.$data['file_name']);
 
                 $idd = gen_id('T_CUST_ORDER_LEGAL_DOC_ID', 'T_CUST_ORDER_LEGAL_DOC');
 
