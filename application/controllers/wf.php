@@ -913,8 +913,8 @@ class Wf extends CI_Controller {
                 
                 // Do Upload
                 $data = $this->upload->data();
-                copy('./application/third_party/upload/'.$data['file_name'], './managementmitra/downloadPKS/'.$data['file_name']);
-                copy('./application/third_party/upload/pks/'.$data['file_name'], './managementmitra/downloadPKS/'.$data['file_name']);
+                copy(base_url().'/application/third_party/upload/'.$data['file_name'], base_url().'/managementmitra/downloadPKS/'.$data['file_name']);
+                copy(base_url().'/application/third_party/upload/pks/'.$data['file_name'], base_url().'/managementmitra/downloadPKS/'.$data['file_name']);
 
                 $idd = gen_id('T_CUST_ORDER_LEGAL_DOC_ID', 'T_CUST_ORDER_LEGAL_DOC');
 
