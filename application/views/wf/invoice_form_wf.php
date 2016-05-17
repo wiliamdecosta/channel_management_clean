@@ -120,6 +120,15 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="name">Tanggal Invoice:</label>
+                                        <div class="col-xs-12 col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="invoice_date" name="invoice_date" class="col-xs-12 col-sm-2" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="name">Jenis Kontrak:</label>
                                         <div class="col-xs-12 col-sm-9">
                                             <div class="clearfix">
@@ -188,7 +197,7 @@
                                         <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="name">Pajak:</label>
                                         <div class="col-xs-12 col-sm-9">
                                             <div class="clearfix">
-                                                <input type="text" id="vat_amount" name="vat_amount" class="col-xs-12 col-sm-1" style="text-align:right" readonly />
+                                                <input type="text" id="vat_amount" name="vat_amount" class="col-xs-12 col-sm-4" style="text-align:right" readonly />
                                             </div>
                                         </div>
                                     </div>
@@ -372,6 +381,7 @@
                 $("#order_date").val( items.ORDER_DATE );
 
                 $("#invoice_no").val( items.INVOICE_NO );
+                $("#invoice_date").val( items.INVOICE_DATE );
                 $("#contract_type_code").val( items.CONTRACT_TYPE_CODE );
                 $("#contract_no").val( items.CONTRACT_NO );
                 $("#mitra_name").val( items.MITRA_NAME );
