@@ -1,9 +1,9 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Invoice extends CI_Controller
+class Contract extends CI_Controller
 {
 
-    private $head = "Invoice";
+    private $head = "Kontrak";
 
     function __construct() {
         parent::__construct();
@@ -11,6 +11,7 @@ class Invoice extends CI_Controller
         checkAuth();
         $this->load->model('M_jqGrid', 'jqGrid');
         $this->load->model('T_invoice');
+        $this->load->model('T_contract');
     }
 
 
@@ -18,19 +19,18 @@ class Invoice extends CI_Controller
         redirect("/");
     }
 
-    public function rincian_invoice(){
-        $title = "Rincian Invoice";
+    public function rincian_contract(){
+        $title = "Rincian Kontrak";
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
         
         $result['result'] = $this->T_invoice->getStatus();
-        $this->load->view('invoice/rincian_invoice', $result);
+        $this->load->view('contract/rincian_contract', $result);
     }
 
-    public function grid_detail_invoice() {
+    public function grid_detail_contract() {
 
-        $s_invoice_no   = $this->input->post('s_invoice_no');
         $s_contract_no  = $this->input->post('s_contract_no');
         $s_mitra_name   = $this->input->post('s_mitra_name');
         $s_status       = $this->input->post('s_status');
@@ -43,41 +43,42 @@ class Invoice extends CI_Controller
         $sord = $_REQUEST['sord'];
 
         $where = '';
-        if(!empty($s_invoice_no)){
-            $where .= " AND A.INVOICE_NO like '%".$s_invoice_no."%'";
-        }
 
         if(!empty($s_contract_no)){
             $where .= " AND A.CONTRACT_NO like '%".$s_contract_no."%'";
         }
 
         if(!empty($s_mitra_name)){
-            $where .= " AND A.MITRA_NAME like '%".$s_mitra_name."%'";
+            $where .= " AND D.PGL_NAME like '%".$s_mitra_name."%'";
         }
 
         if(!empty($s_status)){
             $where .= " AND B.P_ORDER_STATUS_ID = ".$s_status;
         }
 
-        if(!empty($s_awal) && !empty($s_akhir)){
-            $where .= " AND trunc(A.INVOICE_DATE) BETWEEN TO_DATE('".$s_awal."', 'DD/MM/YYYY') AND
-                             TO_DATE('".$s_akhir."', 'DD/MM/YYYY')";
+        if(!empty($s_awal)){
+            $where .= " AND trunc(A.VALID_FROM) = TO_DATE('".$s_awal."', 'DD/MM/YYYY')";
+        }
+
+        if(!empty($s_akhir)){
+            $where .= " AND trunc(A.VALID_TO) = TO_DATE('".$s_akhir."', 'DD/MM/YYYY')";
         }
 
         $table = "SELECT A.T_CUSTOMER_ORDER_ID,
-                       A.INVOICE_NO,
-                       A.INVOICE_DATE,
                        A.CONTRACT_NO,
                        B.ORDER_NO,
                        B.ORDER_DATE,
-                       A.MITRA_NAME,
-                       A.INVOICE_AMOUNT,
+                       D.PGL_NAME AS MITRA_NAME,
+                       A.VALID_FROM,
+                       A.VALID_TO,
+                       E.LOKASI,
                        C.CODE AS STATUS,
-                       B.P_ORDER_STATUS_ID,
                        F_GET_LAST_PROC(A.T_CUSTOMER_ORDER_ID) AS LAST_PROCESS   
-                FROM  T_INVOICE A, T_CUSTOMER_ORDER B, P_ORDER_STATUS C
+                FROM  T_CONTRACT_REGISTRATION A, T_CUSTOMER_ORDER B, P_ORDER_STATUS C, CUST_PGL D, P_MP_LOKASI E
                 WHERE A.T_CUSTOMER_ORDER_ID = B.T_CUSTOMER_ORDER_ID
-                AND B.P_ORDER_STATUS_ID = C.P_ORDER_STATUS_ID".$where;
+                AND B.P_ORDER_STATUS_ID = C.P_ORDER_STATUS_ID
+                AND A.PGL_ID = D.PGL_ID
+                AND A.P_LOCATION_ID = E.P_MP_LOKASI_ID".$where;
 
         $req_param = array(
             "table" => $table,
@@ -142,9 +143,9 @@ class Invoice extends CI_Controller
     {
         $output = $this->getRincianReport();
 
-        startExcel("rincianInvoice".date('Ymd').".xls");
+        startExcel("rincianKontrak".date('Ymd').".xls");
         echo '<html>';
-        echo '<head><title>Rincian Invoice Report</title></head>';
+        echo '<head><title>Rincian Kontrak Report</title></head>';
         echo '<body>';
         echo $output;
         echo '</body>';
@@ -153,7 +154,6 @@ class Invoice extends CI_Controller
     }
 
     public function getRincianReport(){
-        $s_invoice_no   = !($this->input->post('s_invoice_no')) ? $this->input->get('s_invoice_no') : $this->input->post('s_invoice_no');
         $s_contract_no  = !($this->input->post('s_contract_no')) ? $this->input->get('s_contract_no') : $this->input->post('s_contract_no');
         $s_mitra_name   = !($this->input->post('s_mitra_name')) ? $this->input->get('s_mitra_name') : $this->input->post('s_mitra_name');
         $s_status       = !($this->input->post('s_status')) ? $this->input->get('s_status') : $this->input->post('s_status');
@@ -161,41 +161,41 @@ class Invoice extends CI_Controller
         $s_akhir        = !($this->input->post('s_akhir')) ? $this->input->get('s_akhir') : $this->input->post('s_akhir');
 
         $where = '';
-        if(!empty($s_invoice_no)){
-            $where .= " AND A.INVOICE_NO like '%".$s_invoice_no."%'";
-        }
-
         if(!empty($s_contract_no)){
             $where .= " AND A.CONTRACT_NO like '%".$s_contract_no."%'";
         }
 
         if(!empty($s_mitra_name)){
-            $where .= " AND A.MITRA_NAME like '%".$s_mitra_name."%'";
+            $where .= " AND D.PGL_NAME like '%".$s_mitra_name."%'";
         }
 
         if(!empty($s_status)){
             $where .= " AND B.P_ORDER_STATUS_ID = ".$s_status;
         }
 
-        if(!empty($s_awal) && !empty($s_akhir)){
-            $where .= " AND trunc(A.INVOICE_DATE) BETWEEN TO_DATE('".$s_awal."', 'DD/MM/YYYY') AND
-                             TO_DATE('".$s_akhir."', 'DD/MM/YYYY')";
+        if(!empty($s_awal)){
+            $where .= " AND trunc(A.VALID_FROM) = TO_DATE('".$s_awal."', 'DD/MM/YYYY')";
+        }
+
+        if(!empty($s_akhir)){
+            $where .= " AND trunc(A.VALID_TO) = TO_DATE('".$s_akhir."', 'DD/MM/YYYY')";
         }
 
         $sql = "SELECT A.T_CUSTOMER_ORDER_ID,
-                       A.INVOICE_NO,
-                       A.INVOICE_DATE,
                        A.CONTRACT_NO,
                        B.ORDER_NO,
                        B.ORDER_DATE,
-                       A.MITRA_NAME,
-                       A.INVOICE_AMOUNT,
+                       D.PGL_NAME AS MITRA_NAME,
+                       A.VALID_FROM,
+                       A.VALID_TO,
+                       E.LOKASI,
                        C.CODE AS STATUS,
-                       B.P_ORDER_STATUS_ID,
                        F_GET_LAST_PROC(A.T_CUSTOMER_ORDER_ID) AS LAST_PROCESS   
-                FROM  T_INVOICE A, T_CUSTOMER_ORDER B, P_ORDER_STATUS C
+                FROM  T_CONTRACT_REGISTRATION A, T_CUSTOMER_ORDER B, P_ORDER_STATUS C, CUST_PGL D, P_MP_LOKASI E
                 WHERE A.T_CUSTOMER_ORDER_ID = B.T_CUSTOMER_ORDER_ID
-                AND B.P_ORDER_STATUS_ID = C.P_ORDER_STATUS_ID".$where;
+                AND B.P_ORDER_STATUS_ID = C.P_ORDER_STATUS_ID
+                AND A.PGL_ID = D.PGL_ID
+                AND A.P_LOCATION_ID = E.P_MP_LOKASI_ID".$where;
 
         $query = $this->db->query($sql);
         $items = $query->result_array();
@@ -203,7 +203,7 @@ class Invoice extends CI_Controller
         $output = '';
         $output .= '<table width="100%">';
         $output .= '<tr>
-                       <td colspan="9" style="text-align:center;"> <span style="font-size:16px;"><b>LAPORAN RINCIAN INVOICE</b></span></td>
+                       <td colspan="9" style="text-align:center;"> <span style="font-size:16px;"><b>LAPORAN RINCIAN KONTRAK</b></span></td>
                    </tr>';
         //$output .= '<tr><td colspan="9">&nbsp;</td></tr>';
         $output .= '<table>';
@@ -212,11 +212,11 @@ class Invoice extends CI_Controller
         $output .= '<tr>
                         <th style="text-align:left;">No. Order</th>
                         <th style="text-align:center;">Tgl. Order</th>
-                        <th style="text-align:left;">No. Kontrak</th>
-                        <th style="text-align:left;">No. Invoice</th>
-                        <th style="text-align:center;">Tgl. Invoice</th>
+                        <th style="text-align:left;">No. Kontrak</th>                        
                         <th style="text-align:left;">Nama Mitra</th>
-                        <th style="text-align:right;">Nilai Invoice</th>
+                        <th style="text-align:left;">Lokasi</th>
+                        <th style="text-align:center;">Tgl. Berlaku</th>
+                        <th style="text-align:center;">Sampai</th>
                         <th style="text-align:center;">Status</th>
                         <th style="text-align:left;">Posisi Terakhir</th>
                     </tr>';
@@ -226,11 +226,11 @@ class Invoice extends CI_Controller
             $output .= '<tr>';
             $output .= '<td style="text-align:left">'.$no_order.'</td>';
             $output .= '<td style="text-align:center">'.$item['ORDER_DATE'].'</td>';
-            $output .= '<td style="text-align:left">'.$item['CONTRACT_NO'].'</td>';
-            $output .= '<td style="text-align:left">'.$item['INVOICE_NO'].'</td>';
-            $output .= '<td style="text-align:center">'.$item['INVOICE_DATE'].'</td>';
+            $output .= '<td style="text-align:left">'.$item['CONTRACT_NO'].'</td>';            
             $output .= '<td style="text-align:left">'.$item['MITRA_NAME'].'</td>';
-            $output .= '<td style="text-align:right">' . numberFormat((float)$item['INVOICE_AMOUNT'], 2) . '</td>';
+            $output .= '<td style="text-align:left">'.$item['LOKASI'].'</td>';
+            $output .= '<td style="text-align:center">'.$item['VALID_FROM'].'</td>';
+            $output .= '<td style="text-align:center">'.$item['VALID_TO'].'</td>';
             $output .= '<td style="text-align:center">'.$item['STATUS'].'</td>';
             $output .= '<td style="text-align:left">'.$item['LAST_PROCESS'].'</td>';
             $output .= '</tr>';
@@ -241,14 +241,14 @@ class Invoice extends CI_Controller
         return $output;
     }
 
-    public function summary_invoice(){
-        $title = "Summary Invoice";
+    public function summary_contract(){
+        $title = "Summary Kontrak";
         //BreadCrumb
         $bc = array($this->head, $title);
         $this->breadcrumb = getBreadcrumb($bc);
         
-        $result['data_chart'] = $this->T_invoice->getPieChart();
-        $this->load->view('invoice/summary_invoice', $result);
+        $result['data_chart'] = $this->T_contract->getPieChart();
+        $this->load->view('contract/summary_contract', $result);
     }
 
     public function summary_current_month(){

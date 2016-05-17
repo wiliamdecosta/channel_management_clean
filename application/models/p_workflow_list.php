@@ -397,8 +397,8 @@ class P_workflow_list extends CI_Model
         $P_RQST_TYPE_ID = 1; 
         // $P_ORDER_STATUS_ID = $this->input->post('P_ORDER_STATUS_ID'); 
         $P_ORDER_STATUS_ID = 1; 
-        $ORDER_DATE = $this->input->post('ORDER_DATE'); 
-        $DESCRIPTION = $this->input->post('DESCRIPTION');
+        // $ORDER_DATE = $this->input->post('ORDER_DATE'); sysdate
+        $DESCRIPTION = '';
 
         $T_INVOICE_ID = $this->input->post('T_INVOICE_ID'); 
         $INVOICE_NO = $this->input->post('INVOICE_NO'); 
@@ -439,7 +439,7 @@ class P_workflow_list extends CI_Model
                                         LPAD(T_CUSTOMER_ORDER_SEQ.NEXTVAL, 10, '0'),
                                         ".$P_RQST_TYPE_ID.",
                                         ".$P_ORDER_STATUS_ID.",
-                                        to_date('" . $ORDER_DATE . "','yyyy/mm/dd'),
+                                        SYSDATE,
                                         '".$DESCRIPTION."',
                                         SYSDATE,
                                         '".$CREATED_BY."',
@@ -510,7 +510,6 @@ class P_workflow_list extends CI_Model
                     $sql = "UPDATE T_CUSTOMER_ORDER
                             SET P_RQST_TYPE_ID = ".$P_RQST_TYPE_ID.", 
                                 P_ORDER_STATUS_ID =  ".$P_ORDER_STATUS_ID.", 
-                                ORDER_DATE = to_date('" . $ORDER_DATE . "','yyyy/mm/dd'), 
                                 DESCRIPTION = '".$DESCRIPTION."', 
                                 UPDATED_DATE = SYSDATE, 
                                 UPDATED_BY = '".$UPDATED_BY."'
@@ -624,7 +623,7 @@ class P_workflow_list extends CI_Model
         $ORDER_NO = $this->input->post('ORDER_NO'); 
         $P_RQST_TYPE_ID = 2; 
         $P_ORDER_STATUS_ID = 1; 
-        $ORDER_DATE = $this->input->post('ORDER_DATE'); 
+        // $ORDER_DATE = $this->input->post('ORDER_DATE'); 
         
         $T_CONTRACT_REG_ID = $this->input->post('T_CONTRACT_REG_ID'); 
         $PGL_ID = $this->input->post('PGL_ID'); 
@@ -658,7 +657,7 @@ class P_workflow_list extends CI_Model
                                         LPAD(T_CUSTOMER_ORDER_SEQ.NEXTVAL, 10, '0'),
                                         ".$P_RQST_TYPE_ID.",
                                         ".$P_ORDER_STATUS_ID.",
-                                        to_date('" . $ORDER_DATE . "','yyyy/mm/dd'),
+                                        SYSDATE,
                                         SYSDATE,
                                         '".$CREATED_BY."',
                                         SYSDATE,
@@ -714,7 +713,6 @@ class P_workflow_list extends CI_Model
                     $sql = "UPDATE T_CUSTOMER_ORDER
                             SET P_RQST_TYPE_ID = ".$P_RQST_TYPE_ID.", 
                                 P_ORDER_STATUS_ID =  ".$P_ORDER_STATUS_ID.", 
-                                ORDER_DATE = to_date('" . $ORDER_DATE . "','yyyy/mm/dd'), 
                                 UPDATED_DATE = SYSDATE, 
                                 UPDATED_BY = '".$UPDATED_BY."'
                             WHERE T_CUSTOMER_ORDER_ID = ".$T_CUSTOMER_ORDER_ID." ";

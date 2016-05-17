@@ -213,24 +213,24 @@ $prv = getPrivilege($menu_id); ?>
                     editable: false,
                     hidden: true
                 },
-                {
-                    label: 'Tgl. Permohonan', 
-                    name: 'ORDER_DATE', 
-                    width: 130, 
-                    editable: true,
-                    edittype:"text",
-                    editrules: {required: true},
-                    editoptions: {
-                        dataInit: function (element) {
-                           $(element).datepicker({
-                                autoclose: true,
-                                format: 'yyyy-mm-dd',
-                                orientation : 'top',
-                                todayHighlight : true
-                            });
-                        }
-                    }
-                },                 
+                // {
+                //     label: 'Tgl. Permohonan', 
+                //     name: 'ORDER_DATE', 
+                //     width: 130, 
+                //     editable: true,
+                //     edittype:"text",
+                //     editrules: {required: true},
+                //     editoptions: {
+                //         dataInit: function (element) {
+                //            $(element).datepicker({
+                //                 autoclose: true,
+                //                 format: 'yyyy-mm-dd',
+                //                 orientation : 'top',
+                //                 todayHighlight : true
+                //             });
+                //         }
+                //     }
+                // },                 
                 {
                     label: 'T_CONTRACT_REG_ID',
                     name: 'T_CONTRACT_REG_ID', 
@@ -527,7 +527,7 @@ $prv = getPrivilege($menu_id); ?>
                     var form = $(e[0]);
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    form.css({"height": 0.60*screen.height+"px"});
+                    form.css({"height": 0.55*screen.height+"px"});
                     form.css({"width": 0.50*screen.width+"px"});
                     /*$("#USER_NAME").prop("readonly", true);*/                    
                 },
@@ -559,7 +559,7 @@ $prv = getPrivilege($menu_id); ?>
                     form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
                         .wrapInner('<div class="widget-header" />')
                     style_edit_form(form);
-                    form.css({"height": 0.60*screen.height+"px"});
+                    form.css({"height": 0.55*screen.height+"px"});
                     form.css({"width": 0.50*screen.width+"px"});
                     setTimeout( function() {    
                         $('#form_pgl_name').val('');
@@ -581,7 +581,8 @@ $prv = getPrivilege($menu_id); ?>
                     $(".topinfo").html('<div class="ui-state-success">' + response.message + '</div>'); 
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
-                    
+                    $('#form_pgl_name').val('');
+                    $('#form_lokasi').val('');
 
                     return [true,"",response.responseText];
                 }

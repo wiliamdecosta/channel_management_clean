@@ -13,7 +13,7 @@
                         <div class="widget-box transparent">
                             <div class="widget-header red widget-header-flat">
                                 <h4 class="widget-title lighter">
-                                    Rincian Invoice
+                                    Rincian Kontrak
                                 </h4>
 
                                 <div class="widget-toolbar">
@@ -29,9 +29,9 @@
                                     <div class="row">
                                         <div class="col-xs-12">                                            
                                             <div class="form-group">
-                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"> No. Invoice </label>
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"> No. Kontrak </label>
                                                 <div class="col-sm-3">
-                                                    <input class="form-control" type="text" id="invoice_no" name="invoice_no" placeholder="Nomor Invoice" />
+                                                    <input class="form-control" type="text" id="contract_no" name="contract_no" placeholder="Nomor Kontrak" />
                                                 </div>
                                                 <a id="findFilter" class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-info">
                                                     <span class="ace-icon fa fa-search"></span>Find</a>
@@ -39,13 +39,6 @@
                                                 <i class="ace-icon ace-icon fa fa-print align-top bigger-125"></i>
                                                 Export to Excel
                                                 </a>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1-1"> No. Kontrak </label>
-                                                <div class="col-sm-3">
-                                                    <input class="form-control" type="text" id="contract_no" name="contract_no" placeholder="Nomor Kontrak" />
-                                                </div>
                                             </div>
 
                                             <div class="form-group">
@@ -70,7 +63,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1">Tgl. Invoice </label>
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1">Tgl. Order </label>
                                                 <div class="col-sm-2">
                                                     <input class="form-control" type="text" id="awal" name="awal" placeholder="Awal" data-date-format="dd-mm-yyyy" /> 
                                                 </div>
@@ -126,40 +119,18 @@
         });
 
         $('#btn_export_excel').on('click', function (e) {
-            if((awal.length > 0) && (akhir.length == 0)){
-                alert('tanggal akhir invoice belum diisi');
-                return false;
-            }
-
-            if((awal.length == 0) && (akhir.length > 0)){
-                alert('tanggal awal invoice belum diisi');
-                return false;
-            }
-            
             exportExcelRicianReport();        
         });
 
         $('#findFilter').click(function(){
-            var invoice_no = $("#invoice_no").val();
             var contract_no = $("#contract_no").val();
             var mitra_name = $("#mitra_name").val();
             var status = $("#status").val();
             var awal = $("#awal").val();
             var akhir = $("#akhir").val();
 
-            if((awal.length > 0) && (akhir.length == 0)){
-                alert('tanggal akhir invoice belum diisi');
-                return false;
-            }
-
-            if((awal.length == 0) && (akhir.length > 0)){
-                alert('tanggal awal invoice belum diisi');
-                return false;
-            }
-
             $("#grid-table").jqGrid('setGridParam', { 
                 postData:{ 
-                    s_invoice_no : invoice_no,
                     s_contract_no : contract_no,
                     s_mitra_name : mitra_name,
                     s_status : status,
@@ -183,7 +154,7 @@
         });
         
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo site_url('invoice/grid_detail_invoice');?>',
+            url: '<?php echo site_url('contract/grid_detail_contract');?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
@@ -208,32 +179,33 @@
                     width: 250, 
                     sortable: true, 
                     editable: false
-                },                
-                {
-                    label: 'No. Invoice',
-                    name: 'INVOICE_NO', 
-                    width: 200, 
-                    sortable: true, 
-                    editable: false
-                },                
-                {
-                    label: 'Tgl. Invoice',
-                    name: 'INVOICE_DATE', 
-                    width: 100, 
-                    sortable: true, 
-                    editable: false
-                },                
+                },                             
                 {
                     label: 'Nama Mitra',
                     name: 'MITRA_NAME', 
-                    width: 200, 
+                    width: 300, 
                     sortable: true, 
                     editable: false
                 },                
                 {
-                    label: 'Nilai Invoice',
-                    name: 'INVOICE_AMOUNT', 
-                    width: 150, 
+                    label: 'Lokasi',
+                    name: 'LOKASI', 
+                    width: 250, 
+                    sortable: true, 
+                    editable: false
+                },    
+                {
+                    label: 'Berlaku Dari',
+                    name: 'VALID_FROM', 
+                    width: 100, 
+                    sortable: true, 
+                    align: 'right',
+                    editable: false
+                },    
+                {
+                    label: 'Sampai',
+                    name: 'VALID_TO', 
+                    width: 100, 
                     sortable: true, 
                     align: 'right',
                     editable: false
@@ -285,7 +257,7 @@
 
             //memanggil controller jqgrid yang ada di controller crud
             // editurl: '<?php echo site_url('workflow_parameter/crud_procedure');?>',
-            caption: "Rincian Invoice"
+            caption: "Rincian Kontrak"
         });
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
@@ -516,9 +488,8 @@
     }
 
     function exportExcelRicianReport() {
-        var url = "<?php echo base_url();?>invoice/excelRincianReport?";
-        url += "s_invoice_no=" + $('#invoice_no').val();
-        url += "&s_contract_no=" + $('#contract_no').val();
+        var url = "<?php echo base_url();?>contract/excelRincianReport?";
+        url += "s_contract_no=" + $('#contract_no').val();
         url += "&s_mitra_name=" + $('#mitra_name').val();
         url += "&s_status=" + $('#status').val();
         url += "&s_awal=" + $('#awal').val();

@@ -852,6 +852,16 @@ class Workflow_parameter extends CI_Controller
         $this->load->view('workflow_parameter/monitoring',$result);
     }
 
+    public function monitoring_contract(){
+        $title = "Monitoring Kontrak";
+        //BreadCrumb
+        $bc = array('Invoice', $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+        
+        $result['result'] = $this->P_workflow_list->getWorkflowNew(2);
+        $this->load->view('workflow_parameter/monitoring',$result);
+    }
+
     public function processMonitoring(){
 
         $p_workflow_id = $this->input->post('p_workflow_id');

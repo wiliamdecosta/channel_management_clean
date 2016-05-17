@@ -203,37 +203,37 @@ $prv = getPrivilege($menu_id); ?>
                     editable: false,
                     hidden: true
                 },
-                {
-                    label: 'Tgl. Order', 
-                    name: 'ORDER_DATE', 
-                    width: 130, 
-                    editable: true,
-                    edittype:"text",
-                    editrules: {required: true},
-                    editoptions: {
-                        dataInit: function (element) {
-                           $(element).datepicker({
-                                autoclose: true,
-                                format: 'yyyy-mm-dd',
-                                orientation : 'top',
-                                todayHighlight : true
-                            });
-                        }
-                    }
-                },     
-                {
-                    label: 'Deskripsi',
-                    name: 'DESCRIPTION', 
-                    width: 200, 
-                    sortable: true, 
-                    hidden:true, 
-                    editable: true,
-                    editoptions: {
-                                    size: 50,
-                                    maxlength:128
-                    },
-                    editrules: {edithidden: true, required:false}
-                },
+                // {
+                //     label: 'Tgl. Order', 
+                //     name: 'ORDER_DATE', 
+                //     width: 130, 
+                //     editable: true,
+                //     edittype:"text",
+                //     editrules: {required: true},
+                //     editoptions: {
+                //         dataInit: function (element) {
+                //            $(element).datepicker({
+                //                 autoclose: true,
+                //                 format: 'yyyy-mm-dd',
+                //                 orientation : 'top',
+                //                 todayHighlight : true
+                //             });
+                //         }
+                //     }
+                // },     
+                // {
+                //     label: 'Deskripsi',
+                //     name: 'DESCRIPTION', 
+                //     width: 200, 
+                //     sortable: true, 
+                //     hidden:true, 
+                //     editable: true,
+                //     editoptions: {
+                //                     size: 50,
+                //                     maxlength:128
+                //     },
+                //     editrules: {edithidden: true, required:false}
+                // },
                 {
                     label: 'No. Invoice',
                     name: 'INVOICE_NO', 
@@ -463,8 +463,8 @@ $prv = getPrivilege($menu_id); ?>
                     editable: true,
                     hidden: true,
                     editoptions: {
-                        size: 10,
-                        maxlength:2
+                        size: 30,
+                        maxlength:32
                     },
                     editrules: {edithidden: true, required: false}
                 },
@@ -628,7 +628,11 @@ $prv = getPrivilege($menu_id); ?>
                     $(".topinfo").html('<div class="ui-state-success">' + response.message + '</div>'); 
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
-                    
+                    $('#P_MP_PKS_ID').val('');
+                    $('#CUST_PGL_ID').val('');
+                    $('#MITRA_NAME').val('');
+                    $('#MITRA_ADDRESS').val('');
+                    $('#form_contract_no').val('');
 
                     return [true,"",response.responseText];
                 }
