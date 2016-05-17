@@ -901,7 +901,7 @@ class Wf extends CI_Controller {
             $this->load->library('upload');
             $this->upload->initialize($config);
 
-            $config2['upload_path'] = './managementmitra/downloadPKS';
+            $config2['upload_path'] = '../managementmitra/downloadPKS';
             $config2['allowed_types'] = '*';
             $config2['max_size'] = '10000000';
             $config2['overwrite'] = TRUE;
