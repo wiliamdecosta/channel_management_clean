@@ -65,8 +65,7 @@
                         <thead>
                             <tr>
                                 <th width="30">Status Proses</th>
-                                <th width="80" style="text-align:right">Kuantitas Invoice</th>
-                                <th width="80" style="text-align:right">Jumlah Nilai Invoice</th>
+                                <th width="80" style="text-align:right">Kuantitas Kontrak</th>
                             </tr>
                         </thead>
                         
@@ -86,18 +85,10 @@
                     <table class="table table-bordered summary-table" style="margin-bottom:0px;">
                         <thead>
                             <tr>
-                                <th rowspan="2">Bulan</th>
-                                <th colspan="2" style="text-align:center">Input</th>
-                                <th colspan="2" style="text-align:center">Proses</th>
-                                <th colspan="2" style="text-align:center">Selesai</th>
-                            </tr>
-                            <tr>
-                                <th style="text-align:right">Qty</th>
-                                <th style="text-align:right">Nilai</th>
-                                <th style="text-align:right">Qty</th>
-                                <th style="text-align:right">Nilai</th>
-                                <th style="text-align:right">Qty</th>
-                                <th style="text-align:right">Nilai</th>
+                                <th>Bulan</th>
+                                <th style="text-align:center">Input</th>
+                                <th style="text-align:center">Proses</th>
+                                <th style="text-align:center">Selesai</th>
                             </tr>
                         </thead>
                         

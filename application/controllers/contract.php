@@ -258,7 +258,6 @@ class Contract extends CI_Controller
             $result .= '<tr>
                             <td>'.$item->STATUS.'</td>
                             <td style="text-align:right;">'.numberFormat((float)$item->JML_INV, 2).'</td>
-                            <td style="text-align:right;">'.numberFormat((float)$item->TOTAL_NILAI_INV, 2).'</td>
                         </tr>';
             $header = strtoupper($item->BULAN);
         }
@@ -274,11 +273,8 @@ class Contract extends CI_Controller
             $result .= '<tr>
                             <td>'.$item->BLN_CHAR.'</td>
                             <td style="text-align:right;">'.numberFormat((float)$item->JML_INV, 2).'</td>
-                            <td style="text-align:right;">'.numberFormat((float)$item->TOTAL_NILAI_INV, 2).'</td>
                             <td style="text-align:right;">'.numberFormat((float)$item->JML_INV2, 2).'</td>
-                            <td style="text-align:right;">'.numberFormat((float)$item->TOTAL_NILAI_INV2, 2).'</td>
                             <td style="text-align:right;">'.numberFormat((float)$item->JML_INV3, 2).'</td>
-                            <td style="text-align:right;">'.numberFormat((float)$item->TOTAL_NILAI_INV3, 2).'</td>
                         </tr>';
             $header = strtoupper($item->TAHUN);
         }
