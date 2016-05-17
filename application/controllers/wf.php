@@ -946,7 +946,7 @@ class Wf extends CI_Controller {
                                     ".$this->input->post('p_legal_doc_type_id').", 
                                     ".$params['CURR_DOC_ID'].", 
                                     '".$data['client_name']."',
-                                    'application/third_party/upload',
+                                    'managementmitra/downloadPKS',
                                     '".$data['file_name']."'
                                     )";
 
