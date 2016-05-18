@@ -232,8 +232,6 @@ class M_cm extends CI_Model {
                 CUST_RINTA PARTITION(PERIOD_".$period.") A,
                 TEN_ND B, CC_DATAREF@NONPOTS_OP D,V_DIVISI_PT E
                 WHERE A.ND(+)=B.ND AND A.ND = D.P_NOTEL(+) AND A.NCLI = E.NCLI(+) AND B.TEN_ID=".$ten_id;
-        print_r($sql);
-        exit;
         $qs = $db2->query($sql);
 
         if($qs->num_rows() > 0) $result = $qs->result();
