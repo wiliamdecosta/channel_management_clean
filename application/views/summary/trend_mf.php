@@ -102,22 +102,27 @@
             var segment = $('#segment').val();
             var skema_id = $('#form_skembis_type').val();
 
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo site_url("summary/filterTrendMF");?>",
-                data: {
-                    periode : periode,
-                    segment: segment,
-                    skema_id: skema_id,
-                    startdate:startdate,
-                    enddate:enddate
+            if(periode){
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo site_url("summary/filterTrendMF");?>",
+                    data: {
+                        periode : periode,
+                        segment: segment,
+                        skema_id: skema_id,
+                        startdate:startdate,
+                        enddate:enddate
 
-                },
-                timeout: 10000,
-                success: function (data) {
-                    $("#trend_mf_chart").html(data);
-                }
-            })
+                    },
+                    timeout: 10000,
+                    success: function (data) {
+                        $("#trend_mf_chart").html(data);
+                    }
+                })
+            }else{
+                swal('','Periode tidak boleh kosong !','warning')
+            }
+
         });
     });
 </script>

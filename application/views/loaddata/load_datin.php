@@ -773,8 +773,7 @@
                     $('#new_batch').hide("fast");
                     $('#table-content').show("slow");
                     $('#application_form')[0].reset();
-                    jQuery("#grid-table").trigger("reloadGrid");
-                    jQuery("#jqGridDetails").trigger("reloadGrid");
+                    $("#grid-table").trigger("reloadGrid", [{page: 1}]);
                 },
                 error: function(jqXHR, textStatus, errorThrown){
                     // alert(errorThrown);
