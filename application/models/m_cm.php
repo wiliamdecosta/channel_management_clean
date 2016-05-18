@@ -227,11 +227,12 @@ class M_cm extends CI_Model {
     public function excelRinta($period, $pgl_id, $ten_id){
         $db2 = $this->load->database('default2', TRUE);
         $result = array();
-        $sql = "SELECT b.nd nd1,A.* FROM CUST_RINTA PARTITION(PERIOD_".$period.") A,decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag,E.DIVISI
+        $sql = "SELECT b.nd nd1,A.*,decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag,E.DIVISI FROM CUST_RINTA PARTITION(PERIOD_".$period.") A
                 TEN_ND B, CC_DATAREF@NONPOTS_OP D,V_DIVISI_PT E
                 WHERE A.ND(+)=B.ND AND A.ND = D.P_NOTEL(+) AND A.NCLI = E.NCLI(+) AND B.TEN_ID=".$ten_id;
 
         $qs = $db2->query($sql);
+        
         if($qs->num_rows() > 0) $result = $qs->result();
         return $result;
     }
