@@ -153,6 +153,9 @@ class Cm extends CI_Controller {
             ->setCellValue('AL1', 'STATUS BAYAR')
             ->setCellValue('AM1', 'TGL BAYAR')
 
+            ->setCellValue('AN1', 'DIVISI')
+            ->setCellValue('AO1', 'M4L')
+
         ;
 
         $sh->getStyle('A1:AM1')->getFont()->setBold(TRUE);
@@ -195,6 +198,8 @@ class Cm extends CI_Controller {
         $sh->getColumnDimension('AK')->setAutoSize(TRUE);
         $sh->getColumnDimension('AL')->setAutoSize(TRUE);
         $sh->getColumnDimension('AM')->setAutoSize(TRUE);
+        $sh->getColumnDimension('AN')->setAutoSize(TRUE);
+        $sh->getColumnDimension('AO')->setAutoSize(TRUE);
         $sh->getStyle('A1:AM1')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('A1:AM1')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
         $sh->getStyle('A1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
@@ -236,7 +241,9 @@ class Cm extends CI_Controller {
         $sh->getStyle('AK1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('AL1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('AM1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $sh->getStyle('AM1')->getBorders()->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AN1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AO1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AO1')->getBorders()->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
         $x = 2;
         $dt = $this->cm->excelRinta($period, $pgl_id, $ten_id);
@@ -289,6 +296,9 @@ class Cm extends CI_Controller {
             $sh->getCell('AL'.$x)->setValueExplicit($r->STATUS_PEMBAYARAN, PHPExcel_Cell_DataType::TYPE_STRING);
             $sh->getCell('AM'.$x)->setValueExplicit($r->TGL_BYR, PHPExcel_Cell_DataType::TYPE_STRING);
 
+            $sh->getCell('AN'.$x)->setValueExplicit($r->DIVISI, PHPExcel_Cell_DataType::TYPE_STRING);
+            $sh->getCell('AO'.$x)->setValueExplicit($r->FLAG, PHPExcel_Cell_DataType::TYPE_STRING);
+
             $no++;
             $x++;
             //if($x==8000) break;
@@ -333,11 +343,13 @@ class Cm extends CI_Controller {
         $sh->getStyle('AK2:AK'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('AL2:AL'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('AM2:AM'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AN2:AM'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AO2:AM'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AO2:AM'.$x)->getBorders()->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
-        $sh->getStyle('AM2:AM'.$x)->getBorders()->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('C2'.':AJ'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
-        $sh->getStyle('A'.$x.':AM'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $sh->getStyle('A'.$x.':AM'.$x)->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A'.$x.':AO'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A'.$x.':AO'.$x)->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
         $sh->setCellValue('A'.$x, 'TOTAL');
         //$sh->setCellValue('B'.$x, "=SUM(B2:B".($x-1).")");
@@ -496,8 +508,10 @@ class Cm extends CI_Controller {
         $sh->getStyle('AK'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('AL'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('AM'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AN'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AO'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
-        $sh->getStyle('AM'.$x)->getBorders()->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('AO'.$x)->getBorders()->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('A'.$x.':AM'.$x)->getFont()->setBold(TRUE);
 
         $objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel5');
