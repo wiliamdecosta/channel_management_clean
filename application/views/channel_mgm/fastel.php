@@ -40,12 +40,19 @@
             colModel: [
                 {label: 'NO AKUN ', name: 'ACCOUNT_NUM', width: 150, align: "left", hidden: false},
                 {
+                    label: 'DIVISI',
+                    name: 'DIVISI_OP',
+                    width: 150,
+                    align: "left",
+                    editable: true
+                },
+                {
                     label: 'SID',
                     name: 'PRODUCT_LABEL',
                     width: 200,
                     align: "left",
                     editable: true,
-                    formatter: 'string',
+                    formatter: 'string'
                 },
                 {
                     label: 'Nama Produk',
@@ -103,9 +110,9 @@
             width: width2,
             height: '100%',
             scrollOffset: 0,
-            rowNum: 5,
+            rowNum: 10,
             viewrecords: true,
-            rowList: [5, 20, 50],
+            rowList: [10, 20, 50],
             // sortname: 'nofastel',
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
