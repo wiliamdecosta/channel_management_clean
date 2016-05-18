@@ -44,7 +44,7 @@
                     name: 'DIVISI_OP',
                     width: 150,
                     align: "left",
-                    editable: true
+                    editable: false
                 },
                 {
                     label: 'SID',

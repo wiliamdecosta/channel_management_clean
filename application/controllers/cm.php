@@ -529,7 +529,7 @@ class Cm extends CI_Controller {
         $sidx = $_REQUEST['sidx']; // Field name
         $sord = $_REQUEST['sord']; // Asc / Desc
 
-        $table = "CUST_RINTA_NP";
+        $table = "V_CUST_RINTA_NP";
 
         $req_param = array(
             "table" => $table,
