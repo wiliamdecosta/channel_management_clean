@@ -27,6 +27,7 @@
                  colModel: [
                      //{ label: 'ID', name: 'USER_ID', key: true, width:5, sorttype:'number', editable: true,hidden:true },
                      { label: 'ND', name: 'ND1', width:110, frozen:true, align:"left", editable:true,editrules : { required: true}},
+                     { label: 'Divisi', name: 'DIVISI', width:110, frozen:true, align:"left", editable:true,editrules : { required: true}},
                      { label: 'M4L', name: 'FLAG', width:110, frozen:true, align:"left", editable:true,editrules : { required: true}},
                      {
                          label: 'Status',

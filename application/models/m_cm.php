@@ -121,13 +121,13 @@ class M_cm extends CI_Model {
             $rowend = $rowstart + ($rowsnum - 1);
         }
         if($param['ten_id'] == ""){
-            $sql = "SELECT b.nd nd1,b.AKTIF,b.ADDRESS, decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag, A.* ".
-                " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, PGL_TEN C, CC_DATAREF@NONPOTS_OP D ".
-                " WHERE C.TEN_ID(+)=B.TEN_ID AND B.ND(+)=A.ND AND A.ND = D.P_NOTEL(+) AND C.PGL_ID=".$param['pgl_id'];
+            $sql = "SELECT b.nd nd1,b.AKTIF,b.ADDRESS, decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag,E.DIVISI, A.* ".
+                " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, PGL_TEN C, CC_DATAREF@NONPOTS_OP D,V_DIVISI_PT E ".
+                " WHERE C.TEN_ID(+)=B.TEN_ID AND B.ND(+)=A.ND AND A.ND = D.P_NOTEL(+) AND A.NCLI = E.NCLI(+) AND C.PGL_ID=".$param['pgl_id'];
         }
         $sql2 = "SELECT * FROM ( ";
-        $sql3 = "SELECT ROWNUM RN,b.nd nd1,b.AKTIF,b.ADDRESS,decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag,A.* ".
-            " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, CC_DATAREF@NONPOTS_OP D WHERE A.ND(+)=B.ND AND A.ND = D.P_NOTEL(+) AND B.TEN_ID=".$param['ten_id'];
+        $sql3 = "SELECT ROWNUM RN,b.nd nd1,b.AKTIF,b.ADDRESS,decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag,E.DIVISI,A.* ".
+            " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, CC_DATAREF@NONPOTS_OP D,V_DIVISI_PT E WHERE A.ND(+)=B.ND AND A.ND = D.P_NOTEL(+) AND A.NCLI = E.NCLI(+) AND B.TEN_ID=".$param['ten_id'];
 
         $sql_where = ") WHERE RN BETWEEN $rowstart AND $rowend";
 
@@ -206,12 +206,12 @@ class M_cm extends CI_Model {
 
         if($param['ten_id'] == ""){
             $sql = "SELECT b.nd nd1,b.AKTIF, decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag, A.* ".
-                " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, PGL_TEN C, CC_DATAREF@NONPOTS_OP D ".
-                " WHERE C.TEN_ID(+)=B.TEN_ID AND B.ND(+)=A.ND AND A.ND = D.P_NOTEL(+) AND C.PGL_ID=".$param['pgl_id'];
+                " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, PGL_TEN C, CC_DATAREF@NONPOTS_OP D,V_DIVISI_PT E ".
+                " WHERE C.TEN_ID(+)=B.TEN_ID AND B.ND(+)=A.ND AND A.ND = D.P_NOTEL(+) AND A.NCLI = E.NCLI(+) AND C.PGL_ID=".$param['pgl_id'];
         }
         $sql2 = "SELECT COUNT(*) COUNT FROM ( ";
         $sql3 = "SELECT ROWNUM RN,b.nd nd1,A.* ".
-            " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, CC_DATAREF@NONPOTS_OP D WHERE A.ND(+)=B.ND AND A.ND = D.P_NOTEL(+) AND B.TEN_ID=".$param['ten_id'].")";
+            " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, CC_DATAREF@NONPOTS_OP D,V_DIVISI_PT E WHERE A.ND(+)=B.ND AND A.ND = D.P_NOTEL(+) AND A.NCLI = E.NCLI(+) AND B.TEN_ID=".$param['ten_id'].")";
 
         $sql = $sql2." ".$sql3;
         if($wh != "" or $wh != null){
