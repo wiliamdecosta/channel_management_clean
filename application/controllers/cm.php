@@ -200,8 +200,8 @@ class Cm extends CI_Controller {
         $sh->getColumnDimension('AM')->setAutoSize(TRUE);
         $sh->getColumnDimension('AN')->setAutoSize(TRUE);
         $sh->getColumnDimension('AO')->setAutoSize(TRUE);
-        $sh->getStyle('A1:AM1')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $sh->getStyle('A1:AM1')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
+        $sh->getStyle('A1:AO1')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A1:AO1')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
         $sh->getStyle('A1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('B1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('C1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
@@ -512,7 +512,7 @@ class Cm extends CI_Controller {
         $sh->getStyle('AO'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
         $sh->getStyle('AO'.$x)->getBorders()->getRight()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $sh->getStyle('A'.$x.':AM'.$x)->getFont()->setBold(TRUE);
+        $sh->getStyle('A'.$x.':AO'.$x)->getFont()->setBold(TRUE);
 
         $objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel5');
         $objWriter->save(dirname(__FILE__).'/../third_party/report/'.$filename);
