@@ -237,34 +237,18 @@ class M_cm extends CI_Model {
 	public function excelFastel($period, $pgl_id){
         // $db2 = $this->load->database('default2', TRUE);
         $result = array();
-        $sql = "SELECT ACCOUNT_NUM, PRODUCT_LABEL, PRODUCT_NAME, 
+        $sql = "SELECT ACCOUNT_NUM, DIVISI_OP, PRODUCT_LABEL, PRODUCT_NAME,
 					ADDRESS_NAME, PRODUCT_MNY, ABONDEMEN,
 					RESTITUSI, LAIN_LAIN, FLAG_BYR
-					FROM CUST_RINTA_NP 
+					FROM V_CUST_RINTA_NP
 						WHERE PGL_ID = ".$pgl_id." AND BILL_PRD = ".$period;
-		// $parse = OCIParse($this->db->conn_id, $sql);
-		// OCIBindByName($parse, ':data1', $pgl_id );
-		// OCIBindByName($parse, ':data2', $period );
-		// OCIExecute($parse);
-		
-		// while (OCIFetchInto($parse,$arr,OCI_ASSOC)){
-				// if(isset($arr["CONTENT"])){
-				// if($arr["CONTENT"]){
-					// $result = $arr["CONTENT"]->load();
-				// } 
-				// } else $result = ""; 
-			// } 
+
         $qs =$this->db->query($sql);
 				if($qs->num_rows() > 0) $result = $qs->result();
 				return $result;
-		// if (count($qs) > 0) {
-		// foreach ($qs->result() as $row) {
-			// $result[] = $row;
-		// }
-		// print_r($result);
-		// print_r($parse);
+
 		return $result;
-		// }
+
     }
 	
 	// This Part Made By Zen

@@ -588,26 +588,27 @@ class Cm extends CI_Controller {
         ini_set('memory_limit', '-1');
         // Sheet
         $this->load->library("phpexcel");
-        $filename = "ExcelFastel_".$pgl_id."_".$period.".xls";
+        $filename = "Rinta_NP_".$pgl_id."_".$period.".xls";
         $this->phpexcel->getProperties()->setCreator("PT Telekomunikasi Indonesia, Tbk")
             ->setLastModifiedBy("PT Telekomunikasi Indonesia, Tbk")
             ->setTitle("REPORT")
             ->setKeywords("office 2007 openxml php")
-            ->setCategory("Rincian Tagihan ");
+            ->setCategory("Rincian Tagihan Non Pots");
         $this->phpexcel->setActiveSheetIndex(0);
         $sh = & $this->phpexcel->getActiveSheet();
         $sh->setCellValue('A1', 'NO AKUN')
-            ->setCellValue('B1', 'SID')
-            ->setCellValue('C1', 'Nama Produk')
-            ->setCellValue('D1', 'Total Tagihan')
-            ->setCellValue('E1', 'Abonemen')
-            ->setCellValue('F1', 'Diskon')
-            ->setCellValue('G1', 'Restitusi')
-            ->setCellValue('H1', 'Lain - lain')
-            ->setCellValue('I1', 'Flag Bayar')
+            ->setCellValue('B1', 'DIVISI')
+            ->setCellValue('C1', 'SID')
+            ->setCellValue('D1', 'Nama Produk')
+            ->setCellValue('E1', 'Alamat')
+            ->setCellValue('F1', 'Abonemen')
+            ->setCellValue('G1', 'Diskon')
+            ->setCellValue('H1', 'Restitusi')
+            ->setCellValue('I1', 'Lain - lain')
+            ->setCellValue('J1', 'Flag Bayar')
         ;
 
-        $sh->getStyle('A1:I1')->getFont()->setBold(TRUE);
+        $sh->getStyle('A1:J1')->getFont()->setBold(TRUE);
         $sh->getColumnDimension('A')->setAutoSize(TRUE);
         $sh->getColumnDimension('B')->setAutoSize(TRUE);
         $sh->getColumnDimension('C')->setAutoSize(TRUE);
@@ -617,10 +618,11 @@ class Cm extends CI_Controller {
         $sh->getColumnDimension('G')->setAutoSize(TRUE);
         $sh->getColumnDimension('H')->setAutoSize(TRUE);
         $sh->getColumnDimension('I')->setAutoSize(TRUE);
+        $sh->getColumnDimension('J')->setAutoSize(TRUE);
+
 		
-		
-        $sh->getStyle('A1:I1')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $sh->getStyle('A1:I1')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
+        $sh->getStyle('A1:J1')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A1:J1')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
         $sh->getStyle('A1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('B1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('C1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
@@ -630,20 +632,22 @@ class Cm extends CI_Controller {
         $sh->getStyle('G1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('H1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('I1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
         $x = 2;
         $dt = $this->cm->excelFastel($period, $pgl_id);
         $no = 1;
         foreach($dt as $k => $r) {
             $sh->getCell('A'.$x)->setValueExplicit($r->ACCOUNT_NUM, PHPExcel_Cell_DataType::TYPE_STRING);
-            $sh->setCellValue('B'.$x, @$r->PRODUCT_LABEL);
-            $sh->setCellValue('C'.$x, @$r->PRODUCT_NAME);
-            $sh->setCellValue('D'.$x, @$r->ADDRESS_NAME);
-            $sh->setCellValue('E'.$x, @$r->PRODUCT_MNY);
+            $sh->setCellValue('B'.$x, @$r->DIVISI_OP);
+            $sh->setCellValue('C'.$x, @$r->PRODUCT_LABEL);
+            $sh->setCellValue('D'.$x, @$r->PRODUCT_NAME);
+            $sh->setCellValue('E'.$x, @$r->ADDRESS_NAME);
             $sh->setCellValue('F'.$x, @$r->ABONDEMEN);
-            $sh->setCellValue('G'.$x, @$r->RESTITUSI);
-            $sh->setCellValue('H'.$x, @$r->LAIN_LAIN);
-            $sh->setCellValue('I'.$x, @$r->FLAG_BYR);
+            $sh->setCellValue('G'.$x, @$r->DISCOUNT);
+            $sh->setCellValue('H'.$x, @$r->RESTITUSI);
+            $sh->setCellValue('I'.$x, @$r->LAIN_LAIN);
+            $sh->setCellValue('J'.$x, @$r->FLAG_BYR);
             $no++;
             $x++;
             //if($x==8000) break;
@@ -659,19 +663,20 @@ class Cm extends CI_Controller {
         $sh->getStyle('H2:H'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('I2:I'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('J1:J'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K1:K'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 		$x++;
         $sh->setCellValue('B'.$x, 'TOTAL');     
 
-        $sh->setCellValue('E'.$x, "=SUM(E2:E".($x-1).")");
+        $sh->setCellValue('E'.$x, "=SUM(F2:E".($x-1).")");
         $sh->getStyle('E'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
 
-        $sh->setCellValue('F'.$x, "=SUM(F2:F".($x-1).")");
+        $sh->setCellValue('F'.$x, "=SUM(G2:F".($x-1).")");
         $sh->getStyle('F'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
 
-        $sh->setCellValue('G'.$x, "=SUM(G2:G".($x-1).")");
+        $sh->setCellValue('G'.$x, "=SUM(H2:G".($x-1).")");
         $sh->getStyle('G'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
 
-        $sh->setCellValue('H'.$x, "=SUM(H2:H".($x-1).")");
+        $sh->setCellValue('H'.$x, "=SUM(I2:H".($x-1).")");
         $sh->getStyle('H'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
         $sh->setCellValue('A'.$x, '');
 
@@ -690,6 +695,7 @@ class Cm extends CI_Controller {
         $sh->getStyle('H'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('I'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('J'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('A'.$x.':I'.$x)->getFont()->setBold(TRUE);
 		$x++;
 		$sh->getStyle('A'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
@@ -701,6 +707,7 @@ class Cm extends CI_Controller {
         $sh->getStyle('G'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('H'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $sh->getStyle('I'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         $objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel5');
         $objWriter->save(dirname(__FILE__).'/../third_party/report/'.$filename);
         // Write file to the browser
