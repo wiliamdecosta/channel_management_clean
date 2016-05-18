@@ -152,13 +152,12 @@ class Cm extends CI_Controller {
 
             ->setCellValue('AL1', 'STATUS BAYAR')
             ->setCellValue('AM1', 'TGL BAYAR')
-
             ->setCellValue('AN1', 'DIVISI')
             ->setCellValue('AO1', 'M4L')
 
         ;
 
-        $sh->getStyle('A1:AM1')->getFont()->setBold(TRUE);
+        $sh->getStyle('A1:Ao1')->getFont()->setBold(TRUE);
         $sh->getColumnDimension('A')->setAutoSize(TRUE);
         $sh->getColumnDimension('B')->setAutoSize(TRUE);
         $sh->getColumnDimension('C')->setAutoSize(TRUE);
