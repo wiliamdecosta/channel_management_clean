@@ -83,5 +83,26 @@ class mfee extends CI_Model
 
     }
 
+    public function getChartPKS(){
+        $query = "SELECT STATUS,COUNT(STATUS) JML FROM
+                   V_STATUS_PKS
+                  GROUP BY STATUS
+                ";
+        return $this->db->query($query)->result_array();
+    }
+
+    public function getMarfeeCurrentMonth($month){
+        $query = "SELECT
+                    SUM(FEE_NON_TAX) S01,
+                    SUM(FEE_TAX) S02,
+                    SUM(FEE_TOTAL) S03,
+                    SUM(FEE_TO_SHARE) S04
+                    FROM V_SUMMARY_MARFEE_NPK
+                    WHERE PERIOD = ".$month."
+                    GROUP BY PERIOD
+                  ";
+        return $this->db->query($query)->result_array();
+    }
+
 
 }

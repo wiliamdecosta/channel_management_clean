@@ -56,7 +56,7 @@
 
 <body class="no-skin">
 <!-- #section:basics/navbar.layout -->
-<div id="navbar" class="navbar navbar-default">
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
 <script type="text/javascript">
     try{ace.settings.check('navbar' , 'fixed')}catch(e){}
 </script>
@@ -154,7 +154,7 @@
 </script>
 
 <!-- #section:basics/sidebar -->
-<div id="sidebar" class="sidebar                  responsive">
+<div id="sidebar" class="sidebar responsive sidebar-fixed">
 <script type="text/javascript">
     try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 </script>
@@ -194,14 +194,14 @@
 
 <!-- List Menu -->
 <ul class="nav nav-list">
-    <li class="active setting_nav" id="dashboard" href="<?php echo site_url('dashboard/index'); ?>">
+    <!--<li class="active setting_nav" id="dashboard" href="<?php /*echo site_url('dashboard/index'); */?>">
         <a href="#">
             <i class="menu-icon fa fa-tachometer"></i>
             <span class="menu-text"> Dashboard </span>
         </a>
 
         <b class="arrow"></b>
-    </li>
+    </li>-->
     <?php
         echo $this->menu;
     ?>

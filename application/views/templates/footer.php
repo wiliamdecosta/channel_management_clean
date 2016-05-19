@@ -1,6 +1,6 @@
-</div> <!-- #ajax content -->
-</div><!-- /.main-content -->
-</div><!-- /.main-content-inner -->
+</div>
+</div>
+</div>
 
 <!-- Footer -->
 <div class="footer">
@@ -22,9 +22,7 @@
 <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
     <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 </a>
-</div><!-- /.main-container -->
 
-<!--Ajax Menu-->
 <script type="text/javascript">
     $(document).ajaxStart(function () {
         //Global Jquery UI Block
@@ -70,6 +68,7 @@
                     data: {title: title},
                     success: function (data) {
                         $("#ajaxContent").html(data);
+                        $('#breadcrumbs').addClass('breadcrumbs-fixed');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         if (textStatus === 'timeout') {
@@ -109,7 +108,7 @@
             loadContentWithParams('wf-inbox',{});    
         });
         
-    })
+    });
     
     function loadContentWithParams(id, params) {
         $.post( "<?php echo base_url('dynamic_content/load_content');?>/" + id,
@@ -123,14 +122,12 @@
 			
 </script>
 
-<!-- basic scripts -->
 
-<!--[if !IE]> -->
 <script type="text/javascript">
     window.jQuery || document.write("<script src='<?php echo base_url();?>assets/js/jquery.js'>" + "<" + "/script>");
 </script>
 
-<!-- <![endif]-->
+
 
 <!--[if IE]>
 <script type="text/javascript">
@@ -142,13 +139,10 @@
 </script>
 <script src="<?php echo base_url(); ?>assets/js/bootstrap.js"></script>
 
-<!-- page specific plugin scripts -->
-<!-- Sweet alert -->
 <script src="<?php echo base_url(); ?>assets/swal/sweetalert.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/swal/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/swal/sweetalert.css"/>
 
-<!--<script src="--><?php //echo base_url();?><!--assets/js/jquery-ui.custom.js"></script>-->
 <script src="<?php echo base_url(); ?>assets/js/jquery.blockUI.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.ui.touch-punch.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.easypiechart.js"></script>
@@ -183,8 +177,7 @@
 <script src="<?php echo base_url(); ?>assets/js/ace/ace.searchbox-autocomplete.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/spin.js"></script>
 
-<!--<script src="--><?php //echo base_url();?><!--assets/js/jquery-ui.js"></script>-->
-<!--<script src="--><?php //echo base_url();?><!--assets/js/jquery.ui.touch-punch.js"></script>-->
+
 <!--Data table-->
 <script src="<?php echo base_url(); ?>assets/js/dataTables/jquery.dataTables.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
