@@ -31,7 +31,7 @@ class Home extends CI_Controller
         $this->load->view('templates/header');
 
         if ($this->session->userdata('d_prof_id') != 3) {
-            /* For telkom internal only load index*/
+            /* For telkom internal only load index dashboard summary*/
 
             /*Chart PIE PKS*/
             $pks = $this->Mfee->getChartPKS();
@@ -56,8 +56,8 @@ class Home extends CI_Controller
             $FEE_TOTAL = 0;
             $FEE_TO_SHARE = 0;
 
-           // $mfee = $this->Mfee->getMarfeeCurrentMonth(date('Ym'));
-            $mfee = $this->Mfee->getMarfeeCurrentMonth('201512');
+            $mfee = $this->Mfee->getMarfeeCurrentMonth(date('Ym'));
+           // $mfee = $this->Mfee->getMarfeeCurrentMonth('201512');
             foreach ($mfee as $mval) {
                 $FEE_NON_TAX = $mval['S01'];
                 $FEE_TAX = $mval['S02'];
