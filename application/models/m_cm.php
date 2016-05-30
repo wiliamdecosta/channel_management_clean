@@ -8,6 +8,26 @@ class M_cm extends CI_Model {
 
     }
 
+	public function createBatch($mitra, $list_cc){
+		$out_put = "Succes";
+		// create batch
+        $sql = "BEGIN " .
+			"   MARFEE.pkg_proc_batch.create_batch_frm(:params1,:params2); END;";
+        $params = array(
+            array('name' => ':params1', 'value' => $list_cc, 'type' => SQLT_INT, 'length' => 6),
+            array('name' => ':params2', 'value' => $mitra, 'type' => SQLT_INT, 'length' => 11)
+        );
+        // Bind the output parameter
+		$stmt = oci_parse($this->db->conn_id, $sql);
+        foreach ($params as $p) {
+            // Bind Input
+            oci_bind_by_name($stmt, $p['name'], $p['value'], $p['length']);
+        }
+		ociexecute($stmt);
+		die($sql);
+		return $out_put ;	
+	}
+	
 	public function getPglList() {
         $result = array();
         $sql = $this->db->query('SELECT PGL_ID,PGL_NAME FROM CUST_PGL ORDER BY PGL_NAME');

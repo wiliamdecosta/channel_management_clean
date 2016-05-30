@@ -556,7 +556,13 @@ class Loaddata extends CI_Controller {
     }
 
     public function createBatchND(){
-        $arrND = $this->input->post('arrND');
+        $mitra = $this->input->post('mitra');
+        $list_cc = $this->input->post('id_ten');
+		$this->load->model('M_cm','cm');
+		//batch
+		$resultlk = $this->cm->createBatch($mitra, $list_cc);
+		
+		echo $resultlk." !!!!!";
     }
 	
 	public function loadDatin(){

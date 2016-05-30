@@ -41,7 +41,7 @@
         gridview: true,
         // altRows: true,
         shrinkToFit: true,
-        multiselect: true,
+        // multiselect: true,
         multiPageSelection: true,
         //multiSort : true,
         // multikey: "ctrlKey",
@@ -66,6 +66,9 @@
             }
         },
         loadComplete : function() {
+			 //$("#cb_" + this.id).click();
+			 
+		 
             var p = this.p, data = p.data, item, $this = $(this), index = p._index, rowid;
             for (rowid in index) {
                 if (index.hasOwnProperty(rowid)) {
@@ -87,8 +90,23 @@
     });
     jQuery("#grid-table").jqGrid('filterToolbar',{searchOperators : true});
 
-    $("#cb_" + $grid[0].id).hide();
-    $("#jqgh_" + $grid[0].id + "_cb").addClass("ui-jqgrid-sortable");
+   //  $("#cb_" + $grid[0].id).hide();
+	
+	// $("#cb_" + $grid[0].id).click(function () {
+		   // var tot_rows=$("#grid-table").jqGrid('getGridParam', 'records');
+		   // var grid = $("#grid-table");
+		   // grid.jqGrid('resetSelection');
+			// var ids = grid.getDataIDs();
+			// for (var i=0, il=tot_rows.length; i < il; i++) {
+				
+				// alert(ids.length);
+				// $("#jqg_grid-table_" + ids[i]).click();
+			//	grid.jqGrid('setSelection',ids[i], true);
+			// }
+	// });	
+	
+	
+   // $("#jqgh_" + $grid[0].id + "_cb").addClass("ui-jqgrid-sortable");
     cbColModel = $grid.jqGrid('getColProp', 'cb');
     cbColModel.sortable = true;
     cbColModel.sorttype = function (value, item) {
@@ -185,7 +203,7 @@
             }
         }
     ).navButtonAdd('#grid-pager',{
-            caption:"Create Batch",
+            caption:"Create Batch X",
             buttonicon:"ace-icon fa-pencil green",
             position:"last",
             title: "Create Batch",
@@ -194,12 +212,14 @@
             id :"reset"
         });
 
+	// $(".select_continent").click(function () {
+	  // alert(this.attr('value'));
+	// });	
+		
     function createBatchND() {
-        //selectedND
-        if(selectedND.length > 0){
             $.ajax({
                 url: '<?php echo site_url('loaddata/createBatchND');?>',
-                data: {arrND:selectedND},
+                data: {mitra:$("#mitra").val(),id_ten:$("#list_cc").val()},
                 type: 'POST',
                 success: function ( data ) {
                     $("#create_batch").notify("Success",
@@ -212,11 +232,6 @@
                     $('#grid-table').trigger( 'reloadGrid' );
                 }
             });
-        }else{
-            alert('Tidak ada ND yang dipilih !');
-            return false;
-        }
-
     }
 
     function style_edit_form(form) {
