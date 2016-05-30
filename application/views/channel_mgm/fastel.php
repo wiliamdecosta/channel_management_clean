@@ -104,7 +104,9 @@
                     editable: true,
                     formatter: 'integer',
                 },
-                {label: 'FLAG BAYAR', name: 'FLAG_BYR', width: 200, align: "center", editable: true}
+                {label: 'FLAG BAYAR', name: 'FLAG_BYR', width: 200, align: "center", editable: true},
+				{label: 'CUST NAME', name: 'CUST_NAME', width: 200, align: "left", editable: true}
+				
 
             ],
             width: width2,

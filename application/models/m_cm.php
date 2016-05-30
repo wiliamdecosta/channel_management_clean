@@ -263,7 +263,7 @@ class M_cm extends CI_Model {
         $result = array();
         $sql = "SELECT ACCOUNT_NUM, DIVISI_OP, PRODUCT_LABEL, PRODUCT_NAME,
 					ADDRESS_NAME, PRODUCT_MNY, ABONDEMEN,
-					RESTITUSI, LAIN_LAIN, FLAG_BYR
+					RESTITUSI, LAIN_LAIN, FLAG_BYR,CUST_NAME
 					FROM V_CUST_RINTA_NP
 						WHERE PGL_ID = ".$pgl_id." AND BILL_PRD = ".$period;
 
