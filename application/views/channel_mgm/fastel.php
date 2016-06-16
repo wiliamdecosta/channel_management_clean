@@ -105,7 +105,8 @@
                     formatter: 'integer',
                 },
                 {label: 'FLAG BAYAR', name: 'FLAG_BYR', width: 200, align: "center", editable: true},
-				{label: 'CUST NAME', name: 'CUST_NAME', width: 200, align: "left", editable: true}
+				{label: 'CUST NAME', name: 'CUST_NAME', width: 200, align: "left", editable: true},
+				{label: 'PROD PERIOD', name: 'PROD_PERIOD', width: 200, align: "center", editable: true}
 				
 
             ],
