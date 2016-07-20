@@ -124,7 +124,7 @@
             $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
         })
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo site_url('loaddata/grid_flagPayment');?>',
+            url: '<?php echo site_url('loaddata/grid_load_Payment');?>',
             datatype: "json",
             mtype: "POST",
             //colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
@@ -222,7 +222,7 @@
                         postData: {batch_id: rowid},
                         userData: {tes: rowid}
                     }); // the last setting is for demo only
-                    grid_id.jqGrid('setCaption', 'Add New Customer Detail :: ' + celValue);
+                    grid_id.jqGrid('setCaption', 'Flag Pembayaran Detail :: ' + celValue);
                     jQuery("#detailsPlaceholder").show();
                     jQuery("#jqGridDetails").trigger("reloadGrid");
 //                        jQuery('#process').html('<button type="button" class="btn btn-success btn-round" id="process_batch">" <i class="ace-icon fa fa-floppy-o bigger-120"></i>Proses</button>');
@@ -252,7 +252,7 @@
             //memanggil controller jqgrid yang ada di controller crud
 
             editurl: '<?php echo site_url('admin/crud_master');?>',
-            caption: "Add New Customer"
+            caption: "Flag Pembayaran"
 
         });
     });
@@ -790,7 +790,7 @@
             $.ajax({
                 type: 'POST',
                 url: '<?php echo site_url('loaddata/createBatch');?>',
-                data: {periode: val, batch_type: 2},
+                data: {periode: val, batch_type: 3},
                 success: function (data) {
                     $('#new_batch').hide("fast");
                     $('#table-content').show("slow");
