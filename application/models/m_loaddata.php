@@ -43,6 +43,39 @@ class M_loaddata extends CI_Model
 
     }
 
+    public function create_batch_nom($period, $username, $i_pgl_id)
+    {
+//        $result = array();
+        $sql = " DECLARE " .
+            "  v_result VARCHAR2(90); " .
+            "  BEGIN " .
+            "  marfee.create_batch_nom(:params1,:params2,:params3,:params4, :v_result); END;";
+
+
+
+        $params = array(
+            array('name' => ':params1', 'value' => $period, 'type' => SQLT_CHR, 'length' => 100),
+            array('name' => ':params2', 'value' => $username, 'type' => SQLT_CHR, 'length' => 32),
+            array('name' => ':params3', 'value' => 8, 'type' => SQLT_INT, 'length' => 1),
+            array('name' => ':params4', 'value' => $i_pgl_id, 'type' => SQLT_INT, 'length' => 32)
+        );
+        // Bind the output parameter
+
+
+        $stmt = oci_parse($this->db->conn_id, $sql);
+
+        foreach ($params as $p) {
+            // Bind Input
+            oci_bind_by_name($stmt, $p['name'], $p['value'], $p['length']);
+        }
+        $message = '';
+        oci_bind_by_name($stmt, ':v_result', $message, 32);
+
+        ociexecute($stmt);
+        return $message;
+
+    }
+
     public function batchProcess($batch_id, $username)
     {
 //        $result = array();

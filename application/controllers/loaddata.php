@@ -206,6 +206,16 @@ class Loaddata extends CI_Controller {
         json_encode($result);
     }
 
+
+    public function createBatchNOM(){
+        $username = $this->session->userdata('d_user_nik');
+        $tmpPeriod = $this->input->post('periode');
+        $i_pgl_id = $this->input->post('i_pgl_id');
+        $period = implode('#',$tmpPeriod);
+        $result['data']= $this->loadData->create_batch_nom($period,$username,$i_pgl_id);
+        json_encode($result);
+    }
+
     public function processBatch(){
         $username = $this->session->userdata('d_user_nik');
         $batch_id = $this->input->post('batch_id');
@@ -220,6 +230,14 @@ class Loaddata extends CI_Controller {
         $periode = $this->input->post('periode');
 
         $result['data'] = $this->loadData->batchProcessDatin($batch_id,$username,$periode);
+        echo json_encode($result);
+    }
+
+    public function processBatch_NOM(){
+        $username = $this->session->userdata('d_user_nik');
+        $batch_id = $this->input->post('batch_id');
+
+        $result['data'] = $this->loadData->batchProcess($batch_id,$username);
         echo json_encode($result);
     }
 
@@ -643,4 +661,66 @@ class Loaddata extends CI_Controller {
         $this->load->view('loaddata/load_datin',$data);
     }
 
+    public function dataNOM(){
+        $title = $_POST['title'];
+        //BreadCrumb
+        $bc = array($this->head,$title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        $data['menu_id'] = $this->uri->segment(3);
+        $this->load->view('loaddata/load_data_nom',$data);
+    }
+
+    public function grid_dataNOM() {
+        $page = intval($_REQUEST['page']) ;
+        $limit = $_REQUEST['rows'] ;
+        $sidx = $_REQUEST['sidx'] ;
+        $sord = $_REQUEST['sord'] ;
+
+        $table = "V_SHOW_BATCH";
+
+        $req_param = array (
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
+            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
+            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null
+        );
+
+        //$req_param['field'] = array('P_BATCH_TYPE_ID');
+        // $req_param['value'] = array(1);
+
+        $req_param['where'] = array('P_BATCH_TYPE_ID' => 8);
+        $row = $this->jqGrid->get_data($req_param)->result_array();
+        $count = count($row);
+
+        if( $count >0 ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit*$page - ($limit-1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
 }
