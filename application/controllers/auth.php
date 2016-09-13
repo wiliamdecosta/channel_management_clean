@@ -91,10 +91,11 @@ class Auth extends CI_Controller
     public function login()
     {
         $this->load->model('M_user');
-        $username = strtoupper($this->security->xss_clean($this->input->post('username')));
-        $password = $this->security->xss_clean($this->input->post('pwd'));
-        $pwd_md5 = MD5($this->security->xss_clean($this->input->post('pwd')));
-        
+        $username = strtoupper($this->security->xss_clean($this->input->post('username',TRUE)));
+        $password = $this->security->xss_clean($this->input->post('pwd',TRUE));
+        $pwd_md5 = MD5($this->security->xss_clean($this->input->post('pwd',TRUE)));
+		
+
         //Returns TRUE if every character in text is either a letter or a digit, FALSE otherwise.
         if (ctype_alnum($username)) {
             

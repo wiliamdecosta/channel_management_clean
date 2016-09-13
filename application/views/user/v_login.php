@@ -66,7 +66,7 @@
 
                         <label class="block clearfix">
                                         <span class="block input-icon input-icon-right">
-                                        <input type="password" class="form-control" placeholder="Password" id="pwd" name="pwd" required="true"/>
+                                        <input type="password" class="form-control" placeholder="Password" id="pwd" name="pwd" required="true" autocomplete="off"/>
                                         <i class="ace-icon fa fa-lock"></i>
                                         </span>
                         </label>
