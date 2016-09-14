@@ -7,3 +7,11 @@ RewriteRule ^(.*)$ index.php/$1 [L]
 </IfModule>
 
 RedirectMatch 404 /\\.svn(/|$)
+Options -MultiViews
+RedirectMatch 404 ^/system(/?|/.*)$
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} ^TRACE
+RewriteRule .* - [F]
+</IfModule>

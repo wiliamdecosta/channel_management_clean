@@ -247,7 +247,7 @@ class CI_Input {
 			$expire = ($expire > 0) ? time() + $expire : 0;
 		}
 
-		setcookie($prefix.$name, $value, $expire, $path, $domain, $secure);
+		setcookie($prefix.$name, $this->security->xss_clean($value), $expire, $path, $domain, $secure,TRUE);
 	}
 
 	// --------------------------------------------------------------------

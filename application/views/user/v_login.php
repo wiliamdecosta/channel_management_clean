@@ -43,6 +43,7 @@
     </h1>
     <!--    <h4 class="blue" id="id-company-text">&copy; Telkom</h4>-->
 </div>
+
 <div class="space-6"></div>
 <div class="position-relative">
     <div id="login-box" class="login-box visible widget-box no-border">

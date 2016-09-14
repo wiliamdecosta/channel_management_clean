@@ -411,7 +411,8 @@ class CI_Session {
 					($this->now - 31500000),
 					$this->cookie_path,
 					$this->cookie_domain,
-					0
+					0,
+					TRUE
 				);
 	}
 
@@ -663,11 +664,12 @@ class CI_Session {
 		// Set the cookie
 		setcookie(
 					$this->sess_cookie_name,
-					$cookie_data,
+					$this->CI->security->xss_clean($cookie_data),
 					$expire,
 					$this->cookie_path,
 					$this->cookie_domain,
-					$this->cookie_secure
+					$this->cookie_secure,
+					TRUE
 				);
 	}
 
