@@ -184,7 +184,7 @@ class CI_Input {
 	* @param	bool
 	* @return	string
 	*/
-	function cookie($index = '', $xss_clean = FALSE)
+	function cookie($index = '', $xss_clean = TRUE)
 	{
 		return $this->_fetch_from_array($_COOKIE, $index, $xss_clean);
 	}

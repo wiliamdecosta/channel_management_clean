@@ -48,7 +48,7 @@ if ( ! function_exists('set_cookie'))
 	{
 		// Set the config file options
 		$CI =& get_instance();
-		$CI->input->set_cookie($name, $CI->security->xss_clean($value), $expire, $domain, $path, $prefix, $secure, TRUE;
+		$CI->input->set_cookie($name, $CI->security->xss_clean($value), $expire, $domain, $path, $prefix, $secure, TRUE);
 	}
 }
 
@@ -64,7 +64,7 @@ if ( ! function_exists('set_cookie'))
  */
 if ( ! function_exists('get_cookie'))
 {
-	function get_cookie($index = '', $xss_clean = FALSE)
+	function get_cookie($index = '', $xss_clean = TRUE)
 	{
 		$CI =& get_instance();
 
