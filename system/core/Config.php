@@ -43,21 +43,27 @@ class CI_Config {
 	 * @param   boolean  true if errors should just return false, false if an error message should be displayed
 	 * @return  boolean  if the file was successfully loaded or not
 	 */
-	function __construct()
+	public function __construct()
 	{
 		$this->config =& get_config();
-		log_message('debug', "Config Class Initialized");
 
 		// Set the base_url automatically if none was provided
-		if ($this->config['base_url'] == '')
+		if (empty($this->config['base_url']))
 		{
-			if (isset($_SERVER['HTTP_HOST']))
+			if (isset($_SERVER['SERVER_ADDR']))
 			{
-				$base_url = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off' ? 'https' : 'http';
-				$base_url .= '://'. $_SERVER['HTTP_HOST'];
-				$base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
-			}
+				if (strpos($_SERVER['SERVER_ADDR'], ':') !== FALSE)
+				{
+					$server_addr = '['.$_SERVER['SERVER_ADDR'].']';
+				}
+				else
+				{
+					$server_addr = $_SERVER['SERVER_ADDR'];
+				}
 
+				$base_url = (is_https() ? 'https' : 'http').'://'.$server_addr
+					.substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
+			}
 			else
 			{
 				$base_url = 'http://localhost/';
@@ -65,6 +71,8 @@ class CI_Config {
 
 			$this->set_item('base_url', $base_url);
 		}
+
+		log_message('info', 'Config Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -78,7 +86,7 @@ class CI_Config {
 	 * @param   boolean  true if errors should just return false, false if an error message should be displayed
 	 * @return	boolean	if the file was loaded correctly
 	 */
-	function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE)
+	public function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE)
 	{
 		$file = ($file == '') ? 'config' : str_replace('.php', '', $file);
 		$found = FALSE;
@@ -171,35 +179,15 @@ class CI_Config {
 	 * @param	bool
 	 * @return	string
 	 */
-	function item($item, $index = '')
+	public function item($item, $index = '')
 	{
 		if ($index == '')
 		{
-			if ( ! isset($this->config[$item]))
-			{
-				return FALSE;
-			}
-
-			$pref = $this->config[$item];
-		}
-		else
-		{
-			if ( ! isset($this->config[$index]))
-			{
-				return FALSE;
-			}
-
-			if ( ! isset($this->config[$index][$item]))
-			{
-				return FALSE;
-			}
-
-			$pref = $this->config[$index][$item];
+			return isset($this->config[$item]) ? $this->config[$item] : NULL;
 		}
 
-		return $pref;
+		return isset($this->config[$index], $this->config[$index][$item]) ? $this->config[$index][$item] : NULL;
 	}
-
 	// --------------------------------------------------------------------
 
 	/**
@@ -210,7 +198,7 @@ class CI_Config {
 	 * @param	bool
 	 * @return	string
 	 */
-	function slash_item($item)
+	public function slash_item($item)
 	{
 		if ( ! isset($this->config[$item]))
 		{
@@ -234,22 +222,54 @@ class CI_Config {
 	 * @param	string	the URI string
 	 * @return	string
 	 */
-	function site_url($uri = '')
+	public function site_url($uri = '', $protocol = NULL)
 	{
-		if ($uri == '')
+		$base_url = $this->slash_item('base_url');
+
+		if (isset($protocol))
 		{
-			return $this->slash_item('base_url').$this->item('index_page');
+			// For protocol-relative links
+			if ($protocol === '')
+			{
+				$base_url = substr($base_url, strpos($base_url, '//'));
+			}
+			else
+			{
+				$base_url = $protocol.substr($base_url, strpos($base_url, '://'));
+			}
 		}
 
-		if ($this->item('enable_query_strings') == FALSE)
+		if (empty($uri))
 		{
-			$suffix = ($this->item('url_suffix') == FALSE) ? '' : $this->item('url_suffix');
-			return $this->slash_item('base_url').$this->slash_item('index_page').$this->_uri_string($uri).$suffix;
+			return $base_url.$this->item('index_page');
 		}
-		else
+
+		$uri = $this->_uri_string($uri);
+
+		if ($this->item('enable_query_strings') === FALSE)
 		{
-			return $this->slash_item('base_url').$this->item('index_page').'?'.$this->_uri_string($uri);
+			$suffix = isset($this->config['url_suffix']) ? $this->config['url_suffix'] : '';
+
+			if ($suffix !== '')
+			{
+				if (($offset = strpos($uri, '?')) !== FALSE)
+				{
+					$uri = substr($uri, 0, $offset).$suffix.substr($uri, $offset);
+				}
+				else
+				{
+					$uri .= $suffix;
+				}
+			}
+
+			return $base_url.$this->slash_item('index_page').$uri;
 		}
+		elseif (strpos($uri, '?') === FALSE)
+		{
+			$uri = '?'.$uri;
+		}
+
+		return $base_url.$this->item('index_page').$uri;
 	}
 	
 	// -------------------------------------------------------------
@@ -262,9 +282,24 @@ class CI_Config {
 	 * @param string $uri
 	 * @return string
 	 */
-	function base_url($uri = '')
+	public function base_url($uri = '', $protocol = NULL)
 	{
-		return $this->slash_item('base_url').ltrim($this->_uri_string($uri),'/');
+		$base_url = $this->slash_item('base_url');
+
+		if (isset($protocol))
+		{
+			// For protocol-relative links
+			if ($protocol === '')
+			{
+				$base_url = substr($base_url, strpos($base_url, '//'));
+			}
+			else
+			{
+				$base_url = $protocol.substr($base_url, strpos($base_url, '://'));
+			}
+		}
+
+		return $base_url.ltrim($this->_uri_string($uri), '/');
 	}
 	
 	// -------------------------------------------------------------
@@ -312,7 +347,7 @@ class CI_Config {
 	 * @access	public
 	 * @return	string
 	 */
-	function system_url()
+	public function system_url()
 	{
 		$x = explode("/", preg_replace("|/*(.+?)/*$|", "\\1", BASEPATH));
 		return $this->slash_item('base_url').end($x).'/';

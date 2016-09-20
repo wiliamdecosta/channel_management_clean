@@ -7,7 +7,9 @@ RewriteRule ^(.*)$ index.php/$1 [L]
 </IfModule>
 
 RedirectMatch 404 /\\.svn(/|$)
+RedirectMatch 404 /\\.subversion(/|$)
 Options -MultiViews
+Options -Indexes
 RedirectMatch 404 ^/system(/?|/.*)$
 
 <IfModule mod_rewrite.c>

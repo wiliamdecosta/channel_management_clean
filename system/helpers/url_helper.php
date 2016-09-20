@@ -39,10 +39,9 @@
  */
 if ( ! function_exists('site_url'))
 {
-	function site_url($uri = '')
+	function site_url($uri = '', $protocol = NULL)
 	{
-		$CI =& get_instance();
-		return $CI->config->site_url($uri);
+		return get_instance()->config->site_url($uri, $protocol);
 	}
 }
 
@@ -61,10 +60,9 @@ if ( ! function_exists('site_url'))
  */
 if ( ! function_exists('base_url'))
 {
-	function base_url($uri = '')
+	function base_url($uri = '', $protocol = NULL)
 	{
-		$CI =& get_instance();
-		return $CI->config->base_url($uri);
+		return get_instance()->config->base_url($uri, $protocol);
 	}
 }
 
