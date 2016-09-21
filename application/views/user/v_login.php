@@ -26,7 +26,11 @@
     <!--[if lt IE 9]>
     <script src="<?php echo base_url();?>assets/js/html5shiv.js"></script>
     <script src="<?php echo base_url();?>assets/js/respond.js"></script>
+	
     <![endif]-->
+	<!-- google recaptcha -->
+	
+	<!-- end google recaptcha -->
 </head>
 <body class="login-layout light-login">
 <div class="main-container">
@@ -77,19 +81,21 @@
                                 <input type="checkbox" class="ace" />
                                 <span class="lbl"> Remember Me</span>
                             </label>
-                            <a class="width-35 pull-right btn btn-sm btn-danger" name="login" id="login">
+                            <button class="width-35 pull-right btn btn-sm btn-danger" name="login" id="login">
                                 <i class="ace-icon fa fa-key"></i>
                                 <span class="bigger-110">Login</span>
-                            </a>
+                            </button>
                         </div>
                         <br>
                             <div class='alert alert-danger' id="msg" style="display: none">
                             </div>
                         <div class="space-4"></div>
                     </fieldset>
+					<div class="g-recaptcha" data-sitekey="6LdlRwcUAAAAAMiBVi6bPblLLjEOhtxVcRm4-5oI" data-callback="enableBtn"></div>
+					<?php echo $script;?>
                     <input type="hidden" value="<?= site_url();?>" id="host">
                     <input type="hidden" id="token" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" style="display: none">
-                </form>
+			   </form>
                 <div class="space-6"></div>
             </div>
         </div>
@@ -138,7 +144,11 @@
 <!-- inline scripts related to this page -->
 <script src="<?php echo base_url();?>assets/js/jquery.blockUI.js"></script>
 <script src="<?php echo base_url();?>assets/js/login.js"></script>
+<script src="<?php echo base_url(); ?>assets/swal/sweetalert.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/swal/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/swal/sweetalert.css"/>
 <script type="text/javascript">
+	document.getElementById("login").disabled = true;
     jQuery(function($) {
         $(document).on('click', '.toolbar a[data-target]', function(e) {
             e.preventDefault();
@@ -194,6 +204,9 @@
 
         })).ajaxStop($.unblockUI);
     });
+   function enableBtn(){
+    document.getElementById("login").disabled = false;
+   }
 </script>
 </body>
 </html>

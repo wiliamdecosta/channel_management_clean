@@ -48,19 +48,19 @@ $(document).ready(function() {
             $('#pwd').effect("shake", { times:3 }, 500);
             return false;
         }
-
+		var dataPost = $('#loginForm').serialize();
         jQuery.ajax({
             type: "POST",
             url: site+"auth/login",
             dataType: 'json',
-            data: {username: username, pwd: password, csrf_token:token_val},
+            data: dataPost,
             cache :false,
             success: function(data) {
                 if (data.success){
                     window.location.href = host;
                 } else {
-                    $('#msg').html(data.msg);
-                    $('#msg').show();
+                    swal('ERROR',data.msg,'error')
+                    grecaptcha.reset();
                 }
             }
 

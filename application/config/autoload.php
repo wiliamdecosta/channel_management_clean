@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('database', 'session');
+$autoload['libraries'] = array('database', 'session','recaptcha');
 
 
 /*
@@ -80,7 +80,7 @@ $autoload['helper'] = array('security','url', 'asset', 'form','breadcrumb','chec
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('recaptcha');
 
 
 /*
