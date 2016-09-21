@@ -313,30 +313,20 @@ class CI_Config {
 	 */
 	protected function _uri_string($uri)
 	{
-		if ($this->item('enable_query_strings') == FALSE)
+		if ($this->item('enable_query_strings') === FALSE)
 		{
 			if (is_array($uri))
 			{
 				$uri = implode('/', $uri);
 			}
-			$uri = trim($uri, '/');
+			return trim($uri, '/');
 		}
-		else
+		elseif (is_array($uri))
 		{
-			if (is_array($uri))
-			{
-				$i = 0;
-				$str = '';
-				foreach ($uri as $key => $val)
-				{
-					$prefix = ($i == 0) ? '' : '&';
-					$str .= $prefix.$key.'='.$val;
-					$i++;
-				}
-				$uri = $str;
-			}
+			return http_build_query($uri);
 		}
-	    return $uri;
+
+		return $uri;
 	}
 
 	// --------------------------------------------------------------------

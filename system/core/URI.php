@@ -45,6 +45,42 @@ class CI_URI {
 	function __construct()
 	{
 		$this->config =& load_class('Config', 'core');
+		
+		if (is_cli() OR $this->config->item('enable_query_strings') !== TRUE)
+		{
+			$this->_permitted_uri_chars = $this->config->item('permitted_uri_chars');
+
+			// If it's a CLI request, ignore the configuration
+			if (is_cli())
+			{
+				$uri = $this->_parse_argv();
+			}
+			else
+			{
+				$protocol = $this->config->item('uri_protocol');
+				empty($protocol) && $protocol = 'REQUEST_URI';
+
+				switch ($protocol)
+				{
+					case 'AUTO': // For BC purposes only
+					case 'REQUEST_URI':
+						$uri = $this->_parse_request_uri();
+						break;
+					case 'QUERY_STRING':
+						$uri = $this->_parse_query_string();
+						break;
+					case 'PATH_INFO':
+					default:
+						$uri = isset($_SERVER[$protocol])
+							? $_SERVER[$protocol]
+							: $this->_parse_request_uri();
+						break;
+				}
+			}
+
+			$this->_set_uri_string($uri);
+		}
+		
 		log_message('debug', "URI Class Initialized");
 	}
 
@@ -139,6 +175,125 @@ class CI_URI {
 	}
 
 	// --------------------------------------------------------------------
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Parse REQUEST_URI
+	 *
+	 * Will parse REQUEST_URI and automatically detect the URI from it,
+	 * while fixing the query string if necessary.
+	 *
+	 * @return	string
+	 */
+	protected function _parse_request_uri()
+	{
+		if ( ! isset($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME']))
+		{
+			return '';
+		}
+
+		// parse_url() returns false if no host is present, but the path or query string
+		// contains a colon followed by a number
+		$uri = parse_url('http://dummy'.$_SERVER['REQUEST_URI']);
+		$query = isset($uri['query']) ? $uri['query'] : '';
+		$uri = isset($uri['path']) ? $uri['path'] : '';
+
+		if (isset($_SERVER['SCRIPT_NAME'][0]))
+		{
+			if (strpos($uri, $_SERVER['SCRIPT_NAME']) === 0)
+			{
+				$uri = (string) substr($uri, strlen($_SERVER['SCRIPT_NAME']));
+			}
+			elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0)
+			{
+				$uri = (string) substr($uri, strlen(dirname($_SERVER['SCRIPT_NAME'])));
+			}
+		}
+
+		// This section ensures that even on servers that require the URI to be in the query string (Nginx) a correct
+		// URI is found, and also fixes the QUERY_STRING server var and $_GET array.
+		if (trim($uri, '/') === '' && strncmp($query, '/', 1) === 0)
+		{
+			$query = explode('?', $query, 2);
+			$uri = $query[0];
+			$_SERVER['QUERY_STRING'] = isset($query[1]) ? $query[1] : '';
+		}
+		else
+		{
+			$_SERVER['QUERY_STRING'] = $query;
+		}
+
+		parse_str($_SERVER['QUERY_STRING'], $_GET);
+
+		if ($uri === '/' OR $uri === '')
+		{
+			return '/';
+		}
+
+		// Do some final cleaning of the URI and return it
+		return $this->_remove_relative_directory($uri);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Parse QUERY_STRING
+	 *
+	 * Will parse QUERY_STRING and automatically detect the URI from it.
+	 *
+	 * @return	string
+	 */
+	protected function _parse_query_string()
+	{
+		$uri = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : @getenv('QUERY_STRING');
+
+		if (trim($uri, '/') === '')
+		{
+			return '';
+		}
+		elseif (strncmp($uri, '/', 1) === 0)
+		{
+			$uri = explode('?', $uri, 2);
+			$_SERVER['QUERY_STRING'] = isset($uri[1]) ? $uri[1] : '';
+			$uri = $uri[0];
+		}
+
+		parse_str($_SERVER['QUERY_STRING'], $_GET);
+
+		return $this->_remove_relative_directory($uri);
+	}
+	
+	protected function _remove_relative_directory($uri)
+	{
+		$uris = array();
+		$tok = strtok($uri, '/');
+		while ($tok !== FALSE)
+		{
+			if (( ! empty($tok) OR $tok === '0') && $tok !== '..')
+			{
+				$uris[] = $tok;
+			}
+			$tok = strtok('/');
+		}
+
+		return implode('/', $uris);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Parse CLI arguments
+	 *
+	 * Take each command line argument and assume it is a URI segment.
+	 *
+	 * @return	string
+	 */
+	protected function _parse_argv()
+	{
+		$args = array_slice($_SERVER['argv'], 1);
+		return $args ? implode('/', $args) : '';
+	}
 
 	/**
 	 * Detects the URI
