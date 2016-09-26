@@ -169,7 +169,7 @@ class Auth extends CI_Controller
             }
         } else {
             // Recaptcha harus diisi !!
-            echo json_encode(array('success' => false, 'msg' => 'Recaptcha harus diceklis !!'));
+            echo json_encode(array('success' => false, 'msg' => 'Recaptcha harus disi !!'));
             exit;
         }
 
