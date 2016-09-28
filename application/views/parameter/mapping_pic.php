@@ -1,7 +1,7 @@
 <?php $prv = getPrivilege($menu_id); ?>
 <div class="col-sm-12">
-    <div class="tabbable">
-        <ul class="nav nav-tabs" id="myTab">
+    <div class="tabbable" style="margin-top:30px;">
+        <ul class="nav nav-tabs" id="myTab" >
             <li class="">
                 <a href="#" id="mapping_mitra_tab">
                     <i class="green ace-icon fa fa-users bigger-120"></i>

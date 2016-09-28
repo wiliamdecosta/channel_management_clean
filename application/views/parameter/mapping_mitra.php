@@ -1,12 +1,12 @@
 <?php $prv = getPrivilege($menu_id); ?>
 <div class="col-sm-12">
     <!-- #section:elements.tab -->
-    <div class="tabbable">
-        <ul class="nav nav-tabs" id="myTab">
+    <div class="tabbable" style="margin-top:30px;">
+        <ul class="nav nav-tabs"  id="myTab">
             <li class="active">
                 <a data-toggle="tab" href="#" aria-expanded="true">
                     <i class="green ace-icon fa fa-users bigger-120"></i>
-                    Mitra
+                    MitraX
                 </a>
             </li>
             <li class="">
