@@ -13,7 +13,7 @@
                 <div class="col-sm-8">
                     <input type="text" id="mitraForm_segment" name="segment_code" class="col-sm-10 required"
                            placeholder="Pilih Segment"
-                           value="" required>
+                           value="" readonly required>
                     <span class="input-group-btn">
                         <button class="btn btn-warning btn-sm" type="button" id="btn_lov_segment">
                             <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
@@ -26,7 +26,7 @@
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Nama CC </label>
                 <div class="col-sm-8">
                     <input type="text" id="cc_name" name="cc_name" class="col-sm-10 required" placeholder="Pilih CC"
-                           required>
+                          readonly required>
                     <input type="hidden" id="cc_id" name="cc_id" class="form-control required" required>
                     <span class="input-group-btn">
                         <button class="btn btn-warning btn-sm" type="button" id="btn_lov_cc">
@@ -41,7 +41,7 @@
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">Nama Mitra</label>
                 <div class="col-sm-8">
                     <input type="text" id="mitra_name" name="mitra_name" class="col-sm-10 required"
-                           placeholder="Pilih Mitra" required>
+                           placeholder="Pilih Mitra" readonly required>
                     <input type="hidden" id="mitra_id" name="mitra_id" class="form-control required" required>
                     <span class="input-group-btn">
                         <button class="btn btn-warning btn-sm" type="button" id="btn_lov_mitra">
@@ -58,9 +58,9 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right">Nama EAM</label>
                 <div class="col-sm-8">
-                    <input type="hidden" id="p_map_mit_cc" name="p_map_mit_cc" required>
-                    <input type="text" id="eam_name" name="eam_name" placeholder="Pilih EAM" class="col-sm-10 required" required>
-                    <input type="hidden" id="eam_id" name="eam_id" required>
+                    <input type="hidden" id="p_map_mit_cc" name="p_map_mit_cc"  required>
+                    <input type="text" id="eam_name" name="eam_name" placeholder="Pilih EAM" class="col-sm-10 required" readonly required>
+                    <input type="hidden" id="eam_id" name="eam_id" readonly required>
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                            value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" name="action" id="action" value="<?php echo $action; ?>">

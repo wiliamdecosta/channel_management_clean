@@ -6,7 +6,7 @@
             <li class="active">
                 <a data-toggle="tab" href="#" aria-expanded="true">
                     <i class="green ace-icon fa fa-users bigger-120"></i>
-                    MitraX
+                    Mitra
                 </a>
             </li>
             <li class="">
