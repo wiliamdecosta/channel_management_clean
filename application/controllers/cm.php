@@ -29,6 +29,552 @@ class Cm extends CI_Controller {
         echo $option;
     }
 
+	/*start info tunggakan 3-3-2017*/
+	  public function inf_tunggakan() {
+        $title = $_POST['title'];
+        //BreadCrumb
+        $bc = array($this->head,$title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        // prof id 3 = C2BI User
+        if($this->session->userdata('d_prof_id') == 3) {
+            $result['result'] = $this->cm->getPglListByID($this->session->userdata('d_user_id'));
+        } else {
+            $result['result'] = $this->cm->getPglList();
+        }
+        $this->load->view('channel_mgm/inf_tunggakan',$result);
+    }
+	 
+	 /*Datin Tunggakan*/
+	 public function viewTunggakanDatin() {
+        $data['period'] = $this->input->post('tahun')."".$this->input->post('bulan');
+        $data['pgl_id'] = $this->input->post('pengelola');
+        $data['ten_id'] = $this->input->post('tenant');
+        $this->load->view('channel_mgm/detail_tunggakan_dt',$data);
+    }
+	
+	public function gridTunggakanDt($period,$pgl_id,$ten_id) {
+        $sidx = $_POST['sidx'] ;
+        $sord = $_POST['sord'] ;
+        $page = intval($_REQUEST['page']) ;
+        $limit = $_REQUEST['rows'] ;
+
+        $req_param = array (
+            "sort_by" => $sidx,
+            "page" => $page,
+            "rows" => $limit,
+            "sord" => $sord,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
+            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
+            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null,
+            "ten_id" => $ten_id,
+            "pgl_id" => $pgl_id,
+            "period" => $period
+        );
+
+        $row = $this->cm->getTunggakanDtCount($req_param);
+        $count= $row[0]->COUNT;
+
+        if( $count >0 ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+
+        // Parameter yang akan dikirim ke view untuk kebutuhan jqGrid
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->cm->getTunggakanDt($req_param)->result_array();
+
+        echo json_encode($result);
+
+    }
+	
+	/*batas tunggakan DT*/
+	
+	
+	
+	 public function viewTunggakan() {
+        $data['period'] = $this->input->post('tahun')."".$this->input->post('bulan');
+        $data['pgl_id'] = $this->input->post('pengelola');
+        $data['ten_id'] = $this->input->post('tenant');
+        $this->load->view('channel_mgm/detail_tunggakan',$data);
+    }
+	
+	public function gridTunggakan($period,$pgl_id,$ten_id) {
+        $sidx = $_POST['sidx'] ;
+        $sord = $_POST['sord'] ;
+        $page = intval($_REQUEST['page']) ;
+        $limit = $_REQUEST['rows'] ;
+
+        $req_param = array (
+            "sort_by" => $sidx,
+            "page" => $page,
+            "rows" => $limit,
+            "sord" => $sord,
+            "search" => $_REQUEST['_search'],
+            "search_field" => isset($_REQUEST['searchField'])?$_REQUEST['searchField']:null,
+            "search_operator" => isset($_REQUEST['searchOper'])?$_REQUEST['searchOper']:null,
+            "search_str" => isset($_REQUEST['searchString'])?$_REQUEST['searchString']:null,
+            "ten_id" => $ten_id,
+            "pgl_id" => $pgl_id,
+            "period" => $period
+        );
+
+        $row = $this->cm->getTunggakanCount($req_param);
+        $count= $row[0]->COUNT;
+
+        if( $count >0 ) {
+            $total_pages = ceil($count/$limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+
+        // Parameter yang akan dikirim ke view untuk kebutuhan jqGrid
+        $result['page'] = $page;
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+
+        $result['Data'] = $this->cm->getTunggakan($req_param)->result_array();
+
+        echo json_encode($result);
+
+    }
+	
+	
+	public function tunggakanPotsSheet($pgl_id, $ten_id, $period) {
+        // Set unlimited usage memory for big data
+			
+		/*  RN            NUMBER
+			LST_UPDT_PRD  VARCHAR2 (6) 
+			CCA           VARCHAR2 (20) 
+			NCLI          NUMBER
+			SND           VARCHAR2 (15) 
+			SND_GROUP     VARCHAR2 (40) 
+			PRODUK        VARCHAR2 (20) 
+			BA_TREMS      VARCHAR2 (4) 
+			NAMA          VARCHAR2 (60) 
+			ALAMAT        VARCHAR2 (134) 
+			UBIS          VARCHAR2 (6) 
+			SUBSEGMEN     VARCHAR2 (10) 
+			TAGIHAN       NUMBER
+			PPN           NUMBER
+			TOTAL_TAGIHAN NUMBER
+			RP_KLAIM      NUMBER
+			PERIOD_COL    VARCHAR2 (30) 
+			I_PGL_ID      NUMBER
+			COL_DATE      VARCHAR2 (30) 
+			TEN_ID        NUMBER
+			TEN_NAME      VARCHAR2 (100) 
+		*/
+        ini_set('memory_limit', '-1');
+        // Sheet
+        $this->load->library("phpexcel");
+        $filename = "Tunggakan_Pots_".$pgl_id."_".$period.".xls";
+        $this->phpexcel->getProperties()->setCreator("PT Telekomunikasi Indonesia, Tbk")
+            ->setLastModifiedBy("PT Telekomunikasi Indonesia, Tbk")
+            ->setTitle("REPORT")
+            ->setKeywords("office 2007 openxml php")
+            ->setCategory("Rincian Tunggakan Pots");
+        $this->phpexcel->setActiveSheetIndex(0);
+        $sh = & $this->phpexcel->getActiveSheet();
+        $sh->setCellValue('A1', 'CCA')
+            ->setCellValue('B1', 'NCLI')
+            ->setCellValue('C1', 'SND')
+            ->setCellValue('D1', 'ALAMAT')
+            ->setCellValue('E1', 'TEN_NAME')
+            ->setCellValue('F1', 'SND_GROUP')
+            ->setCellValue('G1', 'PRODUK')
+            ->setCellValue('H1', 'BA_TREMS')
+            ->setCellValue('I1', 'UBIS')
+            ->setCellValue('J1', 'SUBSEGMEN')
+            ->setCellValue('K1', 'TAGIHAN')
+            ->setCellValue('L1', 'PPN')
+            ->setCellValue('M1', 'TOTAL_TAGIHAN')
+            ->setCellValue('N1', 'RP_KLAIM')
+            ->setCellValue('O1', 'PERIOD_COL')
+            ->setCellValue('P1', 'COL_DATE')
+        ;
+		
+		//last L1
+
+        $sh->getStyle('A1:P1')->getFont()->setBold(TRUE);
+        $sh->getColumnDimension('A')->setAutoSize(TRUE);
+        $sh->getColumnDimension('B')->setAutoSize(TRUE);
+        $sh->getColumnDimension('C')->setAutoSize(TRUE);
+        $sh->getColumnDimension('D')->setAutoSize(TRUE);
+        $sh->getColumnDimension('E')->setAutoSize(TRUE);
+        $sh->getColumnDimension('F')->setAutoSize(TRUE);
+        $sh->getColumnDimension('G')->setAutoSize(TRUE);
+        $sh->getColumnDimension('H')->setAutoSize(TRUE);
+        $sh->getColumnDimension('I')->setAutoSize(TRUE);
+        $sh->getColumnDimension('J')->setAutoSize(TRUE);
+        $sh->getColumnDimension('K')->setAutoSize(TRUE);
+        $sh->getColumnDimension('L')->setAutoSize(TRUE);
+        $sh->getColumnDimension('M')->setAutoSize(TRUE);
+        $sh->getColumnDimension('N')->setAutoSize(TRUE);
+        $sh->getColumnDimension('O')->setAutoSize(TRUE);
+        $sh->getColumnDimension('P')->setAutoSize(TRUE);
+        
+
+		
+        $sh->getStyle('A1:P1')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A1:P1')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
+        $sh->getStyle('A1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('L1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		//M1
+	   $sh->getStyle('M1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	   $sh->getStyle('N1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	   $sh->getStyle('O1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	   $sh->getStyle('P1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	   $sh->getStyle('Q1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+
+        $x = 2;
+		/*query save excel */
+        // $dt = $this->cm->excelFastel($period, $pgl_id);
+        $dt = $this->cm->excelFastelTugPots($pgl_id, $ten_id, $period);
+        $no = 1;
+        foreach($dt as $k => $r) {
+            // $sh->getCell('A'.$x)->setValueExplicit($r->ACCOUNT_NUM, PHPExcel_Cell_DataType::TYPE_STRING);
+            $sh->setCellValue('A'.$x, @$r->CCA);
+            $sh->setCellValue('B'.$x, @$r->NCLI);
+            $sh->setCellValue('C'.$x, @$r->SND);
+            $sh->setCellValue('D'.$x, @$r->ALAMAT);
+            $sh->setCellValue('E'.$x, @$r->TEN_NAME);
+            $sh->setCellValue('F'.$x, @$r->SND_GROUP);
+            $sh->setCellValue('G'.$x, @$r->PRODUK);
+            $sh->setCellValue('H'.$x, @$r->BA_TREMS);
+            $sh->setCellValue('I'.$x, @$r->UBIS);
+            $sh->setCellValue('J'.$x, @$r->SUBSEGMEN);
+            $sh->setCellValue('K'.$x, @$r->TAGIHAN);
+            $sh->setCellValue('L'.$x, @$r->PPN);
+            $sh->setCellValue('M'.$x, @$r->TOTAL_TAGIHAN);
+            $sh->setCellValue('N'.$x, @$r->RP_KLAIM);
+            $sh->setCellValue('O'.$x, @$r->PERIOD_COL);
+            $sh->setCellValue('P'.$x, @$r->COL_DATE);
+            $no++;
+            $x++;
+            //if($x==8000) break;
+        }
+		$x--;
+        $sh->getStyle('A2:A'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B2:B'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C2:C'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D2:D'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E2:E'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F2:F'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G2:G'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H2:H'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I2:I'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J1:J'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K1:K'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('L1:L'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		//M1
+	    $sh->getStyle('M1:M'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	    $sh->getStyle('N1:N'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	    $sh->getStyle('O1:O'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	    $sh->getStyle('P1:P'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	    $sh->getStyle('Q1:Q'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		$x++;
+        $sh->setCellValue('B'.$x, 'TOTAL');  
+
+		// (K L M N )
+
+        $sh->setCellValue('K'.$x, "=SUM(K2:K".($x-1).")");
+        $sh->getStyle('K'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+
+        $sh->setCellValue('L'.$x, "=SUM(L2:L".($x-1).")");
+        $sh->getStyle('L'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+
+        $sh->setCellValue('M'.$x, "=SUM(M2:M".($x-1).")");
+        $sh->getStyle('M'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+
+        $sh->setCellValue('N'.$x, "=SUM(N2:N".($x-1).")");
+        $sh->getStyle('N'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+        $sh->setCellValue('A'.$x, '');
+
+        $sh->getStyle('A'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('L'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('M'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('N'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('O'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('P'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('Q'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A'.$x.':L'.$x)->getFont()->setBold(TRUE);
+		$x++;
+		$sh->getStyle('A'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('L'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('M'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('N'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('O'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('P'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        // $sh->getStyle('M'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        // $sh->getStyle('L'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel5');
+        $objWriter->save(dirname(__FILE__).'/../third_party/report/'.$filename);
+        // Write file to the browser
+       // $objWriter->save('php://output');
+        //redirect($this->config->config['base_url'].'application/third_party/report/'.$filename, 'location', 301);
+        $data['redirect'] = "true";
+        $data['redirect_url'] = $this->config->config['base_url'].'application/third_party/report/'.$filename;
+
+        echo json_encode($data);
+    }
+	
+	
+	public function tunggakanDTSheet($pgl_id, $ten_id, $period) {
+        // Set unlimited usage memory for big data
+			
+		/*  RN            NUMBER
+			LST_UPDT_PRD  VARCHAR2 (6) 
+			CCA           VARCHAR2 (20) 
+			NCLI          NUMBER
+			SND           VARCHAR2 (15) 
+			SND_GROUP     VARCHAR2 (40) 
+			PRODUK        VARCHAR2 (20) 
+			BA_TREMS      VARCHAR2 (4) 
+			NAMA          VARCHAR2 (60) 
+			ALAMAT        VARCHAR2 (134) 
+			UBIS          VARCHAR2 (6) 
+			SUBSEGMEN     VARCHAR2 (10) 
+			TAGIHAN       NUMBER
+			PPN           NUMBER
+			TOTAL_TAGIHAN NUMBER
+			RP_KLAIM      NUMBER
+			PERIOD_COL    VARCHAR2 (30) 
+			I_PGL_ID      NUMBER
+			COL_DATE      VARCHAR2 (30) 
+			TEN_ID        NUMBER
+			TEN_NAME      VARCHAR2 (100) 
+		*/
+        ini_set('memory_limit', '-1');
+        // Sheet
+        $this->load->library("phpexcel");
+        $filename = "Tunggakan_Datin_".$pgl_id."_".$period.".xls";
+        $this->phpexcel->getProperties()->setCreator("PT Telekomunikasi Indonesia, Tbk")
+            ->setLastModifiedBy("PT Telekomunikasi Indonesia, Tbk")
+            ->setTitle("REPORT")
+            ->setKeywords("office 2007 openxml php")
+            ->setCategory("Rincian Tunggakan Datin");
+        $this->phpexcel->setActiveSheetIndex(0);
+        $sh = & $this->phpexcel->getActiveSheet();
+        $sh->setCellValue('A1', 'IDNUMBER')
+            ->setCellValue('B1', 'NPER')
+            ->setCellValue('C1', 'CA')
+            ->setCellValue('D1', 'NIPNAS')
+            ->setCellValue('E1', 'BPNAME')
+            ->setCellValue('F1', 'PRODUK')
+            ->setCellValue('G1', 'UBIS')
+            ->setCellValue('H1', 'SEGMEN')
+            ->setCellValue('I1', 'BISNIS_AREA')
+            ->setCellValue('J1', 'DIVISI')
+            ->setCellValue('K1', 'WITEL')
+            ->setCellValue('L1', 'BILL_PERIOD')
+            ->setCellValue('M1', 'DUE_DATE')
+            ->setCellValue('N1', 'BILL_ELEMENT')
+            ->setCellValue('O1', 'ACCOUNT')
+            ->setCellValue('P1', 'BILL_AMOUNT')
+        ;
+		
+		//last L1
+
+        $sh->getStyle('A1:P1')->getFont()->setBold(TRUE);
+        $sh->getColumnDimension('A')->setAutoSize(TRUE);
+        $sh->getColumnDimension('B')->setAutoSize(TRUE);
+        $sh->getColumnDimension('C')->setAutoSize(TRUE);
+        $sh->getColumnDimension('D')->setAutoSize(TRUE);
+        $sh->getColumnDimension('E')->setAutoSize(TRUE);
+        $sh->getColumnDimension('F')->setAutoSize(TRUE);
+        $sh->getColumnDimension('G')->setAutoSize(TRUE);
+        $sh->getColumnDimension('H')->setAutoSize(TRUE);
+        $sh->getColumnDimension('I')->setAutoSize(TRUE);
+        $sh->getColumnDimension('J')->setAutoSize(TRUE);
+        $sh->getColumnDimension('K')->setAutoSize(TRUE);
+        $sh->getColumnDimension('L')->setAutoSize(TRUE);
+        $sh->getColumnDimension('M')->setAutoSize(TRUE);
+        $sh->getColumnDimension('N')->setAutoSize(TRUE);
+        $sh->getColumnDimension('O')->setAutoSize(TRUE);
+        $sh->getColumnDimension('P')->setAutoSize(TRUE);
+        
+
+		
+        $sh->getStyle('A1:P1')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A1:P1')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
+        $sh->getStyle('A1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('L1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		//M1
+	   $sh->getStyle('M1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	   $sh->getStyle('N1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	   $sh->getStyle('O1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	   $sh->getStyle('P1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	   $sh->getStyle('Q1')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+
+        $x = 2;
+        // $dt = $this->cm->excelFastel($period, $pgl_id);
+        $dt = $this->cm->excelFastelTugDT($pgl_id, $ten_id, $period);
+		
+        $no = 1;
+        foreach($dt as $k => $r) {
+            // $sh->getCell('A'.$x)->setValueExplicit($r->ACCOUNT_NUM, PHPExcel_Cell_DataType::TYPE_STRING);
+            $sh->setCellValue('A'.$x, @$r->IDNUMBER);
+            $sh->setCellValue('B'.$x, @$r->NPER);
+            $sh->setCellValue('C'.$x, @$r->CA);
+            $sh->setCellValue('D'.$x, @$r->NIPNAS);
+            $sh->setCellValue('E'.$x, @$r->BPNAME);
+            $sh->setCellValue('F'.$x, @$r->PRODUK);
+            $sh->setCellValue('G'.$x, @$r->UBIS);
+            $sh->setCellValue('H'.$x, @$r->SEGMEN);
+            $sh->setCellValue('I'.$x, @$r->BISNIS_AREA);
+            $sh->setCellValue('J'.$x, @$r->DIVISI);
+            $sh->setCellValue('K'.$x, @$r->WITEL);
+            $sh->setCellValue('L'.$x, @$r->BILL_PERIOD);
+            $sh->setCellValue('M'.$x, @$r->DUE_DATE);
+            $sh->setCellValue('N'.$x, @$r->BILL_ELEMENT);
+            $sh->setCellValue('O'.$x, @$r->ACCOUNT);
+            $sh->setCellValue('P'.$x, @$r->BILL_AMOUNT);
+            $no++;
+            $x++;
+            //if($x==8000) break;
+        }
+		$x--;
+        $sh->getStyle('A2:A'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B2:B'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C2:C'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D2:D'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E2:E'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F2:F'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G2:G'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H2:H'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I2:I'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J1:J'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K1:K'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('L1:L'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		//M1
+	    $sh->getStyle('M1:M'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	    $sh->getStyle('N1:N'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	    $sh->getStyle('O1:O'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	    $sh->getStyle('P1:P'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+	    $sh->getStyle('Q1:Q'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		$x++;
+        $sh->setCellValue('B'.$x, 'TOTAL');     
+
+        $sh->setCellValue('P'.$x, "=SUM(P2:P".($x-1).")");
+        $sh->getStyle('P'.$x)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED0);
+
+      
+		$sh->setCellValue('A'.$x, '');
+
+        $sh->getStyle('A'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('L'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('M'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('N'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('O'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('P'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('Q'.$x)->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('A'.$x.':L'.$x)->getFont()->setBold(TRUE);
+		$x++;
+		$sh->getStyle('A'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('B'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('C'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('D'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('E'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('F'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('G'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('H'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('I'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('J'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('K'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('L'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('M'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('N'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('O'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $sh->getStyle('P'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        // $sh->getStyle('M'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        // $sh->getStyle('L'.$x)->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel5');
+        $objWriter->save(dirname(__FILE__).'/../third_party/report/'.$filename);
+        // Write file to the browser
+       // $objWriter->save('php://output');
+        //redirect($this->config->config['base_url'].'application/third_party/report/'.$filename, 'location', 301);
+        $data['redirect'] = "true";
+        $data['redirect_url'] = $this->config->config['base_url'].'application/third_party/report/'.$filename;
+
+        echo json_encode($data);
+    }
+	
+	
+	
+	/*btas enhance 3-3-2017*/
+	
     public function rinta() {
         $title = $_POST['title'];
         //BreadCrumb
@@ -43,6 +589,7 @@ class Cm extends CI_Controller {
         }
         $this->load->view('channel_mgm/rinta',$result);
     }
+	
     public function viewRinta() {
         $data['period'] = $this->input->post('tahun')."".$this->input->post('bulan');
         $data['pgl_id'] = $this->input->post('pengelola');
@@ -526,7 +1073,6 @@ class Cm extends CI_Controller {
 	
 	public function fastels()
     {
-
         $data['pgl_id'] = $this->input->post('mitra');
         $data['period'] = $this->input->post('period');
         $this->load->view('channel_mgm/fastel', $data);

@@ -64,6 +64,494 @@ class M_cm extends CI_Model {
         return $result;
 
     }
+	
+	/*Enhance tunggakan 03-04-2017
+	*/
+	
+	public function getTunggakanDt($param) {
+        $db2 = $this->load->database('default2', TRUE);
+        $wh = "";
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh .= " AND UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+
+        }
+
+        $pagenum = intval($param['page']);
+        $rowsnum = intval($param['rows']);
+        if($pagenum == 1)
+        {
+            $rowstart = $pagenum;
+            $rowend = $rowsnum;
+        }
+        else if ($pagenum > 1)
+        {
+            $rowstart = (($pagenum - 1) * $rowsnum) + 1;
+            $rowend = $rowstart + ($rowsnum - 1);
+        }
+        if($param['ten_id'] == ""){
+            // $sql = "SELECT *
+					// FROM V_DEBT_POST_SUM
+					// WHERE I_PGL_ID = ".$param['pgl_id']." 
+						  // AND PERIOD_COL <= '".$param['period']."'";
+				
+		$sql =	"SELECT IDNUMBER,NPER,
+					CA,
+					NIPNAS,
+					BPNAME,
+					PRODUK,
+					UBIS ,
+					SEGMEN ,
+					SUBSEGMEN ,
+					BISNIS_AREA ,
+					DIVISI,
+					WITEL,
+					BILL_PERIOD,
+					DUE_DATE,
+					BILL_ELEMENT            ,
+					ACCOUNT,
+					BILL_AMOUNT
+			  FROM trem_np_details
+			 WHERE     cl_status = 'OPEN'
+				   AND bill_type <> 'AN'
+				   AND bill_element NOT LIKE 'Payment%'
+				   AND BILL_PERIOD <= '".$param['period']."'
+				   AND EXISTS
+						  (SELECT *
+							 FROM cust_rinta_np_mfee
+							WHERE     pgl_id = ".$param['pgl_id']."
+								  --AND ten_id = ".$param['ten_id']."
+								  AND BILL_PRD = '".$param['period']."'
+								  AND account_num = IDNUMBER) ";
+						  
+        }
+        $sql2 = "SELECT * FROM ( ";
+        $sql3 =	"SELECT ROWNUM RN,IDNUMBER,NPER,
+					CA,
+					NIPNAS,
+					BPNAME,
+					PRODUK,
+					UBIS ,
+					SEGMEN ,
+					SUBSEGMEN ,
+					BISNIS_AREA ,
+					DIVISI,
+					WITEL,
+					BILL_PERIOD,
+					DUE_DATE,
+					BILL_ELEMENT            ,
+					ACCOUNT,
+					BILL_AMOUNT
+			  FROM trem_np_details
+			 WHERE     cl_status = 'OPEN'
+				   AND bill_type <> 'AN'
+				   AND bill_element NOT LIKE 'Payment%'
+				   AND BILL_PERIOD <= '".$param['period']."'
+				   AND EXISTS
+						  (SELECT 1
+							 FROM cust_rinta_np_mfee
+							WHERE     pgl_id = ".$param['pgl_id']."
+								  AND ten_id = ".$param['ten_id']."
+								  AND BILL_PRD = '".$param['period']."'
+								  AND account_num = IDNUMBER) ";
+        $sql_where = ") WHERE RN BETWEEN $rowstart AND $rowend";
+
+        $sql = $sql2." ".$sql3." ".$sql_where;
+        if($wh != "" or $wh != null){
+            $sql .= $wh;
+        }
+           // die($sql);
+        $qs = $db2->query($sql);
+        return $qs;
+
+    }
+	
+	public function getTunggakanDtCount($param) {
+		// die("sa");
+        $db2 = $this->load->database('default2', TRUE);
+        $result = array();
+        $wh = "";
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh .= " AND UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+
+        }
+
+       if($param['ten_id'] == ""){
+            $sql =	"SELECT IDNUMBER,NPER,
+					CA,
+					NIPNAS,
+					BPNAME,
+					PRODUK,
+					UBIS ,
+					SEGMEN ,
+					SUBSEGMEN ,
+					BISNIS_AREA ,
+					DIVISI,
+					WITEL,
+					BILL_PERIOD,
+					DUE_DATE,
+					BILL_ELEMENT            ,
+					ACCOUNT,
+					BILL_AMOUNT
+			  FROM trem_np_details
+			 WHERE     cl_status = 'OPEN'
+				   AND bill_type <> 'AN'
+				   AND bill_element NOT LIKE 'Payment%'
+				   AND BILL_PERIOD <= '".$param['period']."'
+				   AND EXISTS
+						  (SELECT 1
+							 FROM cust_rinta_np_mfee
+							WHERE     pgl_id = ".$param['pgl_id']."
+								  --AND ten_id = ".$param['ten_id']."
+								  AND BILL_PRD = '".$param['period']."'
+								  AND account_num = IDNUMBER) ";
+        }
+        $sql2 = "SELECT COUNT(*) COUNT FROM ( ";
+        $sql3 =	"SELECT IDNUMBER,NPER,
+					CA,
+					NIPNAS,
+					BPNAME,
+					PRODUK,
+					UBIS ,
+					SEGMEN ,
+					SUBSEGMEN ,
+					BISNIS_AREA ,
+					DIVISI,
+					WITEL,
+					BILL_PERIOD,
+					DUE_DATE,
+					BILL_ELEMENT            ,
+					ACCOUNT,
+					BILL_AMOUNT
+			  FROM trem_np_details
+			 WHERE     cl_status = 'OPEN'
+				   AND bill_type <> 'AN'
+				   AND bill_element NOT LIKE 'Payment%'
+				   AND BILL_PERIOD <= '".$param['period']."'
+				   AND EXISTS
+						  (SELECT 1
+							 FROM cust_rinta_np_mfee
+							WHERE     pgl_id = ".$param['pgl_id']."
+								  AND ten_id = ".$param['ten_id']."
+								  AND BILL_PRD = '".$param['period']."'
+								  AND account_num = IDNUMBER) )";
+        // $sql_where = ") WHERE RN BETWEEN $rowstart AND $rowend";
+		
+        $sql = $sql2." ".$sql3;
+        if($wh != "" or $wh != null){
+            $sql .= $wh;
+        }
+        // die($sql);
+        $qs = $db2->query($sql);
+
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+
+    }
+	/*batas dt tunggakan*/
+	
+	public function getTunggakan($param) {
+        $db2 = $this->load->database('default2', TRUE);
+        $wh = "";
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh .= " AND UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+
+        }
+
+        $pagenum = intval($param['page']);
+        $rowsnum = intval($param['rows']);
+        if($pagenum == 1)
+        {
+            $rowstart = $pagenum;
+            $rowend = $rowsnum;
+        }
+        else if ($pagenum > 1)
+        {
+            $rowstart = (($pagenum - 1) * $rowsnum) + 1;
+            $rowend = $rowstart + ($rowsnum - 1);
+        }
+        if($param['ten_id'] == ""){
+            $sql = "SELECT *
+					FROM V_DEBT_POST_SUM
+					WHERE I_PGL_ID = ".$param['pgl_id']." 
+						  AND PERIOD_COL <= '".$param['period']."'";
+        }
+        $sql2 = "SELECT * FROM ( ";
+        $sql3 = "SELECT ROWNUM RN ,A.*
+					FROM V_DEBT_POST_SUM A
+					WHERE I_PGL_ID = ".$param['pgl_id']." 
+						  AND PERIOD_COL <= '".$param['period']."' 
+						  AND TEN_ID =".$param['ten_id'];
+        $sql_where = ") WHERE RN BETWEEN $rowstart AND $rowend";
+
+        $sql = $sql2." ".$sql3." ".$sql_where;
+        if($wh != "" or $wh != null){
+            $sql .= $wh;
+        }
+          // die($sql);
+        $qs = $db2->query($sql);
+        return $qs;
+
+    }
+	
+	public function getTunggakanCount($param) {
+		// die("sa");
+        $db2 = $this->load->database('default2', TRUE);
+        $result = array();
+        $wh = "";
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh .= " AND UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+
+        }
+
+       if($param['ten_id'] == ""){
+            $sql = "SELECT *
+				FROM V_DEBT_POST_SUM
+				WHERE I_PGL_ID = ".$param['pgl_id']." 
+					  AND PERIOD_COL <= '".$param['period']."'";
+        }
+        $sql2 = "SELECT COUNT(*) COUNT FROM ( ";
+        $sql3 = "SELECT *
+					FROM V_DEBT_POST_SUM
+					WHERE I_PGL_ID = ".$param['pgl_id']." 
+						  AND PERIOD_COL <= '".$param['period']."' 
+						  AND TEN_ID =".$param['ten_id'].
+				")";
+        // $sql_where = ") WHERE RN BETWEEN $rowstart AND $rowend";
+		
+        $sql = $sql2." ".$sql3;
+        if($wh != "" or $wh != null){
+            $sql .= $wh;
+        }
+        // die($sql);
+        $qs = $db2->query($sql);
+
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+
+    }
+		
+	
+	/*batas enhance  -- 03-4-2017*/
 
     public function getRinta($param) {
         $db2 = $this->load->database('default2', TRUE);
@@ -160,6 +648,7 @@ class M_cm extends CI_Model {
         return $qs;
 
     }
+	
     public function getRintaCount($param) {
         $db2 = $this->load->database('default2', TRUE);
         $result = array();
@@ -225,6 +714,7 @@ class M_cm extends CI_Model {
         }
 
         if($param['ten_id'] == ""){
+			
             $sql = "SELECT b.nd nd1,b.AKTIF, decode(d.flag,2,'M4L',1,'SIN','MARKETING_FEE') flag, A.* ".
                 " FROM CUST_RINTA PARTITION(PERIOD_".$param['period'].") A, TEN_ND B, PGL_TEN C, CC_DATAREF@NONPOTS_OP D,V_DIVISI_PT E ".
                 " WHERE C.TEN_ID(+)=B.TEN_ID AND B.ND(+)=A.ND AND A.ND = D.P_NOTEL(+) AND A.NCLI = E.NCLI(+) AND C.PGL_ID=".$param['pgl_id'];
@@ -244,6 +734,8 @@ class M_cm extends CI_Model {
         return $result;
 
     }
+	
+	
     public function excelRinta($period, $pgl_id, $ten_id){
         $db2 = $this->load->database('default2', TRUE);
         $result = array();
@@ -258,7 +750,61 @@ class M_cm extends CI_Model {
         return $result;
     }
 	
-	public function excelFastel($period, $pgl_id){
+	public function excelFastelTugPots($pgl_id, $ten_id, $period){
+		
+		$db2 = $this->load->database('default2', TRUE);
+        $result = array();
+        $sql = "SELECT *
+				FROM V_DEBT_POST_SUM
+				WHERE I_PGL_ID = ".$pgl_id." 
+					  AND PERIOD_COL <= '".$period."' 
+					  AND TEN_ID =".$ten_id;
+        $qs = $db2->query($sql);
+
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+    }
+	
+		public function excelFastelTugDT($pgl_id, $ten_id, $period){
+		$db2 = $this->load->database('default2', TRUE);
+        $result = array();
+          $sql =	"SELECT IDNUMBER,NPER,
+					CA,
+					NIPNAS,
+					BPNAME,
+					PRODUK,
+					UBIS ,
+					SEGMEN ,
+					SUBSEGMEN ,
+					BISNIS_AREA ,
+					DIVISI,
+					WITEL,
+					BILL_PERIOD,
+					DUE_DATE,
+					BILL_ELEMENT            ,
+					ACCOUNT,
+					BILL_AMOUNT
+			  FROM trem_np_details
+			 WHERE     cl_status = 'OPEN'
+				   AND bill_type <> 'AN'
+				   AND bill_element NOT LIKE 'Payment%'
+				   AND BILL_PERIOD <= '".$period."'
+				   AND rownum <=10
+				   AND EXISTS
+				      (SELECT 1
+						 FROM cust_rinta_np_mfee
+							WHERE     pgl_id = ".$pgl_id."
+								AND ten_id = ".$ten_id."
+								AND BILL_PRD = '".$period."'
+								AND account_num = IDNUMBER)
+								  ";
+
+		$qs = $db2->query($sql);
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+    }
+
+		public function excelFastel($period, $pgl_id){
         // $db2 = $this->load->database('default2', TRUE);
         $result = array();
         $sql = "SELECT ACCOUNT_NUM, DIVISI_OP, PRODUCT_LABEL, PRODUCT_NAME,
