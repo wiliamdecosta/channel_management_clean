@@ -24,7 +24,7 @@ class M_loaddata extends CI_Model
         $params = array(
             array('name' => ':params1', 'value' => $period, 'type' => SQLT_CHR, 'length' => 100),
             array('name' => ':params2', 'value' => $username, 'type' => SQLT_CHR, 'length' => 32),
-            array('name' => ':params3', 'value' => $batch_type, 'type' => SQLT_CHR, 'length' => 1)
+            array('name' => ':params3', 'value' => $batch_type, 'type' => SQLT_CHR, 'length' => 2)
         );
         // Bind the output parameter
 
