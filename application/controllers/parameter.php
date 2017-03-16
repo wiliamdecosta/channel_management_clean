@@ -1608,7 +1608,7 @@ class Parameter extends CI_Controller
         $data["action"] = $this->input->post("action");
         $this->load->view('parameter/mitra_form', $data);
     }
-
+	
     public function editmitra()
     {
         $data["action"] = $this->input->post("action");
@@ -1625,6 +1625,254 @@ class Parameter extends CI_Controller
         $result['menu_id'] = $this->input->post('menu_id');
         $this->load->view('parameter/mapping_mitra', $result);
     }
+	
+	/*add by : RND - Mapping mitra ARIESA (Mycoins & ID3AS) 
+	  evidence : MOM 
+	*/
+	
+		public function mapping_form_os()
+    {
+        $data["action"] = $this->input->post("action");
+        $this->load->view('parameter/mapping_form_os', $data);
+    }
+	
+	public function editmappingdatacc()
+    {
+        $data["action"] = $this->input->post("action");
+        $this->load->view('parameter/mapping_form_os', $data);
+    }
+	
+	 public function gridMapDataAcc()
+    {
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 5;
+        $sidx = isset($_POST['sidx']) ? $_POST['sidx'] : null;
+        $sord = isset($_POST['sord']) ? $_POST['sord'] : null;
+
+        $table = "V_MP_ACC_PGL";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => $this->input->post('_search'),
+            "search_field" => ($this->input->post('searchField')) ? $this->input->post('searchField') : null,
+            "search_operator" => ($this->input->post('searchOper')) ? $this->input->post('searchOper') : null,
+            "search_str" => ($this->input->post('searchString')) ? ($this->input->post('searchString')) : null
+        );
+
+        // Filter Table *
+
+        $P_MP_PGL_ACC_ID = $this->input->post('P_MP_PGL_ACC_ID');
+        if ($P_MP_PGL_ACC_ID) {
+            $req_param['where'] = array('P_MP_PGL_ACC_ID' => $P_MP_PGL_ACC_ID);
+        }
+
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+	
+	  public function crud_mapping_par_mdacc()
+    {
+        $this->M_parameter->crud_mapping_par_mdacc();
+    }
+	
+	public function mapping_par_mdacc()
+    {		
+		 //BreadCrumb
+        $title = $_POST['title'];
+        $bc = array($this->head, $title);
+        $this->breadcrumb = getBreadcrumb($bc);
+
+        $result['menu_id'] = $this->uri->segment(3);
+        // $result['menu_id'] = $this->input->post('menu_id');
+        $this->load->view('parameter/mapping_par_mdacc', $result);
+    }
+	
+	/*LOV data source*/
+	
+	    public function lov_datasrc()
+    {
+        $data['divID'] = $this->input->post('divID');
+        $data['lov_target_id'] = $this->input->post('lov_target_id');
+        $data['modal_id'] = $this->input->post('modal_id');
+        $data['dts_code'] = $this->input->post('dts_code');
+        $this->load->view('parameter/lov_datasrc', $data);
+    }
+	
+	public function grid_lov_datsrc()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "MARFEE.V_LOV_DATASRC";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => null,
+            "search_field" => null,
+            "search_operator" => null,
+            "search_str" => null
+        );
+
+        // $req_param["where"] = array("CODE" => $this->input->post("dts_code"));
+        if ($this->input->post('_search') == "true") {
+            $filter = json_decode($this->input->post('filters'));
+            $req_param['search'] = "true";
+            $req_param['search_field'] = $filter->rules[0]->field;
+            $req_param['search_operator'] = $filter->rules[0]->op;
+            $req_param['search_str'] = $filter->rules[0]->data;
+        }
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+	
+	/*LOV ACCOUNT - MDIID*/
+	  public function lov_accmdi()
+    {
+        $data['divID'] = $this->input->post('divID');
+        $data['lov_target_id'] = $this->input->post('lov_target_id');
+        $data['modal_id'] = $this->input->post('modal_id');
+        $data['dts_code'] = $this->input->post('dts_code');
+        $this->load->view('parameter/lov_accmdi', $data);
+    }
+	
+	public function grid_lov_accmdi()
+    {
+        $page = intval($_REQUEST['page']); // Page
+        $limit = intval($_REQUEST['rows']); // Number of record/page
+        $sidx = $_REQUEST['sidx']; // Field name
+        $sord = $_REQUEST['sord']; // Asc / Desc
+
+        $table = "C2BI.MV_ACC_MDIID";
+
+        $req_param = array(
+            "table" => $table,
+            "sort_by" => $sidx,
+            "sord" => $sord,
+            "limit" => null,
+            "field" => null,
+            "where" => null,
+            "where_in" => null,
+            "where_not_in" => null,
+            "or_where" => null,
+            "or_where_in" => null,
+            "or_where_not_in" => null,
+            "search" => null,
+            "search_field" => null,
+            "search_operator" => null,
+            "search_str" => null
+        );
+
+        $req_param["where"] = array("CODE" => $this->input->post("dts_code"));
+        if ($this->input->post('_search') == "true") {
+            $filter = json_decode($this->input->post('filters'));
+            $req_param['search'] = "true";
+            $req_param['search_field'] = $filter->rules[0]->field;
+            $req_param['search_operator'] = $filter->rules[0]->op;
+            $req_param['search_str'] = $filter->rules[0]->data;
+        }
+        // Get limit paging
+        $count = $this->jqGrid->countAll($req_param);
+        if ($count > 0) {
+            $total_pages = ceil($count / $limit);
+        } else {
+            $total_pages = 0;
+        }
+        if ($page > $total_pages)
+            $page = $total_pages;
+        $start = $limit * $page - ($limit - 1);
+
+        $req_param['limit'] = array(
+            'start' => $start,
+            'end' => $limit
+        );
+
+        if ($page == 0) {
+            $result['page'] = 1;
+        } else {
+            $result['page'] = $page;
+        }
+        $result['total'] = $total_pages;
+        $result['records'] = $count;
+
+        $result['Data'] = $this->jqGrid->get_data($req_param)->result_array();
+        echo json_encode($result);
+
+    }
+	
+	
+	/*bts enhance */
 
     public function mapping_lokasi()
     {

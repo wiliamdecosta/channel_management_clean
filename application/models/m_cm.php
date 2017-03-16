@@ -359,6 +359,392 @@ class M_cm extends CI_Model {
     }
 	/*batas dt tunggakan*/
 	
+	
+	/*--DATA MY COIN--*/
+		public function getMycoins($param) {
+			$db2 = $this->load->database('default2', TRUE);
+			$wh = "";
+			if($param['search'] != null && $param['search'] === 'true'){
+				$wh .= " AND UPPER(".$param['search_field'].")";
+				switch ($param['search_operator']) {
+					case "bw": // begin with
+						$wh .= " LIKE UPPER('".$param['search_str']."%')";
+						break;
+					case "ew": // end with
+						$wh .= " LIKE UPPER('%".$param['search_str']."')";
+						break;
+					case "cn": // contain %param%
+						$wh .= " LIKE UPPER('%".$param['search_str']."%')";
+						break;
+					case "eq": // equal =
+						if(is_numeric($param['search_str'])) {
+							$wh .= " = ".$param['search_str'];
+						} else {
+							$wh .= " = UPPER('".$param['search_str']."')";
+						}
+						break;
+					case "ne": // not equal
+						if(is_numeric($param['search_str'])) {
+							$wh .= " <> ".$param['search_str'];
+						} else {
+							$wh .= " <> UPPER('".$param['search_str']."')";
+						}
+						break;
+					case "lt":
+						if(is_numeric($param['search_str'])) {
+							$wh .= " < ".$param['search_str'];
+						} else {
+							$wh .= " < '".$param['search_str']."'";
+						}
+						break;
+					case "le":
+						if(is_numeric($param['search_str'])) {
+							$wh .= " <= ".$param['search_str'];
+						} else {
+							$wh .= " <= '".$param['search_str']."'";
+						}
+						break;
+					case "gt":
+						if(is_numeric($param['search_str'])) {
+							$wh .= " > ".$param['search_str'];
+						} else {
+							$wh .= " > '".$param['search_str']."'";
+						}
+						break;
+					case "ge":
+						if(is_numeric($param['search_str'])) {
+							$wh .= " >= ".$param['search_str'];
+						} else {
+							$wh .= " >= '".$param['search_str']."'";
+						}
+						break;
+					default :
+						$wh = "";
+				}
+
+			}
+
+			$pagenum = intval($param['page']);
+			$rowsnum = intval($param['rows']);
+			if($pagenum == 1)
+			{
+				$rowstart = $pagenum;
+				$rowend = $rowsnum;
+			}
+			else if ($pagenum > 1)
+			{
+				$rowstart = (($pagenum - 1) * $rowsnum) + 1;
+				$rowend = $rowstart + ($rowsnum - 1);
+			}
+			// if($param['ten_id'] == ""){
+				// $sql =  "SELECT ROWNUM RN, a.*
+						   // FROM V_RINTA_COID a
+						  // WHERE a.pgl_id =". $param['pgl_id']."
+							    // AND a.DATA_SOURCE_ID = ". $param['dtsc_id']."
+								// AND a.BULAN_TAGIH = '".$param['period']."'";
+			// }
+			
+			$sql2 = "SELECT * FROM ( ";
+			$sql3 =  "SELECT ROWNUM RN, a.*
+						   FROM V_RINTA_COID a
+						  WHERE a.pgl_id =". $param['pgl_id']."
+							    AND a.DATA_SOURCE_ID = ". $param['dtsc_id']."
+								AND a.BULAN_TAGIH = '".$param['period']."'";
+			$sql_where = ") WHERE RN BETWEEN $rowstart AND $rowend";
+			
+
+			$sql = $sql2." ".$sql3." ".$sql_where;
+			
+			// die($sql);
+			 
+			if($wh != "" or $wh != null){
+				$sql .= $wh;
+			}
+			  // die($sql);
+			$qs = $db2->query($sql);
+			return $qs;
+
+		}
+		
+		public function getMycoinsCount($param) {
+		// die("sa");
+        $db2 = $this->load->database('default2', TRUE);
+        $result = array();
+        $wh = "";
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh .= " AND UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+
+        }
+		
+        $sql2 = "SELECT COUNT(*) COUNT FROM ( ";
+        $sql3 =  "SELECT ROWNUM RN, a.*
+						   FROM V_RINTA_COID a
+						  WHERE a.pgl_id =". $param['pgl_id']."
+							    AND a.DATA_SOURCE_ID = ". $param['dtsc_id']."
+								AND a.BULAN_TAGIH = '".$param['period']."' )";
+
+        $sql = $sql2." ".$sql3;
+        if($wh != "" or $wh != null){
+            $sql .= $wh;
+        }
+        // die($sql);
+        $qs = $db2->query($sql);
+
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+
+    }
+		
+	
+	public function getIdeas($param) {
+			$db2 = $this->load->database('default2', TRUE);
+			$wh = "";
+			if($param['search'] != null && $param['search'] === 'true'){
+				$wh .= " AND UPPER(".$param['search_field'].")";
+				switch ($param['search_operator']) {
+					case "bw": // begin with
+						$wh .= " LIKE UPPER('".$param['search_str']."%')";
+						break;
+					case "ew": // end with
+						$wh .= " LIKE UPPER('%".$param['search_str']."')";
+						break;
+					case "cn": // contain %param%
+						$wh .= " LIKE UPPER('%".$param['search_str']."%')";
+						break;
+					case "eq": // equal =
+						if(is_numeric($param['search_str'])) {
+							$wh .= " = ".$param['search_str'];
+						} else {
+							$wh .= " = UPPER('".$param['search_str']."')";
+						}
+						break;
+					case "ne": // not equal
+						if(is_numeric($param['search_str'])) {
+							$wh .= " <> ".$param['search_str'];
+						} else {
+							$wh .= " <> UPPER('".$param['search_str']."')";
+						}
+						break;
+					case "lt":
+						if(is_numeric($param['search_str'])) {
+							$wh .= " < ".$param['search_str'];
+						} else {
+							$wh .= " < '".$param['search_str']."'";
+						}
+						break;
+					case "le":
+						if(is_numeric($param['search_str'])) {
+							$wh .= " <= ".$param['search_str'];
+						} else {
+							$wh .= " <= '".$param['search_str']."'";
+						}
+						break;
+					case "gt":
+						if(is_numeric($param['search_str'])) {
+							$wh .= " > ".$param['search_str'];
+						} else {
+							$wh .= " > '".$param['search_str']."'";
+						}
+						break;
+					case "ge":
+						if(is_numeric($param['search_str'])) {
+							$wh .= " >= ".$param['search_str'];
+						} else {
+							$wh .= " >= '".$param['search_str']."'";
+						}
+						break;
+					default :
+						$wh = "";
+				}
+
+			}
+
+			$pagenum = intval($param['page']);
+			$rowsnum = intval($param['rows']);
+			if($pagenum == 1)
+			{
+				$rowstart = $pagenum;
+				$rowend = $rowsnum;
+			}
+			else if ($pagenum > 1)
+			{
+				$rowstart = (($pagenum - 1) * $rowsnum) + 1;
+				$rowend = $rowstart + ($rowsnum - 1);
+			}
+			// if($param['ten_id'] == ""){
+				// $sql =  "SELECT ROWNUM RN, a.*
+						   // FROM V_RINTA_COID a
+						  // WHERE a.pgl_id =". $param['pgl_id']."
+							    // AND a.DATA_SOURCE_ID = ". $param['dtsc_id']."
+								// AND a.BULAN_TAGIH = '".$param['period']."'";
+			// }
+			
+			$sql2 = "SELECT * FROM ( ";
+			$sql3 =  "SELECT ROWNUM RN, a.*
+						   FROM V_RINTA_COID_IDEAS a
+						  WHERE a.pgl_id =". $param['pgl_id']."
+							    AND a.DATA_SOURCE_ID = ". $param['dtsc_id']."
+								AND a.BULAN_TAGIH = '".$param['period']."'";
+			$sql_where = ") WHERE RN BETWEEN $rowstart AND $rowend";
+			
+
+			$sql = $sql2." ".$sql3." ".$sql_where;
+			
+			// die($sql);
+			 
+			if($wh != "" or $wh != null){
+				$sql .= $wh;
+			}
+			  // die($sql);
+			$qs = $db2->query($sql);
+			return $qs;
+
+		}
+		
+		public function getIdeasCount($param) {
+		// die("sa");
+        $db2 = $this->load->database('default2', TRUE);
+        $result = array();
+        $wh = "";
+        if($param['search'] != null && $param['search'] === 'true'){
+            $wh .= " AND UPPER(".$param['search_field'].")";
+            switch ($param['search_operator']) {
+                case "bw": // begin with
+                    $wh .= " LIKE UPPER('".$param['search_str']."%')";
+                    break;
+                case "ew": // end with
+                    $wh .= " LIKE UPPER('%".$param['search_str']."')";
+                    break;
+                case "cn": // contain %param%
+                    $wh .= " LIKE UPPER('%".$param['search_str']."%')";
+                    break;
+                case "eq": // equal =
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " = ".$param['search_str'];
+                    } else {
+                        $wh .= " = UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "ne": // not equal
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <> ".$param['search_str'];
+                    } else {
+                        $wh .= " <> UPPER('".$param['search_str']."')";
+                    }
+                    break;
+                case "lt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " < ".$param['search_str'];
+                    } else {
+                        $wh .= " < '".$param['search_str']."'";
+                    }
+                    break;
+                case "le":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " <= ".$param['search_str'];
+                    } else {
+                        $wh .= " <= '".$param['search_str']."'";
+                    }
+                    break;
+                case "gt":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " > ".$param['search_str'];
+                    } else {
+                        $wh .= " > '".$param['search_str']."'";
+                    }
+                    break;
+                case "ge":
+                    if(is_numeric($param['search_str'])) {
+                        $wh .= " >= ".$param['search_str'];
+                    } else {
+                        $wh .= " >= '".$param['search_str']."'";
+                    }
+                    break;
+                default :
+                    $wh = "";
+            }
+
+        }
+		
+        $sql2 = "SELECT COUNT(*) COUNT FROM ( ";
+        $sql3 =  "SELECT ROWNUM RN, a.*
+						   FROM V_RINTA_COID_IDEAS a
+						  WHERE a.pgl_id =". $param['pgl_id']."
+							    AND a.DATA_SOURCE_ID = ". $param['dtsc_id']."
+								AND a.BULAN_TAGIH = '".$param['period']."' )";
+
+        $sql = $sql2." ".$sql3;
+        if($wh != "" or $wh != null){
+            $sql .= $wh;
+        }
+         // die($sql);
+        $qs = $db2->query($sql);
+
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+
+    }
+		
+		
+		
+		
+	/*--END--*/
+	
 	public function getTunggakan($param) {
         $db2 = $this->load->database('default2', TRUE);
         $wh = "";
@@ -734,6 +1120,36 @@ class M_cm extends CI_Model {
         return $result;
 
     }
+	
+	/*--Excel Rinta Coin 3-13-2017 by RND--*/
+	   public function excelRintaCoin($period, $pgl_id, $dtsc_id){
+        $db2 = $this->load->database('default2', TRUE);
+        $result = array();
+       $sql =  "SELECT  a.*
+						   FROM V_RINTA_COID a
+						  WHERE a.pgl_id =". $pgl_id."
+							    AND a.DATA_SOURCE_ID = ". $dtsc_id."
+								AND a.BULAN_TAGIH = '".$period."' ";
+        $qs = $db2->query($sql);
+
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+    }
+	
+	   public function excelRintaIdeas($period, $pgl_id, $dtsc_id){
+        $db2 = $this->load->database('default2', TRUE);
+        $result = array();
+       $sql =  "SELECT  a.*
+						   FROM V_RINTA_COID_IDEAS a
+						  WHERE a.pgl_id =". $pgl_id."
+							    AND a.DATA_SOURCE_ID = ". $dtsc_id."
+								AND a.BULAN_TAGIH = '".$period."' ";
+        $qs = $db2->query($sql);
+
+        if($qs->num_rows() > 0) $result = $qs->result();
+        return $result;
+    }
+	
 	
 	
     public function excelRinta($period, $pgl_id, $ten_id){

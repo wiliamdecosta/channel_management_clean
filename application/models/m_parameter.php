@@ -693,6 +693,92 @@ class M_parameter extends CI_Model
         $this->db->where('TEN_ID', $ten_id);
         $this->db->delete('TEN_ND_NP');
     }
+	
+	/* Enhanced by RND
+	   tgl : 2/16/2017
+	   evidence by MOM
+	*/
+	public function crud_mapping_par_mdacc()
+    {
+        $this->db->_protect_identifiers = false;
+
+        $table = "P_MP_PGL_ACCOUNT";
+        $table_md = "P_MP_PGL_ACCOUNT";
+        $pk = "P_MP_PGL_ACC_ID";
+
+        $oper = $this->input->post('oper');
+        $id_ = $this->input->post('id');
+		
+		// P_MP_PGL_ACC_ID NUMBER
+		// PGL_ID          NUMBER
+		// MDI_ACCOUNT     VARCHAR2 (32) 
+		// DATA_SOURCE_ID  NUMBER
+		// VALID_FROM      DATE 
+		// VALID_UNTIL     DATE 
+		// CREATE_BY       VARCHAR2 (100) 
+		// CREATE_DATE     DATE 
+		// UPDATE_BY       VARCHAR2 (100) 
+		// UPDATE_DATE     DATE 
+
+        // $p_map_mit_cc = $this->input->post("p_map_mit_cc");
+        // $cc_id = $this->input->post("cc_id");
+        // $mitra_id = $this->input->post("mitra_id");
+        // $eam_id = $this->input->post("eam_id");
+		
+		// dts_id
+		// acc_id
+		// mitra_id
+		
+		$p_mp_pgl_acc_id = $this->input->post("p_mp_pgl_acc_id");
+		$pgl_id = $this->input->post("mitra_id");
+		$mdi_account = $this->input->post("acc_id");
+		$data_source_id = $this->input->post("dts_id");
+		
+        $action = $this->input->post("action");
+        $user = $this->session->userdata('d_user_name');
+
+        $data = array('PGL_ID' => $pgl_id,
+            'MDI_ACCOUNT' => $mdi_account,
+            'DATA_SOURCE_ID' => $data_source_id
+        );
+
+        if ($action == "add") {
+            $new_id = gen_id($pk, $table);
+            $this->db->set($pk, $new_id);
+            $this->db->set('CREATE_DATE',"SYSDATE",FALSE);
+            $this->db->set('CREATE_BY',$user);
+            $this->db->insert($table_md, $data);
+            if ($this->db->affected_rows() > 0) {
+                $data["success"] = true;
+                $data["message"] = "Data berhasil ditambahakan";
+            } else {
+                $data["success"] = false;
+                $data["message"] = "Gagal menambah data";
+            }
+
+        } elseif ($action == "edit") {
+            $this->db->set('UPDATE_DATE',"SYSDATE",FALSE);
+            $this->db->set('UPDATE_BY',$user);
+            $this->db->where($pk, $p_mp_pgl_acc_id);
+            $this->db->update($table, $data);
+            if ($this->db->affected_rows() > 0) {
+                $data["success"] = true;
+                $data["message"] = "Edit data berhasil";
+            } else {
+                $data["success"] = false;
+                $data["message"] = "Gagal edit data";
+            }
+        } elseif ($oper == 'del') {
+            $this->db->where($pk, $id_);
+            $this->db->delete($table);
+        } else {
+            $data["success"] = false;
+            $data["message"] = "Unknown Error";
+        }
+        echo json_encode($data);
+    }
+	
+	/* batas enhance */
 
     public function crud_detailmitra()
     {

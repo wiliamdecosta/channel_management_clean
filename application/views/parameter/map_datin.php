@@ -2,11 +2,9 @@
 <div class="breadcrumbs" id="breadcrumbs">
     <?= $this->breadcrumb; ?>
 </div>
-
-<div class="row" style="margin-top:20px;" id="map_datin_attr">
-    <div class="col-xs-12">
-        <div class="well well-sm"><h4 class="blue" id="pgl_acc_num_form_title"> Pilih Pengelola Dan Nama Akun </h4>
-        </div>
+<!-- <div class="row"  id="map_datin_attr"> -->
+	<div class="page-content">
+    <!-- <div class="col-xs-12"> -->
         <form class="form-horizontal" role="form" id="pgl_acc_num_form">
 
             <div class="form-group">
@@ -55,11 +53,19 @@
                 </div><!-- /.col -->
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 
 </div>
-<?php $this->load->view('parameter/map_datin_list_pgl.php'); ?>
-<?php $this->load->view('parameter/map_datin_list_acc_num.php'); ?>
+<?php 
+
+//$this->load->view('parameter/map_datin_list_pgl.php'); 
+
+?>
+<?php 
+
+//$this->load->view('parameter/map_datin_list_acc_num.php'); 
+
+?>
 
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
