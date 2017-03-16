@@ -68,7 +68,7 @@
                     data: {title: title},
                     success: function (data) {
                         $("#ajaxContent").html(data);
-                        $('#breadcrumbs').addClass('breadcrumbs-fixed');
+                        $('#breadcrumbs').addClass('breadcrumbs');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         if (textStatus === 'timeout') {
