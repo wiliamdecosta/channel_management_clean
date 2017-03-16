@@ -2,7 +2,7 @@
 
 class Cm extends CI_Controller {
     private $head = "Marketing Fee";
-
+//
 	function __construct() {
 		parent::__construct();
         date_default_timezone_set('Asia/Jakarta');
