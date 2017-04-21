@@ -1213,6 +1213,7 @@ class M_cm extends CI_Model {
 				   AND a.bill_type <> 'AN'
 				   AND a.bill_element NOT LIKE 'Payment%'
 				   AND a.BILL_PERIOD <= '".$period."'
+				   AND a.PARTNER = b.PARTNER
 				   AND EXISTS
 				      (SELECT 1
 						 FROM cust_rinta_np_mfee x
