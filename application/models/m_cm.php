@@ -217,7 +217,7 @@ class M_cm extends CI_Model {
         if($wh != "" or $wh != null){
             $sql .= $wh;
         }
-            die($sql);
+            
         $qs = $db2->query($sql);
         return $qs;
 
@@ -319,41 +319,44 @@ class M_cm extends CI_Model {
 								  AND account_num = IDNUMBER) ";
         }
         $sql2 = "SELECT COUNT(*) COUNT FROM ( ";
-        $sql3 =	"SELECT IDNUMBER,NPER,
-					CA,
-					NIPNAS,
-					BPNAME,
-					PRODUK,
-					UBIS ,
-					SEGMEN ,
-					SUBSEGMEN ,
-					BISNIS_AREA ,
-					DIVISI,
-					WITEL,
-					BILL_PERIOD,
-					DUE_DATE,
-					BILL_ELEMENT            ,
-					ACCOUNT,
-					BILL_AMOUNT
-			  FROM trem_np_details
-			 WHERE     cl_status = 'OPEN'
-				   AND bill_type <> 'AN'
-				   AND bill_element NOT LIKE 'Payment%'
-				   AND BILL_PERIOD <= '".$param['period']."'
+        $sql3 =	"SELECT 
+					b.IDNUMBER,
+				   a.NPER,
+				   a.CA,
+				   b.NIPNAS,
+				   b.BPNAME,
+				   b.PRODUK,
+				   b.UBIS,
+				   b.SEGMEN,
+				   b.SUBSEGMEN,
+				   b.BISNIS_AREA,
+				   b.DIVISI,
+				   b.WITEL,
+				   a.BILL_PERIOD,
+				   a.DUE_DATE,
+				   a.BILL_ELEMENT,
+				   a.ACCOUNT,
+				   a.BILL_AMOUNT
+			  FROM trem_np_details a, mybrains.p_partner@DBL_BILLCOST b
+			 WHERE     a.cl_status = 'OPEN'
+				   AND a.bill_type <> 'AN'
+				   AND a.bill_element NOT LIKE 'Payment%'
+				   AND a.BILL_PERIOD <= '".$param['period']."'
+				   AND a.PARTNER = b.PARTNER
 				   AND EXISTS
 						  (SELECT 1
-							 FROM cust_rinta_np_mfee
-							WHERE     pgl_id = ".$param['pgl_id']."
-								  AND ten_id = ".$param['ten_id']."
-								  AND BILL_PRD = '".$param['period']."'
-								  AND account_num = IDNUMBER) )";
+							 FROM cust_rinta_np_mfee x
+							WHERE     x.pgl_id = ".$param['pgl_id']."
+								  AND x.ten_id = ".$param['ten_id']."
+								  AND x.BILL_PRD = '".$param['period']."'
+								  AND x.account_num = b.IDNUMBER) )";
         // $sql_where = ") WHERE RN BETWEEN $rowstart AND $rowend";
 		
         $sql = $sql2." ".$sql3;
         if($wh != "" or $wh != null){
             $sql .= $wh;
         }
-        // die($sql);
+         //die($sql);
         $qs = $db2->query($sql);
 
         if($qs->num_rows() > 0) $result = $qs->result();
@@ -1187,36 +1190,39 @@ class M_cm extends CI_Model {
 		public function excelFastelTugDT($pgl_id, $ten_id, $period){
 		$db2 = $this->load->database('default2', TRUE);
         $result = array();
-          $sql =	"SELECT IDNUMBER,NPER,
-					CA,
-					NIPNAS,
-					BPNAME,
-					PRODUK,
-					UBIS ,
-					SEGMEN ,
-					SUBSEGMEN ,
-					BISNIS_AREA ,
-					DIVISI,
-					WITEL,
-					BILL_PERIOD,
-					DUE_DATE,
-					BILL_ELEMENT            ,
-					ACCOUNT,
-					BILL_AMOUNT
-			  FROM trem_np_details
-			 WHERE     cl_status = 'OPEN'
-				   AND bill_type <> 'AN'
-				   AND bill_element NOT LIKE 'Payment%'
-				   AND BILL_PERIOD <= '".$period."'
-				   AND rownum <=10
+			
+          $sql =	"SELECT b.IDNUMBER,
+				   a.NPER,
+				   a.CA,
+				   b.NIPNAS,
+				   b.BPNAME,
+				   b.PRODUK,
+				   b.UBIS,
+				   b.SEGMEN,
+				   b.SUBSEGMEN,
+				   b.BISNIS_AREA,
+				   b.DIVISI,
+				   b.WITEL,
+				   a.BILL_PERIOD,
+				   a.DUE_DATE,
+				   a.BILL_ELEMENT,
+				   a.ACCOUNT,
+				   a.BILL_AMOUNT
+			    FROM trem_np_details a, mybrains.p_partner@DBL_BILLCOST b
+			 WHERE     a.cl_status = 'OPEN'
+				   AND a.bill_type <> 'AN'
+				   AND a.bill_element NOT LIKE 'Payment%'
+				   AND a.BILL_PERIOD <= '".$period."'
 				   AND EXISTS
 				      (SELECT 1
-						 FROM cust_rinta_np_mfee
-							WHERE     pgl_id = ".$pgl_id."
-								AND ten_id = ".$ten_id."
-								AND BILL_PRD = '".$period."'
-								AND account_num = IDNUMBER)
+						 FROM cust_rinta_np_mfee x
+							WHERE     x.pgl_id = ".$pgl_id."
+								AND x.ten_id = ".$ten_id."
+								AND x.BILL_PRD = '".$period."'
+								AND x.account_num = b.IDNUMBER)
 								  ";
+								  
+						  
 
 		$qs = $db2->query($sql);
         if($qs->num_rows() > 0) $result = $qs->result();
