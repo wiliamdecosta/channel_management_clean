@@ -217,7 +217,7 @@ class M_cm extends CI_Model {
         if($wh != "" or $wh != null){
             $sql .= $wh;
         }
-           // die($sql);
+            die($sql);
         $qs = $db2->query($sql);
         return $qs;
 
