@@ -197,7 +197,8 @@ class M_cm extends CI_Model {
 				   a.DUE_DATE,
 				   a.BILL_ELEMENT,
 				   a.ACCOUNT,
-				   a.BILL_AMOUNT
+				   a.BILL_AMOUNT,
+				   b.ALAMAT
 			  FROM trem_np_details a, mybrains.p_partner@DBL_BILLCOST b
 			 WHERE     a.cl_status = 'OPEN'
 				   AND a.bill_type <> 'AN'
@@ -336,7 +337,8 @@ class M_cm extends CI_Model {
 				   a.DUE_DATE,
 				   a.BILL_ELEMENT,
 				   a.ACCOUNT,
-				   a.BILL_AMOUNT
+				   a.BILL_AMOUNT,
+				   b.ALAMAT
 			  FROM trem_np_details a, mybrains.p_partner@DBL_BILLCOST b
 			 WHERE     a.cl_status = 'OPEN'
 				   AND a.bill_type <> 'AN'
@@ -1207,7 +1209,8 @@ class M_cm extends CI_Model {
 				   a.DUE_DATE,
 				   a.BILL_ELEMENT,
 				   a.ACCOUNT,
-				   a.BILL_AMOUNT
+				   a.BILL_AMOUNT,
+				   b.ALAMAT
 			    FROM trem_np_details a, mybrains.p_partner@DBL_BILLCOST b
 			 WHERE     a.cl_status = 'OPEN'
 				   AND a.bill_type <> 'AN'

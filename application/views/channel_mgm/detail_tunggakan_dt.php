@@ -83,7 +83,8 @@
                     align: "right",
                     editable: true,
                     formatter: 'integer',
-                }
+                },
+				{label: 'ALAMAT', name: 'ALAMAT', width: 150, align: "left", hidden: false},
             ],
             width: width2,
             height: '100%',
