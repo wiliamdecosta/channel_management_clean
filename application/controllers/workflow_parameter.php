@@ -251,7 +251,9 @@ class Workflow_parameter extends CI_Controller
         $sidx = $_REQUEST['sidx'];
         $sord = $_REQUEST['sord'];
 
-        $table = "SELECT * FROM P_PROCEDURE";
+        $table = "SELECT a.*, b.PROC_NAME AS PROC_NAME_PARENT
+                  FROM P_PROCEDURE a
+                  LEFT JOIN  P_PROCEDURE b ON a.PARENT_ID = b.P_PROCEDURE_ID";
 
         $req_param = array(
             "table" => $table,
