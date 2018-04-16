@@ -27,6 +27,8 @@ class P_procedure extends CI_Model
         $EMAIL_CONTENT = $this->input->post('EMAIL_CONTENT');
         $DESCRIPTION = $this->input->post('DESCRIPTION');
         
+        $PARENT_ID = $this->input->post('PARENT_ID') ? $this->input->post('PARENT_ID') : "null";
+        
         $CREATED_BY = $this->session->userdata('d_user_name');
         $UPDATED_BY = $this->session->userdata('d_user_name');
         
@@ -36,8 +38,8 @@ class P_procedure extends CI_Model
             case 'add':
                 try {
                     $P_PROCEDURE_ID = gen_id('P_PROCEDURE_ID', 'P_PROCEDURE');
-                    $sql = "INSERT INTO P_PROCEDURE(P_PROCEDURE_ID, PROC_NAME, DISPLAY_NAME, SEQNO, F_AFTER, F_BEFORE, DESCRIPTION, IS_ACTIVE, UPDATED_DATE, UPDATED_BY, CREATED_BY, CREATION_DATE, IS_SEND_SMS, SMS_CONTENT, IS_SEND_EMAIL, EMAIL_CONTENT)
-                                VALUES(".$P_PROCEDURE_ID.",'".$PROC_NAME."','".$DISPLAY_NAME."',".$SEQNO.",'".$F_AFTER."','".$F_BEFORE."','".$DESCRIPTION."','".$IS_ACTIVE."',SYSDATE, '".$UPDATED_BY."', '".$CREATED_BY."',SYSDATE, '".$IS_SEND_SMS."','".$SMS_CONTENT."','".$IS_SEND_EMAIL."','".$EMAIL_CONTENT."')";
+                    $sql = "INSERT INTO P_PROCEDURE(P_PROCEDURE_ID, PROC_NAME, DISPLAY_NAME, SEQNO, F_AFTER, F_BEFORE, DESCRIPTION, IS_ACTIVE, UPDATED_DATE, UPDATED_BY, CREATED_BY, CREATION_DATE, IS_SEND_SMS, SMS_CONTENT, IS_SEND_EMAIL, EMAIL_CONTENT, PARENT_ID)
+                                VALUES(".$P_PROCEDURE_ID.",'".$PROC_NAME."','".$DISPLAY_NAME."',".$SEQNO.",'".$F_AFTER."','".$F_BEFORE."','".$DESCRIPTION."','".$IS_ACTIVE."',SYSDATE, '".$UPDATED_BY."', '".$CREATED_BY."',SYSDATE, '".$IS_SEND_SMS."','".$SMS_CONTENT."','".$IS_SEND_EMAIL."','".$EMAIL_CONTENT."', ".$PARENT_ID." )";
                     
                     $this->db->query($sql);
                     
@@ -67,7 +69,8 @@ class P_procedure extends CI_Model
                                 IS_SEND_SMS = '".$IS_SEND_SMS."',
                                 SMS_CONTENT = '".$SMS_CONTENT."',
                                 IS_SEND_EMAIL = '".$IS_SEND_EMAIL."',
-                                EMAIL_CONTENT = '".$EMAIL_CONTENT."'
+                                EMAIL_CONTENT = '".$EMAIL_CONTENT."',
+                                PARENT_ID = ".$PARENT_ID."
                             WHERE P_PROCEDURE_ID = ".$id_;
                     
                     $this->db->query($sql);
