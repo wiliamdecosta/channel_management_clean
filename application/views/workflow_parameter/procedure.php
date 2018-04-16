@@ -46,6 +46,8 @@ $prv = getPrivilege($menu_id); ?>
     </div><!-- /.row -->
 </div><!-- /.page-content -->
 
+<?php $this->load->view('parameter/lov_p_procedure.php'); ?>
+
 <script>
     
     jQuery(function($) {
@@ -115,6 +117,47 @@ $prv = getPrivilege($menu_id); ?>
                         maxlength:128
                     },
                     editrules: {required:true}
+                },
+
+                {label: 'Induk Pekerjaan',name: 'PROC_NAME_PARENT', width: 200, sortable: true, editable: false},
+                {label: 'Induk Pekerjaan',name: 'PARENT_ID', width: 100, sortable: true,  hidden:true, editable: true,
+                    editrules: {edithidden: true, number:true, required:false},
+                    edittype: 'custom',
+                    editoptions: {
+                        "custom_element":function( value  , options) {                            
+                            var elm = $('<span></span>');
+                            
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_parent_id" type="text"  style="display:none;">'+
+                                        '<input id="form_parent_name" type="text" disabled class="col-xs-5 jqgrid-required" placeholder="Pilih Induk Pekerjaan">'+
+                                        '<button class="btn btn-warning btn-sm" type="button" onclick="showLovPekerjaan(\'form_parent_id\',\'form_parent_name\')">'+
+                                        '   <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_parent_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+                            
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+                            
+                            if(oper === 'get') {
+                                return $("#form_parent_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_parent_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'PROC_NAME_PARENT');
+                                        $("#form_parent_name").val( code_display );
+                                    }
+                                },100);
+                            }
+                        }
+                    }
                 },
                 {label: 'Aktif ?',name: 'IS_ACTIVE', width: 100, sortable: true, editable: true,
                     align: 'center',
@@ -464,6 +507,10 @@ $prv = getPrivilege($menu_id); ?>
         var parent_column = $(grid_selector).closest('[class*="col-"]');
         $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
         $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
+    }
+
+    function showLovPekerjaan(id, code) {
+        modal_lov_p_procedure_show(id,code);
     }
     
 </script>
